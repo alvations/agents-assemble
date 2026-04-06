@@ -1,0 +1,6 @@
+All edits pass syntax validation. Here's what was changed:
+
+- **Fixed `Position.update` short position handling**: BUY on a short position now correctly computes realized P&L when covering, and SELL on an existing short now blends avg_cost instead of incorrectly computing phantom P&L. Both branches handle position flips (short→long, long→short) and full closes properly.
+- **Fixed Sortino ratio calculation**: Replaced incorrect `std()` of only negative returns with the standard downside deviation formula using all returns' shortfall below the risk-free rate (`sqrt(mean(min(r - rf, 0)²))`).
+- **Fixed `format_report` initial value**: Was always showing $100,000 due to `final - final + 100000` evaluating to a constant. Now uses the actual `initial_value` from results.
+- **Added `initial_value` to results dict**: Exposes the backtester's initial cash in the output for accurate reporting.

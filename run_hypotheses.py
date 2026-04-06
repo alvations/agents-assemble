@@ -1,0 +1,338 @@
+"""Hypothesis testing runner for agents-assemble.
+
+Runs each persona's strategy through the backtester, compares results,
+and saves all findings to the knowledge base.
+
+Usage:
+    python run_hypotheses.py                    # Run all personas
+    python run_hypotheses.py --persona buffett  # Run one persona
+    python run_hypotheses.py --start 2022-01-01 --end 2024-12-31
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+import traceback
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
+
+import pandas as pd
+
+# Add parent to path for claude_code_client access
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from backtester import Backtester, format_report, save_results
+from personas import ALL_PERSONAS, get_persona, list_personas
+
+
+# ---------------------------------------------------------------------------
+# Knowledge base
+# ---------------------------------------------------------------------------
+KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
+RESULTS_DIR = Path(__file__).parent / "results"
+
+
+def save_to_knowledge(name: str, content: str, category: str = "hypothesis") -> Path:
+    """Save a finding to the knowledge base."""
+    kb_dir = KNOWLEDGE_DIR / category
+    kb_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    path = kb_dir / f"{name}_{timestamp}.md"
+    path.write_text(content)
+    return path
+
+
+def save_result_json(name: str, data: Dict[str, Any]) -> Path:
+    """Save backtest results as JSON."""
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    path = RESULTS_DIR / f"{name}_{timestamp}.json"
+    # Serialize carefully
+    serializable = {}
+    for k, v in data.items():
+        if isinstance(v, pd.Series):
+            serializable[k] = {str(idx): float(val) for idx, val in v.items()}
+        elif isinstance(v, pd.DataFrame):
+            serializable[k] = v.to_dict()
+        elif isinstance(v, list):
+            serializable[k] = str(v)[:2000]  # Truncate large lists
+        elif isinstance(v, dict):
+            serializable[k] = {str(kk): vv for kk, vv in v.items()
+                                if isinstance(vv, (int, float, str, bool, type(None)))}
+        else:
+            try:
+                json.dumps(v)
+                serializable[k] = v
+            except (TypeError, ValueError):
+                serializable[k] = str(v)[:500]
+    path.write_text(json.dumps(serializable, indent=2, default=str))
+    return path
+
+
+# ---------------------------------------------------------------------------
+# Hypothesis definitions
+# ---------------------------------------------------------------------------
+HYPOTHESES = [
+    {
+        "name": "buffett_value_beats_spy",
+        "persona": "buffett_value",
+        "hypothesis": "Buffett-style value investing in blue chips outperforms SPY on a risk-adjusted basis over 3+ years",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "momentum_tech_leaders",
+        "persona": "momentum",
+        "hypothesis": "Momentum strategy in tech leaders captures trends while limiting drawdowns via MACD exits",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "meme_stocks_2021_2024",
+        "persona": "meme_stock",
+        "hypothesis": "Meme stock volume-spike strategy generates high returns but with extreme volatility",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "dividend_aristocrats_stability",
+        "persona": "dividend",
+        "hypothesis": "Dividend investing provides stable returns with low drawdowns vs SPY",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "quant_mean_reversion",
+        "persona": "quant",
+        "hypothesis": "Mean-reversion (buy BB lower + low RSI) generates alpha in large caps",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "fixed_income_duration",
+        "persona": "fixed_income",
+        "hypothesis": "Dynamic duration management via bond ETF trends beats static bond allocation (BND) during rate hike cycle",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "growth_disruption",
+        "persona": "growth",
+        "hypothesis": "Buying dips in disruptive growth stocks during uptrends outperforms, but with high volatility",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "sector_rotation_outperforms",
+        "persona": "sector_rotation",
+        "hypothesis": "Rotating into top-momentum sector ETFs outperforms broad market SPY",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "pairs_relative_value",
+        "persona": "pairs",
+        "hypothesis": "Pairs trading correlated stocks (XOM/CVX, KO/PEP, etc.) generates market-neutral alpha",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "ensemble_consensus",
+        "persona": "ensemble",
+        "hypothesis": "Multi-strategy consensus (momentum+value+growth+dividend) beats any single strategy on risk-adjusted basis",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+]
+
+
+# ---------------------------------------------------------------------------
+# Runner
+# ---------------------------------------------------------------------------
+def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
+    """Run a single hypothesis test."""
+    name = hyp["name"]
+    persona_key = hyp["persona"]
+
+    if verbose:
+        print(f"\n{'=' * 60}")
+        print(f"  Testing: {name}")
+        print(f"  Hypothesis: {hyp['hypothesis']}")
+        print(f"  Period: {hyp['start']} to {hyp['end']}")
+        print(f"{'=' * 60}")
+
+    persona = get_persona(persona_key)
+    symbols = persona.config.universe
+
+    bt = Backtester(
+        strategy=persona,
+        symbols=symbols,
+        start=hyp["start"],
+        end=hyp["end"],
+        initial_cash=100_000,
+        benchmark="SPY",
+        rebalance_frequency=persona.config.rebalance_frequency,
+    )
+
+    try:
+        results = bt.run()
+        report = format_report(results, f"{persona.config.name}: {hyp['hypothesis'][:60]}")
+
+        if verbose:
+            print(report)
+
+        # Determine if hypothesis is supported
+        m = results["metrics"]
+        verdict_lines = [f"# Hypothesis: {hyp['hypothesis']}", ""]
+        verdict_lines.append(f"**Persona:** {persona.config.name}")
+        verdict_lines.append(f"**Period:** {hyp['start']} to {hyp['end']}")
+        verdict_lines.append(f"**Universe:** {', '.join(symbols)}")
+        verdict_lines.append("")
+        verdict_lines.append("## Results")
+        verdict_lines.append(f"- Total Return: {m.get('total_return', 0):.2%}")
+        verdict_lines.append(f"- CAGR: {m.get('cagr', 0):.2%}")
+        verdict_lines.append(f"- Sharpe: {m.get('sharpe_ratio', 0):.2f}")
+        verdict_lines.append(f"- Max Drawdown: {m.get('max_drawdown', 0):.2%}")
+        verdict_lines.append(f"- Win Rate: {m.get('win_rate', 0):.2%}")
+
+        if "benchmark_total_return" in m:
+            verdict_lines.append(f"- Benchmark Return: {m.get('benchmark_total_return', 0):.2%}")
+            verdict_lines.append(f"- Alpha: {m.get('alpha', 0):.2%}")
+            verdict_lines.append(f"- Beta: {m.get('beta', 0):.2f}")
+
+        # Verdict
+        sharpe = m.get("sharpe_ratio", 0)
+        alpha = m.get("alpha", 0)
+        max_dd = m.get("max_drawdown", 0)
+
+        if sharpe > 0.5 and alpha > 0:
+            verdict = "SUPPORTED - Strategy shows positive alpha and decent risk-adjusted returns"
+        elif sharpe > 0 and alpha > -0.05:
+            verdict = "PARTIALLY SUPPORTED - Positive returns but limited alpha over benchmark"
+        else:
+            verdict = "NOT SUPPORTED - Strategy underperforms benchmark on risk-adjusted basis"
+
+        verdict_lines.append(f"\n## Verdict\n**{verdict}**")
+        verdict_lines.append(f"\n## Key Observations")
+
+        if max_dd < -0.30:
+            verdict_lines.append(f"- WARNING: Severe drawdown of {max_dd:.1%}")
+        if m.get("win_rate", 0) > 0.55:
+            verdict_lines.append(f"- Good win rate of {m.get('win_rate', 0):.1%}")
+
+        num_trades = results.get("trade_metrics", {}).get("num_trades", 0)
+        verdict_lines.append(f"- Total trades: {num_trades}")
+
+        finding = "\n".join(verdict_lines)
+        save_to_knowledge(name, finding, "hypothesis_results")
+        save_result_json(name, {"metrics": m, "trade_metrics": results.get("trade_metrics", {})})
+
+        return {
+            "name": name,
+            "status": "success",
+            "verdict": verdict,
+            "metrics": m,
+            "report": report,
+        }
+
+    except Exception as e:
+        error_msg = f"# FAILED: {name}\n\nError: {e}\n\n```\n{traceback.format_exc()}\n```"
+        save_to_knowledge(name, error_msg, "failures")
+
+        if verbose:
+            print(f"  ERROR: {e}")
+
+        return {
+            "name": name,
+            "status": "error",
+            "error": str(e),
+        }
+
+
+def run_all(
+    start: str = "2021-01-01",
+    end: str = "2024-12-31",
+    personas_filter: List[str] = None,
+    verbose: bool = True,
+) -> List[Dict[str, Any]]:
+    """Run all hypothesis tests and generate summary."""
+    hypotheses = HYPOTHESES
+
+    if personas_filter:
+        hypotheses = [h for h in hypotheses if h["persona"] in personas_filter]
+
+    # Override dates if specified
+    for h in hypotheses:
+        h["start"] = start
+        h["end"] = end
+
+    all_results = []
+    for hyp in hypotheses:
+        result = run_hypothesis(hyp, verbose=verbose)
+        all_results.append(result)
+
+    # Generate summary
+    summary_lines = ["# Hypothesis Testing Summary", ""]
+    summary_lines.append(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    summary_lines.append(f"**Period:** {start} to {end}")
+    summary_lines.append(f"**Hypotheses tested:** {len(all_results)}")
+    summary_lines.append("")
+    summary_lines.append("| Persona | Total Return | Sharpe | Max DD | Alpha | Verdict |")
+    summary_lines.append("|---------|-------------|--------|--------|-------|---------|")
+
+    for r in all_results:
+        if r["status"] == "success":
+            m = r["metrics"]
+            summary_lines.append(
+                f"| {r['name']} | {m.get('total_return', 0):.1%} | "
+                f"{m.get('sharpe_ratio', 0):.2f} | {m.get('max_drawdown', 0):.1%} | "
+                f"{m.get('alpha', 'N/A')} | {r['verdict'][:30]}... |"
+            )
+        else:
+            summary_lines.append(f"| {r['name']} | ERROR | - | - | - | {r['error'][:30]} |")
+
+    summary = "\n".join(summary_lines)
+    save_to_knowledge("summary", summary, "hypothesis_results")
+
+    if verbose:
+        print(f"\n\n{'=' * 60}")
+        print(summary)
+
+    return all_results
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+def main():
+    parser = argparse.ArgumentParser(description="Run trading hypothesis backtests")
+    parser.add_argument("--persona", "-p", help="Run only this persona")
+    parser.add_argument("--start", "-s", default="2021-01-01", help="Start date")
+    parser.add_argument("--end", "-e", default="2024-12-31", help="End date")
+    parser.add_argument("--quiet", "-q", action="store_true", help="Less output")
+    parser.add_argument("--list", "-l", action="store_true", help="List personas")
+    args = parser.parse_args()
+
+    if args.list:
+        for p in list_personas():
+            print(f"  {p['key']:20s} | {p['name']:25s} | {p['description']}")
+        return
+
+    filter_list = [args.persona] if args.persona else None
+    results = run_all(
+        start=args.start,
+        end=args.end,
+        personas_filter=filter_list,
+        verbose=not args.quiet,
+    )
+
+    successes = sum(1 for r in results if r["status"] == "success")
+    failures = sum(1 for r in results if r["status"] == "error")
+    print(f"\nDone: {successes} succeeded, {failures} failed")
+
+
+if __name__ == "__main__":
+    main()

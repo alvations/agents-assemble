@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fix `QuantStrategist` vol-weighted sizing denominator**: `total_inv_vol` was computed over ALL candidates but only top N were allocated — diluting weights. Now computed only over the top N slice.
+- **Fix `MemeStockTrader` exit signal overwritten by buy**: A breakout (vol_ratio > 3, price > sma20) with RSI > 80 could score for buy AND trigger exit, with the buy overwriting the exit weight. Restructured as `elif` so exit conditions take priority.
+- **Fix `FixedIncomeStrat` assigning weights for untradeable symbols**: Hardcoded symbols like "HYG", "LQD", "TIP" got weights without checking if they existed in `prices`. Now filters output to only tradeable symbols.
+- **Fix `DividendInvestor` ignoring `max_positions`**: All qualifying candidates got positions regardless of `max_positions=12`. Now sorts by score and truncates to `max_positions`.

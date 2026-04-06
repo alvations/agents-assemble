@@ -1,0 +1,7 @@
+Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_yield_curve` ignoring pre-2024 dates** — The hardcoded `start="2024-01-01"` meant calling `fetch_yield_curve(date="2023-06-15")` would silently return wrong data. Now dynamically adjusts start date based on the requested date.
+- **Removed dead `not df.empty` guard in `fetch_ohlcv`** — Line 155 was unreachable since line 152-153 already raises `ValueError` on empty data.
+- **Fixed `screen_by_fundamentals` filter checks** — Changed `if min_market_cap and ...` to `if min_market_cap is not None and ...` so passing `0` as a threshold actually applies the filter instead of being silently skipped.
+- **Added `cache` parameter to `fetch_fred_series`** — Now consistent with `fetch_ohlcv`; callers can opt out of caching when they need fresh data.
+- **Batch download now populates per-symbol cache** — `fetch_multiple_ohlcv` writes each symbol to cache after batch download, so subsequent `fetch_ohlcv` calls for the same symbol hit cache instead of making redundant requests.

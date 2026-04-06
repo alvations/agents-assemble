@@ -1,0 +1,6 @@
+Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_multiple_ohlcv` single-symbol batch inconsistency** — `yf.download([sym], group_by="ticker")` produces multi-level columns unlike `Ticker.history()`. Now skips batch for single symbols and falls through to the individual `fetch_ohlcv` fallback path, ensuring consistent DataFrame structure.
+- **Fixed `fetch_yield_curve(date=None)` stale hardcoded start** — Replaced `"2024-01-01"` with dynamic `(now - 90 days)` so the function stays correct as time passes without fetching years of unnecessary data.
+- **Added Alpha Vantage rate-limit/error detection** — `fetch_alpha_vantage` now detects `"Note"` (rate limit) and `"Information"` (invalid key) responses and raises clear error messages instead of the confusing `"Unexpected response: ['Note']"`.
+- **Fixed `get_universe` returning mutable reference** — Now returns a `list()` copy so callers can't accidentally mutate the module-level `UNIVERSE` constant.

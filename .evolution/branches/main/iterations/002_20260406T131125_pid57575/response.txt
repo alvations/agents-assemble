@@ -1,0 +1,6 @@
+Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_yield_curve` for arbitrary historical dates** — Instead of the incomplete `"2020-01-01"` / `"2024-01-01"` conditional, now computes start as 1 year before the requested date, so any date (e.g., "2015-06-15") will be in range.
+- **Fixed `fetch_fred_series` CSV fallback index name mismatch** — API path produced index `"date"`, CSV fallback produced `"DATE"`. Now normalizes to `"date"` so downstream code works consistently regardless of which path was taken.
+- **Fixed `fetch_asset_bundle` including empty entries** — Symbols where OHLCV fetch fails and fundamentals aren't requested no longer get empty `{}` entries in the bundle.
+- **Added cache checking to `fetch_multiple_ohlcv`** — Now checks cache before the batch `yf.download` call, skipping already-cached symbols. Also fixed the batch path referencing `symbols[0]`/`symbols` instead of `uncached[0]`/`uncached`, which would have caused KeyErrors or wrong symbol mapping when some symbols were served from cache.

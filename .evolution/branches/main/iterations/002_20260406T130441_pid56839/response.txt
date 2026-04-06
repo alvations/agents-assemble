@@ -1,0 +1,6 @@
+All edits pass syntax validation. Here's what was changed:
+
+- **Fixed `_rebalance` leaking short positions**: Positions not in target weights are now properly closed regardless of direction — short positions get bought back (BUY), not just long positions sold.
+- **Fixed benchmark CAGR using wrong time span**: `bench_cagr` now uses `aligned_n_years` (from the aligned overlap period), and alpha compares portfolio vs benchmark CAGR over the same aligned window, preventing systematic misstatement when date coverage differs.
+- **Fixed RSI returning NaN on all-gain windows**: When the rolling loss is zero but gain is positive (pure uptrend), RSI is now correctly set to 100.0 instead of NaN from division by zero.
+- **Fixed `_rebalance` cash check ignoring transaction costs**: BUY orders now check that cash covers `qty * price * (1 + slippage_pct) + commission` rather than just `qty * price`, preventing cash from going negative after fees.

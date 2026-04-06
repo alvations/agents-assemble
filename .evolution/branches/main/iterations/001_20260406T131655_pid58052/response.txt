@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fix `_get_indicator` silent wrong-answer bug**: `get_indexer` can return -1 (empty index, NaT); `df.iloc[-1]` would silently return the last row. Now returns `None` when idx is -1.
+- **Fix `QuantStrategist` candidate ranking**: candidates were sliced `[:max_positions]` in iteration order, not by score. Added `sort(key=score, reverse=True)` so the best mean-reversion signals are selected.
+- **Fix `GrowthInvestor` truthiness check on RSI**: `rsi and 30 < rsi < 55` would skip RSI=0.0 as falsy despite being a valid (non-None) value. Removed the redundant truthy guard since `rsi` is already validated as non-None earlier.
+- **Fix `list_personas` return type**: was `List[Dict[str, str]]` but dicts contain `float`/`int` values — corrected to `List[Dict[str, Any]]`.
+- **Remove dead `all_syms` in `DividendInvestor`**: intermediate list comprehension was unnecessary since `candidates` has the same length and is iterated directly.

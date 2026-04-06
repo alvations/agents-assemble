@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Remove dead `sma50` fetch in `BuffettValue`**: `sma_50` was fetched on every symbol but never used — wasted indicator lookup removed.
+- **Fix `DividendInvestor` RSI truthiness bug**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 would have skipped the oversold bonus due to falsy float.
+- **Fix `FixedIncomeStrat` TIP RSI truthiness bug**: Same pattern — `if tlt_rsi and tlt_rsi < 30` → `if tlt_rsi is not None and tlt_rsi < 30`.
+- **Cap `FixedIncomeStrat` weights by `max_position_size`**: Hardcoded weights (e.g. 0.35) were not capped by config — if someone sets a lower `max_position_size`, it was silently ignored. Now all returned weights are capped.
+- **Add RSI tiebreaker to `MomentumTrader` scoring**: `trend_score` was discrete (0–4), so stocks with the same score were ordered arbitrarily. Adding `rsi/100` as a fractional tiebreaker ensures higher-momentum stocks rank first among ties.

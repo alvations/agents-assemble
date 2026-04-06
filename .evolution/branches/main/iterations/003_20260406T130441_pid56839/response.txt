@@ -1,0 +1,6 @@
+All edits pass syntax validation. Here's what was changed:
+
+- **Fixed information ratio numerator**: Used `port_aligned_cagr` instead of full-period `cagr`, making it consistent with the aligned-window alpha fix from iteration 2.
+- **Fixed `_rebalance` sell qty cap for short positions**: The cap `min(qty, abs(current_pos.quantity))` now only applies when the position is long (`current_pos.quantity > 0`), allowing short positions to be increased via additional sells.
+- **Fixed missing equity curve snapshot on empty-price rebalance days**: When no prices are available, a snapshot is still recorded (reflecting cash value), preventing gaps in the equity curve.
+- **Fixed `_compute_rsi` for flat-price periods**: When both gain and loss are zero (no price movement), RSI now returns 50 (neutral) instead of NaN.
