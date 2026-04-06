@@ -1,0 +1,68 @@
+You are improving the Python file at: /Users/alvas/jean-claude/agents-assemble/backtester.py
+
+Your approach:
+1. Read the file to understand the full codebase
+2. Plan 3-5 specific, concrete improvements
+3. Implement each improvement using the Edit tool — make targeted changes, NOT full rewrites
+4. After all edits, verify syntax by running: python -c "import ast; ast.parse(open('/Users/alvas/jean-claude/agents-assemble/backtester.py').read())"
+5. End with a brief summary of what you changed (2-5 bullet points)
+
+Focus areas:
+- Bug fixes (correctness, edge cases, error handling at boundaries)
+- Performance (unnecessary work, subprocess efficiency)
+- API ergonomics (clearer names, better defaults)
+- Type safety and Python best practices
+- Removing dead code or unnecessary complexity
+
+Rules:
+- Do NOT remove existing public API — only extend or fix
+- Do NOT add docstrings or comments to code you did not change
+- Do NOT add new third-party dependencies
+- Make each change individually with the Edit tool — small, focused edits
+- If nothing needs improving, say NO_CHANGES_NEEDED without making any edits
+
+Previous improvements already made (do NOT repeat these):
+  - Iteration 1: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed `Position.update` short position handling**: BUY on a short position now correctly computes realized P&L when covering, and SELL on an existing short now blends avg_cost instead of incorrectly computing phantom P&L. Both branches handle position flips (short→long, long→short) and full closes properly.
+- **Fixed Sortino ratio calculation**: Replaced incorrect `std()` of only negative returns with the standard downside deviation
+  - Iteration 1: Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_yield_curve` ignoring pre-2024 dates** — The hardcoded `start="2024-01-01"` meant calling `fetch_yield_curve(date="2023-06-15")` would silently return wrong data. Now dynamically adjusts start date based on the requested date.
+- **Removed dead `not df.empty` guard in `fetch_ohlcv`** — Line 155 was unreachable since line 152-153 already raises `ValueError` on empty data.
+- **Fixed `screen_by_fundamentals` filter checks** — Change
+  - Iteration 1: All edits pass syntax validation. Summary of changes:
+
+- **Fix `_get_indicator` silent wrong-answer bug**: `get_indexer` can return -1 (empty index, NaT); `df.iloc[-1]` would silently return the last row. Now returns `None` when idx is -1.
+- **Fix `QuantStrategist` candidate ranking**: candidates were sliced `[:max_positions]` in iteration order, not by score. Added `sort(key=score, reverse=True)` so the best mean-reversion signals are selected.
+- **Fix `GrowthInvestor` truthiness check on RSI**
+  - Iteration 2: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed `_rebalance` leaking short positions**: Positions not in target weights are now properly closed regardless of direction — short positions get bought back (BUY), not just long positions sold.
+- **Fixed benchmark CAGR using wrong time span**: `bench_cagr` now uses `aligned_n_years` (from the aligned overlap period), and alpha compares portfolio vs benchmark CAGR over the same aligned window, preventing systematic misstatement wh
+  - Iteration 2: Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_yield_curve` for arbitrary historical dates** — Instead of the incomplete `"2020-01-01"` / `"2024-01-01"` conditional, now computes start as 1 year before the requested date, so any date (e.g., "2015-06-15") will be in range.
+- **Fixed `fetch_fred_series` CSV fallback index name mismatch** — API path produced index `"date"`, CSV fallback produced `"DATE"`. Now normalizes to `"date"` so downstream code works consistently regardle
+  - Iteration 2: All edits pass syntax validation. Summary of changes:
+
+- **Fix `QuantStrategist` vol-weighted sizing denominator**: `total_inv_vol` was computed over ALL candidates but only top N were allocated — diluting weights. Now computed only over the top N slice.
+- **Fix `MemeStockTrader` exit signal overwritten by buy**: A breakout (vol_ratio > 3, price > sma20) with RSI > 80 could score for buy AND trigger exit, with the buy overwriting the exit weight. Restructured as `elif` so exit conditions take pr
+  - Iteration 3: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed information ratio numerator**: Used `port_aligned_cagr` instead of full-period `cagr`, making it consistent with the aligned-window alpha fix from iteration 2.
+- **Fixed `_rebalance` sell qty cap for short positions**: The cap `min(qty, abs(current_pos.quantity))` now only applies when the position is long (`current_pos.quantity > 0`), allowing short positions to be increased via additional sells.
+- **Fixed missing equity curv
+  - Iteration 3: Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_multiple_ohlcv` single-symbol batch inconsistency** — `yf.download([sym], group_by="ticker")` produces multi-level columns unlike `Ticker.history()`. Now skips batch for single symbols and falls through to the individual `fetch_ohlcv` fallback path, ensuring consistent DataFrame structure.
+- **Fixed `fetch_yield_curve(date=None)` stale hardcoded start** — Replaced `"2024-01-01"` with dynamic `(now - 90 days)` so the function sta
+  - Iteration 3: All edits pass syntax validation. Summary of changes:
+
+- **Remove dead `sma50` fetch in `BuffettValue`**: `sma_50` was fetched on every symbol but never used — wasted indicator lookup removed.
+- **Fix `DividendInvestor` RSI truthiness bug**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 would have skipped the oversold bonus due to falsy float.
+- **Fix `FixedIncomeStrat` TIP RSI truthiness bug**: Same pattern — `if tlt_rsi and tlt_rsi < 30` → `if tlt_rsi is not No
+  - Iteration 4: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed phantom equity drops from missing data**: When using a union date index, days where a symbol had no price data excluded that position's value from `total_value`, creating false drawdowns and inflated volatility. Now carries forward last-known prices so positions are always valued consistently.
+- **Fixed `_rebalance` executing buys before sells**: Previously, iteration order determined trade execution, so a buy could fail the c

@@ -1,0 +1,8 @@
+All edits pass syntax validation. Here's what was changed:
+
+- **Removed sell qty cap in `_rebalance`**: The `min(qty, int(current_pos.quantity))` cap prevented strategies from flipping long-to-short in a single rebalance. Since `Position.update` handles flips correctly and the cap is mathematically redundant for non-negative target weights, removing it fixes the bug.
+- **Recompute total value after sells**: Buy quantities are now computed from post-sell portfolio value instead of stale pre-sell value, producing more accurate target allocations.
+- **Sort buys by target weight descending**: When cash is limited, higher-conviction positions now get allocated first instead of arbitrary dict iteration order.
+- **Integrated close-positions into sell/buy phases**: Close-long happens in the sell phase (frees cash earlier for buys), and close-short gets highest priority in the buy phase via `float("inf")` weight sort.
+- **Fixed Calmar ratio for zero-drawdown strategies**: When `max_drawdown == 0` and `cagr > 0` (monotonically increasing equity curve), Calmar was incorrectly 0 — now returns `inf`.
+- **Removed unused `datetime` import**.

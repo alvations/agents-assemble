@@ -74,3 +74,10 @@ All edits pass syntax validation. Here's what was changed:
 - **Fixed phantom equity drops from missing data**: When using a union date index, days where a symbol had no price data excluded that position's value from `total_value`, creating false drawdowns and inflated volatility. Now carries forward last-known prices so positions are always valued consistently.
 - **Fixed `_rebalance` executing buys before sells**: Previously, iteration order determined trade execution, so a buy could fail the c
 
+## [2026-04-06T13:42:37.328408+00:00] Branch: main | Run: 20260406T132815_pid59005 | Iter 5 | $1.3981
+### backtester.py
+All edits pass syntax validation. Here's what was changed:
+
+- **Removed sell qty cap in `_rebalance`**: The `min(qty, int(current_pos.quantity))` cap prevented strategies from flipping long-to-short in a single rebalance. Since `Position.update` handles flips correctly and the cap is mathematically redundant for non-negative target weights, removing it fixes the bug.
+- **Recompute total value after sells**: Buy quantities are now computed from post-sell portfolio value instead of stale pre-sell 
+

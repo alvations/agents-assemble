@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from backtester import Backtester, format_report, save_results
 from personas import ALL_PERSONAS, get_persona, list_personas
 from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
+from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
 from trade_recommender import save_strategy_recommendation
 
 
@@ -253,6 +254,47 @@ HYPOTHESES = [
         "start": "2021-01-01",
         "end": "2024-12-31",
     },
+    # === Theme Strategies ===
+    {
+        "name": "ai_revolution_2022_2024",
+        "persona": "ai_revolution",
+        "persona_source": "theme",
+        "hypothesis": "AI infrastructure and applications companies outperform during the AI boom",
+        "start": "2022-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "defense_geopolitics",
+        "persona": "defense_aerospace",
+        "persona_source": "theme",
+        "hypothesis": "Defense/aerospace/cyber stocks benefit from sustained geopolitical tension",
+        "start": "2022-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "biotech_innovation",
+        "persona": "biotech_breakout",
+        "persona_source": "theme",
+        "hypothesis": "Diversified biotech basket with momentum filtering outperforms XBI",
+        "start": "2022-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "china_tech_recovery",
+        "persona": "china_tech_rebound",
+        "persona_source": "theme",
+        "hypothesis": "China tech ADRs recover from regulatory crackdown creating deep value opportunity",
+        "start": "2022-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "small_cap_deep_value",
+        "persona": "small_cap_value",
+        "persona_source": "theme",
+        "hypothesis": "Small cap deep value (oversold + volume) captures mean-reversion alpha",
+        "start": "2022-01-01",
+        "end": "2024-12-31",
+    },
 ]
 
 
@@ -271,8 +313,11 @@ def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
         print(f"  Period: {hyp['start']} to {hyp['end']}")
         print(f"{'=' * 60}")
 
-    if hyp.get("persona_source") == "famous":
+    source = hyp.get("persona_source", "builtin")
+    if source == "famous":
         persona = get_famous_investor(persona_key)
+    elif source == "theme":
+        persona = get_theme_strategy(persona_key)
     else:
         persona = get_persona(persona_key)
     symbols = persona.config.universe

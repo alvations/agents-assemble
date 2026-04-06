@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -239,7 +238,7 @@ def compute_metrics(
     max_dd_end = drawdowns.idxmin()
 
     # Calmar ratio
-    calmar = cagr / abs(max_drawdown) if max_drawdown != 0 else 0
+    calmar = cagr / abs(max_drawdown) if max_drawdown < 0 else (float("inf") if cagr > 0 else 0)
 
     # Win rate
     winning_days = (returns > 0).sum()
@@ -390,7 +389,7 @@ class Backtester:
 
         return all_data, bench_data
 
-    def _should_rebalance(self, date: pd.Timestamp, dates: pd.DatetimeIndex, idx: int) -> bool:
+    def _should_rebalance(self, date: pd.Timestamp, dates: List[pd.Timestamp], idx: int) -> bool:
         """Check if we should rebalance on this date."""
         if self.rebalance_frequency == "daily":
             return True
@@ -545,58 +544,63 @@ class Backtester:
         """Rebalance portfolio to target weights."""
         total_value = portfolio.total_value(prices)
 
-        # Compute desired trades, then execute sells before buys to free cash
+        # Phase 1: Collect and execute all sells (reductions, closes, short initiations)
         sells: List[Tuple[str, int]] = []
-        buys: List[Tuple[str, int]] = []
 
         for sym, target_w in target_weights.items():
             if sym not in prices:
                 continue
-
             price = prices[sym]
             target_value = total_value * target_w
             current_pos = portfolio.get_position(sym)
             current_value = (current_pos.quantity * price) if current_pos else 0.0
-
             diff_value = target_value - current_value
-
-            if abs(diff_value) < price * 0.5:  # Skip tiny rebalances
-                continue
-
-            if diff_value > 0:
-                qty = int(diff_value / price)
-                if qty > 0:
-                    buys.append((sym, qty))
-            elif diff_value < 0:
+            if diff_value < 0 and abs(diff_value) >= price * 0.5:
                 qty = int(abs(diff_value) / price)
                 if qty > 0:
-                    if current_pos and current_pos.quantity > 0:
-                        qty = min(qty, int(current_pos.quantity))
-                    if qty > 0:
-                        sells.append((sym, qty))
+                    sells.append((sym, qty))
 
-        # Execute sells first to free up cash
+        # Close long positions not in target weights
+        for sym in list(portfolio.positions.keys()):
+            if sym not in target_weights:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0 and sym in prices:
+                    sells.append((sym, int(pos.quantity)))
+
         for sym, qty in sells:
             portfolio.execute_trade(date, sym, Side.SELL, qty, prices[sym])
 
-        # Then execute buys with available cash
-        for sym, qty in buys:
+        # Phase 2: Recompute total value after sells, then collect buys
+        total_value = portfolio.total_value(prices)
+        buys: List[Tuple[str, int, float]] = []
+
+        for sym, target_w in target_weights.items():
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            target_value = total_value * target_w
+            current_pos = portfolio.get_position(sym)
+            current_value = (current_pos.quantity * price) if current_pos else 0.0
+            diff_value = target_value - current_value
+            if diff_value >= price * 0.5:
+                qty = int(diff_value / price)
+                if qty > 0:
+                    buys.append((sym, qty, target_w))
+
+        # Close short positions not in target weights (highest priority)
+        for sym in list(portfolio.positions.keys()):
+            if sym not in target_weights:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity < 0 and sym in prices:
+                    buys.append((sym, int(abs(pos.quantity)), float("inf")))
+
+        # Execute buys with highest-weight positions first
+        buys.sort(key=lambda x: x[2], reverse=True)
+        for sym, qty, _ in buys:
             price = prices[sym]
             total_cost = qty * price * (1 + portfolio.slippage_pct) + portfolio.commission_per_trade
             if portfolio.cash >= total_cost:
                 portfolio.execute_trade(date, sym, Side.BUY, qty, price)
-
-        # Close positions not in target
-        for sym in list(portfolio.positions.keys()):
-            if sym not in target_weights or target_weights.get(sym, 0) == 0:
-                pos = portfolio.get_position(sym)
-                if pos and sym in prices:
-                    if pos.quantity > 0:
-                        portfolio.execute_trade(date, sym, Side.SELL,
-                                                int(abs(pos.quantity)), prices[sym])
-                    elif pos.quantity < 0:
-                        portfolio.execute_trade(date, sym, Side.BUY,
-                                                int(abs(pos.quantity)), prices[sym])
 
 
 # ---------------------------------------------------------------------------

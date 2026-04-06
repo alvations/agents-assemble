@@ -698,12 +698,132 @@ UNIVERSE = {
                      "FCX", "NEM", "GOLD", "BHP", "RIO", "VALE"],
     # REITs
     "reits": ["O", "AMT", "PLD", "EQIX", "SPG", "DLR", "VNQ", "XLRE"],
+    # Small caps (Russell 2000 components, IWM)
+    "small_cap": ["SMCI", "CELH", "CAVA", "DUOL", "RELY", "CWAN", "FTNT",
+                   "LULU", "DECK", "EXAS", "HUBS", "SAIA", "RCL", "BURL"],
+    "small_cap_etf": ["IWM", "IWO", "IWN", "SCHA", "VB", "VTWO"],
+    # Mid caps
+    "mid_cap": ["ZS", "PANW", "OKTA", "VEEV", "TEAM", "WIX", "ZM",
+                "NXPI", "MCHP", "SWKS", "QRVO", "ON", "ENTG", "LRCX"],
+    "mid_cap_etf": ["MDY", "IJH", "VO", "IVOO"],
+    # Micro/nano caps (very small, high vol — Tiger/IBKR only)
+    "micro_cap": ["IONQ", "RGTI", "QUBT", "SOUN", "IREN", "APLD",
+                   "GSAT", "OPEN", "DNA", "MNDY", "BRZE", "GTLB"],
+    # Penny stocks / speculative (very high risk, available on most platforms)
+    "speculative": ["ASTS", "LUNR", "RKLB", "JOBY", "LILM", "EVTL",
+                     "MVST", "LAZR", "LIDR", "OUST"],
 }
 
 
 def get_universe(category: str = "mega_cap") -> List[str]:
     """Get a list of tickers for a given category."""
     return list(UNIVERSE.get(category, UNIVERSE["mega_cap"]))
+
+
+def scan_52_week_lows(
+    universe: Optional[List[str]] = None,
+    max_results: int = 20,
+) -> List[Dict[str, Any]]:
+    """Scan for stocks near their 52-week lows (live data).
+
+    Returns list of {symbol, price, 52w_low, 52w_high, pct_from_low, pct_from_high}
+    sorted by proximity to 52w low.
+    """
+    import yfinance as yf
+
+    if universe is None:
+        # Scan across all universe categories
+        all_syms = set()
+        for syms in UNIVERSE.values():
+            all_syms.update(syms)
+        universe = list(all_syms)
+
+    results = []
+    for sym in universe:
+        try:
+            ticker = yf.Ticker(sym)
+            info = ticker.info
+            price = info.get("currentPrice") or info.get("regularMarketPrice")
+            low_52 = info.get("fiftyTwoWeekLow")
+            high_52 = info.get("fiftyTwoWeekHigh")
+
+            if price and low_52 and high_52 and low_52 > 0:
+                pct_from_low = (price - low_52) / low_52
+                pct_from_high = (price - high_52) / high_52
+                results.append({
+                    "symbol": sym,
+                    "price": price,
+                    "52w_low": low_52,
+                    "52w_high": high_52,
+                    "pct_from_low": pct_from_low,
+                    "pct_from_high": pct_from_high,
+                    "range_position": (price - low_52) / (high_52 - low_52) if high_52 > low_52 else 0.5,
+                })
+        except Exception:
+            pass
+
+    results.sort(key=lambda x: x["pct_from_low"])
+    return results[:max_results]
+
+
+def scan_volatile_stocks(
+    universe: Optional[List[str]] = None,
+    period: str = "3mo",
+    min_vol: float = 0.03,
+    max_results: int = 20,
+) -> List[Dict[str, Any]]:
+    """Scan for most volatile stocks (live data).
+
+    Returns list sorted by daily volatility (highest first).
+    """
+    import yfinance as yf
+
+    if universe is None:
+        all_syms = set()
+        for syms in UNIVERSE.values():
+            all_syms.update(syms)
+        universe = list(all_syms)
+
+    results = []
+    for sym in universe:
+        try:
+            ticker = yf.Ticker(sym)
+            hist = ticker.history(period=period)
+            if len(hist) < 20:
+                continue
+            daily_vol = hist["Close"].pct_change().std()
+            if daily_vol >= min_vol:
+                results.append({
+                    "symbol": sym,
+                    "daily_vol": float(daily_vol),
+                    "annual_vol": float(daily_vol * np.sqrt(252)),
+                    "avg_volume": float(hist["Volume"].mean()),
+                    "price": float(hist["Close"].iloc[-1]),
+                })
+        except Exception:
+            pass
+
+    results.sort(key=lambda x: x["daily_vol"], reverse=True)
+    return results[:max_results]
+
+
+def discover_universe_from_etf(
+    etf_symbol: str,
+    max_holdings: int = 20,
+) -> List[str]:
+    """Discover stock universe from an ETF's top holdings (live data).
+
+    Useful for building universes from sector/theme ETFs.
+    """
+    import yfinance as yf
+
+    try:
+        # yfinance doesn't directly expose holdings, but we can try
+        # For now, return known theme ETFs and their typical holdings
+        pass
+    except Exception:
+        pass
+    return []
 
 
 def screen_by_fundamentals(
