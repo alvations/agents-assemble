@@ -17,28 +17,19 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import pandas as pd
 
-# Support both installed package and flat-file imports
+# Add parent to path for claude_code_client access
 sys.path.insert(0, str(Path(__file__).parent.parent))
-sys.path.insert(0, str(Path(__file__).parent))
 
-try:
-    from agents_assemble.engine.backtester import Backtester, format_report, save_results
-    from agents_assemble.strategies.generic import ALL_PERSONAS, get_persona, list_personas
-    from agents_assemble.strategies.famous import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
-    from agents_assemble.strategies.themes import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
-    from agents_assemble.strategies.recession import RECESSION_STRATEGIES, get_recession_strategy
-    from agents_assemble.engine.recommender import save_strategy_recommendation
-except ImportError:
-    from backtester import Backtester, format_report, save_results
-    from personas import ALL_PERSONAS, get_persona, list_personas
-    from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
-    from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
-    from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
-    from trade_recommender import save_strategy_recommendation
+from backtester import Backtester, format_report, save_results
+from personas import ALL_PERSONAS, get_persona, list_personas
+from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
+from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
+from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
+from trade_recommender import save_strategy_recommendation
 
 
 # ---------------------------------------------------------------------------
@@ -468,11 +459,11 @@ def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
 def run_all(
     start: str = "2021-01-01",
     end: str = "2024-12-31",
-    personas_filter: Optional[List[str]] = None,
+    personas_filter: List[str] = None,
     verbose: bool = True,
 ) -> List[Dict[str, Any]]:
     """Run all hypothesis tests and generate summary."""
-    hypotheses = [dict(h) for h in HYPOTHESES]
+    hypotheses = HYPOTHESES
 
     if personas_filter:
         hypotheses = [h for h in hypotheses if h["persona"] in personas_filter]
@@ -499,12 +490,10 @@ def run_all(
     for r in all_results:
         if r["status"] == "success":
             m = r["metrics"]
-            alpha = m.get('alpha')
-            alpha_str = f"{alpha:.1%}" if isinstance(alpha, (int, float)) else "N/A"
             summary_lines.append(
                 f"| {r['name']} | {m.get('total_return', 0):.1%} | "
                 f"{m.get('sharpe_ratio', 0):.2f} | {m.get('max_drawdown', 0):.1%} | "
-                f"{alpha_str} | {r['verdict'][:30]}... |"
+                f"{m.get('alpha', 'N/A')} | {r['verdict'][:30]}... |"
             )
         else:
             summary_lines.append(f"| {r['name']} | ERROR | - | - | - | {r['error'][:30]} |")
@@ -532,18 +521,8 @@ def main():
     args = parser.parse_args()
 
     if args.list:
-        print("  Builtin Personas:")
         for p in list_personas():
-            print(f"    {p['key']:20s} | {p['name']:25s} | {p['description']}")
-        print("\n  Famous Investors:")
-        for p in list_famous_investors():
-            print(f"    {p['key']:20s} | {p['name']:25s} | {p['description']}")
-        print("\n  Theme Strategies:")
-        for p in list_theme_strategies():
-            print(f"    {p['key']:20s} | {p['name']:25s} | {p['description']}")
-        print("\n  Recession Strategies:")
-        for key, strat in RECESSION_STRATEGIES.items():
-            print(f"    {key:20s} | {strat.config.name:25s} | {strat.config.description}")
+            print(f"  {p['key']:20s} | {p['name']:25s} | {p['description']}")
         return
 
     filter_list = [args.persona] if args.persona else None

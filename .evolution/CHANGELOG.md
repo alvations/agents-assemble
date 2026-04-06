@@ -81,3 +81,18 @@ All edits pass syntax validation. Here's what was changed:
 - **Removed sell qty cap in `_rebalance`**: The `min(qty, int(current_pos.quantity))` cap prevented strategies from flipping long-to-short in a single rebalance. Since `Position.update` handles flips correctly and the cap is mathematically redundant for non-negative target weights, removing it fixes the bug.
 - **Recompute total value after sells**: Buy quantities are now computed from post-sell portfolio value instead of stale pre-sell 
 
+## [2026-04-06T13:54:18.755315+00:00] Branch: main | Run: 20260406T132815_pid59005 | Iter 6 | $1.3470
+### backtester.py
+All edits pass syntax validation. Here's what was changed:
+
+- **Pre-computed close prices DataFrame for performance**: Replaced the set-based date union construction and per-date per-symbol `.loc` lookups with a single `pd.DataFrame` of close prices, sorted and forward-filled via `.ffill()`. This eliminates O(n_dates × n_symbols) individual index lookups and the manual `last_known_prices` accumulator, replacing them with a one-time vectorized operation.
+- **Simplified simulation loop**: Removed 
+
+## [2026-04-06T13:54:44.710825+00:00] Branch: main | Run: 20260406T135045_pid60422 | Iter 3 | $0.3888
+### run_hypotheses.py
+Syntax is clean. Here's what I changed:
+
+- **Fixed global state mutation** — `run_all` now shallow-copies `HYPOTHESES` dicts before overwriting `start`/`end`, so repeated calls with different dates don't corrupt the module-level data.
+- **Fixed alpha formatting in summary table** — Alpha was printed as a raw float (e.g., `0.053`) instead of formatted as `5.3%`. Now properly formats as percentage when numeric, falls back to `"N/A"` when missing.
+- **Fixed `--list` showing only builtin personas** 
+

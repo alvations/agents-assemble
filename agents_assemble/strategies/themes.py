@@ -24,7 +24,7 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from personas import BasePersona, PersonaConfig
+from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------

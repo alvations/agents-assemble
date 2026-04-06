@@ -1,0 +1,6 @@
+Syntax is clean. Here's what I changed:
+
+- **Fixed global state mutation** — `run_all` now shallow-copies `HYPOTHESES` dicts before overwriting `start`/`end`, so repeated calls with different dates don't corrupt the module-level data.
+- **Fixed alpha formatting in summary table** — Alpha was printed as a raw float (e.g., `0.053`) instead of formatted as `5.3%`. Now properly formats as percentage when numeric, falls back to `"N/A"` when missing.
+- **Fixed `--list` showing only builtin personas** — Now displays all 4 strategy categories (builtin, famous investors, theme, recession) instead of just the 10 builtins.
+- **Fixed `Optional` type annotation** — `personas_filter` parameter now correctly typed as `Optional[List[str]]` instead of bare `List[str] = None`.

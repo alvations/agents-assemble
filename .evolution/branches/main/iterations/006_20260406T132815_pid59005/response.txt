@@ -1,0 +1,5 @@
+All edits pass syntax validation. Here's what was changed:
+
+- **Pre-computed close prices DataFrame for performance**: Replaced the set-based date union construction and per-date per-symbol `.loc` lookups with a single `pd.DataFrame` of close prices, sorted and forward-filled via `.ffill()`. This eliminates O(n_dates × n_symbols) individual index lookups and the manual `last_known_prices` accumulator, replacing them with a one-time vectorized operation.
+- **Simplified simulation loop**: Removed ~20 lines of duplicated price-fetching code (identical blocks for rebalance vs non-rebalance days) by extracting prices once per date from the pre-computed matrix.
+- **Zero price guard in `_rebalance`**: Added `if price <= 0: continue` in both Phase 1 (sells) and Phase 2 (buys) target-weight loops to prevent `ZeroDivisionError` when a symbol has a degenerate price (e.g., delisted stock, data error).
