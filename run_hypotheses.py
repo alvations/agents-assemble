@@ -26,6 +26,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from backtester import Backtester, format_report, save_results
 from personas import ALL_PERSONAS, get_persona, list_personas
+from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
+from trade_recommender import save_strategy_recommendation
 
 
 # ---------------------------------------------------------------------------
@@ -146,6 +148,111 @@ HYPOTHESES = [
         "start": "2021-01-01",
         "end": "2024-12-31",
     },
+    # === Famous Investors ===
+    {
+        "name": "peter_lynch_garp",
+        "persona": "peter_lynch",
+        "persona_source": "famous",
+        "hypothesis": "Peter Lynch GARP: moderate momentum consumer stocks with low vol outperform",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "ray_dalio_all_weather",
+        "persona": "ray_dalio",
+        "persona_source": "famous",
+        "hypothesis": "Dalio All-Weather risk parity (stocks+bonds+gold+commodities) provides stable returns in any regime",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "george_soros_reflexivity",
+        "persona": "george_soros",
+        "persona_source": "famous",
+        "hypothesis": "Soros reflexivity: concentrated macro momentum bets capture accelerating trends",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "michael_burry_contrarian",
+        "persona": "michael_burry",
+        "persona_source": "famous",
+        "hypothesis": "Burry contrarian: buying capitulation in beaten-down large caps generates deep value alpha",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "jim_simons_quant",
+        "persona": "jim_simons",
+        "persona_source": "famous",
+        "hypothesis": "Simons multi-factor quant: combining mean-reversion + momentum + trend + BB generates consistent alpha",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "carl_icahn_activist",
+        "persona": "carl_icahn",
+        "persona_source": "famous",
+        "hypothesis": "Icahn activist value: concentrated deep-discount large caps showing recovery outperform",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "masayoshi_son_vision",
+        "persona": "masayoshi_son",
+        "persona_source": "famous",
+        "hypothesis": "Son Vision Fund: concentrated high-conviction tech platform bets capture outsized returns",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "li_ka_shing_infrastructure",
+        "persona": "li_ka_shing",
+        "persona_source": "famous",
+        "hypothesis": "Li Ka-shing: patient infrastructure/utility value provides stable income with low drawdowns",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "sawiris_em_industrials",
+        "persona": "nassef_sawiris",
+        "persona_source": "famous",
+        "hypothesis": "Sawiris: emerging market industrial value (materials, mining) outperforms during commodity cycles",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "lemann_consumer_brands",
+        "persona": "jorge_paulo_lemann",
+        "persona_source": "famous",
+        "hypothesis": "Lemann 3G: buying dominant consumer brands on pullbacks compounds steadily",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "alwaleed_crisis_buying",
+        "persona": "prince_alwaleed",
+        "persona_source": "famous",
+        "hypothesis": "Alwaleed: buying iconic blue-chip brands during crises generates recovery alpha",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "howard_marks_contrarian",
+        "persona": "howard_marks",
+        "persona_source": "famous",
+        "hypothesis": "Marks second-level thinking: buying quality during market panic outperforms on risk-adjusted basis",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "support_resistance_commodities",
+        "persona": "support_resistance",
+        "persona_source": "famous",
+        "hypothesis": "Support/resistance breakout on commodity ETFs captures trend reversals with defined risk",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
 ]
 
 
@@ -164,7 +271,10 @@ def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
         print(f"  Period: {hyp['start']} to {hyp['end']}")
         print(f"{'=' * 60}")
 
-    persona = get_persona(persona_key)
+    if hyp.get("persona_source") == "famous":
+        persona = get_famous_investor(persona_key)
+    else:
+        persona = get_persona(persona_key)
     symbols = persona.config.universe
 
     bt = Backtester(
@@ -230,12 +340,25 @@ def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
         save_to_knowledge(name, finding, "hypothesis_results")
         save_result_json(name, {"metrics": m, "trade_metrics": results.get("trade_metrics", {})})
 
+        # Save trade recommendations (winning/losing)
+        try:
+            save_strategy_recommendation(
+                name, results,
+                persona_config={
+                    "rebalance_frequency": persona.config.rebalance_frequency,
+                    "risk_tolerance": persona.config.risk_tolerance,
+                }
+            )
+        except Exception:
+            pass
+
         return {
             "name": name,
             "status": "success",
             "verdict": verdict,
             "metrics": m,
             "report": report,
+            "final_positions": results.get("final_positions", {}),
         }
 
     except Exception as e:

@@ -1,0 +1,6 @@
+All edits pass syntax validation. Here's what was changed:
+
+- **Fixed phantom equity drops from missing data**: When using a union date index, days where a symbol had no price data excluded that position's value from `total_value`, creating false drawdowns and inflated volatility. Now carries forward last-known prices so positions are always valued consistently.
+- **Fixed `_rebalance` executing buys before sells**: Previously, iteration order determined trade execution, so a buy could fail the cash check even though a pending sell on another symbol would have freed sufficient cash. Now collects all trades, executes sells first to free cash, then buys.
+- **Fixed `save_results` losing `portfolio_history` structure**: The list of snapshot dicts contains `pd.Timestamp` values that caused `json.dumps()` to fail, falling through to `str(v)` which stringified the entire list. Now handles generic lists via `json.dumps(v, default=str)`.
+- **Fixed `compute_metrics` crash on total portfolio wipeout**: If `total_return <= -1` (100% loss), `(1 + total_return) ** frac` would raise an error or return a complex number. Now guards against non-positive growth factors.

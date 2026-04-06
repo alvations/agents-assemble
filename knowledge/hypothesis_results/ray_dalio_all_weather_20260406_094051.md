@@ -1,0 +1,21 @@
+# Hypothesis: Dalio All-Weather risk parity (stocks+bonds+gold+commodities) provides stable returns in any regime
+
+**Persona:** Ray Dalio (All-Weather)
+**Period:** 2022-01-01 to 2024-12-31
+**Universe:** VTI, TLT, IEF, GLD, XLE
+
+## Results
+- Total Return: 1.92%
+- CAGR: 0.64%
+- Sharpe: -0.29
+- Max Drawdown: -17.06%
+- Win Rate: 51.66%
+- Benchmark Return: 28.66%
+- Alpha: -8.18%
+- Beta: 0.32
+
+## Verdict
+**NOT SUPPORTED - Strategy underperforms benchmark on risk-adjusted basis**
+
+## Key Observations
+- Total trades: 168

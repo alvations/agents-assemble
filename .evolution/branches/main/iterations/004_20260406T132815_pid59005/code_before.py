@@ -211,11 +211,7 @@ def compute_metrics(
     # Basic return stats
     total_return = (1 + returns).prod() - 1
     n_years = len(returns) / periods_per_year
-    growth = 1 + total_return
-    if growth > 0:
-        cagr = growth ** (1 / max(n_years, 0.01)) - 1
-    else:
-        cagr = -1.0  # Total loss
+    cagr = (1 + total_return) ** (1 / max(n_years, 0.01)) - 1
 
     # Volatility
     daily_vol = returns.std()
@@ -465,31 +461,28 @@ class Backtester:
         # Run simulation
         equity_values = []
         equity_dates = []
-        last_known_prices: Dict[str, float] = {}
 
         for idx, date in enumerate(common_dates):
             if not self._should_rebalance(date, common_dates, idx):
                 # Still record portfolio value
-                prices = dict(last_known_prices)
+                prices = {}
                 for sym in self.symbols:
                     if sym in all_data and date in all_data[sym].index:
                         val = all_data[sym].loc[date, "Close"]
                         if not pd.isna(val):
                             prices[sym] = float(val)
-                last_known_prices.update(prices)
                 snap = portfolio.snapshot(date, prices)
                 equity_values.append(snap["total_value"])
                 equity_dates.append(date)
                 continue
 
-            # Get current prices (start from last known, then overlay today's)
-            prices = dict(last_known_prices)
+            # Get current prices
+            prices = {}
             for sym in self.symbols:
                 if sym in all_data and date in all_data[sym].index:
                     val = all_data[sym].loc[date, "Close"]
                     if not pd.isna(val):
                         prices[sym] = float(val)
-            last_known_prices.update(prices)
 
             if not prices:
                 snap = portfolio.snapshot(date, prices)
@@ -545,10 +538,6 @@ class Backtester:
         """Rebalance portfolio to target weights."""
         total_value = portfolio.total_value(prices)
 
-        # Compute desired trades, then execute sells before buys to free cash
-        sells: List[Tuple[str, int]] = []
-        buys: List[Tuple[str, int]] = []
-
         for sym, target_w in target_weights.items():
             if sym not in prices:
                 continue
@@ -565,26 +554,16 @@ class Backtester:
 
             if diff_value > 0:
                 qty = int(diff_value / price)
-                if qty > 0:
-                    buys.append((sym, qty))
+                total_cost = qty * price * (1 + portfolio.slippage_pct) + portfolio.commission_per_trade
+                if qty > 0 and portfolio.cash >= total_cost:
+                    portfolio.execute_trade(date, sym, Side.BUY, qty, price)
             elif diff_value < 0:
                 qty = int(abs(diff_value) / price)
                 if qty > 0:
                     if current_pos and current_pos.quantity > 0:
                         qty = min(qty, int(current_pos.quantity))
                     if qty > 0:
-                        sells.append((sym, qty))
-
-        # Execute sells first to free up cash
-        for sym, qty in sells:
-            portfolio.execute_trade(date, sym, Side.SELL, qty, prices[sym])
-
-        # Then execute buys with available cash
-        for sym, qty in buys:
-            price = prices[sym]
-            total_cost = qty * price * (1 + portfolio.slippage_pct) + portfolio.commission_per_trade
-            if portfolio.cash >= total_cost:
-                portfolio.execute_trade(date, sym, Side.BUY, qty, price)
+                        portfolio.execute_trade(date, sym, Side.SELL, qty, price)
 
         # Close positions not in target
         for sym in list(portfolio.positions.keys()):
@@ -691,8 +670,6 @@ def save_results(results: Dict[str, Any], path: str) -> None:
                  "quantity": t.quantity, "price": t.price}
                 for t in v
             ]
-        elif isinstance(v, list):
-            serializable[k] = json.loads(json.dumps(v, default=str))
         elif isinstance(v, dict):
             serializable[k] = {str(kk): vv for kk, vv in v.items()
                                 if not isinstance(vv, (pd.Series, pd.DataFrame))}

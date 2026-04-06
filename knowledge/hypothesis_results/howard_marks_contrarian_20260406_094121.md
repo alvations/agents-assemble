@@ -1,0 +1,21 @@
+# Hypothesis: Marks second-level thinking: buying quality during market panic outperforms on risk-adjusted basis
+
+**Persona:** Howard Marks (Oaktree Contrarian)
+**Period:** 2022-01-01 to 2024-12-31
+**Universe:** AAPL, MSFT, GOOGL, JNJ, PG, KO, JPM, V, UNH, HD, BRK-B, ABBV, MRK, PFE, HYG, LQD, BND
+
+## Results
+- Total Return: -1.77%
+- CAGR: -0.60%
+- Sharpe: -1.85
+- Max Drawdown: -6.21%
+- Win Rate: 31.16%
+- Benchmark Return: 28.66%
+- Alpha: -9.42%
+- Beta: 0.02
+
+## Verdict
+**NOT SUPPORTED - Strategy underperforms benchmark on risk-adjusted basis**
+
+## Key Observations
+- Total trades: 5

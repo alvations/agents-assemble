@@ -67,3 +67,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fix `DividendInvestor` RSI truthiness bug**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 would have skipped the oversold bonus due to falsy float.
 - **Fix `FixedIncomeStrat` TIP RSI truthiness bug**: Same pattern — `if tlt_rsi and tlt_rsi < 30` → `if tlt_rsi is not No
 
+## [2026-04-06T13:31:11.186567+00:00] Branch: main | Run: 20260406T132815_pid59005 | Iter 4 | $0.4994
+### backtester.py
+All edits pass syntax validation. Here's what was changed:
+
+- **Fixed phantom equity drops from missing data**: When using a union date index, days where a symbol had no price data excluded that position's value from `total_value`, creating false drawdowns and inflated volatility. Now carries forward last-known prices so positions are always valued consistently.
+- **Fixed `_rebalance` executing buys before sells**: Previously, iteration order determined trade execution, so a buy could fail the c
+

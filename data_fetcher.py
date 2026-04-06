@@ -661,18 +661,43 @@ def fetch_market_breadth() -> Dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Screening / universe helpers
 # ---------------------------------------------------------------------------
-# Popular instruments available on Robinhood / Public.com
+# Popular instruments available on Robinhood / Public.com / Tiger Brokers / IBKR
 UNIVERSE = {
+    # US Equities
     "mega_cap": ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "BRK-B", "JPM", "V"],
     "growth": ["PLTR", "SNOW", "CRWD", "DDOG", "NET", "SHOP", "SQ", "ROKU", "ENPH", "MELI"],
     "value": ["BRK-B", "JPM", "JNJ", "PG", "KO", "PEP", "MRK", "CVX", "XOM", "IBM"],
     "dividend": ["JNJ", "PG", "KO", "PEP", "MMM", "T", "VZ", "MO", "ABBV", "O"],
-    "meme": ["GME", "AMC", "BBBY", "BB", "PLTR", "SOFI", "WISH", "CLOV", "HOOD", "RIVN"],
+    "meme": ["GME", "AMC", "PLTR", "SOFI", "HOOD", "RIVN", "LCID", "NIO", "BBAI"],
+    # US ETFs
     "etf_broad": ["SPY", "QQQ", "IWM", "DIA", "VTI", "VOO"],
     "etf_sector": ["XLF", "XLK", "XLE", "XLV", "XLI", "XLP", "XLU", "XLRE", "XLC", "XLB"],
     "etf_bond": ["BND", "TLT", "IEF", "SHY", "LQD", "HYG", "AGG", "TIP", "VCSH", "VCIT"],
     "etf_international": ["EEM", "VEA", "VWO", "EFA", "IEMG"],
-    "crypto_adjacent": ["COIN", "MARA", "RIOT", "MSTR", "SQ"],
+    "etf_commodity": ["GLD", "SLV", "USO", "UNG", "DBA", "WEAT", "COPX"],
+    "crypto_adjacent": ["COIN", "MARA", "RIOT", "MSTR"],
+    # China / HK ADRs (tradeable on US exchanges, Tiger Brokers, IBKR)
+    "china_adr": ["BABA", "JD", "PDD", "NIO", "XPEV", "LI", "BIDU", "TME", "BILI", "FUTU"],
+    "china_tech": ["BABA", "PDD", "JD", "BIDU", "NTES", "TME", "BILI", "IQ", "WB", "ZTO"],
+    "china_ev": ["NIO", "XPEV", "LI", "BYD"],
+    # Hong Kong / Singapore via ETFs (Tiger Brokers supports HK stocks directly)
+    "hk_etf": ["EWH", "FXI", "MCHI", "KWEB", "GXC"],
+    "singapore_etf": ["EWS"],
+    # European stocks (ADRs tradeable on US, Tiger, IBKR)
+    "europe_adr": ["SAP", "ASML", "NVO", "AZN", "SHEL", "TTE", "UL", "DEO", "BP", "HSBC"],
+    "europe_luxury": ["LVMH", "MC.PA"],  # Some need European exchange
+    "europe_etf": ["VGK", "EZU", "EWG", "EWU", "EWQ", "EWI", "EWP"],
+    # Latin America
+    "latam_adr": ["MELI", "NU", "VALE", "PBR", "ITUB", "BSBR", "SQM", "GGAL"],
+    "latam_etf": ["EWZ", "EWW", "ILF"],
+    # India / Other Asia
+    "india_etf": ["INDA", "SMIN", "EPI"],
+    "asia_etf": ["AAXJ", "EWT", "EWY", "EWA", "EWJ"],
+    # Commodities (via ETFs/stocks)
+    "commodities": ["GLD", "SLV", "USO", "UNG", "DBA", "WEAT", "COPX", "CPER",
+                     "FCX", "NEM", "GOLD", "BHP", "RIO", "VALE"],
+    # REITs
+    "reits": ["O", "AMT", "PLD", "EQIX", "SPG", "DLR", "VNQ", "XLRE"],
 }
 
 

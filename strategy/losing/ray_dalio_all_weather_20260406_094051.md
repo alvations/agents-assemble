@@ -1,0 +1,69 @@
+# LOSING Strategy: ray_dalio_all_weather
+**Generated:** 2026-04-06T09:40:51.349283
+**Assessment:** NEUTRAL — Mixed signals. Paper trade before committing capital.
+
+## Performance Summary
+- **total_return:** 1.92%
+- **sharpe_ratio:** -0.29
+- **max_drawdown:** -17.06%
+- **win_rate:** 51.66%
+- **alpha:** -8.18%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 1.0%
+- **stop_loss:** 20.5%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 17.1%
+- **rebalance_frequency:** monthly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** Enter on any weekly rebalance day. No specific timing edge detected.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Position Recommendations
+
+### VTI — BUY
+- Entry limit: $227.78 (0.5% below avg cost)
+- Stop-loss: $182.05 (20.5% below entry)
+- Take-profit: $240.37 (5.0% above entry)
+- Position size: 1.0% of portfolio
+- Trailing stop: 16.4% trailing stop after 2.5% gain
+
+### TLT — BUY
+- Entry limit: $104.09 (0.5% below avg cost)
+- Stop-loss: $83.20 (20.5% below entry)
+- Take-profit: $109.85 (5.0% above entry)
+- Position size: 1.0% of portfolio
+- Trailing stop: 16.4% trailing stop after 2.5% gain
+
+### IEF — BUY
+- Entry limit: $90.67 (0.5% below avg cost)
+- Stop-loss: $72.47 (20.5% below entry)
+- Take-profit: $95.68 (5.0% above entry)
+- Position size: 1.0% of portfolio
+- Trailing stop: 16.4% trailing stop after 2.5% gain
+
+### GLD — BUY
+- Entry limit: $186.51 (0.5% below avg cost)
+- Stop-loss: $149.06 (20.5% below entry)
+- Take-profit: $196.81 (5.0% above entry)
+- Position size: 1.0% of portfolio
+- Trailing stop: 16.4% trailing stop after 2.5% gain
+
+### XLE — BUY
+- Entry limit: $38.12 (0.5% below avg cost)
+- Stop-loss: $30.47 (20.5% below entry)
+- Take-profit: $40.23 (5.0% above entry)
+- Position size: 1.0% of portfolio
+- Trailing stop: 16.4% trailing stop after 2.5% gain
+
+## Lessons Learned
+
+This strategy lost money. Key issues:
+- Sharpe ratio: -0.29 (target > 0.5)
+- Max drawdown: -17.06% (target > -20%)
+- Alpha: -8.18% if available (target > 0%)
+
+**DO NOT REPEAT** these patterns without fundamental strategy changes.
