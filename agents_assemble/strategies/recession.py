@@ -121,6 +121,8 @@ def _safe_get(data, sym, indicator, date):
         return None
     if date in df.index:
         val = df.loc[date, indicator]
+        if isinstance(val, pd.Series):
+            val = val.iloc[0]
         return float(val) if not pd.isna(val) else None
     try:
         idx = df.index.get_indexer([date], method="nearest")[0]
@@ -130,7 +132,7 @@ def _safe_get(data, sym, indicator, date):
                 return None  # Data too stale
             val = df.iloc[idx][indicator]
             return float(val) if not pd.isna(val) else None
-    except (IndexError, KeyError):
+    except (IndexError, KeyError, TypeError):
         pass
     return None
 
@@ -165,7 +167,7 @@ class RecessionDetector(BasePersona):
 
         if regime["is_recession"]:
             # Defensive positioning
-            return {
+            weights = {
                 "XLP": 0.15,  # Consumer staples
                 "XLV": 0.10,  # Healthcare
                 "TLT": 0.30,  # Long bonds
@@ -177,7 +179,7 @@ class RecessionDetector(BasePersona):
             }
         else:
             # Risk-on positioning
-            return {
+            weights = {
                 "SPY": 0.35,
                 "QQQ": 0.30,
                 "TLT": 0.15,
@@ -187,6 +189,8 @@ class RecessionDetector(BasePersona):
                 "XLV": 0.0,
                 "SHY": 0.0,
             }
+
+        return {k: v for k, v in weights.items() if k in prices}
 
 
 # ---------------------------------------------------------------------------
@@ -215,7 +219,7 @@ class TreasurySafe(BasePersona):
         regime = detect_recession_regime(date, data, prices)
 
         if regime["is_recession"]:
-            return {
+            weights = {
                 "TLT": 0.45,  # Long bonds (biggest winner in recession)
                 "IEF": 0.20,
                 "GLD": 0.20,  # Gold hedge
@@ -225,7 +229,7 @@ class TreasurySafe(BasePersona):
             }
         elif regime["confidence"] > 0.3:
             # Mixed signals — balanced
-            return {
+            weights = {
                 "IEF": 0.30,
                 "TLT": 0.15,
                 "GLD": 0.15,
@@ -235,7 +239,7 @@ class TreasurySafe(BasePersona):
             }
         else:
             # All clear — moderate bond allocation
-            return {
+            weights = {
                 "SHY": 0.40,  # Short duration (rates may rise)
                 "IEF": 0.25,
                 "TLT": 0.10,
@@ -243,6 +247,8 @@ class TreasurySafe(BasePersona):
                 "TIP": 0.10,
                 "SPY": 0.0,
             }
+
+        return {k: v for k, v in weights.items() if k in prices}
 
 
 # ---------------------------------------------------------------------------

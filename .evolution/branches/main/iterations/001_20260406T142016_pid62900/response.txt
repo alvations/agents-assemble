@@ -1,0 +1,6 @@
+Syntax is valid. Summary of changes:
+
+- **Removed dead imports**: `json`, `numpy`, `pandas`, and `Tuple` were imported but never used; replaced with `math` (needed for NaN/inf check)
+- **Fixed NaN/inf bug in `grade_metric`**: Added `math.isfinite()` guard — metrics producing `NaN` (e.g., Sharpe when vol=0) or `inf` (e.g., profit_factor with zero losses) now correctly grade as "F" instead of silently getting wrong grades
+- **Extracted `GRADE_SCORES` to module-level constant**: Was being recreated on every loop iteration inside `compute_composite_score`
+- **Removed redundant `isinstance` check**: `r['alpha']` is always numeric (comes from `metrics.get("alpha", 0)`), so the `isinstance` guard and "N/A" branch were dead code

@@ -45,30 +45,14 @@ GRADE_THRESHOLDS = {
 
 GRADE_SCORES = {"A": 100, "B": 80, "C": 60, "D": 40, "F": 20}
 
-# Default values for missing metrics — 0 is misleading for some metrics
-# (e.g., max_drawdown=0 means "no drawdown" which would falsely grade as A)
-_METRIC_MISSING_DEFAULTS = {
-    "max_drawdown": -1.0,
-}
-
-
-def _safe_float(value: Any) -> float:
-    """Coerce a value to float, returning NaN for non-numeric types."""
-    if isinstance(value, (int, float)):
-        return float(value)
-    return float("nan")
-
 
 def grade_metric(metric: str, value: float) -> str:
     """Grade a single metric value."""
-    value = _safe_float(value)
     if not math.isfinite(value):
         return "F"
-    thresholds = GRADE_THRESHOLDS.get(metric)
-    if thresholds is None:
-        return "F"
+    thresholds = GRADE_THRESHOLDS.get(metric, {})
     for grade in ["A", "B", "C", "D"]:
-        if value >= thresholds[grade]:
+        if value >= thresholds.get(grade, -999):
             return grade
     return "F"
 
@@ -77,7 +61,7 @@ def compute_composite_score(metrics: Dict[str, float]) -> float:
     """Compute weighted composite score (0-100)."""
     score = 0.0
     for metric, weight in METRICS_WEIGHTS.items():
-        value = metrics.get(metric, _METRIC_MISSING_DEFAULTS.get(metric, 0))
+        value = metrics.get(metric, 0)
         grade = grade_metric(metric, value)
         score += GRADE_SCORES[grade] * weight
     return score
@@ -98,16 +82,13 @@ def diagnose_strategy(
     """
     grades = {}
     for metric in METRICS_WEIGHTS:
-        value = metrics.get(metric, _METRIC_MISSING_DEFAULTS.get(metric, 0))
+        value = metrics.get(metric, 0)
         grades[metric] = {
             "value": value,
             "grade": grade_metric(metric, value),
         }
 
-    # Compute composite directly from already-graded values (avoids re-grading)
-    composite = sum(
-        GRADE_SCORES[grades[m]["grade"]] * w for m, w in METRICS_WEIGHTS.items()
-    )
+    composite = compute_composite_score(metrics)
 
     # Identify strengths and weaknesses
     strengths = []
@@ -120,12 +101,12 @@ def diagnose_strategy(
         elif info["grade"] in ("D", "F"):
             weaknesses.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
 
-    # Strategy-specific suggestions (use same defaults as scoring)
-    sharpe = metrics.get("sharpe_ratio", _METRIC_MISSING_DEFAULTS.get("sharpe_ratio", 0))
-    max_dd = metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0))
-    win_rate = metrics.get("win_rate", _METRIC_MISSING_DEFAULTS.get("win_rate", 0))
-    alpha = metrics.get("alpha", _METRIC_MISSING_DEFAULTS.get("alpha", 0))
-    total_ret = metrics.get("total_return", _METRIC_MISSING_DEFAULTS.get("total_return", 0))
+    # Strategy-specific suggestions
+    sharpe = metrics.get("sharpe_ratio", 0)
+    max_dd = metrics.get("max_drawdown", 0)
+    win_rate = metrics.get("win_rate", 0)
+    alpha = metrics.get("alpha", 0)
+    total_ret = metrics.get("total_return", 0)
     num_trades = trade_metrics.get("num_trades", 0) if trade_metrics else 0
 
     if max_dd < -0.25:
@@ -186,20 +167,14 @@ def rank_strategies(results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "name": r["name"],
             "composite_score": diagnosis["composite_score"],
             "overall_grade": diagnosis["overall_grade"],
-            "sharpe": _safe_float(r["metrics"].get("sharpe_ratio", 0)),
-            "alpha": _safe_float(r["metrics"].get("alpha", 0)),
-            "max_dd": _safe_float(r["metrics"].get(
-                "max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)
-            )),
-            "total_return": _safe_float(r["metrics"].get("total_return", 0)),
+            "sharpe": r["metrics"].get("sharpe_ratio", 0),
+            "alpha": r["metrics"].get("alpha", 0),
+            "max_dd": r["metrics"].get("max_drawdown", 0),
+            "total_return": r["metrics"].get("total_return", 0),
             "diagnosis": diagnosis,
         })
 
-    # Use _safe_float to ensure NaN doesn't break sort (NaN sorts to bottom)
-    ranked.sort(
-        key=lambda x: (x["composite_score"], x["sharpe"] if math.isfinite(x["sharpe"]) else -999),
-        reverse=True,
-    )
+    ranked.sort(key=lambda x: x["composite_score"], reverse=True)
 
     # Assign ranks
     for i, r in enumerate(ranked):
@@ -237,16 +212,14 @@ def generate_judge_report(results: List[Dict[str, Any]]) -> str:
         lines.extend([
             f"\n## #{r['rank']} {r['name']} (Score: {d['composite_score']:.0f}, Grade: {d['overall_grade']})",
             "",
+            "**Strengths:**",
         ])
-        if d["strengths"]:
-            lines.append("**Strengths:**")
-            for s in d["strengths"]:
-                lines.append(f"- {s}")
+        for s in d["strengths"]:
+            lines.append(f"- {s}")
 
-        if d["weaknesses"]:
-            lines.append("\n**Weaknesses:**")
-            for w in d["weaknesses"]:
-                lines.append(f"- {w}")
+        lines.append("\n**Weaknesses:**")
+        for w in d["weaknesses"]:
+            lines.append(f"- {w}")
 
         lines.append("\n**Improvement Suggestions:**")
         for s in d["suggestions"]:

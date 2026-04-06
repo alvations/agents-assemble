@@ -112,3 +112,35 @@ Syntax is clean. Here's what I changed:
 - **Added staleness guard to `_safe_get`**: The nearest-date fallback via `get_indexer(method="nearest")` could return arbitrarily old data (months/years stale). Now rejects data more than 10 days from the requested date.
 - **Fixed NaN bug
 
+## [2026-04-06T14:21:05.830296+00:00] Branch: main | Run: 20260406T140930_pid62145 | Iter 3 | $0.4433
+### recession_strategies.py
+Syntax is clean. Here's what I changed:
+
+- **Filtered `RecessionDetector.generate_signals` returns by `prices`**: Both branches now return `{k: v for k, v in weights.items() if k in prices}`, matching the pattern used by `DefensiveRotation` and `GoldBug` — prevents returning weights for symbols the backtester can't trade
+- **Filtered `TreasurySafe.generate_signals` returns by `prices`**: All three branches (recession/mixed/clear) now filter the same way — same consistency fix
+- **Fixed duplicate
+
+## [2026-04-06T14:22:04.935353+00:00] Branch: main | Run: 20260406T142016_pid62900 | Iter 1 | $0.3531
+### judge.py
+Syntax is valid. Summary of changes:
+
+- **Removed dead imports**: `json`, `numpy`, `pandas`, and `Tuple` were imported but never used; replaced with `math` (needed for NaN/inf check)
+- **Fixed NaN/inf bug in `grade_metric`**: Added `math.isfinite()` guard — metrics producing `NaN` (e.g., Sharpe when vol=0) or `inf` (e.g., profit_factor with zero losses) now correctly grade as "F" instead of silently getting wrong grades
+- **Extracted `GRADE_SCORES` to module-level constant**: Was being recreated
+
+## [2026-04-06T14:24:05.275230+00:00] Branch: main | Run: 20260406T142016_pid62900 | Iter 2 | $0.4465
+### judge.py
+Syntax is valid. Summary of changes:
+
+- **Fixed `grade_metric` for unknown metrics**: Returns "F" instead of silently grading as "A" when a metric isn't in `GRADE_THRESHOLDS` (the old `{}.get(grade, -999)` fallback meant any value passed all thresholds)
+- **Fixed missing `max_drawdown` false-A bug**: Added `_METRIC_MISSING_DEFAULTS` so missing `max_drawdown` defaults to -1.0 (grade "F") instead of 0 (grade "A" — "no drawdown")
+- **Cleaned up empty report sections**: "Strengths:" and "Weaknesses:
+
+## [2026-04-06T14:25:47.123105+00:00] Branch: main | Run: 20260406T142016_pid62900 | Iter 3 | $0.3586
+### judge.py
+All tests pass. Summary of changes:
+
+- **Fixed crash on `None`/non-numeric metric values**: Added `_safe_float()` helper; `grade_metric` now returns "F" for `None`, strings, etc. instead of raising `TypeError`
+- **Eliminated duplicate grading in `diagnose_strategy`**: Composite score is now computed directly from already-graded values instead of calling `compute_composite_score` which re-grades every metric
+- **Fixed inconsistent missing-metric defaults in suggestion logic**: `diagnose_strategy`
+

@@ -1,392 +1,361 @@
-"""Recession indicators and recession-proof strategies for agents-assemble.
+"""Hypothesis judge for agents-assemble.
 
-Recession Detection:
-- Yield curve inversion (10Y-2Y spread, 10Y-3M spread)
-- SMA200 death cross on SPY
-- High yield spreads widening
-- Market breadth deterioration
-- VIX regime
+Analyzes backtest results, identifies weaknesses in trading strategies,
+suggests parameter tuning, and ranks strategies for deployment.
 
-Recession-Proof Strategies:
-1. RecessionDetector    — Regime detection, shifts to defensive
-2. TreasurySafe        — Flight to quality during downturns
-3. DefensiveRotation   — Rotate to staples/utilities/healthcare in recessions
-4. GoldBug             — Gold and precious metals as recession hedge
+Can optionally use Claude (via claude_code_client) for deeper analysis.
 """
 
 from __future__ import annotations
 
+import math
+from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import numpy as np
-import pandas as pd
 
-from personas import BasePersona, PersonaConfig
+KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
 # ---------------------------------------------------------------------------
-# Recession Regime Detection
+# Scoring rubric
 # ---------------------------------------------------------------------------
-def detect_recession_regime(
-    date: pd.Timestamp,
-    data: Dict[str, pd.DataFrame],
-    prices: Dict[str, float],
-) -> Dict[str, Any]:
-    """Detect if we're in a recession-like regime.
+METRICS_WEIGHTS = {
+    "sharpe_ratio": 0.25,
+    "sortino_ratio": 0.15,
+    "total_return": 0.15,
+    "max_drawdown": 0.15,  # Inverted — less negative is better
+    "alpha": 0.15,
+    "win_rate": 0.05,
+    "profit_factor": 0.05,
+    "calmar_ratio": 0.05,
+}
 
-    Uses multiple signals:
-    1. SPY below SMA200 (bear market)
-    2. TLT rising (flight to quality)
-    3. IWM underperforming SPY (small caps weaker = risk-off)
-    4. VIX proxy (high volatility in SPY)
+# Benchmark thresholds for grading
+GRADE_THRESHOLDS = {
+    "sharpe_ratio": {"A": 1.5, "B": 1.0, "C": 0.5, "D": 0.0, "F": -999},
+    "sortino_ratio": {"A": 2.0, "B": 1.2, "C": 0.5, "D": 0.0, "F": -999},
+    "total_return": {"A": 0.50, "B": 0.25, "C": 0.10, "D": 0.0, "F": -999},
+    "max_drawdown": {"A": -0.05, "B": -0.10, "C": -0.20, "D": -0.30, "F": -999},
+    "alpha": {"A": 0.10, "B": 0.05, "C": 0.0, "D": -0.05, "F": -999},
+    "win_rate": {"A": 0.55, "B": 0.50, "C": 0.45, "D": 0.40, "F": 0.0},
+    "calmar_ratio": {"A": 2.0, "B": 1.0, "C": 0.5, "D": 0.0, "F": -999},
+    "profit_factor": {"A": 2.0, "B": 1.5, "C": 1.1, "D": 1.0, "F": 0.0},
+}
 
-    Returns dict with regime info and confidence score.
-    """
-    regime = {
-        "is_recession": False,
-        "confidence": 0.0,
-        "signals": {},
-    }
+GRADE_SCORES = {"A": 100, "B": 80, "C": 60, "D": 40, "F": 20}
 
-    signal_count = 0
-    total_signals = 0
-
-    # Fetch SPY indicators once (used by signals 1, 2, 4, 5)
-    spy_price = prices.get("SPY")
-    spy_sma50 = _safe_get(data, "SPY", "sma_50", date) if "SPY" in data else None
-    spy_sma200 = _safe_get(data, "SPY", "sma_200", date) if "SPY" in data else None
-    spy_vol = _safe_get(data, "SPY", "vol_20", date) if "SPY" in data else None
-    spy_rsi = _safe_get(data, "SPY", "rsi_14", date) if "SPY" in data else None
-
-    # Signal 1: SPY below SMA200
-    if spy_sma200 is not None and spy_price is not None:
-        total_signals += 1
-        if spy_price < spy_sma200:
-            signal_count += 1
-            regime["signals"]["spy_below_sma200"] = True
-        else:
-            regime["signals"]["spy_below_sma200"] = False
-
-    # Signal 2: SPY SMA50 < SMA200 (death cross)
-    if spy_sma50 is not None and spy_sma200 is not None:
-        total_signals += 1
-        if spy_sma50 < spy_sma200:
-            signal_count += 1
-            regime["signals"]["death_cross"] = True
-        else:
-            regime["signals"]["death_cross"] = False
-
-    # Signal 3: TLT trending up (bonds rally = flight to quality)
-    if "TLT" in data:
-        tlt_sma50 = _safe_get(data, "TLT", "sma_50", date)
-        tlt_sma200 = _safe_get(data, "TLT", "sma_200", date)
-        if tlt_sma50 is not None and tlt_sma200 is not None:
-            total_signals += 1
-            if tlt_sma50 > tlt_sma200:
-                signal_count += 1
-                regime["signals"]["tlt_uptrend"] = True
-            else:
-                regime["signals"]["tlt_uptrend"] = False
-
-    # Signal 4: High volatility
-    if spy_vol is not None:
-        total_signals += 1
-        if spy_vol > 0.018:  # Annualized ~28%
-            signal_count += 1
-            regime["signals"]["high_vol"] = True
-        else:
-            regime["signals"]["high_vol"] = False
-
-    # Signal 5: RSI below 40 on SPY
-    if spy_rsi is not None:
-        total_signals += 1
-        if spy_rsi < 40:
-            signal_count += 1
-            regime["signals"]["spy_oversold"] = True
-        else:
-            regime["signals"]["spy_oversold"] = False
-
-    if total_signals > 0:
-        regime["confidence"] = signal_count / total_signals
-        regime["is_recession"] = regime["confidence"] >= 0.5  # majority of available signals
-
-    return regime
-
-
-def _safe_get(data, sym, indicator, date):
-    if sym not in data:
-        return None
-    df = data[sym]
-    if indicator not in df.columns:
-        return None
-    if date in df.index:
-        val = df.loc[date, indicator]
-        return float(val) if not pd.isna(val) else None
-    try:
-        idx = df.index.get_indexer([date], method="nearest")[0]
-        if idx >= 0:
-            nearest_date = df.index[idx]
-            if abs((date - nearest_date).days) > 10:
-                return None  # Data too stale
-            val = df.iloc[idx][indicator]
-            return float(val) if not pd.isna(val) else None
-    except (IndexError, KeyError):
-        pass
-    return None
-
-
-# ---------------------------------------------------------------------------
-# 1. Recession Detector — Adaptive regime switching
-# ---------------------------------------------------------------------------
-class RecessionDetector(BasePersona):
-    """Adaptive strategy that detects recession regime and switches positioning.
-
-    Normal regime: 70% stocks (SPY/QQQ), 20% bonds (TLT), 10% gold (GLD)
-    Recession regime: 20% stocks (XLP/XLV), 50% bonds (TLT/IEF), 20% gold (GLD), 10% cash
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Recession Detector (Adaptive)",
-            description="Regime-switching: risk-on in growth, defensive in recession",
-            risk_tolerance=0.4,
-            max_position_size=0.50,
-            max_positions=6,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "SPY", "QQQ", "TLT", "IEF", "GLD",
-                "XLP", "XLV", "SHY",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        regime = detect_recession_regime(date, data, prices)
-
-        if regime["is_recession"]:
-            # Defensive positioning
-            return {
-                "XLP": 0.15,  # Consumer staples
-                "XLV": 0.10,  # Healthcare
-                "TLT": 0.30,  # Long bonds
-                "IEF": 0.15,  # Intermediate bonds
-                "GLD": 0.20,  # Gold
-                "SHY": 0.05,  # Short-term treasuries (cash proxy)
-                "SPY": 0.0,   # Exit stocks
-                "QQQ": 0.0,   # Exit tech
-            }
-        else:
-            # Risk-on positioning
-            return {
-                "SPY": 0.35,
-                "QQQ": 0.30,
-                "TLT": 0.15,
-                "GLD": 0.10,
-                "IEF": 0.05,
-                "XLP": 0.0,
-                "XLV": 0.0,
-                "SHY": 0.0,
-            }
-
-
-# ---------------------------------------------------------------------------
-# 2. Treasury Safe Haven
-# ---------------------------------------------------------------------------
-class TreasurySafe(BasePersona):
-    """Flight to quality strategy during downturns.
-
-    Thesis: When stocks sell off, treasuries rally. Go long duration
-    when recession signals fire, short duration otherwise.
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Treasury Safe Haven",
-            description="Flight to quality: long-duration bonds when recession signals fire",
-            risk_tolerance=0.2,
-            max_position_size=0.40,
-            max_positions=4,
-            rebalance_frequency="weekly",
-            universe=universe or ["TLT", "IEF", "SHY", "TIP", "GLD", "SPY"],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        regime = detect_recession_regime(date, data, prices)
-
-        if regime["is_recession"]:
-            return {
-                "TLT": 0.45,  # Long bonds (biggest winner in recession)
-                "IEF": 0.20,
-                "GLD": 0.20,  # Gold hedge
-                "TIP": 0.10,  # Inflation protection
-                "SHY": 0.0,
-                "SPY": 0.0,
-            }
-        elif regime["confidence"] > 0.3:
-            # Mixed signals — balanced
-            return {
-                "IEF": 0.30,
-                "TLT": 0.15,
-                "GLD": 0.15,
-                "SHY": 0.20,
-                "TIP": 0.10,
-                "SPY": 0.0,
-            }
-        else:
-            # All clear — moderate bond allocation
-            return {
-                "SHY": 0.40,  # Short duration (rates may rise)
-                "IEF": 0.25,
-                "TLT": 0.10,
-                "GLD": 0.10,
-                "TIP": 0.10,
-                "SPY": 0.0,
-            }
-
-
-# ---------------------------------------------------------------------------
-# 3. Defensive Rotation
-# ---------------------------------------------------------------------------
-class DefensiveRotation(BasePersona):
-    """Rotate into defensive sectors during recession signals.
-
-    Thesis: Consumer staples, utilities, and healthcare outperform
-    during recessions because demand is inelastic.
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Defensive Rotation",
-            description="Rotate to staples/utilities/healthcare when recession signals fire",
-            risk_tolerance=0.3,
-            max_position_size=0.20,
-            max_positions=10,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                # Defensive sectors
-                "XLP", "XLU", "XLV",  # Sector ETFs
-                "PG", "KO", "PEP", "CL",  # Consumer staples
-                "JNJ", "MRK", "ABBV", "UNH",  # Healthcare
-                "NEE", "DUK", "SO",  # Utilities
-                # Growth (for when things are good)
-                "SPY", "QQQ", "XLK",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        regime = detect_recession_regime(date, data, prices)
-        weights = {}
-
-        if regime["is_recession"]:
-            # Full defensive
-            defensive = ["XLP", "XLU", "XLV", "PG", "KO", "JNJ", "MRK", "NEE"]
-            available = [s for s in defensive if s in prices]
-            if available:
-                per_stock = min(0.90 / len(available), self.config.max_position_size)
-                for sym in available:
-                    weights[sym] = per_stock
-            # Exit growth
-            for sym in ["SPY", "QQQ", "XLK"]:
-                weights[sym] = 0.0
-        else:
-            # Risk-on with some defensive hedge
-            weights["SPY"] = 0.30
-            weights["QQQ"] = 0.25
-            weights["XLK"] = 0.15
-            weights["XLP"] = 0.10
-            weights["XLV"] = 0.10
-            weights["XLU"] = 0.05
-
-        return {k: v for k, v in weights.items() if k in prices}
-
-
-# ---------------------------------------------------------------------------
-# 4. Gold Bug
-# ---------------------------------------------------------------------------
-class GoldBug(BasePersona):
-    """Gold and precious metals strategy for recession/inflation hedge.
-
-    Thesis: Gold outperforms during recessions, currency debasement,
-    and inflation. Mining stocks provide leveraged exposure.
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Gold Bug (Precious Metals)",
-            description="Gold/silver/miners as recession and inflation hedge",
-            risk_tolerance=0.5,
-            max_position_size=0.25,
-            max_positions=6,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "GLD", "SLV",  # Physical gold/silver ETFs
-                "GDX", "GDXJ",  # Gold miners
-                "NEM", "GOLD", "AEM",  # Individual miners
-                "IAU",  # Alternative gold ETF
-                "SPY", "TLT",  # Required for recession regime detection
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        regime = detect_recession_regime(date, data, prices)
-
-        # Always hold some gold
-        base_gold = 0.20
-
-        if regime["is_recession"]:
-            # Max gold allocation
-            weights["GLD"] = 0.35
-            weights["SLV"] = 0.15
-            weights["GDX"] = 0.20
-            weights["NEM"] = 0.10
-            weights["IAU"] = 0.10
-        else:
-            # Check gold trend
-            gld_sma50 = _safe_get(data, "GLD", "sma_50", date)
-            gld_sma200 = _safe_get(data, "GLD", "sma_200", date)
-            gld_price = prices.get("GLD")
-
-            if gld_sma50 is not None and gld_sma200 is not None and gld_price is not None:
-                if gld_sma50 > gld_sma200:
-                    # Gold uptrend — increase allocation
-                    weights["GLD"] = 0.30
-                    weights["GDX"] = 0.20
-                    weights["SLV"] = 0.15
-                    weights["NEM"] = 0.10
-                else:
-                    # Gold downtrend — minimal
-                    weights["GLD"] = 0.15
-                    weights["IAU"] = 0.10
-            else:
-                weights["GLD"] = base_gold
-
-        return {k: v for k, v in weights.items() if k in prices}
-
-
-# ---------------------------------------------------------------------------
-# Registry
-# ---------------------------------------------------------------------------
-RECESSION_STRATEGIES = {
-    "recession_detector": RecessionDetector,
-    "treasury_safe": TreasurySafe,
-    "defensive_rotation": DefensiveRotation,
-    "gold_bug": GoldBug,
+# Default values for missing metrics — 0 is misleading for some metrics
+# (e.g., max_drawdown=0 means "no drawdown" which would falsely grade as A)
+_METRIC_MISSING_DEFAULTS = {
+    "max_drawdown": -1.0,
 }
 
 
-def get_recession_strategy(name: str, **kwargs) -> BasePersona:
-    cls = RECESSION_STRATEGIES.get(name)
-    if cls is None:
-        raise ValueError(f"Unknown strategy: {name}. Available: {list(RECESSION_STRATEGIES.keys())}")
-    return cls(**kwargs)
+def _safe_float(value: Any) -> float:
+    """Coerce a value to float, returning NaN for non-numeric types."""
+    if isinstance(value, (int, float)):
+        return float(value)
+    return float("nan")
+
+
+def grade_metric(metric: str, value: float) -> str:
+    """Grade a single metric value."""
+    value = _safe_float(value)
+    if not math.isfinite(value):
+        return "F"
+    thresholds = GRADE_THRESHOLDS.get(metric)
+    if thresholds is None:
+        return "F"
+    for grade in ["A", "B", "C", "D"]:
+        if value >= thresholds[grade]:
+            return grade
+    return "F"
+
+
+def compute_composite_score(metrics: Dict[str, float]) -> float:
+    """Compute weighted composite score (0-100)."""
+    score = 0.0
+    for metric, weight in METRICS_WEIGHTS.items():
+        value = metrics.get(metric, _METRIC_MISSING_DEFAULTS.get(metric, 0))
+        grade = grade_metric(metric, value)
+        score += GRADE_SCORES[grade] * weight
+    return score
+
+
+# ---------------------------------------------------------------------------
+# Diagnosis engine
+# ---------------------------------------------------------------------------
+def diagnose_strategy(
+    name: str,
+    metrics: Dict[str, float],
+    trade_metrics: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Diagnose a strategy's strengths and weaknesses.
+
+    Returns:
+        Dict with grades, diagnosis, and improvement suggestions.
+    """
+    grades = {}
+    for metric in METRICS_WEIGHTS:
+        value = metrics.get(metric, _METRIC_MISSING_DEFAULTS.get(metric, 0))
+        grades[metric] = {
+            "value": value,
+            "grade": grade_metric(metric, value),
+        }
+
+    # Compute composite directly from already-graded values (avoids re-grading)
+    composite = sum(
+        GRADE_SCORES[grades[m]["grade"]] * w for m, w in METRICS_WEIGHTS.items()
+    )
+
+    # Identify strengths and weaknesses
+    strengths = []
+    weaknesses = []
+    suggestions = []
+
+    for metric, info in grades.items():
+        if info["grade"] in ("A", "B"):
+            strengths.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
+        elif info["grade"] in ("D", "F"):
+            weaknesses.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
+
+    # Strategy-specific suggestions (use same defaults as scoring)
+    sharpe = metrics.get("sharpe_ratio", _METRIC_MISSING_DEFAULTS.get("sharpe_ratio", 0))
+    max_dd = metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0))
+    win_rate = metrics.get("win_rate", _METRIC_MISSING_DEFAULTS.get("win_rate", 0))
+    alpha = metrics.get("alpha", _METRIC_MISSING_DEFAULTS.get("alpha", 0))
+    total_ret = metrics.get("total_return", _METRIC_MISSING_DEFAULTS.get("total_return", 0))
+    num_trades = trade_metrics.get("num_trades", 0) if trade_metrics else 0
+
+    if max_dd < -0.25:
+        suggestions.append("Add trailing stop-loss (e.g., 15-20% from peak) to limit drawdowns")
+        suggestions.append("Consider position sizing via Kelly criterion or vol-targeting")
+
+    if win_rate < 0.40:
+        suggestions.append("Low win rate — ensure winners are large enough (check profit factor)")
+        suggestions.append("Consider tighter entry criteria or waiting for confirmation signals")
+
+    if sharpe < 0 and total_ret < 0:
+        suggestions.append("Strategy is destroying capital — consider inverting signals or switching regime")
+        suggestions.append("Add regime detection (trending vs mean-reverting market filter)")
+
+    if sharpe > 0 and alpha < 0:
+        suggestions.append("Positive returns but negative alpha — strategy just follows market beta")
+        suggestions.append("Reduce market exposure or add hedging (inverse ETF position in downtrends)")
+
+    if num_trades > 500:
+        suggestions.append("High trade count increases transaction costs — consider longer holding periods")
+        suggestions.append("Increase rebalance frequency threshold or add minimum holding period")
+
+    if num_trades < 20:
+        suggestions.append("Very few trades — strategy may be too selective, missing opportunities")
+        suggestions.append("Relax entry criteria or expand the universe of tradeable instruments")
+
+    if sharpe > 1.0 and max_dd > -0.15:
+        suggestions.append("Strong strategy! Consider scaling up position sizes gradually")
+        suggestions.append("Test on different time periods to confirm robustness (2020, 2018-2019)")
+
+    if not suggestions:
+        suggestions.append("Strategy is performing adequately — focus on robustness testing across market regimes")
+
+    return {
+        "name": name,
+        "composite_score": composite,
+        "overall_grade": "A" if composite >= 85 else "B" if composite >= 70 else "C" if composite >= 55 else "D" if composite >= 40 else "F",
+        "grades": grades,
+        "strengths": strengths,
+        "weaknesses": weaknesses,
+        "suggestions": suggestions,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Ranking and comparison
+# ---------------------------------------------------------------------------
+def rank_strategies(results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Rank multiple strategy results by composite score."""
+    ranked = []
+    for r in results:
+        if r.get("status") != "success" or "metrics" not in r:
+            continue
+        diagnosis = diagnose_strategy(
+            r["name"], r["metrics"], r.get("trade_metrics")
+        )
+        ranked.append({
+            "name": r["name"],
+            "composite_score": diagnosis["composite_score"],
+            "overall_grade": diagnosis["overall_grade"],
+            "sharpe": _safe_float(r["metrics"].get("sharpe_ratio", 0)),
+            "alpha": _safe_float(r["metrics"].get("alpha", 0)),
+            "max_dd": _safe_float(r["metrics"].get(
+                "max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)
+            )),
+            "total_return": _safe_float(r["metrics"].get("total_return", 0)),
+            "diagnosis": diagnosis,
+        })
+
+    # Use _safe_float to ensure NaN doesn't break sort (NaN sorts to bottom)
+    ranked.sort(
+        key=lambda x: (x["composite_score"], x["sharpe"] if math.isfinite(x["sharpe"]) else -999),
+        reverse=True,
+    )
+
+    # Assign ranks
+    for i, r in enumerate(ranked):
+        r["rank"] = i + 1
+
+    return ranked
+
+
+def generate_judge_report(results: List[Dict[str, Any]]) -> str:
+    """Generate a comprehensive judge report."""
+    ranked = rank_strategies(results)
+
+    lines = [
+        "# Strategy Judge Report",
+        f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        f"**Strategies evaluated:** {len(ranked)}",
+        "",
+        "## Rankings",
+        "",
+        "| Rank | Strategy | Score | Grade | Sharpe | Alpha | Max DD | Return |",
+        "|------|----------|-------|-------|--------|-------|--------|--------|",
+    ]
+
+    for r in ranked:
+        lines.append(
+            f"| {r['rank']} | {r['name']} | {r['composite_score']:.0f} | "
+            f"{r['overall_grade']} | {r['sharpe']:.2f} | "
+            f"{r['alpha']:.2%} | "
+            f"{r['max_dd']:.1%} | {r['total_return']:.1%} |"
+        )
+
+    # Detail for each strategy
+    for r in ranked:
+        d = r["diagnosis"]
+        lines.extend([
+            f"\n## #{r['rank']} {r['name']} (Score: {d['composite_score']:.0f}, Grade: {d['overall_grade']})",
+            "",
+        ])
+        if d["strengths"]:
+            lines.append("**Strengths:**")
+            for s in d["strengths"]:
+                lines.append(f"- {s}")
+
+        if d["weaknesses"]:
+            lines.append("\n**Weaknesses:**")
+            for w in d["weaknesses"]:
+                lines.append(f"- {w}")
+
+        lines.append("\n**Improvement Suggestions:**")
+        for s in d["suggestions"]:
+            lines.append(f"- {s}")
+
+    # Deployment recommendation
+    lines.extend([
+        "\n## Deployment Recommendation",
+        "",
+    ])
+
+    if ranked:
+        best = ranked[0]
+        if best["composite_score"] >= 70:
+            lines.append(f"**Deploy:** {best['name']} (Score: {best['composite_score']:.0f})")
+            lines.append(f"Start with small position sizes (25% of intended) for live validation.")
+        else:
+            lines.append("**No strategy meets deployment threshold (Score >= 70).**")
+            lines.append("Continue iterating on strategy design and parameter tuning.")
+
+        if len(ranked) >= 3:
+            lines.append(f"\n**Ensemble candidate:** Combine top 3: "
+                         f"{', '.join(r['name'] for r in ranked[:3])}")
+
+    return "\n".join(lines)
+
+
+def save_judge_report(results: List[Dict[str, Any]]) -> Path:
+    """Generate and save the judge report."""
+    report = generate_judge_report(results)
+    kb_dir = KNOWLEDGE_DIR / "judge_reports"
+    kb_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    path = kb_dir / f"judge_report_{timestamp}.md"
+    path.write_text(report)
+    return path
+
+
+# ---------------------------------------------------------------------------
+# Parameter tuning suggestions
+# ---------------------------------------------------------------------------
+def suggest_parameter_tuning(
+    name: str,
+    metrics: Dict[str, float],
+    persona_config: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, str]]:
+    """Suggest specific parameter changes based on performance."""
+    suggestions = []
+    sharpe = metrics.get("sharpe_ratio", 0)
+    max_dd = metrics.get("max_drawdown", 0)
+    win_rate = metrics.get("win_rate", 0)
+    vol = metrics.get("annual_volatility", 0)
+
+    if max_dd < -0.20:
+        suggestions.append({
+            "parameter": "max_position_size",
+            "current": "0.20-0.30",
+            "suggested": "0.10-0.15",
+            "reason": f"Max drawdown {max_dd:.1%} is too severe. Smaller positions reduce concentration risk."
+        })
+        suggestions.append({
+            "parameter": "stop_loss",
+            "current": "None",
+            "suggested": "0.15 (15% trailing stop)",
+            "reason": "Add stop-loss to automatically exit losing positions before they compound."
+        })
+
+    if vol > 0.25:
+        suggestions.append({
+            "parameter": "rebalance_frequency",
+            "current": "daily/weekly",
+            "suggested": "monthly",
+            "reason": f"Annual vol {vol:.1%} is high. Less frequent rebalancing reduces whipsaw losses."
+        })
+
+    if win_rate < 0.35:
+        suggestions.append({
+            "parameter": "entry_threshold",
+            "current": "current RSI/BB levels",
+            "suggested": "Tighten RSI to < 25 for buy, > 80 for sell",
+            "reason": f"Win rate {win_rate:.1%} is low. More selective entries improve hit rate."
+        })
+
+    if sharpe > 0.8:
+        suggestions.append({
+            "parameter": "max_positions",
+            "current": "8-10",
+            "suggested": "6-8 (concentrate in winners)",
+            "reason": f"Good Sharpe {sharpe:.2f} — concentrating in fewer high-conviction picks may increase returns."
+        })
+
+    return suggestions
 
 
 if __name__ == "__main__":
-    print("=== Recession Strategies ===\n")
-    for key, cls in RECESSION_STRATEGIES.items():
-        inst = cls()
-        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")
+    # Test with sample metrics
+    sample = {
+        "sharpe_ratio": 1.10,
+        "sortino_ratio": 1.65,
+        "total_return": 0.87,
+        "max_drawdown": -0.16,
+        "alpha": 0.146,
+        "win_rate": 0.37,
+        "profit_factor": 1.31,
+        "calmar_ratio": 1.45,
+        "annual_volatility": 0.17,
+    }
+    d = diagnose_strategy("momentum_test", sample, {"num_trades": 700})
+    print(f"Composite Score: {d['composite_score']:.0f} ({d['overall_grade']})")
+    print(f"\nStrengths: {d['strengths']}")
+    print(f"\nWeaknesses: {d['weaknesses']}")
+    print(f"\nSuggestions: {d['suggestions']}")

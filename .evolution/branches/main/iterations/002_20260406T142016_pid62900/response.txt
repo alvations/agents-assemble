@@ -1,0 +1,6 @@
+Syntax is valid. Summary of changes:
+
+- **Fixed `grade_metric` for unknown metrics**: Returns "F" instead of silently grading as "A" when a metric isn't in `GRADE_THRESHOLDS` (the old `{}.get(grade, -999)` fallback meant any value passed all thresholds)
+- **Fixed missing `max_drawdown` false-A bug**: Added `_METRIC_MISSING_DEFAULTS` so missing `max_drawdown` defaults to -1.0 (grade "F") instead of 0 (grade "A" — "no drawdown")
+- **Cleaned up empty report sections**: "Strengths:" and "Weaknesses:" headers are now skipped when their lists are empty
+- **Deterministic ranking on ties**: Sort now uses `(composite_score, sharpe)` as key so tied strategies rank by Sharpe ratio instead of arbitrary insertion order

@@ -1,0 +1,6 @@
+All tests pass. Summary of changes:
+
+- **Fixed crash on `None`/non-numeric metric values**: Added `_safe_float()` helper; `grade_metric` now returns "F" for `None`, strings, etc. instead of raising `TypeError`
+- **Eliminated duplicate grading in `diagnose_strategy`**: Composite score is now computed directly from already-graded values instead of calling `compute_composite_score` which re-grades every metric
+- **Fixed inconsistent missing-metric defaults in suggestion logic**: `diagnose_strategy` suggestion variables now use `_METRIC_MISSING_DEFAULTS` — a missing `max_drawdown` correctly triggers stop-loss suggestions instead of silently appearing as "no drawdown"
+- **Fixed NaN in sort key**: `rank_strategies` uses `_safe_float()` for display values and guards against NaN in the sort comparator to prevent unpredictable ordering

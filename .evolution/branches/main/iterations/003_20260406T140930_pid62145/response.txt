@@ -1,0 +1,6 @@
+Syntax is clean. Here's what I changed:
+
+- **Filtered `RecessionDetector.generate_signals` returns by `prices`**: Both branches now return `{k: v for k, v in weights.items() if k in prices}`, matching the pattern used by `DefensiveRotation` and `GoldBug` — prevents returning weights for symbols the backtester can't trade
+- **Filtered `TreasurySafe.generate_signals` returns by `prices`**: All three branches (recession/mixed/clear) now filter the same way — same consistency fix
+- **Fixed duplicate-index crash in `_safe_get`**: `df.loc[date, indicator]` returns a Series (not scalar) when the index has duplicate dates (possible with yfinance data around DST transitions), causing `float()` to raise. Now extracts `.iloc[0]` from Series results
+- **Catch `TypeError` in `_safe_get` nearest-date fallback**: `get_indexer(method="nearest")` raises `TypeError` on incompatible index types (e.g., string vs datetime) — now caught alongside `IndexError`/`KeyError`
