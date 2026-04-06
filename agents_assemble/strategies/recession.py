@@ -11,8 +11,7 @@ Recession-Proof Strategies:
 1. RecessionDetector    — Regime detection, shifts to defensive
 2. TreasurySafe        — Flight to quality during downturns
 3. DefensiveRotation   — Rotate to staples/utilities/healthcare in recessions
-4. BearMarketHero      — Inverse/short-like positioning via defensive ETFs
-5. GoldBug             — Gold and precious metals as recession hedge
+4. GoldBug             — Gold and precious metals as recession hedge
 """
 
 from __future__ import annotations
@@ -52,35 +51,36 @@ def detect_recession_regime(
     signal_count = 0
     total_signals = 0
 
+    # Fetch SPY indicators once (used by signals 1, 2, 4, 5)
+    spy_price = prices.get("SPY")
+    spy_sma50 = _safe_get(data, "SPY", "sma_50", date) if "SPY" in data else None
+    spy_sma200 = _safe_get(data, "SPY", "sma_200", date) if "SPY" in data else None
+    spy_vol = _safe_get(data, "SPY", "vol_20", date) if "SPY" in data else None
+    spy_rsi = _safe_get(data, "SPY", "rsi_14", date) if "SPY" in data else None
+
     # Signal 1: SPY below SMA200
-    if "SPY" in data:
-        spy_sma200 = _safe_get(data, "SPY", "sma_200", date)
-        spy_price = prices.get("SPY")
-        if spy_sma200 and spy_price:
-            total_signals += 1
-            if spy_price < spy_sma200:
-                signal_count += 1
-                regime["signals"]["spy_below_sma200"] = True
-            else:
-                regime["signals"]["spy_below_sma200"] = False
+    if spy_sma200 is not None and spy_price is not None:
+        total_signals += 1
+        if spy_price < spy_sma200:
+            signal_count += 1
+            regime["signals"]["spy_below_sma200"] = True
+        else:
+            regime["signals"]["spy_below_sma200"] = False
 
     # Signal 2: SPY SMA50 < SMA200 (death cross)
-    if "SPY" in data:
-        spy_sma50 = _safe_get(data, "SPY", "sma_50", date)
-        spy_sma200 = _safe_get(data, "SPY", "sma_200", date)
-        if spy_sma50 and spy_sma200:
-            total_signals += 1
-            if spy_sma50 < spy_sma200:
-                signal_count += 1
-                regime["signals"]["death_cross"] = True
-            else:
-                regime["signals"]["death_cross"] = False
+    if spy_sma50 is not None and spy_sma200 is not None:
+        total_signals += 1
+        if spy_sma50 < spy_sma200:
+            signal_count += 1
+            regime["signals"]["death_cross"] = True
+        else:
+            regime["signals"]["death_cross"] = False
 
     # Signal 3: TLT trending up (bonds rally = flight to quality)
     if "TLT" in data:
         tlt_sma50 = _safe_get(data, "TLT", "sma_50", date)
         tlt_sma200 = _safe_get(data, "TLT", "sma_200", date)
-        if tlt_sma50 and tlt_sma200:
+        if tlt_sma50 is not None and tlt_sma200 is not None:
             total_signals += 1
             if tlt_sma50 > tlt_sma200:
                 signal_count += 1
@@ -89,30 +89,26 @@ def detect_recession_regime(
                 regime["signals"]["tlt_uptrend"] = False
 
     # Signal 4: High volatility
-    if "SPY" in data:
-        spy_vol = _safe_get(data, "SPY", "vol_20", date)
-        if spy_vol:
-            total_signals += 1
-            if spy_vol > 0.018:  # Annualized ~28%
-                signal_count += 1
-                regime["signals"]["high_vol"] = True
-            else:
-                regime["signals"]["high_vol"] = False
+    if spy_vol is not None:
+        total_signals += 1
+        if spy_vol > 0.018:  # Annualized ~28%
+            signal_count += 1
+            regime["signals"]["high_vol"] = True
+        else:
+            regime["signals"]["high_vol"] = False
 
     # Signal 5: RSI below 40 on SPY
-    if "SPY" in data:
-        spy_rsi = _safe_get(data, "SPY", "rsi_14", date)
-        if spy_rsi:
-            total_signals += 1
-            if spy_rsi < 40:
-                signal_count += 1
-                regime["signals"]["spy_oversold"] = True
-            else:
-                regime["signals"]["spy_oversold"] = False
+    if spy_rsi is not None:
+        total_signals += 1
+        if spy_rsi < 40:
+            signal_count += 1
+            regime["signals"]["spy_oversold"] = True
+        else:
+            regime["signals"]["spy_oversold"] = False
 
     if total_signals > 0:
         regime["confidence"] = signal_count / total_signals
-        regime["is_recession"] = regime["confidence"] >= 0.5  # 3+ signals
+        regime["is_recession"] = regime["confidence"] >= 0.5  # majority of available signals
 
     return regime
 
@@ -129,6 +125,9 @@ def _safe_get(data, sym, indicator, date):
     try:
         idx = df.index.get_indexer([date], method="nearest")[0]
         if idx >= 0:
+            nearest_date = df.index[idx]
+            if abs((date - nearest_date).days) > 10:
+                return None  # Data too stale
             val = df.iloc[idx][indicator]
             return float(val) if not pd.isna(val) else None
     except (IndexError, KeyError):
@@ -326,6 +325,7 @@ class GoldBug(BasePersona):
                 "GDX", "GDXJ",  # Gold miners
                 "NEM", "GOLD", "AEM",  # Individual miners
                 "IAU",  # Alternative gold ETF
+                "SPY", "TLT",  # Required for recession regime detection
             ],
         )
         super().__init__(config)
@@ -346,11 +346,11 @@ class GoldBug(BasePersona):
             weights["IAU"] = 0.10
         else:
             # Check gold trend
-            gld_sma50 = self._get_indicator(data, "GLD", "sma_50", date)
-            gld_sma200 = self._get_indicator(data, "GLD", "sma_200", date)
+            gld_sma50 = _safe_get(data, "GLD", "sma_50", date)
+            gld_sma200 = _safe_get(data, "GLD", "sma_200", date)
             gld_price = prices.get("GLD")
 
-            if gld_sma50 and gld_sma200 and gld_price:
+            if gld_sma50 is not None and gld_sma200 is not None and gld_price is not None:
                 if gld_sma50 > gld_sma200:
                     # Gold uptrend — increase allocation
                     weights["GLD"] = 0.30

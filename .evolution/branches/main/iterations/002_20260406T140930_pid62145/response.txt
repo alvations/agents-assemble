@@ -1,0 +1,6 @@
+Syntax is clean. Here's what I changed:
+
+- **Eliminated redundant SPY lookups in `detect_recession_regime`**: `spy_sma200` was fetched twice (signals 1 and 2), and `"SPY" in data` was checked 3 separate times. All 5 SPY indicators are now fetched once upfront.
+- **Added staleness guard to `_safe_get`**: The nearest-date fallback via `get_indexer(method="nearest")` could return arbitrarily old data (months/years stale). Now rejects data more than 10 days from the requested date.
+- **Fixed NaN bug in `GoldBug.generate_signals`**: Switched from `self._get_indicator` to `_safe_get` — `_get_indicator` doesn't check for NaN on its nearest-date path, so `float(NaN)` passes `is not None` checks and silently corrupts comparisons (NaN < NaN → False).
+- **Fixed `GoldBug` broken recession detection**: Universe lacked SPY and TLT, which the backtester uses to determine what data to fetch. Since `detect_recession_regime` needs SPY/TLT data for all 5 signals, GoldBug could never detect a recession.

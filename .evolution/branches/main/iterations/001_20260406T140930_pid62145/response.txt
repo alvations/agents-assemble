@@ -1,0 +1,6 @@
+Syntax is clean. Here's what I changed:
+
+- **Fixed truthiness bugs in `detect_recession_regime`**: Changed 5 checks from `if val:` to `if val is not None:` — RSI of 0 or vol of 0.0 were incorrectly treated as missing data, skipping the signal entirely
+- **Fixed same bug in `GoldBug.generate_signals`**: `gld_sma50 and gld_sma200 and gld_price` → explicit `is not None` checks
+- **Fixed misleading comment**: `# 3+ signals` → `# majority of available signals` since the threshold is 50% of *available* signals (which varies)
+- **Removed phantom `BearMarketHero`** from module docstring — listed as strategy #4 but never implemented

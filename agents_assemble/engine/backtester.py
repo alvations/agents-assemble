@@ -371,7 +371,7 @@ class Backtester:
 
     def _load_data(self) -> Tuple[Dict[str, pd.DataFrame], Optional[pd.DataFrame]]:
         """Load price data for all symbols + benchmark."""
-        from data_fetcher import fetch_ohlcv, fetch_multiple_ohlcv
+        from agents_assemble.data.fetcher import fetch_ohlcv, fetch_multiple_ohlcv
 
         if self._external_data:
             all_data = self._external_data
@@ -433,13 +433,13 @@ class Backtester:
             slippage_pct=self.slippage_pct,
         )
 
-        # Build date index — use union (not intersection) so partial data works
-        date_sets = [set(df.index) for df in all_data.values()]
-        all_dates = sorted(set.union(*date_sets)) if date_sets else []
+        # Build close prices matrix — union index with forward-fill for partial data
+        close_prices = pd.DataFrame({sym: df["Close"] for sym, df in all_data.items()})
+        close_prices = close_prices.sort_index().ffill()
+        common_dates = list(close_prices.index)
 
-        if not all_dates:
+        if not common_dates:
             raise ValueError("No trading dates found across symbols")
-        common_dates = all_dates
 
         # Pre-compute technical indicators per symbol
         enriched_data = {}
@@ -464,33 +464,13 @@ class Backtester:
         # Run simulation
         equity_values = []
         equity_dates = []
-        last_known_prices: Dict[str, float] = {}
 
         for idx, date in enumerate(common_dates):
-            if not self._should_rebalance(date, common_dates, idx):
-                # Still record portfolio value
-                prices = dict(last_known_prices)
-                for sym in self.symbols:
-                    if sym in all_data and date in all_data[sym].index:
-                        val = all_data[sym].loc[date, "Close"]
-                        if not pd.isna(val):
-                            prices[sym] = float(val)
-                last_known_prices.update(prices)
-                snap = portfolio.snapshot(date, prices)
-                equity_values.append(snap["total_value"])
-                equity_dates.append(date)
-                continue
+            # Get prices from pre-computed forward-filled matrix
+            row = close_prices.loc[date]
+            prices = {sym: float(v) for sym, v in row.items() if not pd.isna(v)}
 
-            # Get current prices (start from last known, then overlay today's)
-            prices = dict(last_known_prices)
-            for sym in self.symbols:
-                if sym in all_data and date in all_data[sym].index:
-                    val = all_data[sym].loc[date, "Close"]
-                    if not pd.isna(val):
-                        prices[sym] = float(val)
-            last_known_prices.update(prices)
-
-            if not prices:
+            if not self._should_rebalance(date, common_dates, idx) or not prices:
                 snap = portfolio.snapshot(date, prices)
                 equity_values.append(snap["total_value"])
                 equity_dates.append(date)
@@ -551,6 +531,8 @@ class Backtester:
             if sym not in prices:
                 continue
             price = prices[sym]
+            if price <= 0:
+                continue
             target_value = total_value * target_w
             current_pos = portfolio.get_position(sym)
             current_value = (current_pos.quantity * price) if current_pos else 0.0
@@ -578,6 +560,8 @@ class Backtester:
             if sym not in prices:
                 continue
             price = prices[sym]
+            if price <= 0:
+                continue
             target_value = total_value * target_w
             current_pos = portfolio.get_position(sym)
             current_value = (current_pos.quantity * price) if current_pos else 0.0
@@ -711,7 +695,7 @@ def save_results(results: Dict[str, Any], path: str) -> None:
 
 
 if __name__ == "__main__":
-    from data_fetcher import fetch_ohlcv
+    from agents_assemble.data.fetcher import fetch_ohlcv
 
     # Simple buy-and-hold strategy test
     def buy_and_hold(date, prices, portfolio, data):

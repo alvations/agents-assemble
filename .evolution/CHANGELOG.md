@@ -96,3 +96,19 @@ Syntax is clean. Here's what I changed:
 - **Fixed alpha formatting in summary table** — Alpha was printed as a raw float (e.g., `0.053`) instead of formatted as `5.3%`. Now properly formats as percentage when numeric, falls back to `"N/A"` when missing.
 - **Fixed `--list` showing only builtin personas** 
 
+## [2026-04-06T14:11:50.712719+00:00] Branch: main | Run: 20260406T140930_pid62145 | Iter 1 | $0.3446
+### recession_strategies.py
+Syntax is clean. Here's what I changed:
+
+- **Fixed truthiness bugs in `detect_recession_regime`**: Changed 5 checks from `if val:` to `if val is not None:` — RSI of 0 or vol of 0.0 were incorrectly treated as missing data, skipping the signal entirely
+- **Fixed same bug in `GoldBug.generate_signals`**: `gld_sma50 and gld_sma200 and gld_price` → explicit `is not None` checks
+- **Fixed misleading comment**: `# 3+ signals` → `# majority of available signals` since the threshold is 50% of *available
+
+## [2026-04-06T14:18:35.923169+00:00] Branch: main | Run: 20260406T140930_pid62145 | Iter 2 | $0.9846
+### recession_strategies.py
+Syntax is clean. Here's what I changed:
+
+- **Eliminated redundant SPY lookups in `detect_recession_regime`**: `spy_sma200` was fetched twice (signals 1 and 2), and `"SPY" in data` was checked 3 separate times. All 5 SPY indicators are now fetched once upfront.
+- **Added staleness guard to `_safe_get`**: The nearest-date fallback via `get_indexer(method="nearest")` could return arbitrarily old data (months/years stale). Now rejects data more than 10 days from the requested date.
+- **Fixed NaN bug
+

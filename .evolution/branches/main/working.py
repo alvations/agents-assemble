@@ -1,563 +1,392 @@
-"""Hypothesis testing runner for agents-assemble.
+"""Recession indicators and recession-proof strategies for agents-assemble.
 
-Runs each persona's strategy through the backtester, compares results,
-and saves all findings to the knowledge base.
+Recession Detection:
+- Yield curve inversion (10Y-2Y spread, 10Y-3M spread)
+- SMA200 death cross on SPY
+- High yield spreads widening
+- Market breadth deterioration
+- VIX regime
 
-Usage:
-    python run_hypotheses.py                    # Run all personas
-    python run_hypotheses.py --persona buffett  # Run one persona
-    python run_hypotheses.py --start 2022-01-01 --end 2024-12-31
+Recession-Proof Strategies:
+1. RecessionDetector    — Regime detection, shifts to defensive
+2. TreasurySafe        — Flight to quality during downturns
+3. DefensiveRotation   — Rotate to staples/utilities/healthcare in recessions
+4. GoldBug             — Gold and precious metals as recession hedge
 """
 
 from __future__ import annotations
 
-import argparse
-import json
-import sys
-import traceback
-from datetime import datetime
-from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import numpy as np
 import pandas as pd
 
-# Support both installed package and flat-file imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-sys.path.insert(0, str(Path(__file__).parent))
-
-try:
-    from agents_assemble.engine.backtester import Backtester, format_report, save_results
-    from agents_assemble.strategies.generic import ALL_PERSONAS, get_persona, list_personas
-    from agents_assemble.strategies.famous import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
-    from agents_assemble.strategies.themes import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
-    from agents_assemble.strategies.recession import RECESSION_STRATEGIES, get_recession_strategy
-    from agents_assemble.engine.recommender import save_strategy_recommendation
-except ImportError:
-    from backtester import Backtester, format_report, save_results
-    from personas import ALL_PERSONAS, get_persona, list_personas
-    from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
-    from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
-    from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
-    from trade_recommender import save_strategy_recommendation
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
-# Knowledge base
+# Recession Regime Detection
 # ---------------------------------------------------------------------------
-KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
-RESULTS_DIR = Path(__file__).parent / "results"
+def detect_recession_regime(
+    date: pd.Timestamp,
+    data: Dict[str, pd.DataFrame],
+    prices: Dict[str, float],
+) -> Dict[str, Any]:
+    """Detect if we're in a recession-like regime.
 
+    Uses multiple signals:
+    1. SPY below SMA200 (bear market)
+    2. TLT rising (flight to quality)
+    3. IWM underperforming SPY (small caps weaker = risk-off)
+    4. VIX proxy (high volatility in SPY)
 
-def save_to_knowledge(name: str, content: str, category: str = "hypothesis") -> Path:
-    """Save a finding to the knowledge base."""
-    kb_dir = KNOWLEDGE_DIR / category
-    kb_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    path = kb_dir / f"{name}_{timestamp}.md"
-    path.write_text(content)
-    return path
+    Returns dict with regime info and confidence score.
+    """
+    regime = {
+        "is_recession": False,
+        "confidence": 0.0,
+        "signals": {},
+    }
 
+    signal_count = 0
+    total_signals = 0
 
-def save_result_json(name: str, data: Dict[str, Any]) -> Path:
-    """Save backtest results as JSON."""
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    path = RESULTS_DIR / f"{name}_{timestamp}.json"
-    # Serialize carefully
-    serializable = {}
-    for k, v in data.items():
-        if isinstance(v, pd.Series):
-            serializable[k] = {str(idx): float(val) for idx, val in v.items()}
-        elif isinstance(v, pd.DataFrame):
-            serializable[k] = v.to_dict()
-        elif isinstance(v, list):
-            serializable[k] = str(v)[:2000]  # Truncate large lists
-        elif isinstance(v, dict):
-            serializable[k] = {str(kk): vv for kk, vv in v.items()
-                                if isinstance(vv, (int, float, str, bool, type(None)))}
+    # Fetch SPY indicators once (used by signals 1, 2, 4, 5)
+    spy_price = prices.get("SPY")
+    spy_sma50 = _safe_get(data, "SPY", "sma_50", date) if "SPY" in data else None
+    spy_sma200 = _safe_get(data, "SPY", "sma_200", date) if "SPY" in data else None
+    spy_vol = _safe_get(data, "SPY", "vol_20", date) if "SPY" in data else None
+    spy_rsi = _safe_get(data, "SPY", "rsi_14", date) if "SPY" in data else None
+
+    # Signal 1: SPY below SMA200
+    if spy_sma200 is not None and spy_price is not None:
+        total_signals += 1
+        if spy_price < spy_sma200:
+            signal_count += 1
+            regime["signals"]["spy_below_sma200"] = True
         else:
-            try:
-                json.dumps(v)
-                serializable[k] = v
-            except (TypeError, ValueError):
-                serializable[k] = str(v)[:500]
-    path.write_text(json.dumps(serializable, indent=2, default=str))
-    return path
+            regime["signals"]["spy_below_sma200"] = False
+
+    # Signal 2: SPY SMA50 < SMA200 (death cross)
+    if spy_sma50 is not None and spy_sma200 is not None:
+        total_signals += 1
+        if spy_sma50 < spy_sma200:
+            signal_count += 1
+            regime["signals"]["death_cross"] = True
+        else:
+            regime["signals"]["death_cross"] = False
+
+    # Signal 3: TLT trending up (bonds rally = flight to quality)
+    if "TLT" in data:
+        tlt_sma50 = _safe_get(data, "TLT", "sma_50", date)
+        tlt_sma200 = _safe_get(data, "TLT", "sma_200", date)
+        if tlt_sma50 is not None and tlt_sma200 is not None:
+            total_signals += 1
+            if tlt_sma50 > tlt_sma200:
+                signal_count += 1
+                regime["signals"]["tlt_uptrend"] = True
+            else:
+                regime["signals"]["tlt_uptrend"] = False
+
+    # Signal 4: High volatility
+    if spy_vol is not None:
+        total_signals += 1
+        if spy_vol > 0.018:  # Annualized ~28%
+            signal_count += 1
+            regime["signals"]["high_vol"] = True
+        else:
+            regime["signals"]["high_vol"] = False
+
+    # Signal 5: RSI below 40 on SPY
+    if spy_rsi is not None:
+        total_signals += 1
+        if spy_rsi < 40:
+            signal_count += 1
+            regime["signals"]["spy_oversold"] = True
+        else:
+            regime["signals"]["spy_oversold"] = False
+
+    if total_signals > 0:
+        regime["confidence"] = signal_count / total_signals
+        regime["is_recession"] = regime["confidence"] >= 0.5  # majority of available signals
+
+    return regime
 
 
-# ---------------------------------------------------------------------------
-# Hypothesis definitions
-# ---------------------------------------------------------------------------
-HYPOTHESES = [
-    {
-        "name": "buffett_value_beats_spy",
-        "persona": "buffett_value",
-        "hypothesis": "Buffett-style value investing in blue chips outperforms SPY on a risk-adjusted basis over 3+ years",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "momentum_tech_leaders",
-        "persona": "momentum",
-        "hypothesis": "Momentum strategy in tech leaders captures trends while limiting drawdowns via MACD exits",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "meme_stocks_2021_2024",
-        "persona": "meme_stock",
-        "hypothesis": "Meme stock volume-spike strategy generates high returns but with extreme volatility",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "dividend_aristocrats_stability",
-        "persona": "dividend",
-        "hypothesis": "Dividend investing provides stable returns with low drawdowns vs SPY",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "quant_mean_reversion",
-        "persona": "quant",
-        "hypothesis": "Mean-reversion (buy BB lower + low RSI) generates alpha in large caps",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "fixed_income_duration",
-        "persona": "fixed_income",
-        "hypothesis": "Dynamic duration management via bond ETF trends beats static bond allocation (BND) during rate hike cycle",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "growth_disruption",
-        "persona": "growth",
-        "hypothesis": "Buying dips in disruptive growth stocks during uptrends outperforms, but with high volatility",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "sector_rotation_outperforms",
-        "persona": "sector_rotation",
-        "hypothesis": "Rotating into top-momentum sector ETFs outperforms broad market SPY",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "pairs_relative_value",
-        "persona": "pairs",
-        "hypothesis": "Pairs trading correlated stocks (XOM/CVX, KO/PEP, etc.) generates market-neutral alpha",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "ensemble_consensus",
-        "persona": "ensemble",
-        "hypothesis": "Multi-strategy consensus (momentum+value+growth+dividend) beats any single strategy on risk-adjusted basis",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    # === Famous Investors ===
-    {
-        "name": "peter_lynch_garp",
-        "persona": "peter_lynch",
-        "persona_source": "famous",
-        "hypothesis": "Peter Lynch GARP: moderate momentum consumer stocks with low vol outperform",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "ray_dalio_all_weather",
-        "persona": "ray_dalio",
-        "persona_source": "famous",
-        "hypothesis": "Dalio All-Weather risk parity (stocks+bonds+gold+commodities) provides stable returns in any regime",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "george_soros_reflexivity",
-        "persona": "george_soros",
-        "persona_source": "famous",
-        "hypothesis": "Soros reflexivity: concentrated macro momentum bets capture accelerating trends",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "michael_burry_contrarian",
-        "persona": "michael_burry",
-        "persona_source": "famous",
-        "hypothesis": "Burry contrarian: buying capitulation in beaten-down large caps generates deep value alpha",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "jim_simons_quant",
-        "persona": "jim_simons",
-        "persona_source": "famous",
-        "hypothesis": "Simons multi-factor quant: combining mean-reversion + momentum + trend + BB generates consistent alpha",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "carl_icahn_activist",
-        "persona": "carl_icahn",
-        "persona_source": "famous",
-        "hypothesis": "Icahn activist value: concentrated deep-discount large caps showing recovery outperform",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "masayoshi_son_vision",
-        "persona": "masayoshi_son",
-        "persona_source": "famous",
-        "hypothesis": "Son Vision Fund: concentrated high-conviction tech platform bets capture outsized returns",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "li_ka_shing_infrastructure",
-        "persona": "li_ka_shing",
-        "persona_source": "famous",
-        "hypothesis": "Li Ka-shing: patient infrastructure/utility value provides stable income with low drawdowns",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "sawiris_em_industrials",
-        "persona": "nassef_sawiris",
-        "persona_source": "famous",
-        "hypothesis": "Sawiris: emerging market industrial value (materials, mining) outperforms during commodity cycles",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "lemann_consumer_brands",
-        "persona": "jorge_paulo_lemann",
-        "persona_source": "famous",
-        "hypothesis": "Lemann 3G: buying dominant consumer brands on pullbacks compounds steadily",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "alwaleed_crisis_buying",
-        "persona": "prince_alwaleed",
-        "persona_source": "famous",
-        "hypothesis": "Alwaleed: buying iconic blue-chip brands during crises generates recovery alpha",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "howard_marks_contrarian",
-        "persona": "howard_marks",
-        "persona_source": "famous",
-        "hypothesis": "Marks second-level thinking: buying quality during market panic outperforms on risk-adjusted basis",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "support_resistance_commodities",
-        "persona": "support_resistance",
-        "persona_source": "famous",
-        "hypothesis": "Support/resistance breakout on commodity ETFs captures trend reversals with defined risk",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    # === Theme Strategies ===
-    {
-        "name": "ai_revolution_2022_2024",
-        "persona": "ai_revolution",
-        "persona_source": "theme",
-        "hypothesis": "AI infrastructure and applications companies outperform during the AI boom",
-        "start": "2022-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "defense_geopolitics",
-        "persona": "defense_aerospace",
-        "persona_source": "theme",
-        "hypothesis": "Defense/aerospace/cyber stocks benefit from sustained geopolitical tension",
-        "start": "2022-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "biotech_innovation",
-        "persona": "biotech_breakout",
-        "persona_source": "theme",
-        "hypothesis": "Diversified biotech basket with momentum filtering outperforms XBI",
-        "start": "2022-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "china_tech_recovery",
-        "persona": "china_tech_rebound",
-        "persona_source": "theme",
-        "hypothesis": "China tech ADRs recover from regulatory crackdown creating deep value opportunity",
-        "start": "2022-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "small_cap_deep_value",
-        "persona": "small_cap_value",
-        "persona_source": "theme",
-        "hypothesis": "Small cap deep value (oversold + volume) captures mean-reversion alpha",
-        "start": "2022-01-01",
-        "end": "2024-12-31",
-    },
-    # === Recession Strategies ===
-    {
-        "name": "recession_detector_adaptive",
-        "persona": "recession_detector",
-        "persona_source": "recession",
-        "hypothesis": "Regime-switching strategy detects recession and shifts to defensive, preserving capital",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "treasury_safe_haven",
-        "persona": "treasury_safe",
-        "persona_source": "recession",
-        "hypothesis": "Flight to quality (long-duration bonds + gold) outperforms during market stress",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "defensive_rotation_recession",
-        "persona": "defensive_rotation",
-        "persona_source": "recession",
-        "hypothesis": "Rotating to staples/utilities/healthcare during recession signals beats holding SPY",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-    {
-        "name": "gold_bug_hedge",
-        "persona": "gold_bug",
-        "persona_source": "recession",
-        "hypothesis": "Gold and precious metals provide portfolio protection during recession/inflation",
-        "start": "2021-01-01",
-        "end": "2024-12-31",
-    },
-]
-
-
-# ---------------------------------------------------------------------------
-# Runner
-# ---------------------------------------------------------------------------
-def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
-    """Run a single hypothesis test."""
-    name = hyp["name"]
-    persona_key = hyp["persona"]
-
-    if verbose:
-        print(f"\n{'=' * 60}")
-        print(f"  Testing: {name}")
-        print(f"  Hypothesis: {hyp['hypothesis']}")
-        print(f"  Period: {hyp['start']} to {hyp['end']}")
-        print(f"{'=' * 60}")
-
-    source = hyp.get("persona_source", "builtin")
-    if source == "famous":
-        persona = get_famous_investor(persona_key)
-    elif source == "theme":
-        persona = get_theme_strategy(persona_key)
-    elif source == "recession":
-        persona = get_recession_strategy(persona_key)
-    else:
-        persona = get_persona(persona_key)
-    symbols = persona.config.universe
-
-    bt = Backtester(
-        strategy=persona,
-        symbols=symbols,
-        start=hyp["start"],
-        end=hyp["end"],
-        initial_cash=100_000,
-        benchmark="SPY",
-        rebalance_frequency=persona.config.rebalance_frequency,
-    )
-
+def _safe_get(data, sym, indicator, date):
+    if sym not in data:
+        return None
+    df = data[sym]
+    if indicator not in df.columns:
+        return None
+    if date in df.index:
+        val = df.loc[date, indicator]
+        return float(val) if not pd.isna(val) else None
     try:
-        results = bt.run()
-        report = format_report(results, f"{persona.config.name}: {hyp['hypothesis'][:60]}")
-
-        if verbose:
-            print(report)
-
-        # Determine if hypothesis is supported
-        m = results["metrics"]
-        verdict_lines = [f"# Hypothesis: {hyp['hypothesis']}", ""]
-        verdict_lines.append(f"**Persona:** {persona.config.name}")
-        verdict_lines.append(f"**Period:** {hyp['start']} to {hyp['end']}")
-        verdict_lines.append(f"**Universe:** {', '.join(symbols)}")
-        verdict_lines.append("")
-        verdict_lines.append("## Results")
-        verdict_lines.append(f"- Total Return: {m.get('total_return', 0):.2%}")
-        verdict_lines.append(f"- CAGR: {m.get('cagr', 0):.2%}")
-        verdict_lines.append(f"- Sharpe: {m.get('sharpe_ratio', 0):.2f}")
-        verdict_lines.append(f"- Max Drawdown: {m.get('max_drawdown', 0):.2%}")
-        verdict_lines.append(f"- Win Rate: {m.get('win_rate', 0):.2%}")
-
-        if "benchmark_total_return" in m:
-            verdict_lines.append(f"- Benchmark Return: {m.get('benchmark_total_return', 0):.2%}")
-            verdict_lines.append(f"- Alpha: {m.get('alpha', 0):.2%}")
-            verdict_lines.append(f"- Beta: {m.get('beta', 0):.2f}")
-
-        # Verdict
-        sharpe = m.get("sharpe_ratio", 0)
-        alpha = m.get("alpha", 0)
-        max_dd = m.get("max_drawdown", 0)
-
-        if sharpe > 0.5 and alpha > 0:
-            verdict = "SUPPORTED - Strategy shows positive alpha and decent risk-adjusted returns"
-        elif sharpe > 0 and alpha > -0.05:
-            verdict = "PARTIALLY SUPPORTED - Positive returns but limited alpha over benchmark"
-        else:
-            verdict = "NOT SUPPORTED - Strategy underperforms benchmark on risk-adjusted basis"
-
-        verdict_lines.append(f"\n## Verdict\n**{verdict}**")
-        verdict_lines.append(f"\n## Key Observations")
-
-        if max_dd < -0.30:
-            verdict_lines.append(f"- WARNING: Severe drawdown of {max_dd:.1%}")
-        if m.get("win_rate", 0) > 0.55:
-            verdict_lines.append(f"- Good win rate of {m.get('win_rate', 0):.1%}")
-
-        num_trades = results.get("trade_metrics", {}).get("num_trades", 0)
-        verdict_lines.append(f"- Total trades: {num_trades}")
-
-        finding = "\n".join(verdict_lines)
-        save_to_knowledge(name, finding, "hypothesis_results")
-        save_result_json(name, {"metrics": m, "trade_metrics": results.get("trade_metrics", {})})
-
-        # Save trade recommendations (winning/losing)
-        try:
-            save_strategy_recommendation(
-                name, results,
-                persona_config={
-                    "rebalance_frequency": persona.config.rebalance_frequency,
-                    "risk_tolerance": persona.config.risk_tolerance,
-                }
-            )
-        except Exception:
-            pass
-
-        return {
-            "name": name,
-            "status": "success",
-            "verdict": verdict,
-            "metrics": m,
-            "report": report,
-            "final_positions": results.get("final_positions", {}),
-        }
-
-    except Exception as e:
-        error_msg = f"# FAILED: {name}\n\nError: {e}\n\n```\n{traceback.format_exc()}\n```"
-        save_to_knowledge(name, error_msg, "failures")
-
-        if verbose:
-            print(f"  ERROR: {e}")
-
-        return {
-            "name": name,
-            "status": "error",
-            "error": str(e),
-        }
-
-
-def run_all(
-    start: str = "2021-01-01",
-    end: str = "2024-12-31",
-    personas_filter: Optional[List[str]] = None,
-    verbose: bool = True,
-) -> List[Dict[str, Any]]:
-    """Run all hypothesis tests and generate summary."""
-    hypotheses = [dict(h) for h in HYPOTHESES]
-
-    if personas_filter:
-        hypotheses = [h for h in hypotheses if h["persona"] in personas_filter]
-
-    # Override dates if specified
-    for h in hypotheses:
-        h["start"] = start
-        h["end"] = end
-
-    all_results = []
-    for hyp in hypotheses:
-        result = run_hypothesis(hyp, verbose=verbose)
-        all_results.append(result)
-
-    # Generate summary
-    summary_lines = ["# Hypothesis Testing Summary", ""]
-    summary_lines.append(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    summary_lines.append(f"**Period:** {start} to {end}")
-    summary_lines.append(f"**Hypotheses tested:** {len(all_results)}")
-    summary_lines.append("")
-    summary_lines.append("| Persona | Total Return | Sharpe | Max DD | Alpha | Verdict |")
-    summary_lines.append("|---------|-------------|--------|--------|-------|---------|")
-
-    for r in all_results:
-        if r["status"] == "success":
-            m = r["metrics"]
-            alpha = m.get('alpha')
-            alpha_str = f"{alpha:.1%}" if isinstance(alpha, (int, float)) else "N/A"
-            summary_lines.append(
-                f"| {r['name']} | {m.get('total_return', 0):.1%} | "
-                f"{m.get('sharpe_ratio', 0):.2f} | {m.get('max_drawdown', 0):.1%} | "
-                f"{alpha_str} | {r['verdict'][:30]}... |"
-            )
-        else:
-            summary_lines.append(f"| {r['name']} | ERROR | - | - | - | {r['error'][:30]} |")
-
-    summary = "\n".join(summary_lines)
-    save_to_knowledge("summary", summary, "hypothesis_results")
-
-    if verbose:
-        print(f"\n\n{'=' * 60}")
-        print(summary)
-
-    return all_results
+        idx = df.index.get_indexer([date], method="nearest")[0]
+        if idx >= 0:
+            nearest_date = df.index[idx]
+            if abs((date - nearest_date).days) > 10:
+                return None  # Data too stale
+            val = df.iloc[idx][indicator]
+            return float(val) if not pd.isna(val) else None
+    except (IndexError, KeyError):
+        pass
+    return None
 
 
 # ---------------------------------------------------------------------------
-# CLI
+# 1. Recession Detector — Adaptive regime switching
 # ---------------------------------------------------------------------------
-def main():
-    parser = argparse.ArgumentParser(description="Run trading hypothesis backtests")
-    parser.add_argument("--persona", "-p", help="Run only this persona")
-    parser.add_argument("--start", "-s", default="2021-01-01", help="Start date")
-    parser.add_argument("--end", "-e", default="2024-12-31", help="End date")
-    parser.add_argument("--quiet", "-q", action="store_true", help="Less output")
-    parser.add_argument("--list", "-l", action="store_true", help="List personas")
-    args = parser.parse_args()
+class RecessionDetector(BasePersona):
+    """Adaptive strategy that detects recession regime and switches positioning.
 
-    if args.list:
-        print("  Builtin Personas:")
-        for p in list_personas():
-            print(f"    {p['key']:20s} | {p['name']:25s} | {p['description']}")
-        print("\n  Famous Investors:")
-        for p in list_famous_investors():
-            print(f"    {p['key']:20s} | {p['name']:25s} | {p['description']}")
-        print("\n  Theme Strategies:")
-        for p in list_theme_strategies():
-            print(f"    {p['key']:20s} | {p['name']:25s} | {p['description']}")
-        print("\n  Recession Strategies:")
-        for key, strat in RECESSION_STRATEGIES.items():
-            print(f"    {key:20s} | {strat.config.name:25s} | {strat.config.description}")
-        return
+    Normal regime: 70% stocks (SPY/QQQ), 20% bonds (TLT), 10% gold (GLD)
+    Recession regime: 20% stocks (XLP/XLV), 50% bonds (TLT/IEF), 20% gold (GLD), 10% cash
+    """
 
-    filter_list = [args.persona] if args.persona else None
-    results = run_all(
-        start=args.start,
-        end=args.end,
-        personas_filter=filter_list,
-        verbose=not args.quiet,
-    )
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="Recession Detector (Adaptive)",
+            description="Regime-switching: risk-on in growth, defensive in recession",
+            risk_tolerance=0.4,
+            max_position_size=0.50,
+            max_positions=6,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "SPY", "QQQ", "TLT", "IEF", "GLD",
+                "XLP", "XLV", "SHY",
+            ],
+        )
+        super().__init__(config)
 
-    successes = sum(1 for r in results if r["status"] == "success")
-    failures = sum(1 for r in results if r["status"] == "error")
-    print(f"\nDone: {successes} succeeded, {failures} failed")
+    def generate_signals(self, date, prices, portfolio, data):
+        regime = detect_recession_regime(date, data, prices)
+
+        if regime["is_recession"]:
+            # Defensive positioning
+            return {
+                "XLP": 0.15,  # Consumer staples
+                "XLV": 0.10,  # Healthcare
+                "TLT": 0.30,  # Long bonds
+                "IEF": 0.15,  # Intermediate bonds
+                "GLD": 0.20,  # Gold
+                "SHY": 0.05,  # Short-term treasuries (cash proxy)
+                "SPY": 0.0,   # Exit stocks
+                "QQQ": 0.0,   # Exit tech
+            }
+        else:
+            # Risk-on positioning
+            return {
+                "SPY": 0.35,
+                "QQQ": 0.30,
+                "TLT": 0.15,
+                "GLD": 0.10,
+                "IEF": 0.05,
+                "XLP": 0.0,
+                "XLV": 0.0,
+                "SHY": 0.0,
+            }
+
+
+# ---------------------------------------------------------------------------
+# 2. Treasury Safe Haven
+# ---------------------------------------------------------------------------
+class TreasurySafe(BasePersona):
+    """Flight to quality strategy during downturns.
+
+    Thesis: When stocks sell off, treasuries rally. Go long duration
+    when recession signals fire, short duration otherwise.
+    """
+
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="Treasury Safe Haven",
+            description="Flight to quality: long-duration bonds when recession signals fire",
+            risk_tolerance=0.2,
+            max_position_size=0.40,
+            max_positions=4,
+            rebalance_frequency="weekly",
+            universe=universe or ["TLT", "IEF", "SHY", "TIP", "GLD", "SPY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        regime = detect_recession_regime(date, data, prices)
+
+        if regime["is_recession"]:
+            return {
+                "TLT": 0.45,  # Long bonds (biggest winner in recession)
+                "IEF": 0.20,
+                "GLD": 0.20,  # Gold hedge
+                "TIP": 0.10,  # Inflation protection
+                "SHY": 0.0,
+                "SPY": 0.0,
+            }
+        elif regime["confidence"] > 0.3:
+            # Mixed signals — balanced
+            return {
+                "IEF": 0.30,
+                "TLT": 0.15,
+                "GLD": 0.15,
+                "SHY": 0.20,
+                "TIP": 0.10,
+                "SPY": 0.0,
+            }
+        else:
+            # All clear — moderate bond allocation
+            return {
+                "SHY": 0.40,  # Short duration (rates may rise)
+                "IEF": 0.25,
+                "TLT": 0.10,
+                "GLD": 0.10,
+                "TIP": 0.10,
+                "SPY": 0.0,
+            }
+
+
+# ---------------------------------------------------------------------------
+# 3. Defensive Rotation
+# ---------------------------------------------------------------------------
+class DefensiveRotation(BasePersona):
+    """Rotate into defensive sectors during recession signals.
+
+    Thesis: Consumer staples, utilities, and healthcare outperform
+    during recessions because demand is inelastic.
+    """
+
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="Defensive Rotation",
+            description="Rotate to staples/utilities/healthcare when recession signals fire",
+            risk_tolerance=0.3,
+            max_position_size=0.20,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Defensive sectors
+                "XLP", "XLU", "XLV",  # Sector ETFs
+                "PG", "KO", "PEP", "CL",  # Consumer staples
+                "JNJ", "MRK", "ABBV", "UNH",  # Healthcare
+                "NEE", "DUK", "SO",  # Utilities
+                # Growth (for when things are good)
+                "SPY", "QQQ", "XLK",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        regime = detect_recession_regime(date, data, prices)
+        weights = {}
+
+        if regime["is_recession"]:
+            # Full defensive
+            defensive = ["XLP", "XLU", "XLV", "PG", "KO", "JNJ", "MRK", "NEE"]
+            available = [s for s in defensive if s in prices]
+            if available:
+                per_stock = min(0.90 / len(available), self.config.max_position_size)
+                for sym in available:
+                    weights[sym] = per_stock
+            # Exit growth
+            for sym in ["SPY", "QQQ", "XLK"]:
+                weights[sym] = 0.0
+        else:
+            # Risk-on with some defensive hedge
+            weights["SPY"] = 0.30
+            weights["QQQ"] = 0.25
+            weights["XLK"] = 0.15
+            weights["XLP"] = 0.10
+            weights["XLV"] = 0.10
+            weights["XLU"] = 0.05
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 4. Gold Bug
+# ---------------------------------------------------------------------------
+class GoldBug(BasePersona):
+    """Gold and precious metals strategy for recession/inflation hedge.
+
+    Thesis: Gold outperforms during recessions, currency debasement,
+    and inflation. Mining stocks provide leveraged exposure.
+    """
+
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="Gold Bug (Precious Metals)",
+            description="Gold/silver/miners as recession and inflation hedge",
+            risk_tolerance=0.5,
+            max_position_size=0.25,
+            max_positions=6,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "GLD", "SLV",  # Physical gold/silver ETFs
+                "GDX", "GDXJ",  # Gold miners
+                "NEM", "GOLD", "AEM",  # Individual miners
+                "IAU",  # Alternative gold ETF
+                "SPY", "TLT",  # Required for recession regime detection
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        regime = detect_recession_regime(date, data, prices)
+
+        # Always hold some gold
+        base_gold = 0.20
+
+        if regime["is_recession"]:
+            # Max gold allocation
+            weights["GLD"] = 0.35
+            weights["SLV"] = 0.15
+            weights["GDX"] = 0.20
+            weights["NEM"] = 0.10
+            weights["IAU"] = 0.10
+        else:
+            # Check gold trend
+            gld_sma50 = _safe_get(data, "GLD", "sma_50", date)
+            gld_sma200 = _safe_get(data, "GLD", "sma_200", date)
+            gld_price = prices.get("GLD")
+
+            if gld_sma50 is not None and gld_sma200 is not None and gld_price is not None:
+                if gld_sma50 > gld_sma200:
+                    # Gold uptrend — increase allocation
+                    weights["GLD"] = 0.30
+                    weights["GDX"] = 0.20
+                    weights["SLV"] = 0.15
+                    weights["NEM"] = 0.10
+                else:
+                    # Gold downtrend — minimal
+                    weights["GLD"] = 0.15
+                    weights["IAU"] = 0.10
+            else:
+                weights["GLD"] = base_gold
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# Registry
+# ---------------------------------------------------------------------------
+RECESSION_STRATEGIES = {
+    "recession_detector": RecessionDetector,
+    "treasury_safe": TreasurySafe,
+    "defensive_rotation": DefensiveRotation,
+    "gold_bug": GoldBug,
+}
+
+
+def get_recession_strategy(name: str, **kwargs) -> BasePersona:
+    cls = RECESSION_STRATEGIES.get(name)
+    if cls is None:
+        raise ValueError(f"Unknown strategy: {name}. Available: {list(RECESSION_STRATEGIES.keys())}")
+    return cls(**kwargs)
 
 
 if __name__ == "__main__":
-    main()
+    print("=== Recession Strategies ===\n")
+    for key, cls in RECESSION_STRATEGIES.items():
+        inst = cls()
+        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")
