@@ -1,0 +1,98 @@
+{
+  "strategy_name": "treasury_safe_haven",
+  "is_winning": "False",
+  "generated_at": "2026-04-06T09:49:25.953631",
+  "overall_assessment": "AVOID \u2014 Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "5.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "22.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "SHY",
+      "action": "BUY",
+      "current_position": 456.0,
+      "avg_cost_basis": "$77.44",
+      "recommended_entry": {
+        "limit_price": "$77.05 (0.5% below avg cost)",
+        "market_price": "Use market order if volatile"
+      },
+      "stop_loss": "$58.08 (25.0% below entry)",
+      "take_profit": "$81.31 (5.0% above entry)",
+      "position_size": "5.0% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 2.5% gain"
+    },
+    {
+      "symbol": "IEF",
+      "action": "BUY",
+      "current_position": 252.0,
+      "avg_cost_basis": "$88.61",
+      "recommended_entry": {
+        "limit_price": "$88.17 (0.5% below avg cost)",
+        "market_price": "Use market order if volatile"
+      },
+      "stop_loss": "$66.46 (25.0% below entry)",
+      "take_profit": "$93.04 (5.0% above entry)",
+      "position_size": "5.0% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 2.5% gain"
+    },
+    {
+      "symbol": "TLT",
+      "action": "BUY",
+      "current_position": 107.0,
+      "avg_cost_basis": "$87.81",
+      "recommended_entry": {
+        "limit_price": "$87.37 (0.5% below avg cost)",
+        "market_price": "Use market order if volatile"
+      },
+      "stop_loss": "$65.86 (25.0% below entry)",
+      "take_profit": "$92.20 (5.0% above entry)",
+      "position_size": "5.0% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 2.5% gain"
+    },
+    {
+      "symbol": "GLD",
+      "action": "BUY",
+      "current_position": 37.0,
+      "avg_cost_basis": "$224.47",
+      "recommended_entry": {
+        "limit_price": "$223.35 (0.5% below avg cost)",
+        "market_price": "Use market order if volatile"
+      },
+      "stop_loss": "$168.35 (25.0% below entry)",
+      "take_profit": "$235.69 (5.0% above entry)",
+      "position_size": "5.0% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 2.5% gain"
+    },
+    {
+      "symbol": "TIP",
+      "action": "BUY",
+      "current_position": 86.0,
+      "avg_cost_basis": "$104.65",
+      "recommended_entry": {
+        "limit_price": "$104.12 (0.5% below avg cost)",
+        "market_price": "Use market order if volatile"
+      },
+      "stop_loss": "$78.48 (25.0% below entry)",
+      "take_profit": "$109.88 (5.0% above entry)",
+      "position_size": "5.0% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 2.5% gain"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "-10.95%",
+    "sharpe_ratio": "-0.92",
+    "max_drawdown": "-22.38%",
+    "win_rate": "48.85%",
+    "alpha": "N/A"
+  }
+}

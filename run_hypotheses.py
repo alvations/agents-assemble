@@ -28,6 +28,7 @@ from backtester import Backtester, format_report, save_results
 from personas import ALL_PERSONAS, get_persona, list_personas
 from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
 from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
+from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
 from trade_recommender import save_strategy_recommendation
 
 
@@ -295,6 +296,39 @@ HYPOTHESES = [
         "start": "2022-01-01",
         "end": "2024-12-31",
     },
+    # === Recession Strategies ===
+    {
+        "name": "recession_detector_adaptive",
+        "persona": "recession_detector",
+        "persona_source": "recession",
+        "hypothesis": "Regime-switching strategy detects recession and shifts to defensive, preserving capital",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "treasury_safe_haven",
+        "persona": "treasury_safe",
+        "persona_source": "recession",
+        "hypothesis": "Flight to quality (long-duration bonds + gold) outperforms during market stress",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "defensive_rotation_recession",
+        "persona": "defensive_rotation",
+        "persona_source": "recession",
+        "hypothesis": "Rotating to staples/utilities/healthcare during recession signals beats holding SPY",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "gold_bug_hedge",
+        "persona": "gold_bug",
+        "persona_source": "recession",
+        "hypothesis": "Gold and precious metals provide portfolio protection during recession/inflation",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
 ]
 
 
@@ -318,6 +352,8 @@ def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
         persona = get_famous_investor(persona_key)
     elif source == "theme":
         persona = get_theme_strategy(persona_key)
+    elif source == "recession":
+        persona = get_recession_strategy(persona_key)
     else:
         persona = get_persona(persona_key)
     symbols = persona.config.universe
