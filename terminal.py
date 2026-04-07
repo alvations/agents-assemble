@@ -35,15 +35,35 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).parent))
 
 # Lazy import matplotlib to avoid issues in headless environments
+_plt_cache = None
+
 def _get_plt():
-    import matplotlib
-    matplotlib.use("Agg")  # Non-interactive backend
-    import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
-    return plt, mdates
+    global _plt_cache
+    if _plt_cache is None:
+        import matplotlib
+        matplotlib.use("Agg")  # Non-interactive backend
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+        _plt_cache = (plt, mdates)
+    return _plt_cache
 
 CHARTS_DIR = Path(__file__).parent / "charts"
 CHARTS_DIR.mkdir(exist_ok=True)
+
+
+def _empty_chart(path: Path, message: str = "No data available") -> Path:
+    """Create a minimal 'no data' chart so callers always get a valid file."""
+    plt, _ = _get_plt()
+    fig, ax = plt.subplots(figsize=(6, 3))
+    fig.patch.set_facecolor("#1a1a2e")
+    ax.set_facecolor("#1a1a2e")
+    ax.text(0.5, 0.5, message, color="white", fontsize=14,
+            ha="center", va="center", transform=ax.transAxes)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    fig.savefig(path, dpi=100, facecolor="#1a1a2e", bbox_inches="tight")
+    plt.close(fig)
+    return path
 
 
 class Terminal:
@@ -64,6 +84,9 @@ class Terminal:
         from data_fetcher import fetch_ohlcv
 
         df = fetch_ohlcv(symbol, start=start, end=end)
+        if len(df) < 2:
+            path = self.output_dir / f"{symbol}_chart.png"
+            return _empty_chart(path, f"Insufficient data for {symbol}")
         if df.index.tz is not None:
             df.index = df.index.tz_localize(None)
 
@@ -248,7 +271,8 @@ class Terminal:
                 data[name] = row
 
         if not data:
-            return self.output_dir / "empty.png"
+            path = self.output_dir / "leaderboard_heatmap.png"
+            return _empty_chart(path, "No strategy data available")
 
         df = pd.DataFrame(data).T.fillna(0)
         # Sort by 3Y return
@@ -312,7 +336,8 @@ class Terminal:
                 })
 
         if not points:
-            return self.output_dir / "empty.png"
+            path = self.output_dir / f"risk_return_{horizon}.png"
+            return _empty_chart(path, f"No strategy data for {horizon}")
 
         fig, ax = plt.subplots(figsize=(14, 9))
         fig.patch.set_facecolor("#1a1a2e")
@@ -445,7 +470,8 @@ class Terminal:
                 pass
 
         if not rets:
-            return self.output_dir / "empty.png"
+            path = self.output_dir / "sector_performance.png"
+            return _empty_chart(path, "No sector data available")
 
         sorted_items = sorted(rets.items(), key=lambda x: x[1], reverse=True)
         names = [x[0] for x in sorted_items]
