@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `InfrastructureBoom` missing overbought exit** (line 451): Added `rsi > 70 → weight 0.0` guard before the buy condition. This was the only strategy without any RSI exit filter — stocks with RSI 90+ near SMA200 would be bought instead of exited.
+- **Fixed `AgingPopulation` missing overbought exit** (line 639): Same fix — defensive strategy should not buy overbought stocks. Both strategies now match the exit pattern used by the other 8 themes.
+- **Fixed `vol_avg` truthiness checks** in SmallCapValue (line 510) and CryptoEcosystem (line 572): `vol_avg and vol_avg > 0` → `vol_avg is not None and vol_avg > 0` for consistency with the codebase-wide `is not None` pattern.
+- **Capped `SmallCapValue` vol_ratio contribution to score** (line 512): `+ vol_ratio` → `+ min(vol_ratio, 3.0)`. An unbounded vol_ratio (e.g., 10x average volume → score ~11) overwhelmed the RSI component (max 3.0), making the "deep value" strategy rank by volume spike size rather than oversold depth.

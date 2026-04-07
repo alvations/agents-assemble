@@ -448,9 +448,7 @@ class InfrastructureBoom(BasePersona):
                 continue
 
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
-            if rsi is not None and rsi > 70:
-                weights[sym] = 0.0
-            elif discount > -0.10:
+            if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
                 if rsi is not None and rsi < 40:
                     score += 0.2
@@ -509,9 +507,9 @@ class SmallCapValue(BasePersona):
                 continue
 
             # Deep value: oversold + volume spike
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
             if rsi < 30 and vol_ratio > 1.5:
-                score = (30 - rsi) / 30 * 3 + min(vol_ratio, 3.0)
+                score = (30 - rsi) / 30 * 3 + vol_ratio
                 scored.append((sym, score))
             elif bb_lower is not None and price < bb_lower and rsi < 35:
                 score = 2.0
@@ -571,7 +569,7 @@ class CryptoEcosystem(BasePersona):
             if any(v is None for v in [sma20, rsi]):
                 continue
 
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
 
             # Crypto is momentum-driven — ride breakouts
             if price > sma20 and rsi < 75 and vol_ratio > 1.2:
@@ -637,9 +635,7 @@ class AgingPopulation(BasePersona):
 
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             # Defensive: buy near or below SMA200
-            if rsi is not None and rsi > 70:
-                weights[sym] = 0.0
-            elif discount > -0.10:
+            if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
                 if rsi is not None and rsi < 40:
                     score += 0.1

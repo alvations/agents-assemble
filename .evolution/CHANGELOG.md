@@ -272,3 +272,10 @@ Syntax is valid. Here's what I changed:
 - **Fixed NaN safety in both strategies**: `_get_indicator` can return `np.nan` via its nearest-date code path (missing NaN check at `personas.py:76`). Replaced `v is None` guards with `pd.isna()` and bare truthiness checks (`if sma200`) with `pd.notna(sma200)` — prevents NaN from silently corrupting score calculations
 - **Removed dead code in `DynamicEnsemble` filter**: `total_weight >= 0.3` with `signals == 0` is unreachable since all three signal branc
 
+## [2026-04-07T09:38:21.599338+00:00] Branch: main | Run: 20260407T092841_pid39593 | Iter 9 | $0.7395
+### theme_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `InfrastructureBoom` missing overbought exit** (line 451): Added `rsi > 70 → weight 0.0` guard before the buy condition. This was the only strategy without any RSI exit filter — stocks with RSI 90+ near SMA200 would be bought instead of exited.
+- **Fixed `AgingPopulation` missing overbought exit** (line 639): Same fix — defensive strategy should not buy overbought stocks. Both strategies now match the exit pattern used by the other
+

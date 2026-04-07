@@ -554,70 +554,6 @@ class GlobalRotation(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# 8. Factor ETF Rotation
-# ---------------------------------------------------------------------------
-class FactorETFRotation(BasePersona):
-    """Rotate between factor ETFs based on momentum.
-
-    Instead of picking individual stocks, rotate between factor ETFs:
-    momentum (MTUM), quality (QUAL), value (VLUE), low vol (SPLV),
-    size (IWM), multi-factor (LRGF). Pick the top 3 by momentum.
-    """
-
-    def __init__(self, universe=None):
-        config = PersonaConfig(
-            name="Factor ETF Rotation",
-            description="Rotate between factor ETFs (momentum, quality, value, low vol) based on trend",
-            risk_tolerance=0.4,
-            max_position_size=0.35,
-            max_positions=3,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "MTUM",  # Momentum
-                "QUAL",  # Quality
-                "VLUE",  # Value
-                "SPLV",  # Low Volatility
-                "IWM",   # Small Cap (Size)
-                "SPY",   # Market (baseline)
-                "TLT",   # Bonds (safe haven)
-                "GLD",   # Gold (hedge)
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        scored = []
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma50 is None or sma200 is None:
-                continue
-            # Momentum score
-            mom = (price - sma200) / sma200 if sma200 > 0 else 0
-            if price > sma50:
-                mom += 0.1
-            scored.append((sym, mom))
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        weights = {}
-        if top:
-            # Only invest in factors with positive momentum
-            positive = [(s, m) for s, m in top if m > 0]
-            if positive:
-                per_etf = min(0.90 / len(positive), self.config.max_position_size)
-                for sym, _ in positive:
-                    weights[sym] = per_etf
-            else:
-                weights["TLT"] = 0.50
-                weights["GLD"] = 0.30
-        return weights
-
-
-# ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
 RESEARCH_STRATEGIES = {
@@ -628,7 +564,6 @@ RESEARCH_STRATEGIES = {
     "risk_parity_momentum": RiskParityMomentum,
     "mean_variance_optimal": MeanVarianceOptimal,
     "global_rotation": GlobalRotation,
-    "factor_etf_rotation": FactorETFRotation,
 }
 
 
