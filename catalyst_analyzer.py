@@ -191,7 +191,7 @@ class CatalystAnalyzer:
         full_report() → Dict (everything combined)
     """
 
-    def __init__(self, symbol: str, industry: Optional[str] = None):
+    def __init__(self, symbol: str, industry: str | None = None):
         self.symbol = symbol.upper()
         self.industry = industry or self._detect_industry()
         self._price_data = None
@@ -220,7 +220,7 @@ class CatalystAnalyzer:
 
     # ----- 1. News -----
 
-    def get_news(self, max_items: int = 20) -> List[NewsItem]:
+    def get_news(self, max_items: int = 20) -> list[NewsItem]:
         """Pull recent news for the ticker."""
         if self._news_cache is not None:
             return self._news_cache
@@ -275,7 +275,7 @@ class CatalystAnalyzer:
         self,
         volume_threshold: float = 2.0,
         return_threshold: float = 0.03,
-    ) -> Dict[str, Any]:
+    ) -> dict:
         """Find and analyze historical event days."""
         df = self._get_price_data()
         if len(df) < 50:
@@ -319,8 +319,8 @@ class CatalystAnalyzer:
             for h in SELL_HORIZONS:
                 rets = [e.post_returns.get(h, 0) for e in up]
                 sell_analysis[f"{h}d"] = {
-                    "avg_return": float(np.mean(rets)),
-                    "win_rate": float(np.mean([1 if r > 0 else 0 for r in rets])),
+                    "avg_return": sum(rets) / len(rets),
+                    "win_rate": sum(1 for r in rets if r > 0) / len(rets),
                     "best": float(max(rets)),
                     "worst": float(min(rets)),
                 }
@@ -335,8 +335,8 @@ class CatalystAnalyzer:
             for h in SELL_HORIZONS:
                 rets = [e.post_returns.get(h, 0) for e in down]
                 sell_analysis[f"{h}d"] = {
-                    "avg_return": float(np.mean(rets)),
-                    "bounce_rate": float(np.mean([1 if r > 0 else 0 for r in rets])),
+                    "avg_return": sum(rets) / len(rets),
+                    "bounce_rate": sum(1 for r in rets if r > 0) / len(rets),
                     "best": float(max(rets)),
                     "worst": float(min(rets)),
                 }
@@ -349,7 +349,7 @@ class CatalystAnalyzer:
 
     # ----- 3. Backtest event strategies -----
 
-    def backtest_event_strategy(self) -> Dict[str, BacktestResult]:
+    def backtest_event_strategy(self) -> dict[str, BacktestResult]:
         """Run all event-driven backtests and return structured results."""
         df = self._get_price_data()
         if len(df) < 50:
@@ -404,8 +404,8 @@ class CatalystAnalyzer:
             holding_days=holding_days,
             total_trades=len(trades),
             win_rate=len(winners) / len(trades),
-            avg_return=float(np.mean(trades)),
-            total_return=float(np.prod([1 + t for t in trades]) - 1),
+            avg_return=sum(trades) / len(trades),
+            total_return=math.prod(1 + t for t in trades) - 1,
             best_trade=float(max(trades)),
             worst_trade=float(min(trades)),
             profit_factor=abs(sum(winners) / sum(losers)) if losers else 0.0 if not winners else 999.0,
@@ -413,7 +413,7 @@ class CatalystAnalyzer:
 
     # ----- 4. Forward-looking predictions -----
 
-    def predict_next_catalyst(self) -> List[CatalystPrediction]:
+    def predict_next_catalyst(self) -> list[CatalystPrediction]:
         """Generate forward-looking predictions based on historical patterns."""
         patterns = self.analyze_historical_patterns()
         backtests = self.backtest_event_strategy()
@@ -505,7 +505,7 @@ class CatalystAnalyzer:
 
     # ----- 5. Full report -----
 
-    def full_report(self) -> Dict[str, Any]:
+    def full_report(self) -> dict:
         """Generate complete catalyst analysis report."""
         news = self.get_news()
         patterns = self.analyze_historical_patterns()
@@ -601,7 +601,7 @@ class CatalystAnalyzer:
             return "delivery_numbers"
         return "general"
 
-    def save_report(self, directory: Optional[str] = None) -> Path:
+    def save_report(self, directory: str | None = None) -> Path:
         """Save full report as JSON."""
         report = self.full_report()
         out_dir = Path(directory or str(Path(__file__).parent / "knowledge" / "catalyst_scans"))
@@ -615,7 +615,7 @@ class CatalystAnalyzer:
 # ---------------------------------------------------------------------------
 # Batch scanner for multiple tickers
 # ---------------------------------------------------------------------------
-def scan_industry(industry: str) -> Dict[str, Dict]:
+def scan_industry(industry: str) -> dict[str, dict]:
     """Scan all tickers in an industry."""
     info = INDUSTRY_CATALYSTS.get(industry)
     if not info:
@@ -631,7 +631,7 @@ def scan_industry(industry: str) -> Dict[str, Dict]:
     return results
 
 
-def scan_all_industries() -> Dict[str, Dict]:
+def scan_all_industries() -> dict[str, dict]:
     """Scan top ticker from each industry."""
     results = {}
     for industry, info in INDUSTRY_CATALYSTS.items():

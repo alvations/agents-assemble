@@ -226,13 +226,13 @@ class Terminal:
         from run_multi_horizon import run_single, _get_all_strategies
 
         all_strats = _get_all_strategies()
-        now = datetime.now()
+        now = pd.Timestamp.now()
         end_date = now.strftime("%Y-%m-%d")
         horizons = {
-            "3m": (f"{now.year}-{max(1, now.month - 3):02d}-{now.day:02d}", end_date),
-            "6m": (f"{now.year - (1 if now.month <= 6 else 0)}-{(now.month - 6 - 1) % 12 + 1:02d}-{now.day:02d}", end_date),
-            "1y": (f"{now.year - 1}-{now.month:02d}-{now.day:02d}", end_date),
-            "3y": (f"{now.year - 3}-{now.month:02d}-{now.day:02d}", end_date),
+            "3m": ((now - pd.DateOffset(months=3)).strftime("%Y-%m-%d"), end_date),
+            "6m": ((now - pd.DateOffset(months=6)).strftime("%Y-%m-%d"), end_date),
+            "1y": ((now - pd.DateOffset(years=1)).strftime("%Y-%m-%d"), end_date),
+            "3y": ((now - pd.DateOffset(years=3)).strftime("%Y-%m-%d"), end_date),
         }
 
         # Collect data for top strategies
@@ -290,9 +290,12 @@ class Terminal:
         plt, _ = _get_plt()
         from run_multi_horizon import run_single, _get_all_strategies
 
-        horizons = {"1y": ("2024-01-01", "2024-12-31"), "3y": ("2022-01-01", "2024-12-31"),
-                     "5y": ("2020-01-01", "2024-12-31")}
-        start, end = horizons.get(horizon, horizons["3y"])
+        now = pd.Timestamp.now()
+        end_str = now.strftime("%Y-%m-%d")
+        offset_map = {"1y": 1, "3y": 3, "5y": 5}
+        years = offset_map.get(horizon, 3)
+        start = (now - pd.DateOffset(years=years)).strftime("%Y-%m-%d")
+        end = end_str
 
         points = []
         for strat_info in _get_all_strategies():
