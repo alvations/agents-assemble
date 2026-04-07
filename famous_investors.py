@@ -284,15 +284,24 @@ class GeorgeSoros(BasePersona):
 
         if top:
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                weights[sym] = (score / total_score) * 0.95
-            # Post-clip normalization: redistribute freed allocation
-            clipped = {s: min(w, self.config.max_position_size) for s, w in weights.items() if w > 0}
-            clip_total = sum(clipped.values())
-            if clip_total > 0 and clip_total < 0.90:
-                scale = 0.95 / clip_total
-                clipped = {s: min(w * scale, self.config.max_position_size) for s, w in clipped.items()}
-            weights.update(clipped)
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.95 for sym, score in top}
+            # Iterative cap redistribution: keep redistributing until no entry exceeds cap
+            while True:
+                over = {s: w for s, w in raw.items() if w > cap}
+                if not over:
+                    break
+                under = {s: w for s, w in raw.items() if w <= cap}
+                freed = sum(w - cap for w in over.values())
+                for s in over:
+                    raw[s] = cap
+                if under:
+                    under_total = sum(under.values())
+                    for s in under:
+                        raw[s] += freed * (under[s] / under_total)
+                else:
+                    break
+            weights.update(raw)
 
         return weights
 
@@ -1106,15 +1115,24 @@ class SupportResistanceCommodity(BasePersona):
         top = scored[:self.config.max_positions]
         if top:
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                weights[sym] = (score / total_score) * 0.90
-            # Post-clip normalization: redistribute freed allocation
-            clipped = {s: min(w, self.config.max_position_size) for s, w in weights.items() if w > 0}
-            clip_total = sum(clipped.values())
-            if clip_total > 0 and clip_total < 0.85:
-                scale = 0.90 / clip_total
-                clipped = {s: min(w * scale, self.config.max_position_size) for s, w in clipped.items()}
-            weights.update(clipped)
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.90 for sym, score in top}
+            # Iterative cap redistribution
+            while True:
+                over = {s: w for s, w in raw.items() if w > cap}
+                if not over:
+                    break
+                under = {s: w for s, w in raw.items() if w <= cap}
+                freed = sum(w - cap for w in over.values())
+                for s in over:
+                    raw[s] = cap
+                if under:
+                    under_total = sum(under.values())
+                    for s in under:
+                        raw[s] += freed * (under[s] / under_total)
+                else:
+                    break
+            weights.update(raw)
 
         return weights
 
@@ -1174,11 +1192,11 @@ class BillAckman(BasePersona):
             if price < sma200 * 0.90:
                 continue  # Broken thesis
             score = 0.0
-            if sma50 and price > sma50 > sma200:
+            if sma50 is not None and price > sma50 > sma200:
                 score += 2.0
             elif price > sma200:
                 score += 1.0
-            if vol and vol < 0.02:
+            if vol is not None and vol < 0.02:
                 score += 1.0  # Prefer low vol (quality)
             if 30 < rsi < 65:
                 score += 0.5  # Buy on pullback, not at highs
@@ -1247,7 +1265,7 @@ class StanleyDruckenmiller(BasePersona):
                 continue
             # Druckenmiller: aggressive momentum with macro awareness
             score = 0.0
-            if sma200 and price > sma50 > sma200:
+            if sma200 is not None and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
@@ -1257,7 +1275,7 @@ class StanleyDruckenmiller(BasePersona):
                 score += 0.5
             if score >= 3:
                 scored.append((sym, score))
-            elif sma200 and price < sma200:
+            elif sma200 is not None and price < sma200:
                 weights[sym] = 0.0  # Cut losers aggressively
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
@@ -1320,11 +1338,11 @@ class CathieWood(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             # ARK style: buy dips in uptrend, hold through volatility
-            if sma200 and price < sma200 * 0.80:
+            if sma200 is not None and price < sma200 * 0.80:
                 weights[sym] = 0.0  # Only exit on full thesis break
                 continue
             score = 0.0
-            if price > sma200 and rsi < 50:
+            if sma200 is not None and price > sma200 and rsi < 50:
                 score += 2.5  # Buy the dip in uptrend (ARK specialty)
             elif price > sma50:
                 score += 1.5
@@ -1396,9 +1414,9 @@ class BlackRock2026(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
-                if vol and vol < 0.02:
+                if vol is not None and vol < 0.02:
                     score += 0.3  # Quality bonus
-                if rsi and rsi < 45:
+                if rsi is not None and rsi < 45:
                     score += 0.2
                 candidates.append((sym, score))
         candidates.sort(key=lambda x: x[1], reverse=True)

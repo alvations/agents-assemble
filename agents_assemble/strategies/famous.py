@@ -1320,11 +1320,11 @@ class CathieWood(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             # ARK style: buy dips in uptrend, hold through volatility
-            if sma200 and price < sma200 * 0.80:
+            if sma200 is not None and price < sma200 * 0.80:
                 weights[sym] = 0.0  # Only exit on full thesis break
                 continue
             score = 0.0
-            if price > sma200 and rsi < 50:
+            if sma200 is not None and price > sma200 and rsi < 50:
                 score += 2.5  # Buy the dip in uptrend (ARK specialty)
             elif price > sma50:
                 score += 1.5
