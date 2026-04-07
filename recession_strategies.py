@@ -16,9 +16,6 @@ Recession-Proof Strategies:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
-
-import numpy as np
 import pandas as pd
 
 from personas import BasePersona, PersonaConfig
@@ -29,9 +26,9 @@ from personas import BasePersona, PersonaConfig
 # ---------------------------------------------------------------------------
 def detect_recession_regime(
     date: pd.Timestamp,
-    data: Dict[str, pd.DataFrame],
-    prices: Dict[str, float],
-) -> Dict[str, Any]:
+    data: dict[str, pd.DataFrame],
+    prices: dict[str, float],
+) -> dict[str, object]:
     """Detect if we're in a recession-like regime.
 
     Uses multiple signals:
@@ -52,7 +49,8 @@ def detect_recession_regime(
     total_signals = 0
 
     # Fetch SPY indicators once (used by signals 1, 2, 4, 5)
-    spy_price = prices.get("SPY")
+    _spy_raw = prices.get("SPY")
+    spy_price = _spy_raw if _spy_raw is not None and not pd.isna(_spy_raw) else None
     spy_sma50 = _safe_get(data, "SPY", "sma_50", date) if "SPY" in data else None
     spy_sma200 = _safe_get(data, "SPY", "sma_200", date) if "SPY" in data else None
     spy_vol = _safe_get(data, "SPY", "vol_20", date) if "SPY" in data else None
@@ -147,7 +145,7 @@ class RecessionDetector(BasePersona):
     Recession regime: 20% stocks (XLP/XLV), 50% bonds (TLT/IEF), 20% gold (GLD), 10% cash
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Recession Detector (Adaptive)",
             description="Regime-switching: risk-on in growth, defensive in recession",
@@ -203,7 +201,7 @@ class TreasurySafe(BasePersona):
     when recession signals fire, short duration otherwise.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Treasury Safe Haven",
             description="Flight to quality: long-duration bonds when recession signals fire",
@@ -261,12 +259,12 @@ class DefensiveRotation(BasePersona):
     during recessions because demand is inelastic.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Defensive Rotation",
             description="Rotate to staples/utilities/healthcare when recession signals fire",
             risk_tolerance=0.3,
-            max_position_size=0.20,
+            max_position_size=0.30,
             max_positions=10,
             rebalance_frequency="weekly",
             universe=universe or [
@@ -318,7 +316,7 @@ class GoldBug(BasePersona):
     and inflation. Mining stocks provide leveraged exposure.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Gold Bug (Precious Metals)",
             description="Gold/silver/miners as recession and inflation hedge",
