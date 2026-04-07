@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `gld_price` variable** in `GoldBug.generate_signals` (line 355) — fetched from `prices.get("GLD")` and checked `is not None` in the condition, but never used in any computation inside the block. Also removed a latent NaN-safety issue since `prices.get()` can return NaN which `is not None` doesn't catch.
+- **Fixed `_safe_get` nearest-date path missing Series check** (line 131) — The exact-date path handled `pd.Series` returns (from duplicate index dates) via `isinstance` + `.iloc[0]`, but the nearest-date path didn't. `df.iloc[idx][indicator]` can also return a Series if column names are duplicated, which would cause `float(Series)` to raise TypeError (caught by except → returns None). Now both paths handle Series consistently.
+- **Removed dead universe entries in `GoldBug`** — GDXJ, GOLD, and AEM were in the default universe but never assigned weights in any branch of `generate_signals`, causing unnecessary data fetching with no effect on strategy behavior.

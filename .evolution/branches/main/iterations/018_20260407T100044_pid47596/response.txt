@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `save_results` producing invalid JSON** — `calmar_ratio` (`float("inf")` when no drawdown) and `profit_factor` (`float("inf")` when no losing days) were output as `Infinity` tokens by `json.dumps`, which is not valid JSON. Added `_sanitize_for_json` to recursively replace inf/nan with `null`.
+- **Replaced `numpy` with `math`/pandas equivalents** — `np.sqrt` → `math.sqrt`, `np.minimum(x, 0)` → `.clip(upper=0)`, `np.mean` → `sum()/len()`, `np.nan` → `float("nan")`. Removes the heavy numpy import; consistent with the same change made for other strategy files in iterations 2, 14, 16.
+- **Modernized type hints** — Replaced `Dict`, `List`, `Optional`, `Tuple` from `typing` with builtin `dict`, `list`, `tuple`, `X | None` (already guarded by `from __future__ import annotations`). Removed unused typing imports, keeping only `Any` and `Callable`.

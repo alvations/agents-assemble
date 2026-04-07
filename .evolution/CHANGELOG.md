@@ -417,3 +417,17 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed FaberSectorRotation safe haven bypassing universe check** (lines 679-680) — custom universes without TLT/IEF would get phantom allocations. Now checks `self.config.universe` before allocating, matching the pattern fixed in iteration 13 for FactorETFRotation and RiskParityMomentum.
 - **Fixed FaberSectorRotation capped weight excess unallocated** — with 1-2 qualifying sectors, `max_position_size=0.35` cap left 20-55% in cash instead 
 
+## [2026-04-07T10:11:02.856798+00:00] Branch: main | Run: 20260407T095840_pid47310 | Iter 19 | $1.0588
+### recession_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `gld_price` variable** in `GoldBug.generate_signals` (line 355) — fetched from `prices.get("GLD")` and checked `is not None` in the condition, but never used in any computation inside the block. Also removed a latent NaN-safety issue since `prices.get()` can return NaN which `is not None` doesn't catch.
+- **Fixed `_safe_get` nearest-date path missing Series check** (line 131) — The exact-date path handled `pd.Series` returns
+
+## [2026-04-07T10:11:14.157515+00:00] Branch: main | Run: 20260407T100044_pid47596 | Iter 18 | $1.7599
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `save_results` producing invalid JSON** — `calmar_ratio` (`float("inf")` when no drawdown) and `profit_factor` (`float("inf")` when no losing days) were output as `Infinity` tokens by `json.dumps`, which is not valid JSON. Added `_sanitize_for_json` to recursively replace inf/nan with `null`.
+- **Replaced `numpy` with `math`/pandas equivalents** — `np.sqrt` → `math.sqrt`, `np.minimum(x, 0)` → `.clip(upper=0)`, `np.mean` → `sum()/le
+

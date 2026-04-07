@@ -703,6 +703,7 @@ def save_results(results: dict[str, Any], path: str) -> None:
             except (TypeError, ValueError):
                 serializable[k] = str(v)
 
+    serializable = _sanitize_for_json(serializable)
     Path(path).write_text(json.dumps(serializable, indent=2, default=str))
 
 

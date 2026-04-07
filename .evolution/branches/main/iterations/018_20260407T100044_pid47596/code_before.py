@@ -15,12 +15,12 @@ Supports:
 from __future__ import annotations
 
 import json
-import math
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import numpy as np
 import pandas as pd
 
 
@@ -112,9 +112,9 @@ class Portfolio:
     """Tracks cash, positions, and portfolio value over time."""
     initial_cash: float = 100_000.0
     cash: float = 100_000.0
-    positions: dict[str, Position] = field(default_factory=dict)
-    trades: list[Trade] = field(default_factory=list)
-    history: list[dict[str, Any]] = field(default_factory=list)
+    positions: Dict[str, Position] = field(default_factory=dict)
+    trades: List[Trade] = field(default_factory=list)
+    history: List[Dict[str, Any]] = field(default_factory=list)
 
     # Transaction cost model
     commission_per_trade: float = 0.0  # Robinhood = $0
@@ -145,13 +145,13 @@ class Portfolio:
         self.trades.append(trade)
         return trade
 
-    def get_position(self, symbol: str) -> Position | None:
+    def get_position(self, symbol: str) -> Optional[Position]:
         pos = self.positions.get(symbol)
         if pos and pos.quantity != 0:
             return pos
         return None
 
-    def total_value(self, prices: dict[str, float]) -> float:
+    def total_value(self, prices: Dict[str, float]) -> float:
         """Calculate total portfolio value given current prices."""
         value = self.cash
         for sym, pos in self.positions.items():
@@ -159,7 +159,7 @@ class Portfolio:
                 value += pos.quantity * prices[sym]
         return value
 
-    def snapshot(self, date: pd.Timestamp, prices: dict[str, float]) -> dict[str, Any]:
+    def snapshot(self, date: pd.Timestamp, prices: Dict[str, float]) -> Dict[str, Any]:
         """Take a snapshot of portfolio state."""
         total = self.total_value(prices)
         holdings = {}
@@ -189,10 +189,10 @@ class Portfolio:
 # ---------------------------------------------------------------------------
 def compute_metrics(
     returns: pd.Series,
-    benchmark_returns: pd.Series | None = None,
+    benchmark_returns: Optional[pd.Series] = None,
     risk_free_rate: float = 0.04,
     periods_per_year: int = 252,
-) -> dict[str, float]:
+) -> Dict[str, float]:
     """Compute comprehensive performance metrics.
 
     Args:
@@ -218,17 +218,16 @@ def compute_metrics(
 
     # Volatility
     daily_vol = returns.std()
-    sqrt_periods = math.sqrt(periods_per_year)
-    annual_vol = daily_vol * sqrt_periods
+    annual_vol = daily_vol * np.sqrt(periods_per_year)
 
     # Sharpe ratio
     daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
     excess = returns - daily_rf
-    sharpe = excess.mean() / excess.std() * sqrt_periods if excess.std() > 0 else 0
+    sharpe = excess.mean() / excess.std() * np.sqrt(periods_per_year) if excess.std() > 0 else 0
 
     # Sortino ratio (downside deviation only)
-    downside_diff = (returns - daily_rf).clip(upper=0)
-    downside_dev = math.sqrt((downside_diff**2).mean()) * sqrt_periods
+    downside_diff = np.minimum(returns - daily_rf, 0)
+    downside_dev = np.sqrt(np.mean(downside_diff**2)) * np.sqrt(periods_per_year)
     sortino = (cagr - risk_free_rate) / downside_dev if downside_dev > 0 else 0
 
     # Drawdown analysis
@@ -294,7 +293,7 @@ def compute_metrics(
 
             # Information ratio
             tracking = aligned["port"] - aligned["bench"]
-            tracking_error = tracking.std() * sqrt_periods
+            tracking_error = tracking.std() * np.sqrt(periods_per_year)
             info_ratio = (port_aligned_cagr - bench_cagr) / tracking_error if tracking_error > 0 else 0
             metrics["information_ratio"] = info_ratio
             metrics["tracking_error"] = tracking_error
@@ -302,7 +301,7 @@ def compute_metrics(
     return metrics
 
 
-def compute_trade_metrics(trades: list[Trade]) -> dict[str, Any]:
+def compute_trade_metrics(trades: List[Trade]) -> Dict[str, Any]:
     """Compute trade-level metrics."""
     if not trades:
         return {"num_trades": 0}
@@ -319,7 +318,7 @@ def compute_trade_metrics(trades: list[Trade]) -> dict[str, Any]:
         "total_commission": total_commission,
         "total_slippage": total_slippage,
         "total_transaction_costs": total_commission + total_slippage,
-        "avg_trade_size": sum(t.quantity * t.price for t in trades) / len(trades),
+        "avg_trade_size": np.mean([t.quantity * t.price for t in trades]),
     }
 
 
@@ -349,15 +348,15 @@ class Backtester:
     def __init__(
         self,
         strategy: Callable,
-        symbols: list[str],
+        symbols: List[str],
         start: str = "2020-01-01",
-        end: str | None = None,
+        end: Optional[str] = None,
         initial_cash: float = 100_000.0,
         commission: float = 0.0,
         slippage_pct: float = 0.001,
         benchmark: str = "SPY",
         rebalance_frequency: str = "daily",  # daily, weekly, monthly
-        data: dict[str, pd.DataFrame] | None = None,
+        data: Optional[Dict[str, pd.DataFrame]] = None,
     ):
         self.strategy = strategy
         self.symbols = symbols
@@ -370,7 +369,7 @@ class Backtester:
         self.rebalance_frequency = rebalance_frequency
         self._external_data = data
 
-    def _load_data(self) -> tuple[dict[str, pd.DataFrame], pd.DataFrame | None]:
+    def _load_data(self) -> Tuple[Dict[str, pd.DataFrame], Optional[pd.DataFrame]]:
         """Load price data for all symbols + benchmark."""
         from data_fetcher import fetch_ohlcv, fetch_multiple_ohlcv
 
@@ -390,7 +389,7 @@ class Backtester:
 
         return all_data, bench_data
 
-    def _should_rebalance(self, date: pd.Timestamp, dates: list[pd.Timestamp], idx: int) -> bool:
+    def _should_rebalance(self, date: pd.Timestamp, dates: List[pd.Timestamp], idx: int) -> bool:
         """Check if we should rebalance on this date."""
         if self.rebalance_frequency == "daily":
             return True
@@ -404,7 +403,7 @@ class Backtester:
             return date.month != dates[idx - 1].month
         return True
 
-    def run(self) -> dict[str, Any]:
+    def run(self) -> Dict[str, Any]:
         """Run the backtest.
 
         Returns dict with:
@@ -520,13 +519,13 @@ class Backtester:
             },
         }
 
-    def _rebalance(self, portfolio: Portfolio, target_weights: dict[str, float],
-                   prices: dict[str, float], date: pd.Timestamp) -> None:
+    def _rebalance(self, portfolio: Portfolio, target_weights: Dict[str, float],
+                   prices: Dict[str, float], date: pd.Timestamp) -> None:
         """Rebalance portfolio to target weights."""
         total_value = portfolio.total_value(prices)
 
         # Phase 1: Collect and execute all sells (reductions, closes, short initiations)
-        sells: list[tuple[str, int]] = []
+        sells: List[Tuple[str, int]] = []
 
         for sym, target_w in target_weights.items():
             if sym not in prices:
@@ -555,7 +554,7 @@ class Backtester:
 
         # Phase 2: Recompute total value after sells, then collect buys
         total_value = portfolio.total_value(prices)
-        buys: list[tuple[str, int, float]] = []
+        buys: List[Tuple[str, int, float]] = []
 
         for sym, target_w in target_weights.items():
             if sym not in prices:
@@ -595,7 +594,7 @@ def _compute_rsi(prices: pd.Series, period: int = 14) -> pd.Series:
     delta = prices.diff()
     gain = delta.where(delta > 0, 0.0).rolling(window=period).mean()
     loss = (-delta.where(delta < 0, 0.0)).rolling(window=period).mean()
-    rs = gain / loss.replace(0, float("nan"))
+    rs = gain / loss.replace(0, np.nan)
     rsi = 100 - (100 / (1 + rs))
     # When loss==0 but gain>0 (all up days in window), RSI should be 100 not NaN
     rsi.loc[(loss == 0) & (gain > 0)] = 100.0
@@ -605,7 +604,7 @@ def _compute_rsi(prices: pd.Series, period: int = 14) -> pd.Series:
 
 
 def _compute_bollinger(prices: pd.Series, period: int = 20,
-                       num_std: float = 2) -> tuple[pd.Series, pd.Series]:
+                       num_std: float = 2) -> Tuple[pd.Series, pd.Series]:
     sma = prices.rolling(period).mean()
     std = prices.rolling(period).std()
     return sma + num_std * std, sma - num_std * std
@@ -622,7 +621,7 @@ def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
 # ---------------------------------------------------------------------------
 # Report generation
 # ---------------------------------------------------------------------------
-def format_report(results: dict[str, Any], title: str = "Backtest Report") -> str:
+def format_report(results: Dict[str, Any], title: str = "Backtest Report") -> str:
     """Format backtest results as a readable report."""
     m = results["metrics"]
     tm = results["trade_metrics"]
@@ -668,18 +667,7 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
     return "\n".join(lines)
 
 
-def _sanitize_for_json(obj):
-    """Replace float inf/nan with None for JSON compliance."""
-    if isinstance(obj, float) and (math.isinf(obj) or math.isnan(obj)):
-        return None
-    if isinstance(obj, dict):
-        return {k: _sanitize_for_json(v) for k, v in obj.items()}
-    if isinstance(obj, list):
-        return [_sanitize_for_json(v) for v in obj]
-    return obj
-
-
-def save_results(results: dict[str, Any], path: str) -> None:
+def save_results(results: Dict[str, Any], path: str) -> None:
     """Save backtest results to JSON."""
     serializable = {}
     for k, v in results.items():
@@ -703,7 +691,6 @@ def save_results(results: dict[str, Any], path: str) -> None:
             except (TypeError, ValueError):
                 serializable[k] = str(v)
 
-    serializable = _sanitize_for_json(serializable)
     Path(path).write_text(json.dumps(serializable, indent=2, default=str))
 
 
