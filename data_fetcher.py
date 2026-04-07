@@ -105,7 +105,10 @@ def _cache_get(key: str, max_age_hours: float = 12) -> pd.DataFrame | None:
             try:
                 return pd.read_parquet(path)
             except Exception:
-                pass
+                try:
+                    path.unlink()
+                except OSError:
+                    pass
     return None
 
 
@@ -397,9 +400,10 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
     if date:
         dt = datetime.strptime(date, "%Y-%m-%d")
         start = (dt - timedelta(days=365)).strftime("%Y-%m-%d")
+        end = (dt + timedelta(days=15)).strftime("%Y-%m-%d")
     else:
         start = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
-    end = (datetime.strptime(date, "%Y-%m-%d") + timedelta(days=15)).strftime("%Y-%m-%d") if date else None
+        end = None
     for series_id, label in maturities.items():
         try:
             df = fetch_fred_series(series_id, start=start, end=end)
@@ -677,13 +681,14 @@ def fetch_market_breadth() -> dict[str, Any]:
     for sym in etfs:
         try:
             ticker = yf.Ticker(sym)
-            hist = ticker.history(period="1mo")
+            hist = ticker.history(period="3mo")
             if not hist.empty:
                 close = hist["Close"]
                 sma20 = close.rolling(20).mean()
                 valid_sma = sma20.notna()
                 above_sma = (close[valid_sma] > sma20[valid_sma]).sum() / valid_sma.sum() if valid_sma.sum() > 0 else 0
-                first_close = close.iloc[0] if len(close) > 1 else None
+                recent = close.iloc[-22:] if len(close) > 22 else close
+                first_close = recent.iloc[0] if len(recent) > 1 else None
                 ret_1m = (close.iloc[-1] / first_close - 1) if first_close is not None and not pd.isna(first_close) and first_close > 0 else 0
                 breadth[sym] = {
                     "pct_above_sma20": float(above_sma),
@@ -939,10 +944,10 @@ def get_universe(category: str = "mega_cap") -> list[str]:
 
 def _all_universe_symbols() -> list[str]:
     """Return sorted list of all unique symbols across every UNIVERSE category."""
-    all_syms: set[str] = set()
-    for syms in UNIVERSE.values():
-        all_syms.update(syms)
-    return sorted(all_syms)
+    return list(_ALL_UNIVERSE_SYMBOLS)
+
+
+_ALL_UNIVERSE_SYMBOLS: list[str] = sorted({s for syms in UNIVERSE.values() for s in syms})
 
 
 def scan_52_week_lows(

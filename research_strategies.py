@@ -228,8 +228,9 @@ class LowVolAnomaly(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            inds = self._get_indicators(data, sym, ["vol_20", "sma_200"], date)
+            vol = inds["vol_20"]
+            sma200 = inds["sma_200"]
 
             if _is_missing(vol) or vol <= 0:
                 continue
@@ -396,8 +397,9 @@ class RiskParityMomentum(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            vol = inds["vol_20"]
 
             if _is_missing(vol) or vol <= 0:
                 continue
@@ -593,7 +595,7 @@ class GlobalRotation(BasePersona):
             rsi = inds["rsi_14"]
             vol = inds["vol_20"]
 
-            if any(_is_missing(v) for v in [sma50, sma200, rsi]):
+            if any(_is_missing(v) for v in [sma50, sma200, rsi, vol]) or vol <= 0:
                 continue
 
             # Momentum score (same as proven momentum framework)
@@ -606,8 +608,7 @@ class GlobalRotation(BasePersona):
                 score += 0.5
 
             # Vol-adjusted (prefer lower vol for same momentum)
-            if not _is_missing(vol) and vol > 0:
-                score *= min(1.5, 0.02 / vol)
+            score *= min(1.5, 0.02 / vol)
 
             if score > 1.5:
                 scored.append((sym, score))
@@ -665,8 +666,9 @@ class FactorETFRotation(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
             if _is_missing(sma50) or _is_missing(sma200):
                 continue
             # Momentum score
@@ -769,7 +771,7 @@ class FaberSectorRotation(BasePersona):
         for sym in self.config.universe:
             if sym in prices and sym not in weights:
                 weights[sym] = 0.0
-        return {k: v for k, v in weights.items() if k in prices}
+        return weights
 
 
 RESEARCH_STRATEGIES = {

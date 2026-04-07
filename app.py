@@ -324,8 +324,28 @@ function generateTradePlan() {
     });
 }
 
-function loadStrategies() { /* reload */ location.reload(); }
-function filterStrategies() { /* TODO: client-side filter */ }
+// Load all strategies list
+function loadStrategies() {
+    document.getElementById('all-strategies').innerHTML = '<p class="loading">Loading...</p>';
+    fetch('/api/strategies').then(r => r.json()).then(data => {
+        let html = '<table><tr><th>Strategy</th><th>Category</th><th>Universe Size</th><th>Rebalance</th><th>Risk</th></tr>';
+        const filter = document.getElementById('cat-filter').value;
+        data.forEach(s => {
+            if (filter && s.source !== filter) return;
+            html += '<tr><td><b>' + s.name + '</b></td>'
+                + '<td><span class="tag tag-blue">' + s.source + '</span></td>'
+                + '<td>' + s.universe_size + '</td>'
+                + '<td>' + s.rebalance + '</td>'
+                + '<td>' + s.risk + '</td></tr>';
+        });
+        html += '</table>';
+        document.getElementById('all-strategies').innerHTML = html;
+    });
+}
+function filterStrategies() { loadStrategies(); }
+
+// Auto-load strategies when switching to that tab
+document.querySelector('[onclick*="strategies"]').addEventListener('click', () => setTimeout(loadStrategies, 100));
 </script>
 </body>
 </html>
@@ -340,20 +360,55 @@ def index():
 
 @app.route("/api/leaderboard")
 def api_leaderboard():
-    from run_multi_horizon import run_single, _get_all_strategies
+    """Read existing backtest results from results/ directory — no re-running."""
+    results_dir = Path(__file__).parent / "results"
+    results = []
+    for f in results_dir.glob("*.json"):
+        try:
+            data = json.loads(f.read_text())
+            metrics = data.get("metrics", data)
+            name = f.stem.rsplit("_2026", 1)[0]
+            ret = metrics.get("total_return", 0)
+            sharpe = metrics.get("sharpe_ratio", 0)
+            max_dd = metrics.get("max_drawdown", 0)
+            if isinstance(ret, (int, float)):
+                results.append({
+                    "name": name,
+                    "source": "backtest",
+                    "return": round(ret, 4),
+                    "sharpe": round(sharpe, 2) if isinstance(sharpe, (int, float)) else 0,
+                    "max_dd": round(max_dd, 4) if isinstance(max_dd, (int, float)) else 0,
+                })
+        except Exception:
+            pass
+    # Deduplicate by name (keep latest)
+    seen = {}
+    for r in results:
+        seen[r["name"]] = r
+    results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)
+    return jsonify(results[:30])
+
+@app.route("/api/strategies")
+def api_strategies():
+    """List all strategies with metadata — no backtesting, instant response."""
+    from run_multi_horizon import _get_all_strategies
     results = []
     for s in _get_all_strategies():
-        r = run_single(s, "3y", "2022-01-01", "2024-12-31", verbose=False)
-        if r["status"] == "success":
-            m = r["metrics"]
+        try:
+            persona = s["getter"](s["key"])
             results.append({
-                "name": s["key"], "source": s["source"],
-                "return": m.get("total_return", 0),
-                "sharpe": m.get("sharpe_ratio", 0),
-                "max_dd": m.get("max_drawdown", 0),
+                "name": s["key"],
+                "source": s["source"],
+                "display_name": persona.config.name,
+                "description": persona.config.description,
+                "universe_size": len(persona.config.universe),
+                "rebalance": persona.config.rebalance_frequency,
+                "risk": f"{persona.config.risk_tolerance:.0%}",
             })
-    results.sort(key=lambda x: x["return"], reverse=True)
-    return jsonify(results[:30])
+        except Exception:
+            results.append({"name": s["key"], "source": s["source"],
+                            "universe_size": 0, "rebalance": "?", "risk": "?"})
+    return jsonify(results)
 
 @app.route("/api/market")
 def api_market():

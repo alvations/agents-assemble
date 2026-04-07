@@ -163,18 +163,24 @@ class Portfolio:
 
     def snapshot(self, date: pd.Timestamp, prices: dict[str, float]) -> dict[str, Any]:
         """Take a snapshot of portfolio state."""
-        total = self.total_value(prices)
+        total = self.cash
         holdings = {}
         for sym, pos in self.positions.items():
             if pos.quantity != 0 and sym in prices:
                 mv = pos.quantity * prices[sym]
+                total += mv
                 holdings[sym] = {
                     "quantity": pos.quantity,
                     "avg_cost": pos.avg_cost,
                     "market_value": mv,
-                    "weight": mv / total if total > 0 else 0,
                     "unrealized_pnl": (prices[sym] - pos.avg_cost) * pos.quantity,
                 }
+        if total > 0:
+            for h in holdings.values():
+                h["weight"] = h["market_value"] / total
+        else:
+            for h in holdings.values():
+                h["weight"] = 0
         snap = {
             "date": date,
             "cash": self.cash,
@@ -209,10 +215,12 @@ def compute_metrics(
     if returns.empty or len(returns) < 2:
         return {"error": "Insufficient data"}
 
-    # Drop interior NaN to prevent silent metric corruption
-    returns = returns.dropna()
+    # Drop NaN and inf to prevent silent metric corruption.
+    # pct_change() produces inf when equity touches zero then recovers;
+    # inf propagates through mean/std/prod and silently corrupts all metrics.
+    returns = returns.replace([float('inf'), float('-inf')], float('nan')).dropna()
     if len(returns) < 2:
-        return {"error": "Insufficient data after removing NaN"}
+        return {"error": "Insufficient data after removing NaN/inf"}
 
     # Basic return stats
     total_return = (1 + returns).prod() - 1
@@ -288,7 +296,8 @@ def compute_metrics(
 
     # Benchmark comparison
     if benchmark_returns is not None and not benchmark_returns.empty:
-        aligned = pd.DataFrame({"port": returns, "bench": benchmark_returns}).dropna()
+        aligned = pd.DataFrame({"port": returns, "bench": benchmark_returns})
+        aligned = aligned.replace([float('inf'), float('-inf')], float('nan')).dropna()
         if len(aligned) > 10:
             aligned_n_years = (aligned.index[-1] - aligned.index[0]).days / 365.25
             bench_total = (1 + aligned["bench"]).prod() - 1
@@ -788,7 +797,7 @@ def save_results(results: dict[str, Any], path: str) -> None:
                 for t in v
             ]
         elif isinstance(v, list):
-            serializable[k] = json.loads(json.dumps(v, default=str))
+            serializable[k] = json.loads(json.dumps(_sanitize_for_json(v), default=str))
         elif isinstance(v, dict):
             serializable[k] = {str(kk): vv for kk, vv in v.items()
                                 if not isinstance(vv, (pd.Series, pd.DataFrame))}
