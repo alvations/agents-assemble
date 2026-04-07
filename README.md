@@ -1,62 +1,124 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments (stocks, ETFs, bonds) on Robinhood / Public.com.
+Trading agents and algorithms for publicly tradable instruments. Backtested across multiple time horizons with 63 strategies, 510 tickers, and comprehensive research.
 
-## Architecture
+**Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
+
+## Quick Start
+
+```bash
+pip install -e .
+
+# Run all strategies on 3-year horizon
+python run_multi_horizon.py --horizon 3y
+
+# Run single strategy
+python run_multi_horizon.py --persona concentrate_winners
+
+# Run all strategies in a category
+python run_multi_horizon.py --category research
+
+# Test suite (63/63 should pass)
+python test_strategies.py
+```
+
+## Top 5 Strategies (Cross-Horizon Consistency)
+
+| Rank | Strategy | Avg Sharpe | 3Y Return | 10Y Return |
+|------|----------|-----------|-----------|-----------|
+| **1** | **Concentrate Winners** | **1.11** | 135.6% | 817.5% |
+| 2 | Momentum | 1.08 | 135.0% | 570.0% |
+| 3 | Momentum Crash-Hedged | 1.05 | 117.1% | 743.0% |
+| 4 | AI Revolution | 0.94 | 183.6% | 783.3% |
+| 5 | Masayoshi Son | 0.87 | 90.8% | 1068.3% |
+
+See [LEADERBOARD.md](LEADERBOARD.md) for full rankings of all 63 strategies.
+
+## 63 Strategies Across 8 Categories
+
+| Category | Count | Best Performer |
+|----------|-------|---------------|
+| Generic | 10 | Momentum (1.08 avg Sharpe) |
+| Famous Investors | 13 | Masayoshi Son (0.87) |
+| Themes | 12 | AI Revolution (0.94) |
+| Recession | 4 | Defensive Rotation (0.59) |
+| Unconventional | 8 | Concentrate Winners (1.11) |
+| Research | 10 | Momentum Crash-Hedged (1.05) |
+| Math | 5 | Kelly Optimal (0.67) |
+| Hedge Fund | 2 | Healthcare+Asia (0.81) |
+
+## Universe: 510 Tickers, 71 Categories
+
+- **US:** mega/mid/small/micro cap, Dividend Aristocrats (47), Dividend Kings (21)
+- **China:** 65 ADRs (BABA, JD, PDD, NIO, etc.)
+- **Europe:** 37 ADRs by country (UK, Germany, France, Nordic, etc.)
+- **Japan:** 13 ADRs (TM, SONY, MUFG, etc.)
+- **India:** 8 ADRs + ETFs (INFY, IBN, HDB, INDA)
+- **LatAm:** 30 (Brazil, Mexico, Argentina, Chile)
+- **Africa/ME:** 12 (GOLD, HMY, CYBR, WIX, etc.)
+- **Sectors:** fintech, cybersecurity, gaming, nuclear, quantum, cannabis, space, EV
+- **Themes:** AI, GLP-1/obesity, robotics, data centers, semiconductors (24)
+- **Commodities:** gold, silver, copper, uranium, lithium, agriculture
+
+## Project Structure
 
 ```
 agents-assemble/
-  data_fetcher.py      — Market data (yfinance, FRED, premium APIs)
-  backtester.py        — Event-driven backtesting engine
-  personas.py          — 7 trader persona strategies
-  run_hypotheses.py    — Hypothesis testing runner
-  knowledge/           — Saved findings and research
-  results/             — Backtest result JSON files
-  .cache/              — Data cache (parquet)
+  agents_assemble/              # Python package
+    data/fetcher.py             # Market data (yfinance, FRED, SEC, premium APIs)
+    engine/backtester.py        # Event-driven backtesting engine
+    engine/judge.py             # Strategy grading and ranking
+    engine/recommender.py       # Trade recommendations with entry/exit/stops
+    strategies/                 # All strategy implementations
+      generic.py, famous.py, themes.py, recession.py,
+      unconventional.py, research.py, math.py, hedge_fund.py
+
+  run_hypotheses.py             # Single-horizon backtest runner
+  run_multi_horizon.py          # Multi-horizon (1Y/3Y/5Y/10Y) runner
+  test_strategies.py            # Test suite (63/63 pass)
+  sync_package.py               # Sync flat files → package after evolution
+
+  LEADERBOARD.md                # Definitive strategy rankings
+  CLAUDE.md                     # Development guide
+  knowledge/                    # Research findings, failures log
+  results/                      # Backtest JSON results
+  strategy/winning/             # Trade recs for winning strategies
+  strategy/losing/              # Failed strategies (don't repeat)
+  .evolution/                   # Self-evolution history
 ```
 
-## Personas
+## Key Findings
 
-| Persona | Style | Risk | Rebalance |
-|---------|-------|------|-----------|
-| Buffett Value | Deep value, buy-and-hold blue chips | Low | Monthly |
-| Momentum | Trend-following tech leaders | High | Weekly |
-| Meme Stock | Volume spikes, dip buys, YOLO | Very High | Daily |
-| Dividend | Dividend aristocrats, compound forever | Very Low | Monthly |
-| Quant | Mean-reversion, Bollinger/RSI | Medium | Daily |
-| Fixed Income | Bond duration/credit via ETFs | Low | Weekly |
-| Growth | Disruptive innovation dip-buying | High | Weekly |
+- **Always backtest** — never trust any strategy blindly
+- **Test 4 horizons** — 1Y, 3Y, 5Y, 10Y (a 3Y winner may be a 10Y loser)
+- **Concentration beats diversification** — top 3-5 stocks outperform equal-weight
+- **Vol-scaling prevents crashes** — Momentum Crash-Hedged >0.7 Sharpe all horizons
+- **Bond fallback fails in rate hikes** — use gold/cash as third option
+- See `knowledge/failures_log.md` for strategies NOT to repeat
 
-## Quick start
+## Self-Evolution
+
+The library self-evolves using `self_evolve.py` from the parent jean-claude project:
 
 ```bash
-# Run all hypothesis backtests
-python run_hypotheses.py
-
-# Run single persona
-python run_hypotheses.py --persona buffett_value
-
-# Custom date range
-python run_hypotheses.py --start 2022-01-01 --end 2024-06-30
-
-# Self-evolve the library
-cd ..
-python self_evolve.py agents-assemble/ -n 3 --verbose
+cd agents-assemble
+PYTHONPATH=$(pwd) python3 ../self_evolve.py backtester.py -n 3 --verbose --resume
+python3 sync_package.py  # Sync flat files → package
 ```
 
-## Data sources
+50+ evolution iterations completed. See `.evolution/` for full history.
 
-### Free (no API key needed)
-- **yfinance**: OHLCV, fundamentals, dividends, options
-- **FRED CSV**: Treasury yields, macro data (limited)
+## API Keys (optional, set as env vars)
 
-### Free with API key
-- **FRED API**: Full macro/bond data (`FRED_API_KEY`)
-- **Finnhub**: Social sentiment, news (`FINNHUB_API_KEY`)
-- **Alpha Vantage**: Real-time quotes (`ALPHA_VANTAGE_KEY`)
+| Key | Source | Free Tier |
+|-----|--------|-----------|
+| `FRED_API_KEY` | FRED macro data | Unlimited |
+| `FINNHUB_API_KEY` | Social sentiment, insider trades | 60 calls/min |
+| `ALPHA_VANTAGE_KEY` | Real-time quotes | 5 calls/min |
+| `POLYGON_API_KEY` | Tick data | 5 calls/min (delayed) |
+| `NEWS_API_KEY` | Financial news headlines | 100/day |
 
-### Premium
-- **Polygon.io**: Tick data, options (`POLYGON_API_KEY`)
-- **IEX Cloud**: Real-time US equities (`IEX_CLOUD_KEY`)
+## Tax Note (K-1 Warning)
 
-Run `python data_fetcher.py` to see API key status.
+Some commodity ETFs (USO, UNG, DBA) issue K-1 forms instead of 1099-DIV.
+See `knowledge/tax_k1_warning.md` for safe alternatives.
