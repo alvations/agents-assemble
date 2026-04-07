@@ -18,7 +18,7 @@ Strategies:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -58,7 +58,7 @@ class SellInMayGoAway(BasePersona):
 
         if month >= 11 or month <= 4:
             # "Winter" = stocks
-            return {
+            raw = {
                 "SPY": 0.50,
                 "QQQ": 0.40,
                 "TLT": 0.0,
@@ -67,13 +67,14 @@ class SellInMayGoAway(BasePersona):
             }
         else:
             # "Summer" = bonds/cash
-            return {
+            raw = {
                 "SPY": 0.0,
                 "QQQ": 0.0,
                 "TLT": 0.30,
                 "IEF": 0.30,
                 "SHY": 0.30,
             }
+        return {k: v for k, v in raw.items() if k in prices}
 
 
 # ---------------------------------------------------------------------------
@@ -110,18 +111,19 @@ class TurnOfMonth(BasePersona):
 
         if day >= 26 or day <= 3:
             # Turn of month window — be in stocks
-            return {
+            raw = {
                 "SPY": 0.50,
                 "QQQ": 0.40,
                 "SHY": 0.0,
             }
         else:
             # Mid-month — park in short-term treasuries
-            return {
+            raw = {
                 "SPY": 0.0,
                 "QQQ": 0.0,
                 "SHY": 0.90,
             }
+        return {k: v for k, v in raw.items() if k in prices}
 
 
 # ---------------------------------------------------------------------------
@@ -245,7 +247,7 @@ class DogsOfTheDow(BasePersona):
             discount = (sma200 - price) / sma200
             discount_scores.append((sym, discount))
 
-        # Sort by discount (most negative = worst performers = "dogs")
+        # Sort by discount (highest = furthest below SMA200 = "dogs")
         discount_scores.sort(key=lambda x: x[1], reverse=True)
 
         # Take the 10 "worst" performers (highest discount = most beaten down)
@@ -380,6 +382,13 @@ class TailRiskHarvest(BasePersona):
             if daily_ret is None:
                 continue
 
+            # Exit recovered positions (RSI > 60 = recovered from crash)
+            if rsi and rsi > 65 and sma200 and price > sma200:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                    continue  # Don't consider for crash buy
+
             # Crash buy signal: sharp drop + above SMA200 (still quality)
             if daily_ret < -0.03:  # > 3% drop
                 vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
@@ -389,12 +398,6 @@ class TailRiskHarvest(BasePersona):
                     if vol_ratio > 2:
                         score *= 1.5  # Panic selling = better opportunity
                     crash_buys.append((sym, score))
-
-            # Exit recovered positions (RSI > 60 = recovered from crash)
-            if rsi and rsi > 65 and sma200 and price > sma200:
-                pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0:
-                    weights[sym] = 0.0
 
         crash_buys.sort(key=lambda x: x[1], reverse=True)
         top = crash_buys[:self.config.max_positions]

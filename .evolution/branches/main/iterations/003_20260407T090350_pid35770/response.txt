@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Bug fix (LowVolAnomaly line 223)**: Changed `if sma200 and` → `if sma200 is not None and` — a 0.0 SMA200 value would skip the downtrend filter, allowing broken-trend stocks into the low-vol portfolio. Same bug class fixed in iterations 1-2.
+- **Bug fix (GlobalRotation line 535)**: Changed `if vol and vol > 0:` → `if vol is not None and vol > 0:` — explicit None check for consistency and correctness.
+- **Bug fix (GlobalRotation line 540)**: Changed `elif sma200 and` → `elif sma200 is not None and` — same truthiness bug preventing zero-weighting of broken-trend stocks.
+- **Bug fix (RiskParityMomentum fallback lines 389-392)**: The fallback path hardcoded `TLT` and `GLD` allocations regardless of the user's custom universe. With a custom universe like `["SPY", "QQQ", "IWM"]`, the strategy would suggest positions in TLT/GLD whose prices aren't available. Now only allocates to safe havens if they're in the universe.

@@ -185,3 +185,19 @@ All edits pass syntax validation. Summary of changes:
 - **Bug fix (MultiFactorSmartBeta lines 142, 145, 148, 155)**: Changed truthiness checks on `sma50`, `sma200`, `rsi` to proper `is not None` checks or removed redundant guards. A 0.0 value would have incorrectly skipped momentum/quality scoring — same bug class fixed in iteration 1 for DualMomentum.
 - **Bug fix (RiskParityMomentum line 383)**: Changed `if sma50 and` → `if sma50 is not None and` to prevent 0.0 values from bypassing the moment
 
+## [2026-04-07T09:18:31.969963+00:00] Branch: main | Run: 20260407T090350_pid35770 | Iter 3 | $0.3429
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Bug fix (LowVolAnomaly line 223)**: Changed `if sma200 and` → `if sma200 is not None and` — a 0.0 SMA200 value would skip the downtrend filter, allowing broken-trend stocks into the low-vol portfolio. Same bug class fixed in iterations 1-2.
+- **Bug fix (GlobalRotation line 535)**: Changed `if vol and vol > 0:` → `if vol is not None and vol > 0:` — explicit None check for consistency and correctness.
+- **Bug fix (GlobalRotation line 540)*
+
+## [2026-04-07T09:20:49.659659+00:00] Branch: main | Run: 20260407T091902_pid38331 | Iter 1 | $0.4585
+### unconventional_strategies.py
+All changes pass syntax check. Summary:
+
+- **Removed unused imports** `Dict` and `Any` — dead code cleanup
+- **Filtered `SellInMayGoAway` and `TurnOfMonth` signals by `prices`** — these were the only two strategies returning hard-coded symbol dicts without checking if the symbols exist in the price data, which could cause downstream issues in the backtester
+- **Fixed `TailRiskHarvest` exit/crash-buy conflict** — moved exit check before crash-buy check with `continue`, so a position marked for ex
+

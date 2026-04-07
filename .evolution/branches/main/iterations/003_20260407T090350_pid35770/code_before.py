@@ -20,7 +20,7 @@ from typing import List, Optional
 
 import numpy as np
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -220,7 +220,7 @@ class LowVolAnomaly(BasePersona):
             if vol is None or vol <= 0:
                 continue
             # Must be above SMA200 (not broken)
-            if sma200 is not None and price < sma200 * 0.95:
+            if sma200 and price < sma200 * 0.95:
                 continue
 
             vol_ranked.append((sym, vol))
@@ -387,11 +387,8 @@ class RiskParityMomentum(BasePersona):
         if not candidates:
             # Everything trending down → safe haven, zero out all equities
             fallback = {sym: 0.0 for sym in self.config.universe}
-            # Only allocate to safe havens if they're in the universe
-            if "TLT" in self.config.universe:
-                fallback["TLT"] = 0.50
-            if "GLD" in self.config.universe:
-                fallback["GLD"] = 0.30
+            fallback["TLT"] = 0.50
+            fallback["GLD"] = 0.30
             return fallback
 
         # Risk parity: inverse-vol weighting
@@ -535,12 +532,12 @@ class GlobalRotation(BasePersona):
                 score += 0.5
 
             # Vol-adjusted (prefer lower vol for same momentum)
-            if vol is not None and vol > 0:
+            if vol and vol > 0:
                 score *= min(1.5, 0.02 / vol)
 
             if score > 1.5:
                 scored.append((sym, score))
-            elif sma200 is not None and price < sma200 * 0.95:
+            elif sma200 and price < sma200 * 0.95:
                 weights[sym] = 0.0
 
         scored.sort(key=lambda x: x[1], reverse=True)

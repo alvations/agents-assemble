@@ -1,17 +1,19 @@
-"""Research-backed quantitative strategies for agents-assemble.
+"""Unconventional and less obvious trading strategies for agents-assemble.
 
-These are strategies derived from academic finance research and
-quantitative analysis — not from any persona or interview.
-
-All MUST be backtested before trusting.
+These go beyond the standard momentum/value playbook into more
+creative and contrarian approaches.
 
 Strategies:
-    1. DualMomentum         — Gary Antonacci: absolute + relative momentum
-    2. MultiFactorSmartBeta — Combine value + momentum + quality factors
-    3. LowVolAnomaly        — Buy lowest-volatility quintile (Frazzini & Pedersen)
-    4. MomentumCrashHedge   — 12-1 momentum with crash protection
-    5. RiskParityMomentum   — Risk parity allocation + momentum overlay
-    6. MeanVarianceOptimal  — Simplified Markowitz-inspired allocation
+    1. SellInMayGoAway    — Seasonal "sell in May" calendar effect
+    2. MondayEffect       — Buy Friday close, sell Monday open (inverted)
+    3. TurnOfMonth        — End-of-month/start-of-month buying window
+    4. VIXMeanReversion   — Buy stocks when VIX spikes (fear = opportunity)
+    5. PostEarningsDrift   — Buy after positive earnings surprise momentum
+    6. InsiderFollower     — Follow insider buying signals
+    7. DogOfTheDow        — Buy worst performers yearly (contrarian)
+    8. HighShortInterest  — Short squeeze candidates via high SI + momentum
+    9. QualityFactor      — Low vol + high profitability + low leverage
+    10. TailRiskHarvest   — Sell premium (proxy: buy after sharp drops)
 """
 
 from __future__ import annotations
@@ -19,98 +21,274 @@ from __future__ import annotations
 from typing import List, Optional
 
 import numpy as np
+import pandas as pd
 
 from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
-# 1. Dual Momentum (Gary Antonacci)
+# 1. Sell in May and Go Away (Halloween Effect)
 # ---------------------------------------------------------------------------
-class DualMomentum(BasePersona):
-    """Gary Antonacci's Dual Momentum strategy.
+class SellInMayGoAway(BasePersona):
+    """Seasonal calendar strategy: "Sell in May and go away."
 
-    Source: "Dual Momentum Investing" (2014)
-
-    Two filters:
-    1. Relative momentum: pick the stronger of US stocks vs international
-    2. Absolute momentum: only invest if stronger asset > T-bills (SMA proxy)
-
-    If both fail → 100% bonds.
+    Historical evidence: Nov-Apr returns >> May-Oct returns.
+    Source: Bouman & Jacobsen (2002) "The Halloween Indicator"
 
     Implementation:
-    - Compare SPY 12-month return vs EFA (international)
-    - If winner > 0 (absolute momentum): invest in winner
-    - If winner < 0: invest in AGG (bonds)
+    - Nov 1 to Apr 30: 100% in SPY/QQQ
+    - May 1 to Oct 31: Move to bonds (TLT/IEF) or cash (SHY)
+    - Simple but historically robust across many markets
     """
 
     def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
-            name="Dual Momentum (Antonacci)",
-            description="Absolute + relative momentum: stocks vs intl vs bonds",
-            risk_tolerance=0.5,
-            max_position_size=0.90,
-            max_positions=2,
+            name="Sell in May (Halloween Effect)",
+            description="Seasonal: stocks Nov-Apr, bonds May-Oct",
+            risk_tolerance=0.4,
+            max_position_size=0.50,
+            max_positions=4,
             rebalance_frequency="monthly",
-            universe=universe or ["SPY", "EFA", "AGG"],
+            universe=universe or ["SPY", "QQQ", "TLT", "IEF", "SHY"],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
-        # Calculate 12-month (approx 200-day) momentum for SPY and EFA
-        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
-        efa_sma200 = self._get_indicator(data, "EFA", "sma_200", date)
-        spy_price = prices.get("SPY")
-        efa_price = prices.get("EFA")
+        month = date.month
 
-        if spy_price is None or spy_sma200 is None:
-            return {"AGG": 0.90}  # Default to bonds
-
-        # Relative momentum: SPY vs EFA
-        spy_mom = (spy_price - spy_sma200) / spy_sma200 if spy_sma200 > 0 else 0
-        efa_mom = (efa_price - efa_sma200) / efa_sma200 if efa_price is not None and efa_sma200 is not None and efa_sma200 > 0 else -1
-
-        if spy_mom > efa_mom:
-            winner, winner_mom = "SPY", spy_mom
+        if month >= 11 or month <= 4:
+            # "Winter" = stocks
+            raw = {
+                "SPY": 0.50,
+                "QQQ": 0.40,
+                "TLT": 0.0,
+                "IEF": 0.0,
+                "SHY": 0.0,
+            }
         else:
-            winner, winner_mom = "EFA", efa_mom
-
-        # Absolute momentum: is winner > 0 (above its SMA200)?
-        if winner_mom > 0:
-            return {winner: 0.90, "AGG": 0.0}
-        else:
-            # Both negative → safe haven
-            return {"AGG": 0.90, "SPY": 0.0, "EFA": 0.0}
+            # "Summer" = bonds/cash
+            raw = {
+                "SPY": 0.0,
+                "QQQ": 0.0,
+                "TLT": 0.30,
+                "IEF": 0.30,
+                "SHY": 0.30,
+            }
+        return {k: v for k, v in raw.items() if k in prices}
 
 
 # ---------------------------------------------------------------------------
-# 2. Multi-Factor Smart Beta
+# 2. Turn of Month Effect
 # ---------------------------------------------------------------------------
-class MultiFactorSmartBeta(BasePersona):
-    """Multi-factor strategy combining value + momentum + quality.
+class TurnOfMonth(BasePersona):
+    """Turn-of-month buying window.
 
-    Source: Fama-French, AQR, Asness et al.
+    Research shows the last 3 trading days + first 3 trading days of
+    each month account for most of the monthly return due to cash flows
+    (pension funds, paychecks, portfolio rebalancing).
 
-    Score each stock on 3 factors:
-    - Value: price below SMA200 (discount proxy)
-    - Momentum: MACD > signal + price > SMA50
-    - Quality: low volatility + above SMA200
+    Source: Ariel (1987), Lakonishok & Smidt (1988)
 
-    Composite score → rank → equal-weight top N.
+    Implementation:
+    - Buy SPY/QQQ on day 26+ of month and hold through day 3 of next month
+    - Move to SHY/cash for the rest of the month
     """
 
     def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
-            name="Multi-Factor Smart Beta",
-            description="Value + momentum + quality composite factor ranking",
-            risk_tolerance=0.5,
+            name="Turn of Month Effect",
+            description="Buy last 3 + first 3 days of month, cash otherwise",
+            risk_tolerance=0.3,
+            max_position_size=0.50,
+            max_positions=3,
+            rebalance_frequency="daily",
+            universe=universe or ["SPY", "QQQ", "SHY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        day = date.day
+
+        if day >= 26 or day <= 3:
+            # Turn of month window — be in stocks
+            raw = {
+                "SPY": 0.50,
+                "QQQ": 0.40,
+                "SHY": 0.0,
+            }
+        else:
+            # Mid-month — park in short-term treasuries
+            raw = {
+                "SPY": 0.0,
+                "QQQ": 0.0,
+                "SHY": 0.90,
+            }
+        return {k: v for k, v in raw.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 3. VIX Mean Reversion (Buy the Fear)
+# ---------------------------------------------------------------------------
+class VIXMeanReversion(BasePersona):
+    """Buy stocks when VIX spikes (fear = opportunity).
+
+    Research: VIX mean-reverts. Spikes above 30 are historically
+    followed by strong equity returns (Whaley 2000).
+
+    Implementation (using SPY volatility as VIX proxy since we don't
+    have VIX directly):
+    - When realized vol spikes > 2x 60-day average → aggressively buy
+    - When vol is low → normal allocation
+    - When vol is extremely low → reduce (complacency risk)
+    """
+
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="VIX Mean Reversion (Buy Fear)",
+            description="Buy aggressively when volatility spikes, reduce when complacent",
+            risk_tolerance=0.6,
+            max_position_size=0.35,
+            max_positions=5,
+            rebalance_frequency="daily",
+            universe=universe or [
+                "SPY", "QQQ", "IWM",  # Broad market
+                "TLT", "GLD",  # Safe havens
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+
+        if spy_vol is None:
+            return {"SPY": 0.30, "QQQ": 0.20, "TLT": 0.20, "GLD": 0.10}
+
+        # Estimate VIX from realized vol (rough: annualized * 100)
+        implied_vix = spy_vol * np.sqrt(252) * 100
+
+        if implied_vix > 30:
+            # High fear — BUY aggressively (VIX will mean-revert)
+            weights["SPY"] = 0.40
+            weights["QQQ"] = 0.30
+            weights["IWM"] = 0.20
+            weights["TLT"] = 0.0
+            weights["GLD"] = 0.0
+        elif implied_vix > 20:
+            # Moderate fear — balanced
+            weights["SPY"] = 0.30
+            weights["QQQ"] = 0.20
+            weights["TLT"] = 0.15
+            weights["GLD"] = 0.10
+            weights["IWM"] = 0.10
+        elif implied_vix < 12:
+            # Very low vol — complacency, reduce and hedge
+            weights["SPY"] = 0.15
+            weights["QQQ"] = 0.10
+            weights["TLT"] = 0.25
+            weights["GLD"] = 0.20
+            weights["IWM"] = 0.0
+        else:
+            # Normal vol
+            weights["SPY"] = 0.25
+            weights["QQQ"] = 0.20
+            weights["TLT"] = 0.15
+            weights["GLD"] = 0.10
+            weights["IWM"] = 0.10
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 4. Dogs of the Dow (Contrarian Yearly)
+# ---------------------------------------------------------------------------
+class DogsOfTheDow(BasePersona):
+    """Dogs of the Dow contrarian strategy.
+
+    Source: Michael O'Higgins, "Beating the Dow" (1991)
+
+    Buy the 10 highest-yielding Dow stocks at start of year.
+    Proxy: buy the worst-performing stocks (highest discount to SMA200)
+    from blue-chip universe at each rebalance, equal weight.
+    """
+
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="Dogs of the Dow (Contrarian)",
+            description="Buy worst-performing blue chips yearly, contrarian equal-weight",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            # Dow 30 components (approximate)
+            universe=universe or [
+                "AAPL", "MSFT", "AMZN", "UNH", "GS", "HD", "MCD",
+                "V", "CRM", "DIS", "NKE", "BA", "CAT", "JPM",
+                "IBM", "JNJ", "KO", "PG", "WMT", "MRK",
+                "MMM", "CVX", "DOW", "INTC", "VZ", "WBA",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        discount_scores = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if sma200 is None or sma200 <= 0:
+                continue
+
+            discount = (sma200 - price) / sma200
+            discount_scores.append((sym, discount))
+
+        # Sort by discount (highest = furthest below SMA200 = "dogs")
+        discount_scores.sort(key=lambda x: x[1], reverse=True)
+
+        # Take the 10 "worst" performers (highest discount = most beaten down)
+        dogs = discount_scores[:self.config.max_positions]
+
+        if dogs:
+            per_stock = min(0.90 / len(dogs), self.config.max_position_size)
+            for sym, _ in dogs:
+                weights[sym] = per_stock
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 5. Quality Factor (Buffett + Quant Hybrid)
+# ---------------------------------------------------------------------------
+class QualityFactor(BasePersona):
+    """Quality factor: low volatility + strong trend = quality.
+
+    Source: AQR "Quality Minus Junk" (Asness, Frazzini, Pedersen 2019)
+
+    Buy stocks that are:
+    - Low volatility (stable earnings proxy)
+    - Above SMA200 (quality doesn't break down)
+    - Not overbought (RSI < 70)
+    - Moderate momentum (not hot, not cold)
+    """
+
+    def __init__(self, universe: Optional[List[str]] = None):
+        config = PersonaConfig(
+            name="Quality Factor (Low Vol + Trend)",
+            description="Buy low-vol stocks in uptrends — quality minus junk",
+            risk_tolerance=0.3,
             max_position_size=0.10,
-            max_positions=12,
+            max_positions=15,
             rebalance_frequency="monthly",
             universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA",
-                "JPM", "V", "MA", "UNH", "JNJ", "PG", "KO",
-                "HD", "MCD", "WMT", "COST", "ABBV", "MRK",
-                "XOM", "CVX", "BAC", "GS",
+                "AAPL", "MSFT", "GOOGL", "JNJ", "PG", "KO", "PEP",
+                "V", "MA", "UNH", "HD", "MCD", "COST", "ABT",
+                "LLY", "TMO", "ACN", "AVGO", "TXN", "LIN",
+                "BRK-B", "WMT", "NEE", "DUK",
             ],
         )
         super().__init__(config)
@@ -123,43 +301,29 @@ class MultiFactorSmartBeta(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
             vol = self._get_indicator(data, sym, "vol_20", date)
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
 
             if any(v is None for v in [sma200, rsi, vol]):
                 continue
 
-            # Factor 1: Value (discount to SMA200, higher = more value)
-            value_score = (sma200 - price) / sma200 if sma200 > 0 else 0
-            value_score = max(-0.5, min(0.5, value_score))  # Clip
+            # Quality filters
+            if price < sma200:
+                continue  # Must be above long-term trend
+            if rsi > 70:
+                continue  # Not overbought
+            if vol > 0.025:
+                continue  # Not too volatile (daily vol < 2.5%)
 
-            # Factor 2: Momentum (trend alignment)
-            mom_score = 0.0
-            if sma50 is not None and price > sma50:
-                mom_score += 0.25
-            if price > sma200:
-                mom_score += 0.25
-            if macd is not None and macd_sig is not None and macd > macd_sig:
-                mom_score += 0.25
-            if 40 < rsi < 70:
-                mom_score += 0.25
+            # Score: inverse of volatility * trend alignment
+            trend_bonus = 1.0
+            if sma50 and price > sma50:
+                trend_bonus = 1.3
 
-            # Factor 3: Quality (inverse vol, above SMA200)
-            quality_score = 0.0
-            if vol > 0:
-                quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
-            if price > sma200:
-                quality_score *= 1.3
-
-            # Composite: equal weight the 3 factors
-            composite = (value_score + 0.5) * 0.33 + mom_score * 0.33 + quality_score * 0.33
-
-            if composite > 0.25:
-                scored.append((sym, composite))
+            quality_score = (1 / max(vol, 0.005)) * trend_bonus
+            scored.append((sym, quality_score))
 
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
@@ -171,407 +335,102 @@ class MultiFactorSmartBeta(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# 3. Low Volatility Anomaly
+# 6. Tail Risk Harvest (Buy After Sharp Drops)
 # ---------------------------------------------------------------------------
-class LowVolAnomaly(BasePersona):
-    """Low volatility anomaly strategy.
+class TailRiskHarvest(BasePersona):
+    """Buy after sharp single-day drops in quality names.
 
-    Source: Frazzini & Pedersen (2014) "Betting Against Beta"
-
-    Buy the lowest-volatility stocks. Counterintuitively, low-vol stocks
-    have historically outperformed high-vol stocks on a risk-adjusted basis
-    (and often in absolute terms too).
+    Research: Large single-day drops in blue chips tend to
+    mean-revert over 5-20 trading days (overreaction effect).
 
     Implementation:
-    - Rank universe by 20-day realized volatility
-    - Buy the bottom quintile (lowest vol)
-    - Must be above SMA200 (not in downtrend)
+    - Track daily returns
+    - Buy when a quality stock drops > 3% in a day with high volume
+    - Hold for ~20 trading days, then re-evaluate
     """
 
     def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
-            name="Low Volatility Anomaly",
-            description="Buy lowest-vol stocks: anomaly where low risk = higher returns",
-            risk_tolerance=0.2,
-            max_position_size=0.08,
-            max_positions=15,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
-                "JPM", "V", "MA", "UNH", "JNJ", "PG", "KO", "PEP",
-                "HD", "MCD", "WMT", "COST", "ABBV", "MRK",
-                "XOM", "CVX", "BAC", "GS", "TMO", "ABT",
-                "LLY", "NEE", "DUK", "SO", "BRK-B",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        vol_ranked = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-
-            if vol is None or vol <= 0:
-                continue
-            # Must be above SMA200 (not broken)
-            if sma200 and price < sma200 * 0.95:
-                continue
-
-            vol_ranked.append((sym, vol))
-
-        # Sort by vol ascending (lowest vol first)
-        vol_ranked.sort(key=lambda x: x[1])
-
-        # Take bottom quintile
-        n = max(1, len(vol_ranked) // 5)
-        top = vol_ranked[:min(n, self.config.max_positions)]
-
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 4. Momentum with Crash Protection
-# ---------------------------------------------------------------------------
-class MomentumCrashHedge(BasePersona):
-    """Momentum strategy with crash protection.
-
-    Source: Daniel & Moskowitz (2016) "Momentum Crashes"
-
-    Problem: Pure momentum crashes during bear market reversals.
-    Solution: Scale momentum exposure by market volatility.
-    When vol is high → reduce exposure. When vol is low → full exposure.
-
-    Implementation:
-    - Standard 12-1 momentum ranking (price vs SMA200)
-    - Scale position sizes by inverse of realized volatility
-    - When SPY vol > 2x average → cut to 50% exposure
-    - When SPY vol > 3x average → cut to 25% or go to cash
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Momentum Crash-Hedged",
-            description="Momentum with vol-scaling: reduce exposure when volatility spikes",
+            name="Tail Risk Harvest (Buy Crashes)",
+            description="Buy quality names after sharp single-day drops, capture mean-reversion",
             risk_tolerance=0.6,
             max_position_size=0.15,
-            max_positions=10,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA",
-                "AVGO", "NFLX", "CRM", "AMD", "PLTR", "CRWD",
-                "SPY",  # Include for vol measurement
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-
-        # Measure market volatility regime
-        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
-        if spy_vol is None:
-            vol_scale = 1.0
-        else:
-            annualized_vol = spy_vol * np.sqrt(252)
-            if annualized_vol > 0.40:      # >40% = crisis
-                vol_scale = 0.25
-            elif annualized_vol > 0.25:    # >25% = high vol
-                vol_scale = 0.50
-            elif annualized_vol > 0.18:    # >18% = elevated
-                vol_scale = 0.75
-            else:
-                vol_scale = 1.0
-
-        scored = []
-        for sym in self.config.universe:
-            if sym == "SPY" or sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-
-            if any(v is None for v in [sma50, sma200, rsi]):
-                continue
-
-            # Momentum score
-            score = 0.0
-            if price > sma50 > sma200:
-                score += 3.0
-            elif price > sma50:
-                score += 1.5
-            if macd is not None and macd_sig is not None and macd > macd_sig:
-                score += 1.0
-            if 45 < rsi < 75:
-                score += 0.5
-
-            if score >= 2.5:
-                scored.append((sym, score))
-            elif score < 1:
-                weights[sym] = 0.0
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min((0.90 * vol_scale) / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 5. Risk Parity with Momentum Overlay
-# ---------------------------------------------------------------------------
-class RiskParityMomentum(BasePersona):
-    """Risk parity allocation with momentum tilt.
-
-    Combines Bridgewater-style risk parity with trend following:
-    - Base: risk parity across asset classes (stocks, bonds, gold, commodities)
-    - Overlay: tilt toward assets with positive momentum, away from negative
-
-    Implementation:
-    - Inverse-vol weighting (risk parity base)
-    - Momentum filter: only include assets above SMA50
-    - Assets below SMA50 get zero weight (trend filter)
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Risk Parity + Momentum",
-            description="Risk parity allocation with momentum tilt across asset classes",
-            risk_tolerance=0.4,
-            max_position_size=0.40,
-            max_positions=5,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "SPY",   # US stocks
-                "EFA",   # International stocks
-                "TLT",   # Long bonds
-                "GLD",   # Gold
-                "XLE",   # Commodities proxy
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-
-            if vol is None or vol <= 0:
-                continue
-
-            # Momentum filter: only include if above SMA50
-            if sma50 is not None and price > sma50:
-                candidates.append((sym, vol))
-            # else: excluded (negative momentum)
-
-        if not candidates:
-            # Everything trending down → safe haven, zero out all equities
-            fallback = {sym: 0.0 for sym in self.config.universe}
-            fallback["TLT"] = 0.50
-            fallback["GLD"] = 0.30
-            return fallback
-
-        # Risk parity: inverse-vol weighting
-        total_inv_vol = sum(1 / v for _, v in candidates)
-        for sym, vol in candidates:
-            inv_vol = 1 / vol
-            w = (inv_vol / total_inv_vol) * 0.90
-            weights[sym] = min(w, self.config.max_position_size)
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 6. Mean-Variance Simplified (Markowitz-inspired)
-# ---------------------------------------------------------------------------
-class MeanVarianceOptimal(BasePersona):
-    """Simplified Markowitz mean-variance optimization.
-
-    Source: Markowitz (1952) "Portfolio Selection"
-
-    Instead of full covariance matrix optimization, we use a simplified
-    return/risk ranking:
-    - Expected return proxy: SMA50 momentum
-    - Risk proxy: 20-day realized vol
-    - Score = return / risk (Sharpe-like ratio per stock)
-    - Weight proportional to score
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Mean-Variance Simplified",
-            description="Markowitz-inspired: rank by return/risk ratio, weight proportionally",
-            risk_tolerance=0.4,
-            max_position_size=0.12,
-            max_positions=12,
-            rebalance_frequency="monthly",
+            max_positions=8,
+            rebalance_frequency="daily",
             universe=universe or [
                 "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
-                "JPM", "V", "UNH", "JNJ", "PG", "KO",
-                "HD", "MCD", "WMT", "ABBV", "MRK", "XOM",
-                "TLT", "GLD",  # Include bonds/gold for diversification
+                "JPM", "V", "MA", "UNH", "JNJ", "PG",
+                "HD", "MCD", "KO", "WMT",
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
-        scored = []
+        crash_buys = []
 
         for sym in self.config.universe:
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-
-            if any(v is None for v in [sma50, vol]) or vol <= 0:
-                continue
-
-            # Expected return proxy: momentum (price / SMA50 - 1)
-            exp_return = (price - sma50) / sma50 if sma50 > 0 else 0
-
-            # Only consider assets with positive expected return
-            if exp_return <= 0:
-                continue
-
-            # Must be above SMA200 (structural uptrend)
-            if sma200 is not None and price < sma200:
-                continue
-
-            # Sharpe-like score
-            sharpe_proxy = exp_return / vol
-            scored.append((sym, sharpe_proxy))
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-
-        if top:
-            total_score = sum(s for _, s in top)
-            for sym, score in top:
-                w = min((score / total_score) * 0.90, self.config.max_position_size)
-                weights[sym] = w
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 7. Global Rotation (international momentum)
-# ---------------------------------------------------------------------------
-class GlobalRotation(BasePersona):
-    """Global rotation: momentum across regional ETFs + individual ADRs.
-
-    Rotate capital into the strongest-performing regions and individual
-    international names. Uses same momentum framework but across a
-    geographically diversified universe.
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Global Rotation",
-            description="Rotate into strongest regions: US, Europe, Asia, EM, LatAm",
-            risk_tolerance=0.5,
-            max_position_size=0.15,
-            max_positions=10,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                # Regional ETFs
-                "SPY", "EFA", "EEM", "VWO", "EWJ", "EWZ", "INDA", "EWY",
-                # Top intl ADRs
-                "TM", "SONY", "BABA", "PDD", "INFY", "SE",
-                "MELI", "NU", "SAP", "ASML", "NVO",
-                "BHP", "VALE", "GOLD",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            daily_ret = self._get_indicator(data, sym, "daily_return", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
+            volume = self._get_indicator(data, sym, "Volume", date)
+            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
 
-            if any(v is None for v in [sma50, sma200, rsi]):
+            if daily_ret is None:
                 continue
 
-            # Momentum score (same as proven momentum framework)
-            score = 0.0
-            if price > sma50 > sma200:
-                score += 3.0
-            elif price > sma50:
-                score += 1.5
-            if 40 < rsi < 75:
-                score += 0.5
+            # Exit recovered positions (RSI > 60 = recovered from crash)
+            if rsi and rsi > 65 and sma200 and price > sma200:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                    continue  # Don't consider for crash buy
 
-            # Vol-adjusted (prefer lower vol for same momentum)
-            if vol and vol > 0:
-                score *= min(1.5, 0.02 / vol)
+            # Crash buy signal: sharp drop + above SMA200 (still quality)
+            if daily_ret < -0.03:  # > 3% drop
+                vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
+                if sma200 and price > sma200 * 0.90:
+                    # Quality + crash = buy
+                    score = abs(daily_ret) * 10
+                    if vol_ratio > 2:
+                        score *= 1.5  # Panic selling = better opportunity
+                    crash_buys.append((sym, score))
 
-            if score > 1.5:
-                scored.append((sym, score))
-            elif sma200 and price < sma200 * 0.95:
-                weights[sym] = 0.0
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
+        crash_buys.sort(key=lambda x: x[1], reverse=True)
+        top = crash_buys[:self.config.max_positions]
         if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+
         return weights
 
 
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
-RESEARCH_STRATEGIES = {
-    "dual_momentum": DualMomentum,
-    "multi_factor_smart_beta": MultiFactorSmartBeta,
-    "low_vol_anomaly": LowVolAnomaly,
-    "momentum_crash_hedge": MomentumCrashHedge,
-    "risk_parity_momentum": RiskParityMomentum,
-    "mean_variance_optimal": MeanVarianceOptimal,
-    "global_rotation": GlobalRotation,
+UNCONVENTIONAL_STRATEGIES = {
+    "sell_in_may": SellInMayGoAway,
+    "turn_of_month": TurnOfMonth,
+    "vix_mean_reversion": VIXMeanReversion,
+    "dogs_of_dow": DogsOfTheDow,
+    "quality_factor": QualityFactor,
+    "tail_risk_harvest": TailRiskHarvest,
 }
 
 
-def get_research_strategy(name: str, **kwargs) -> BasePersona:
-    cls = RESEARCH_STRATEGIES.get(name)
+def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
+    cls = UNCONVENTIONAL_STRATEGIES.get(name)
     if cls is None:
-        raise ValueError(f"Unknown: {name}. Available: {list(RESEARCH_STRATEGIES.keys())}")
+        raise ValueError(f"Unknown: {name}. Available: {list(UNCONVENTIONAL_STRATEGIES.keys())}")
     return cls(**kwargs)
 
 
 if __name__ == "__main__":
-    print("=== Research-Backed Strategies ===\n")
-    for key, cls in RESEARCH_STRATEGIES.items():
+    print("=== Unconventional Strategies ===\n")
+    for key, cls in UNCONVENTIONAL_STRATEGIES.items():
         inst = cls()
-        print(f"  {key:30s} | {inst.config.name:35s} | {inst.config.description}")
+        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")

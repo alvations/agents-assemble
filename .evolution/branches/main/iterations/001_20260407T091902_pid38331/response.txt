@@ -1,0 +1,6 @@
+All changes pass syntax check. Summary:
+
+- **Removed unused imports** `Dict` and `Any` — dead code cleanup
+- **Filtered `SellInMayGoAway` and `TurnOfMonth` signals by `prices`** — these were the only two strategies returning hard-coded symbol dicts without checking if the symbols exist in the price data, which could cause downstream issues in the backtester
+- **Fixed `TailRiskHarvest` exit/crash-buy conflict** — moved exit check before crash-buy check with `continue`, so a position marked for exit (RSI > 65) can't be overwritten by a simultaneous crash-buy signal
+- **Fixed misleading comment in `DogsOfTheDow`** — said "most negative = worst performers" but the sort actually picks the highest (most positive) discount values
