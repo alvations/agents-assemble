@@ -770,11 +770,6 @@ class PairsTrader(BasePersona):
             if any(v is None for v in [rsi_a, rsi_b, sma50_a, sma50_b]):
                 continue
 
-            # Relative momentum: which one is stronger?
-            mom_a = price_a / sma50_a if sma50_a > 0 else 1
-            mom_b = price_b / sma50_b if sma50_b > 0 else 1
-            spread = mom_a - mom_b  # positive = A is stronger
-
             # Mean reversion in the pair
             if rsi_a < 35 and rsi_b > 55:
                 # A oversold relative to B — overweight A
