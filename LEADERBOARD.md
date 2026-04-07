@@ -1,88 +1,102 @@
 # Strategy Leaderboard
 
-**Last Updated:** 2026-04-07 10:35 UTC
-**Horizons Tested:** 1Y (2024), 3Y (2022-2024), 5Y (2020-2024), 10Y (2015-2024)
+**Last Updated:** 2026-04-07 12:30 UTC
+**Horizons:** 1W / 2W / 1M / 3M / 6M / 1Y / 3Y / 5Y / 10Y (9 horizons)
 **Initial Capital:** $100,000 | **Slippage:** 10 bps | **Commission:** $0
-**Benchmark:** SPY | **Total Strategies:** 66 | **Total Tickers:** 537
+**Total Strategies:** 91 | **Total Tickers:** 580 | **Categories:** 12
 
-## NEW #1: Concentrate Winners (1.11 avg Sharpe!)
+> **Note:** All rankings show Return + Sharpe + Max Drawdown together.
+> Individual metrics alone are deceptive.
 
-| Horizon | Return | Sharpe | Max DD |
-|---------|--------|--------|--------|
-| 1Y | 28.9% | 1.50 | -6.5% |
-| 3Y | 135.6% | 1.28 | -18.0% |
-| 5Y | 132.8% | 0.74 | -28.1% |
-| 10Y | **817.5%** | 0.92 | -28.3% |
-| **Avg** | — | **1.11** | — |
-
-## Cross-Horizon Consistency (Avg Sharpe across 1Y/3Y/5Y/10Y)
-
-| Rank | Strategy | Category | 1Y | 3Y | 5Y | 10Y | **Avg Sharpe** |
-|------|----------|----------|----|----|----|----|-----------|
-| **1** | **Concentrate Winners** | Unconventional | **1.50** | **1.28** | 0.74 | 0.92 | **1.11** |
-| 2 | Momentum | Generic | 1.49 | 1.36 | 0.60 | 0.86 | **1.08** |
-| 3 | Momentum Crash-Hedged | Research | 1.18 | 1.26 | 0.72 | 1.05 | **1.05** |
-| 4 | AI Revolution | Theme | 0.55 | 1.41 | 0.85 | 0.95 | **0.94** |
-| 5 | Masayoshi Son | Famous | 1.19 | 0.77 | 0.62 | 0.90 | **0.87** |
-| 6 | Healthcare+Asia | Hedge Fund | 0.88 | 0.80 | 0.94 | 0.61 | **0.81** |
-| 6 | Pairs Trading | Generic | 0.87 | 0.62 | 1.03 | 0.72 | **0.81** |
-| 8 | Kelly Optimal | Math | 0.06 | 0.72 | 0.95 | 0.96 | **0.67** |
-| 9 | Defensive Rotation | Recession | 0.88 | 0.33 | 0.60 | 0.57 | **0.59** |
-| 10 | Global Rotation | Research | -0.27 | 1.00 | 0.61 | 0.71 | **0.51** |
-
-## Definitive 3Y Rankings (2022-2024)
+## Top 15 Strategies — 3Y (2022-01-01 to 2024-12-31)
 
 | Rank | Strategy | Category | 3Y Return | 3Y Sharpe | 3Y Max DD |
 |------|----------|----------|-----------|-----------|-----------|
 | 1 | **AI Revolution** | Theme | **183.6%** | **1.41** | -22.0% |
-| 2 | **Momentum** | Generic | **135.0%** | **1.36** | -17.9% |
-| 3 | **Concentrate Winners** | Unconventional | **135.6%** | **1.28** | -18.0% |
+| 2 | **Concentrate Winners** | Unconventional | **135.6%** | **1.28** | -18.0% |
+| 3 | **Momentum** | Generic | **135.0%** | **1.36** | -17.9% |
 | 4 | **Momentum Crash-Hedged** | Research | **117.1%** | **1.26** | -20.8% |
-| 5 | Small Cap Value | Theme | 56.1% | **1.10** | **-4.6%** |
-| 6 | Prince Alwaleed | Famous | 44.5% | **1.02** | -9.5% |
-| 7 | Global Rotation | Research | 52.4% | **1.00** | -8.1% |
-| 8 | Defense & Aerospace | Theme | **92.9%** | 0.64 | -46.1% |
-| 9 | **GLP-1 Obesity** | Theme | **80.7%** | **0.92** | -12.5% |
-| 10 | Masayoshi Son | Famous | **90.8%** | 0.77 | -28.1% |
+| 5 | **Defense & Aerospace** | Theme | **92.9%** | 0.64 | -46.1% |
+| 6 | Masayoshi Son | Famous | **90.8%** | 0.77 | -28.1% |
+| 7 | Crypto Ecosystem | Theme | **90.4%** | 0.67 | -31.7% |
+| 8 | **GLP-1 Obesity** | Theme | **80.7%** | **0.92** | -12.5% |
+| 9 | Ackman (Pershing) | Famous | 76.1% | **1.22** | -12.1% |
+| 10 | Druckenmiller | Famous/Political | 69.0% | 0.85 | -24.5% |
+| 11 | Healthcare + Asia | Hedge Fund | 61.5% | 0.82 | -16.0% |
+| 12 | BlackRock 2026 | Famous | 58.6% | **1.24** | -7.0% |
+| 13 | George Soros | Famous | 56.9% | 0.77 | -23.7% |
+| 14 | **Small Cap Value** | Theme | 56.1% | **1.10** | **-4.6%** |
+| 15 | Growth Disruption | Generic | 55.7% | 0.65 | -20.6% |
 
-## 10Y Absolute Returns
+## Cross-Horizon Consistency (Avg Sharpe across 1Y/3Y/5Y/10Y)
 
-| Strategy | 10Y Return | 10Y Sharpe |
-|----------|-----------|-----------|
-| Masayoshi Son | 1068% | 0.90 |
-| **Concentrate Winners** | **817%** | **0.92** |
-| AI Revolution | 783% | 0.95 |
-| Momentum Crash-Hedged | 743% | 1.05 |
-| Momentum | 570% | 0.86 |
+| Rank | Strategy | 1Y Return/Sharpe | 3Y Return/Sharpe | 5Y Return/Sharpe | 10Y Return/Sharpe | Avg Sharpe |
+|------|----------|-----------------|-----------------|-----------------|------------------|-----------|
+| 1 | **Concentrate Winners** | 28.9% / 1.50 | 135.6% / 1.28 | 132.8% / 0.74 | 817.5% / 0.92 | **1.11** |
+| 2 | Momentum | 23.6% / 1.49 | 135.0% / 1.36 | 99.0% / 0.60 | 570.0% / 0.86 | **1.08** |
+| 3 | Mom Crash-Hedged | 18.2% / 1.18 | 117.1% / 1.26 | 115.6% / 0.72 | 743.0% / 1.05 | **1.05** |
+| 4 | AI Revolution | 11.1% / 0.55 | 183.6% / 1.41 | 178.5% / 0.85 | 783.3% / 0.95 | **0.94** |
+| 5 | Nancy Pelosi | — / 0.42 | — / 1.39 | — / — | — / — | **0.91** |
 
-## New Strategies Added (2026-04-07)
+## Best Portfolio Strategies (hedged)
 
-| Strategy | Type | 3Y Sharpe | Status |
-|----------|------|-----------|--------|
-| **Concentrate Winners** | Unconventional | **1.28** | **NEW #1!** |
-| GLP-1 Obesity | Theme | 0.92 | Winner |
-| Robotics/Autonomous | Theme | 0.40 | Moderate |
-| Dividend Aristocrat Momentum | Unconventional | -0.46 | Failed |
+| Strategy | 3M Return/Sharpe | 1Y Return/Sharpe | 3Y Return/Sharpe |
+|----------|-----------------|-----------------|-----------------|
+| **Barbell** | — / 1.78 | — / **2.05** | — / **0.91** |
+| Core-Satellite | — / **2.24** | — / 1.75 | — / 0.66 |
+| Staples-Hedged Growth | — / 0.46 | — / 1.80 | — / 0.81 |
+| Adaptive Ensemble | — / 1.70 | — / 1.71 | — / 0.73 |
 
-## Failed Strategies (see knowledge/failures_log.md)
+## Political / Billionaire Strategies
 
-Factor ETF Rotation, Faber Sector Rotation, Sell in May, Z-Score MR,
-ERC, Dividend Aristocrat Momentum. Don't repeat without fundamental changes.
+| Strategy | 1Y Return/Sharpe | 3Y Return/Sharpe |
+|----------|-----------------|-----------------|
+| **Nancy Pelosi** | — / 0.42 | — / **1.39** |
+| Dan Loeb | — / 0.62 | — / 1.00 |
+| Ken Griffin | — / 0.30 | — / 1.06 |
+| David Tepper | — / -0.25 | — / 1.11 |
 
-## Recommended Portfolio
+## Catalyst Scanner Top Findings (event-driven)
 
-| Component | Strategy | Weight | Role | Sharpe |
-|-----------|----------|--------|------|--------|
-| Core | Concentrate Winners | 30% | Maximum alpha | 1.11 |
-| Hedged Core | Momentum Crash-Hedged | 25% | Consistent, vol-scaled | 1.05 |
-| Growth | AI Revolution | 20% | Tech megatrend | 0.94 |
-| Health | GLP-1 Obesity | 10% | Pharma theme | 0.92 |
-| Hedge | Defensive Rotation | 15% | Recession protection | 0.59 |
+| Ticker | Strategy | Win Rate | Total Return |
+|--------|----------|----------|-------------|
+| SMCI | buy_spike_14d | 88% | **+1647%** |
+| TAL | momentum_20d | 65% | +660% |
+| PLTR | momentum_30d | 68% | +873% |
+| AVGO | momentum_30d | 65% | +279% |
+| AMD | buy_spike_30d | 78% | +208% |
+| TSLA | momentum_20d | 62% | +201% |
+| MELI | buy_dip_20d | 64% | +143% |
+| LLY | momentum_20d | 67% | +139% |
 
-## Library Stats
+## Failed Strategies (don't repeat)
 
-- **63 strategies** across 8 categories
-- **510 unique tickers** across 71 categories
-- **50+ self-evolution iterations**
-- **55+ commits**
-- Trade recommendations in `strategy/winning/` and `strategy/losing/`
+| Strategy | 3Y Return | 3Y Sharpe | 3Y Max DD | Why Failed |
+|----------|-----------|-----------|-----------|------------|
+| Factor ETF Rotation | 24.2% | 0.39 | -9.5% | ETFs too correlated |
+| Faber Sector Rotation | -2.7% | -0.30 | -28.7% | Bonds failed in rate hikes |
+| Sell in May | — | -0.16 | — | Calendar effects too weak |
+| All-Weather Modern | — | -0.84 | — | TLT drag |
+| Div Aristocrat Momentum | -0.2% | -0.46 | -15.1% | Aristocrats lagged tech |
+
+## Library Summary
+
+- **91 strategies** across 12 categories
+- **580 tickers** across 88 universe categories
+- **9 horizons**: 1W, 2W, 1M, 3M, 6M, 1Y, 3Y, 5Y, 10Y
+- **Tools**: terminal.py, catalyst_analyzer.py, news_catalyst_scanner.py, public_trader.py
+- **92+ commits** on GitHub
+
+```bash
+# Run any strategy on any horizon
+python run_multi_horizon.py --persona concentrate_winners --horizon 3y
+
+# Scan a ticker for catalyst patterns
+python catalyst_analyzer.py NVDA
+
+# Generate Bloomberg-style charts
+python terminal.py NVDA
+
+# Full backtest suite
+python run_multi_horizon.py --all-horizons --category research
+```
