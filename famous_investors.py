@@ -192,7 +192,23 @@ class RayDalio(BasePersona):
         total = sum(weights.values())
         if total > 0 and abs(total - 0.95) > 0.01:
             scale = 0.95 / total
-            weights = {k: min(v * scale, self.config.max_position_size) for k, v in weights.items()}
+            raw = {k: v * scale for k, v in weights.items()}
+            cap = self.config.max_position_size
+            while True:
+                over = {s: w for s, w in raw.items() if w > cap}
+                if not over:
+                    break
+                under = {s: w for s, w in raw.items() if w <= cap}
+                freed = sum(w - cap for w in over.values())
+                for s in over:
+                    raw[s] = cap
+                if under:
+                    under_total = sum(under.values())
+                    for s in under:
+                        raw[s] += freed * (under[s] / under_total)
+                else:
+                    break
+            weights = raw
 
         return weights
 
@@ -244,13 +260,19 @@ class GeorgeSoros(BasePersona):
                 continue
 
             price = prices[sym]
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_20", "sma_50", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"],
+                date,
+            )
+            sma20 = inds["sma_20"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
 
             if any(v is None for v in [sma20, sma50, rsi, macd, macd_sig]):
                 continue
@@ -355,11 +377,16 @@ class MichaelBurry(BasePersona):
                 continue
 
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "rsi_14", "bb_lower", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            bb_lower = inds["bb_lower"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
 
             if any(v is None for v in [sma200, rsi]):
                 continue
@@ -1270,11 +1297,16 @@ class StanleyDruckenmiller(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
             if any(v is None for v in [sma50, rsi]):
                 continue
             # Druckenmiller: aggressive momentum with macro awareness
@@ -1296,9 +1328,23 @@ class StanleyDruckenmiller(BasePersona):
         if top:
             # Score-weighted (concentrate in strongest)
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                w = min((score / total_score) * 0.90, self.config.max_position_size)
-                weights[sym] = w
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.90 for sym, score in top}
+            while True:
+                over = {s: w for s, w in raw.items() if w > cap}
+                if not over:
+                    break
+                under = {s: w for s, w in raw.items() if w <= cap}
+                freed = sum(w - cap for w in over.values())
+                for s in over:
+                    raw[s] = cap
+                if under:
+                    under_total = sum(under.values())
+                    for s in under:
+                        raw[s] += freed * (under[s] / under_total)
+                else:
+                    break
+            weights.update(raw)
         return weights
 
 
@@ -1424,6 +1470,10 @@ class BlackRock2026(BasePersona):
             vol = self._get_indicator(data, sym, "vol_20", date)
             if sma200 is None:
                 continue
+            # Exit broken thesis
+            if price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
             # Institutional: quality + reasonable entry
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.10:
@@ -1481,6 +1531,10 @@ class BerkshireHoldings(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             vol = self._get_indicator(data, sym, "vol_20", date)
             if sma200 is None:
+                continue
+            # Exit broken thesis
+            if price < sma200 * 0.85:
+                weights[sym] = 0.0
                 continue
             # Buffett: buy and hold quality at fair value
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
@@ -1542,6 +1596,10 @@ class JapaneseSogoShosha(BasePersona):
             sma200 = self._get_indicator(data, sym, "sma_200", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             if sma200 is None:
+                continue
+            # Exit broken thesis
+            if price < sma200 * 0.85:
+                weights[sym] = 0.0
                 continue
             # Value: buy near or below SMA200
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0

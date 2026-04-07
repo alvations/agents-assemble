@@ -240,19 +240,34 @@ def compute_metrics(
     daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
     excess = returns - daily_rf
     excess_std = excess.std()
-    sharpe = excess.mean() / excess_std * sqrt_periods if excess_std > 0 else 0
+    if excess_std > 0:
+        sharpe = excess.mean() / excess_std * sqrt_periods
+    elif excess.mean() > 0:
+        sharpe = float("inf")
+    elif excess.mean() < 0:
+        sharpe = float("-inf")
+    else:
+        sharpe = 0.0
 
     # Sortino ratio (downside deviation only)
     downside_diff = (returns - daily_rf).clip(upper=0)
     downside_dev = math.sqrt((downside_diff**2).mean()) * sqrt_periods
-    sortino = (cagr - risk_free_rate) / downside_dev if downside_dev > 0 else 0
+    excess_cagr = cagr - risk_free_rate
+    if downside_dev > 0:
+        sortino = excess_cagr / downside_dev
+    elif excess_cagr > 0:
+        sortino = float("inf")
+    elif excess_cagr < 0:
+        sortino = float("-inf")
+    else:
+        sortino = 0.0
 
     # Drawdown analysis
     cum_returns = (1 + returns).cumprod()
     rolling_max = cum_returns.cummax()
     drawdowns = cum_returns / rolling_max - 1
     max_drawdown = drawdowns.min()
-    max_dd_end = drawdowns.idxmin()
+    max_dd_end = drawdowns.idxmin() if max_drawdown < 0 else None
 
     # Calmar ratio
     calmar = cagr / abs(max_drawdown) if max_drawdown < 0 else (float("inf") if cagr > 0 else 0)
@@ -723,6 +738,13 @@ def _fmt_ratio(value: float) -> str:
     return f"{value:>10.2f}"
 
 
+def _fmt_pct(value: float) -> str:
+    """Format a percentage that may be infinite (alpha on extreme short backtests)."""
+    if not math.isfinite(value):
+        return "       N/A"
+    return f"{value:>10.2%}"
+
+
 def format_report(results: dict[str, Any], title: str = "Backtest Report") -> str:
     """Format backtest results as a readable report."""
     m = results["metrics"]
@@ -740,7 +762,7 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         f"  Total Return:       {m.get('total_return', 0):>10.2%}",
         f"  CAGR:               {m.get('cagr', 0):>10.2%}",
         f"  Annual Volatility:  {m.get('annual_volatility', 0):>10.2%}",
-        f"  Sharpe Ratio:       {m.get('sharpe_ratio', 0):>10.2f}",
+        f"  Sharpe Ratio:       {_fmt_ratio(m.get('sharpe_ratio', 0))}",
         f"  Sortino Ratio:      {_fmt_ratio(m.get('sortino_ratio', 0))}",
         f"  Calmar Ratio:       {_fmt_ratio(m.get('calmar_ratio', 0))}",
         f"  Max Drawdown:       {m.get('max_drawdown', 0):>10.2%}",
@@ -762,10 +784,10 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         lines.extend([
             "",
             "--- vs Benchmark ---",
-            f"  Benchmark Return:   {m.get('benchmark_total_return', 0):>10.2%}",
-            f"  Alpha:              {m.get('alpha', 0):>10.2%}",
-            f"  Beta:               {m.get('beta', 0):>10.2f}",
-            f"  Info Ratio:         {m.get('information_ratio', 0):>10.2f}",
+            f"  Benchmark Return:   {_fmt_pct(m.get('benchmark_total_return', 0))}",
+            f"  Alpha:              {_fmt_pct(m.get('alpha', 0))}",
+            f"  Beta:               {_fmt_ratio(m.get('beta', 0))}",
+            f"  Info Ratio:         {_fmt_ratio(m.get('information_ratio', 0))}",
         ])
 
     lines.append(f"\n{'=' * 60}")

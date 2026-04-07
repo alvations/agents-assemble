@@ -204,8 +204,8 @@ class DefenseAerospace(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
             if sma200 is None:
                 continue
 
@@ -405,6 +405,11 @@ class LatAmGrowth(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
 
+            # Broken trend: >15% below SMA200 (LatAm stocks can freefall)
+            if sma200 is not None and price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+
             if price > sma50 and rsi < 65:
                 score = 1.5
                 if sma200 is not None and price > sma200:
@@ -462,8 +467,8 @@ class InfrastructureBoom(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
             if sma200 is None:
                 continue
 
@@ -670,8 +675,8 @@ class AgingPopulation(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
             if sma200 is None:
                 continue
 
@@ -733,9 +738,8 @@ class GLP1Obesity(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
             if any(v is None for v in [sma50, rsi]):
                 continue
             if sma200 is not None and price < sma200 * 0.90:
