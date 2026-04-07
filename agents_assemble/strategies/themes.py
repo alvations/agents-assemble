@@ -571,7 +571,7 @@ class CryptoEcosystem(BasePersona):
             if any(v is None for v in [sma20, rsi]):
                 continue
 
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
 
             # Crypto is momentum-driven — ride breakouts
             if price > sma20 and rsi < 75 and vol_ratio > 1.2:
