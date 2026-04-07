@@ -14,6 +14,7 @@ Strategies:
     6. MeanVarianceOptimal  — Simplified Markowitz-inspired allocation
     7. GlobalRotation        — International momentum rotation
     8. FactorETFRotation    — Rotate between factor ETFs by momentum
+    9. FaberSectorRotation  — Faber 12-month sector momentum, top 3
 """
 
 from __future__ import annotations
@@ -23,6 +24,11 @@ import math
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 _SQRT_252 = math.sqrt(252)
+
+
+def _is_missing(v) -> bool:
+    """Check if indicator value is None or NaN (nearest-date path can leak NaN)."""
+    return v is None or v != v
 
 
 # ---------------------------------------------------------------------------
@@ -64,12 +70,12 @@ class DualMomentum(BasePersona):
         spy_price = prices.get("SPY")
         efa_price = prices.get("EFA")
 
-        if spy_price is None or spy_sma200 is None:
-            return {"AGG": 0.90}  # Default to bonds
+        if spy_price is None or _is_missing(spy_sma200):
+            return {"AGG": 0.90} if "AGG" in prices else {}
 
         # Relative momentum: SPY vs EFA
         spy_mom = (spy_price - spy_sma200) / spy_sma200 if spy_sma200 > 0 else 0
-        efa_mom = (efa_price - efa_sma200) / efa_sma200 if efa_price is not None and efa_sma200 is not None and efa_sma200 > 0 else -1
+        efa_mom = (efa_price - efa_sma200) / efa_sma200 if efa_price is not None and not _is_missing(efa_sma200) and efa_sma200 > 0 else -1
 
         if spy_mom > efa_mom:
             winner, winner_mom = "SPY", spy_mom
@@ -78,10 +84,11 @@ class DualMomentum(BasePersona):
 
         # Absolute momentum: is winner > 0 (above its SMA200)?
         if winner_mom > 0:
-            return {winner: 0.90, "AGG": 0.0}
+            weights = {winner: 0.90, "AGG": 0.0}
         else:
             # Both negative → safe haven
-            return {"AGG": 0.90, "SPY": 0.0, "EFA": 0.0}
+            weights = {"AGG": 0.90, "SPY": 0.0, "EFA": 0.0}
+        return {k: v for k, v in weights.items() if k in prices}
 
 
 # ---------------------------------------------------------------------------
@@ -132,7 +139,7 @@ class MultiFactorSmartBeta(BasePersona):
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
             vol = self._get_indicator(data, sym, "vol_20", date)
 
-            if any(v is None for v in [sma200, rsi, vol]):
+            if any(_is_missing(v) for v in [sma200, rsi, vol]):
                 continue
 
             # Factor 1: Value (discount to SMA200, higher = more value)
@@ -219,10 +226,10 @@ class LowVolAnomaly(BasePersona):
             vol = self._get_indicator(data, sym, "vol_20", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
 
-            if vol is None or vol <= 0:
+            if _is_missing(vol) or vol <= 0:
                 continue
             # Must be above SMA200 (not broken)
-            if sma200 is not None and price < sma200 * 0.95:
+            if not _is_missing(sma200) and price < sma200 * 0.95:
                 continue
 
             vol_ranked.append((sym, vol))
@@ -281,7 +288,7 @@ class MomentumCrashHedge(BasePersona):
 
         # Measure market volatility regime
         spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
-        if spy_vol is None:
+        if _is_missing(spy_vol):
             vol_scale = 1.0
         else:
             annualized_vol = spy_vol * _SQRT_252
@@ -305,7 +312,7 @@ class MomentumCrashHedge(BasePersona):
             macd = self._get_indicator(data, sym, "macd", date)
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
 
-            if any(v is None for v in [sma50, sma200, rsi]):
+            if any(_is_missing(v) for v in [sma50, sma200, rsi]):
                 continue
 
             # Momentum score
@@ -378,11 +385,11 @@ class RiskParityMomentum(BasePersona):
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             vol = self._get_indicator(data, sym, "vol_20", date)
 
-            if vol is None or vol <= 0:
+            if _is_missing(vol) or vol <= 0:
                 continue
 
             # Momentum filter: only include if above SMA50
-            if sma50 is not None and price > sma50:
+            if not _is_missing(sma50) and price > sma50:
                 candidates.append((sym, vol))
             # else: excluded (negative momentum)
 
@@ -451,7 +458,7 @@ class MeanVarianceOptimal(BasePersona):
             vol = self._get_indicator(data, sym, "vol_20", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
 
-            if any(v is None for v in [sma50, vol]) or vol <= 0:
+            if any(_is_missing(v) for v in [sma50, vol]) or vol <= 0:
                 continue
 
             # Expected return proxy: momentum (price / SMA50 - 1)
@@ -462,7 +469,7 @@ class MeanVarianceOptimal(BasePersona):
                 continue
 
             # Must be above SMA200 (structural uptrend)
-            if sma200 is not None and price < sma200:
+            if not _is_missing(sma200) and price < sma200:
                 continue
 
             # Sharpe-like score
@@ -524,7 +531,7 @@ class GlobalRotation(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             vol = self._get_indicator(data, sym, "vol_20", date)
 
-            if any(v is None for v in [sma50, sma200, rsi]):
+            if any(_is_missing(v) for v in [sma50, sma200, rsi]):
                 continue
 
             # Momentum score (same as proven momentum framework)
@@ -537,7 +544,7 @@ class GlobalRotation(BasePersona):
                 score += 0.5
 
             # Vol-adjusted (prefer lower vol for same momentum)
-            if vol is not None and vol > 0:
+            if not _is_missing(vol) and vol > 0:
                 score *= min(1.5, 0.02 / vol)
 
             if score > 1.5:
@@ -594,7 +601,7 @@ class FactorETFRotation(BasePersona):
             price = prices[sym]
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma50 is None or sma200 is None:
+            if _is_missing(sma50) or _is_missing(sma200):
                 continue
             # Momentum score
             mom = (price - sma200) / sma200 if sma200 > 0 else 0
@@ -612,10 +619,10 @@ class FactorETFRotation(BasePersona):
             for sym, _ in top:
                 weights[sym] = per_etf
         else:
-            # All negative momentum → safe haven (only if in prices)
-            if "TLT" in prices:
+            # All negative momentum → safe haven (only if in universe and prices)
+            if "TLT" in self.config.universe and "TLT" in prices:
                 weights["TLT"] = 0.50
-            if "GLD" in prices:
+            if "GLD" in self.config.universe and "GLD" in prices:
                 weights["GLD"] = 0.30
         return weights
 
@@ -655,7 +662,7 @@ class FaberSectorRotation(BasePersona):
                 continue
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma200 is None or sma200 <= 0:
+            if _is_missing(sma200) or sma200 <= 0:
                 continue
             momentum = (price - sma200) / sma200
             if momentum > 0:
