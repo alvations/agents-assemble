@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `FixedIncomeStrat` allocating outside custom universe** (line 554) — hardcoded TLT/IEF/SHY/LQD/HYG/TIP symbols bypassed custom universe; now filters by `self.config.universe`, matching the pattern fixed in iterations 3/13/18 for other strategies
+- **Fixed `PairsTrader` ignoring custom universe** (line 762) — `generate_signals` iterated `self.PAIRS` without checking if pair symbols are in `self.config.universe`, so a custom universe couldn't restrict which pairs are traded
+- **Fixed `SectorRotation` score-weighted allocation losing clipped excess** (lines 708-724) — same bug class as CryptoEcosystem (iteration 21); when `min()` clips high-score positions to `max_position_size`, freed allocation is now redistributed to uncapped positions
+- **Fixed `EnsembleStrategist` consensus inflation on sub-strategy failure** (line 882) — denominator was `len(all_signals)` (successful strategies only), so a failing sub-strategy inflated `consensus_factor` from 0.75 to 1.0; now uses `len(self._sub_strategies)` for true consensus
+- **Added staleness guard to `_get_indicator` nearest-date path** (line 78) — `get_indexer(method="nearest")` could silently return months-old data; now rejects matches >10 calendar days from the requested date, matching the guard added to `data_fetcher.py`'s `_safe_get` in iteration 2

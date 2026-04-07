@@ -473,3 +473,31 @@ All edits pass syntax validation. Summary of changes:
 - **Removed dead `vol > 0` guard in `MultiFactorSmartBeta`** (line 162) — always true since line 142 already filters `vol <= 0`, the conditional was dead code wrapping the quality score computation
 - **Fixed `RiskParityMomentum` weight capping discarding unallocated capital** — simple `min(w, cap)` capping lost 30%+ of budget when one asset dominated via inverse-vol weighting (e.g., 2 candidates with vol 0.005 vs 0.02 → 0.58 allocated instea
 
+## [2026-04-07T10:31:23.831762+00:00] Branch: main | Run: 20260407T102920_pid50912 | Iter 22 | $0.6319
+### data_fetcher.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `Optional` not imported** (line 100) — `_cache_get` used `Optional[pd.DataFrame]` but `Optional` was never imported; changed to `pd.DataFrame | None` to match the modernized style used throughout the file (guarded by `from __future__ import annotations`)
+- **Fixed `fetch_yield_curve` NaN leak** (lines 397-402) — Both the date-specific and latest-value paths could produce `float('nan')` in the curve dict when FRED returns missing da
+
+## [2026-04-07T10:32:25.331300+00:00] Branch: main | Run: 20260407T103016_pid51115 | Iter 22 | $0.6986
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `FixedIncomeStrat` allocating outside custom universe** (line 554) — hardcoded TLT/IEF/SHY/LQD/HYG/TIP symbols bypassed custom universe; now filters by `self.config.universe`, matching the pattern fixed in iterations 3/13/18 for other strategies
+- **Fixed `PairsTrader` ignoring custom universe** (line 762) — `generate_signals` iterated `self.PAIRS` without checking if pair symbols are in `self.config.universe`, so a custom universe
+
+## [2026-04-07T10:32:57.797879+00:00] Branch: main | Run: 20260407T101611_pid49367 | Iter 22 | $1.2332
+### theme_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed DefenseAerospace overbought weight: `0.05` → `0.0`** (line 212) — Every other strategy exits overbought stocks at 0.0; this was the only one keeping a 5% allocation in RSI > 80 stocks
+- **Added broken-trend exit to CleanEnergy** (line 145) — Stocks >15% below SMA200 now exit. Without this, the oversold bounce path (`rsi < 30`) would buy stocks in structural freefall (e.g., LCID falling from $60 to $2). Matches the pattern in AIRevo
+
+## [2026-04-07T10:34:34.421784+00:00] Branch: main | Run: 20260407T102919_pid50891 | Iter 22 | $1.0010
+### famous_investors.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `MichaelBurry` `bb_lower` truthiness bug (line 365)**: `bb_lower and price < bb_lower` → `bb_lower is not None and price < bb_lower` — a Bollinger lower band of exactly 0.0 (extreme case) would skip the deep-oversold entry signal
+- **Fixed `SupportResistanceCommodity` `atr` truthiness bug (line 1083)**: `if atr and atr > 0:` → `if atr is not None and atr > 0:` — an ATR of 0.0 would skip the risk-normalization sizing, using unscaled
+

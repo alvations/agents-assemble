@@ -75,6 +75,10 @@ class BasePersona(ABC):
                 idx = df.index.get_indexer([date], method="nearest")[0]
                 if idx == -1:
                     return None
+                nearest_date = df.index[idx]
+                # Reject data more than 10 calendar days from requested date
+                if abs((date - nearest_date).days) > 10:
+                    return None
                 val = df.iloc[idx][indicator]
                 if pd.isna(val):
                     return None
@@ -550,9 +554,11 @@ class FixedIncomeStrat(BasePersona):
         if tlt_rsi is not None and tlt_rsi < 30:
             weights["TIP"] = 0.10  # Inflation hedge when bonds oversold
 
-        # Only return weights for symbols that are actually tradeable, capped by config
+        # Only return weights for symbols in our universe that are actually tradeable
+        universe = set(self.config.universe)
         cap = self.config.max_position_size
-        return {sym: min(w, cap) for sym, w in weights.items() if sym in tradeable}
+        return {sym: min(w, cap) for sym, w in weights.items()
+                if sym in tradeable and sym in universe}
 
 
 # ---------------------------------------------------------------------------
@@ -707,9 +713,21 @@ class SectorRotation(BasePersona):
 
         if top:
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                w = min((score / total_score) * 0.90, self.config.max_position_size)
-                weights[sym] = w
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.90 for sym, score in top}
+            # Redistribute clipped excess so budget isn't lost
+            uncapped = {s: w for s, w in raw.items() if w <= cap}
+            capped = {s: w for s, w in raw.items() if w > cap}
+            if capped and uncapped:
+                excess = sum(w - cap for w in capped.values())
+                uncapped_total = sum(uncapped.values())
+                for sym in capped:
+                    weights[sym] = cap
+                for sym, w in uncapped.items():
+                    weights[sym] = min(w + excess * (w / uncapped_total), cap)
+            else:
+                for sym, w in raw.items():
+                    weights[sym] = min(w, cap)
 
         return weights
 
@@ -757,9 +775,12 @@ class PairsTrader(BasePersona):
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
+        universe = set(self.config.universe)
 
         for sym_a, sym_b in self.PAIRS:
             if sym_a not in prices or sym_b not in prices:
+                continue
+            if sym_a not in universe or sym_b not in universe:
                 continue
 
             price_a = prices[sym_a]
@@ -864,10 +885,11 @@ class EnsembleStrategist(BasePersona):
 
         # Only take positions where 2+ strategies agree (consensus)
         weights = {}
+        n_strategies = len(self._sub_strategies)
         for sym, info in combined.items():
             if info["signal_count"] >= 2:
-                # Scale weight by consensus strength
-                consensus_factor = info["signal_count"] / len(all_signals)
+                # Scale weight by consensus strength (use total strategies, not just successful ones)
+                consensus_factor = info["signal_count"] / n_strategies
                 w = min(info["total_weight"] * consensus_factor,
                         self.config.max_position_size)
                 weights[sym] = w

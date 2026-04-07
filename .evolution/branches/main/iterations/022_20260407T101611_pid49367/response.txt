@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed DefenseAerospace overbought weight: `0.05` → `0.0`** (line 212) — Every other strategy exits overbought stocks at 0.0; this was the only one keeping a 5% allocation in RSI > 80 stocks
+- **Added broken-trend exit to CleanEnergy** (line 145) — Stocks >15% below SMA200 now exit. Without this, the oversold bounce path (`rsi < 30`) would buy stocks in structural freefall (e.g., LCID falling from $60 to $2). Matches the pattern in AIRevolution, BiotechBreakout, GLP1Obesity, RoboticsAutonomous
+- **Added broken-trend exit to DefenseAerospace, InfrastructureBoom, AgingPopulation** — All three discount-based defensive strategies (risk_tolerance 0.3–0.4) gave the highest scores to the most deeply discounted stocks with no floor, so a stock 50% below SMA200 would outrank all others and receive a full allocation. Now exits stocks >20% below SMA200
+- **Fixed SmallCapValue BB path: added volume guard** (line 526) — The Bollinger band buy path now requires `vol_ratio > 0.5`, preventing purchases of halted or illiquid small caps with zero/near-zero volume

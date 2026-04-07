@@ -21,7 +21,7 @@ Themes:
 
 from __future__ import annotations
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -140,11 +140,6 @@ class CleanEnergy(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
 
-            # Broken trend: >15% below SMA200 (clean energy is volatile)
-            if sma200 is not None and price < sma200 * 0.85:
-                weights[sym] = 0.0
-                continue
-
             # Buy dips in uptrend or recovery from oversold
             if sma200 is not None and price > sma200 and rsi < 55:
                 score = 2.0
@@ -206,16 +201,12 @@ class DefenseAerospace(BasePersona):
                 continue
 
             # Defense stocks tend to be stable — buy near SMA200
-            # Broken trend: >20% below SMA200
-            if price < sma200 * 0.80:
-                weights[sym] = 0.0
-                continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.10 and (rsi is None or rsi < 65):
                 score = max(discount + 0.10, 0.01) + 0.3
                 candidates.append((sym, score))
             elif rsi is not None and rsi > 80:
-                weights[sym] = 0.0
+                weights[sym] = 0.05
 
         candidates.sort(key=lambda x: x[1], reverse=True)
         top = candidates[:self.config.max_positions]
@@ -458,10 +449,6 @@ class InfrastructureBoom(BasePersona):
             if sma200 is None:
                 continue
 
-            # Broken trend: >20% below SMA200
-            if price < sma200 * 0.80:
-                weights[sym] = 0.0
-                continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if rsi is not None and rsi > 70:
                 weights[sym] = 0.0
@@ -527,7 +514,7 @@ class SmallCapValue(BasePersona):
             if rsi < 30 and vol_ratio > 1.5:
                 score = (30 - rsi) / 30 * 3 + min(vol_ratio, 3.0)
                 scored.append((sym, score))
-            elif bb_lower is not None and price < bb_lower and rsi < 35 and vol_ratio > 0.5:
+            elif bb_lower is not None and price < bb_lower and rsi < 35:
                 score = 2.0
                 scored.append((sym, score))
             elif rsi > 80:
@@ -653,10 +640,6 @@ class AgingPopulation(BasePersona):
             if sma200 is None:
                 continue
 
-            # Broken trend: >20% below SMA200
-            if price < sma200 * 0.80:
-                weights[sym] = 0.0
-                continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             # Defensive: buy near or below SMA200
             if rsi is not None and rsi > 70:

@@ -399,7 +399,10 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
                         continue
                     curve[label] = float(val)
                 else:
-                    curve[label] = float(df.iloc[-1]["value"])
+                    val = df.iloc[-1]["value"]
+                    if pd.isna(val):
+                        continue
+                    curve[label] = float(val)
         except Exception:
             pass
 
@@ -528,7 +531,8 @@ def fetch_insider_trades(symbol: str, limit: int = 50) -> list[dict[str, Any]]:
     Note: This uses the free EDGAR full-text search API.
     """
     # Use EDGAR company search for CIK lookup
-    url = f"https://efts.sec.gov/LATEST/search-index?q=%22{symbol}%22&dateRange=custom&startdt=2024-01-01&forms=4"
+    startdt = (datetime.now() - timedelta(days=730)).strftime("%Y-%m-%d")
+    url = f"https://efts.sec.gov/LATEST/search-index?q=%22{symbol}%22&dateRange=custom&startdt={startdt}&forms=4"
     try:
         resp = requests.get(url, headers=SEC_HEADERS, timeout=30)
         if resp.status_code == 200:

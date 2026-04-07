@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `MichaelBurry` `bb_lower` truthiness bug (line 365)**: `bb_lower and price < bb_lower` → `bb_lower is not None and price < bb_lower` — a Bollinger lower band of exactly 0.0 (extreme case) would skip the deep-oversold entry signal
+- **Fixed `SupportResistanceCommodity` `atr` truthiness bug (line 1083)**: `if atr and atr > 0:` → `if atr is not None and atr > 0:` — an ATR of 0.0 would skip the risk-normalization sizing, using unscaled scores instead
+- **Fixed `RayDalio` normalization asymmetry (line 192)**: Only scaled weights DOWN to 0.95, never up. When fewer than 5 assets had vol data, the All-Weather portfolio would hold 30-45% unintended cash. Now normalizes both directions, keeping the portfolio near-fully invested as Dalio's approach requires.
+- **Fixed `GeorgeSoros` score-weighted under-allocation (line 286)**: When `min()` clipped high-score positions to `max_position_size=0.30`, the freed allocation was lost — e.g., 5 positions could allocate only 0.75 instead of 0.95. Added post-clip normalization to redistribute.
+- **Fixed `SupportResistanceCommodity` same under-allocation bug (line 1103)**: Same pattern — breakout scores vary widely (1.0 to 8.0+), so top-scored commodity positions were always clipped, leaving 10-20% in unintended cash.

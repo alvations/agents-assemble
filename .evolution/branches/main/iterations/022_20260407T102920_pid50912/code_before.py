@@ -97,7 +97,7 @@ def _cache_path(key: str) -> Path:
     return CACHE_DIR / f"{safe}.parquet"
 
 
-def _cache_get(key: str, max_age_hours: float = 12) -> pd.DataFrame | None:
+def _cache_get(key: str, max_age_hours: float = 12) -> Optional[pd.DataFrame]:
     path = _cache_path(key)
     if path.exists():
         age = time.time() - path.stat().st_mtime
@@ -364,8 +364,8 @@ def fetch_fred_series(
             df.columns = ["value"]
             df["value"] = pd.to_numeric(df["value"], errors="coerce")
             df = df.dropna()
-        except Exception as e:
-            raise ValueError(f"Could not fetch FRED series {series_id}. Set FRED_API_KEY for reliable access.") from e
+        except Exception:
+            raise ValueError(f"Could not fetch FRED series {series_id}. Set FRED_API_KEY for reliable access.")
 
     if cache:
         _cache_set(cache_key, df)
@@ -394,15 +394,9 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
                     nearest = df.index[pos]
                     if abs((nearest - idx).days) > 10:
                         continue
-                    val = df.loc[nearest, "value"]
-                    if pd.isna(val):
-                        continue
-                    curve[label] = float(val)
+                    curve[label] = float(df.loc[nearest, "value"])
                 else:
-                    val = df.iloc[-1]["value"]
-                    if pd.isna(val):
-                        continue
-                    curve[label] = float(val)
+                    curve[label] = float(df.iloc[-1]["value"])
         except Exception:
             pass
 
@@ -531,8 +525,7 @@ def fetch_insider_trades(symbol: str, limit: int = 50) -> list[dict[str, Any]]:
     Note: This uses the free EDGAR full-text search API.
     """
     # Use EDGAR company search for CIK lookup
-    startdt = (datetime.now() - timedelta(days=730)).strftime("%Y-%m-%d")
-    url = f"https://efts.sec.gov/LATEST/search-index?q=%22{symbol}%22&dateRange=custom&startdt={startdt}&forms=4"
+    url = f"https://efts.sec.gov/LATEST/search-index?q=%22{symbol}%22&dateRange=custom&startdt=2024-01-01&forms=4"
     try:
         resp = requests.get(url, headers=SEC_HEADERS, timeout=30)
         if resp.status_code == 200:

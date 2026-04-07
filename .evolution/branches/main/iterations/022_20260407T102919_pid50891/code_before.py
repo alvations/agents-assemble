@@ -27,7 +27,7 @@ Personas:
 
 from __future__ import annotations
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -187,11 +187,11 @@ class RayDalio(BasePersona):
 
             weights[sym] = min(blended, self.config.max_position_size)
 
-        # Normalize to ~95% invested (All-Weather should be near-fully invested)
+        # Normalize to ~95% invested
         total = sum(weights.values())
-        if total > 0 and abs(total - 0.95) > 0.01:
+        if total > 0.95:
             scale = 0.95 / total
-            weights = {k: min(v * scale, self.config.max_position_size) for k, v in weights.items()}
+            weights = {k: v * scale for k, v in weights.items()}
 
         return weights
 
@@ -285,14 +285,8 @@ class GeorgeSoros(BasePersona):
         if top:
             total_score = sum(s for _, s in top)
             for sym, score in top:
-                weights[sym] = (score / total_score) * 0.95
-            # Post-clip normalization: redistribute freed allocation
-            clipped = {s: min(w, self.config.max_position_size) for s, w in weights.items() if w > 0}
-            clip_total = sum(clipped.values())
-            if clip_total > 0 and clip_total < 0.90:
-                scale = 0.95 / clip_total
-                clipped = {s: min(w * scale, self.config.max_position_size) for s, w in clipped.items()}
-            weights.update(clipped)
+                w = min((score / total_score) * 0.95, self.config.max_position_size)
+                weights[sym] = w
 
         return weights
 
@@ -368,7 +362,7 @@ class MichaelBurry(BasePersona):
                 candidates.append((sym, score))
 
             # Also buy if at Bollinger lower band + deeply oversold
-            elif bb_lower is not None and price < bb_lower and rsi < 25:
+            elif bb_lower and price < bb_lower and rsi < 25:
                 score = (bb_lower - price) / bb_lower * 10 + 0.5
                 candidates.append((sym, score))
 
@@ -1086,7 +1080,7 @@ class SupportResistanceCommodity(BasePersona):
                 # Breakout with volume confirmation
                 score = 3.0 + vol_ratio
                 # ATR-based sizing: wider ATR = smaller position (risk normalization)
-                if atr is not None and atr > 0:
+                if atr and atr > 0:
                     atr_pct = atr / price
                     score *= (0.02 / max(atr_pct, 0.005))  # Prefer low-ATR breakouts
                 scored.append((sym, score))
@@ -1107,14 +1101,8 @@ class SupportResistanceCommodity(BasePersona):
         if top:
             total_score = sum(s for _, s in top)
             for sym, score in top:
-                weights[sym] = (score / total_score) * 0.90
-            # Post-clip normalization: redistribute freed allocation
-            clipped = {s: min(w, self.config.max_position_size) for s, w in weights.items() if w > 0}
-            clip_total = sum(clipped.values())
-            if clip_total > 0 and clip_total < 0.85:
-                scale = 0.90 / clip_total
-                clipped = {s: min(w * scale, self.config.max_position_size) for s, w in clipped.items()}
-            weights.update(clipped)
+                w = min((score / total_score) * 0.90, self.config.max_position_size)
+                weights[sym] = w
 
         return weights
 

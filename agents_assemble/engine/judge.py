@@ -54,6 +54,8 @@ _METRIC_MISSING_DEFAULTS = {
 
 def _safe_float(value: Any) -> float:
     """Coerce a value to float, returning NaN for non-numeric types."""
+    if isinstance(value, bool):
+        return float("nan")
     if isinstance(value, (int, float)):
         return float(value)
     return float("nan")
@@ -115,6 +117,8 @@ def diagnose_strategy(
     suggestions = []
 
     for metric, info in grades.items():
+        if not math.isfinite(info["value"]):
+            continue
         if info["grade"] in ("A", "B"):
             strengths.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
         elif info["grade"] in ("D", "F"):
@@ -186,12 +190,10 @@ def rank_strategies(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "name": r["name"],
             "composite_score": diagnosis["composite_score"],
             "overall_grade": diagnosis["overall_grade"],
-            "sharpe": _safe_float(r["metrics"].get("sharpe_ratio", 0)),
-            "alpha": _safe_float(r["metrics"].get("alpha", 0)),
-            "max_dd": _safe_float(r["metrics"].get(
-                "max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)
-            )),
-            "total_return": _safe_float(r["metrics"].get("total_return", 0)),
+            "sharpe": _safe_float(r["metrics"].get("sharpe_ratio")),
+            "alpha": _safe_float(r["metrics"].get("alpha")),
+            "max_dd": _safe_float(r["metrics"].get("max_drawdown")),
+            "total_return": _safe_float(r["metrics"].get("total_return")),
             "diagnosis": diagnosis,
         })
 

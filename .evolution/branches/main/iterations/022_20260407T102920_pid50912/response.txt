@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `Optional` not imported** (line 100) — `_cache_get` used `Optional[pd.DataFrame]` but `Optional` was never imported; changed to `pd.DataFrame | None` to match the modernized style used throughout the file (guarded by `from __future__ import annotations`)
+- **Fixed `fetch_yield_curve` NaN leak** (lines 397-402) — Both the date-specific and latest-value paths could produce `float('nan')` in the curve dict when FRED returns missing data (encoded as "." → NaN after `pd.to_numeric`). Now skips NaN values with `pd.isna()` check
+- **Fixed `fetch_fred_series` CSV fallback losing exception context** (line 370) — Changed bare `raise ValueError(...)` to `raise ... from e` so the original exception (network error, parse error, etc.) is preserved in the chain
+- **Fixed `fetch_insider_trades` hardcoded stale date** (line 530) — `startdt=2024-01-01` was hardcoded, meaning the search window was frozen in time. Now dynamically computes a 2-year lookback window from the current date
