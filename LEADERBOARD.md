@@ -1,6 +1,6 @@
 # Strategy Leaderboard
 
-**Last Updated:** 2026-04-06 09:50 UTC
+**Last Updated:** 2026-04-07 00:30 UTC
 **Backtest Period:** 2022-01-01 to 2024-12-31 (3 years)
 **Initial Capital:** $100,000
 **Benchmark:** SPY (28.66% total return over period)
@@ -31,6 +31,17 @@
 | 31 | S/R Commodity | Famous | -11.8% | -0.80 | -23.8% | Commodities whipsawed, no clear trend |
 | 32 | Meme Stock | Generic | -13.3% | -0.04 | -43.6% | Post-bubble destruction, 2022+ was brutal |
 
+## Unconventional Strategies (NEW)
+
+| Rank | Strategy | Type | Return | Sharpe | Max DD | Notes |
+|------|----------|------|--------|--------|--------|-------|
+| 1 | Quality Factor | Unconventional | 31.9% | 0.70 | -8.9% | Low vol + uptrend = quality |
+| 2 | Dogs of the Dow | Unconventional | 33.1% | 0.54 | -8.3% | Contrarian: buy worst performers |
+| 3 | Tail Risk Harvest | Unconventional | 9.2% | -0.14 | -5.1% | Buy after >3% crashes, lowest DD |
+| 4 | Turn of Month | Unconventional | 7.4% | -0.11 | -11.5% | Calendar effect too weak |
+| 5 | VIX Mean Reversion | Unconventional | 5.0% | -0.11 | -22.2% | 2022 rate hikes broke it |
+| 6 | Sell in May | Unconventional | 2.2% | -0.16 | -24.2% | Missed 2023 summer rally |
+
 ## Strategy Categories
 
 ### Best by Category
@@ -40,6 +51,7 @@
 - **Best Recession Hedge:** Defensive Rotation (60.7%, 0.65 Sharpe)
 - **Lowest Drawdown:** Small Cap Deep Value (-4.6%)
 - **Highest Alpha vs SPY:** Momentum (+17.1% alpha)
+- **Best Unconventional:** Quality Factor (0.70 Sharpe, -8.9% DD)
 
 ### Recommended Portfolio Blend
 | Component | Strategy | Weight | Role |

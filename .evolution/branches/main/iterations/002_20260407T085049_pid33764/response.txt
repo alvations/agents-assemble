@@ -1,0 +1,7 @@
+All edits pass syntax check. Summary of changes:
+
+- **Removed unused `import pandas as pd`** and **`from typing import List, Optional`** — neither is referenced anywhere in the file
+- **Modernized type hints** — replaced `Optional[List[str]]` with `list[str] | None` across all 13 classes (already guarded by `from __future__ import annotations`)
+- **Removed dead variable `vol`** in `GeorgeSoros.generate_signals` — fetched via `_get_indicator` but never used in any computation or check
+- **Removed dead variable `rsi`** in `MasayoshiSon.generate_signals` — fetched but never used; not even included in the None check
+- **Fixed `LiKaShing` overly permissive buy condition** — `discount > -0.05` admitted stocks up to 5% *above* SMA200, contradicting the "buy when trading below SMA200" intent; changed to `discount >= 0` and adjusted score formula to match

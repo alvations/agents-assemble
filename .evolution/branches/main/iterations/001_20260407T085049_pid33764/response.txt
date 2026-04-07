@@ -1,0 +1,7 @@
+All edits pass syntax check. Summary of changes:
+
+- **Removed unused imports**: `dataclass`, `field`, `Any`, `Dict`, `numpy` — none were referenced in the file
+- **Removed dead variable** in `PeterLynch.generate_signals`: `ret` (daily_return) was fetched but never used
+- **Removed dead variable** in `NassefSawiris.generate_signals`: `sma50` was fetched but never used
+- **Fixed `HowardMarks` buy/exit conflict**: The risk control exit (`price < sma200 * 0.80`) was checked *after* candidates were added, so buy signals overwrote the exit. Moved the exit check before buy logic with `continue` to prevent buying stocks that have broken down >20%
+- **Fixed `HowardMarks` fear proxy**: Was hardcoded to "AAPL" which would silently fail (fear_mode always False) if universe was customized without AAPL. Now uses SPY (proper broad market proxy) with fallback to first available universe symbol

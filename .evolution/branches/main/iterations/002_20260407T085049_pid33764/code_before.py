@@ -21,7 +21,11 @@ Personas:
 
 from __future__ import annotations
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from typing import List, Optional
+
+import pandas as pd
+
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -45,7 +49,7 @@ class PeterLynch(BasePersona):
     - Avoid overbought (RSI > 75) and extremely volatile names
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Peter Lynch (GARP)",
             description="Growth at reasonable price: moderate momentum, low vol, buy what you know",
@@ -142,7 +146,7 @@ class RayDalio(BasePersona):
         "XLE": 0.075,  # Energy (commodity proxy available on Robinhood)
     }
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Ray Dalio (All-Weather)",
             description="Risk parity: balance across growth/inflation regimes via ETFs",
@@ -212,7 +216,7 @@ class GeorgeSoros(BasePersona):
     - Mix of equities and bond/currency ETFs for macro bets
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="George Soros (Reflexivity)",
             description="Macro momentum: ride reflexive trends, concentrate bets, fade extremes",
@@ -242,6 +246,7 @@ class GeorgeSoros(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             macd = self._get_indicator(data, sym, "macd", date)
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
             volume = self._get_indicator(data, sym, "Volume", date)
             vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
 
@@ -307,7 +312,7 @@ class MichaelBurry(BasePersona):
     - Avoid momentum — specifically buy what's hated
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Michael Burry (Contrarian)",
             description="Deep value contrarian: buy capitulation, bet against consensus",
@@ -398,7 +403,7 @@ class JimSimons(BasePersona):
     - Daily rebalancing, many positions
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Jim Simons (Quant Factors)",
             description="Pure systematic: multi-factor composite, vol-weighted, daily rebalance",
@@ -505,7 +510,7 @@ class CarlIcahn(BasePersona):
     - Concentrated positions, patient monthly rebalance
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Carl Icahn (Activist Value)",
             description="Concentrated deep value: buy beaten-down large caps showing recovery",
@@ -584,7 +589,7 @@ class MasayoshiSon(BasePersona):
     - Hold through volatility (wide stop at SMA200)
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Masayoshi Son (Vision Fund)",
             description="High-conviction tech platform bets: concentrated, momentum-driven",
@@ -610,6 +615,7 @@ class MasayoshiSon(BasePersona):
             price = prices[sym]
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
 
             if any(v is None for v in [sma50, sma200]):
                 continue
@@ -657,7 +663,7 @@ class LiKaShing(BasePersona):
     - Very low turnover, focus on yield
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Li Ka-shing (Infrastructure Value)",
             description="Patient infrastructure/utility value: steady cash flows, geographic diversity",
@@ -689,8 +695,8 @@ class LiKaShing(BasePersona):
 
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             # Buy steady assets on discount
-            if discount >= 0:  # At or below SMA200
-                score = max(discount, 0.01)
+            if discount > -0.05:  # At or below SMA200
+                score = max(discount + 0.05, 0.01)
                 if rsi and rsi < 40:
                     score += 0.1
                 candidates.append((sym, score + 0.3))  # Base ensures we hold
@@ -723,7 +729,7 @@ class NassefSawiris(BasePersona):
     - Buy on deep discount to SMA200 + RSI recovery
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Nassef Sawiris (EM Industrials)",
             description="Emerging market industrials: materials, construction, global value",
@@ -789,7 +795,7 @@ class JorgePauloLemann(BasePersona):
     - Buy on pullback to SMA50 with moderate RSI
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Jorge Paulo Lemann (3G Capital)",
             description="Consumer brand dominance: buy great brands on weakness, concentrate",
@@ -859,7 +865,7 @@ class PrinceAlwaleed(BasePersona):
     - Contrarian: buy on crisis (deep RSI + volume spike)
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Prince Alwaleed (Kingdom Holding)",
             description="Global blue-chip contrarian: buy iconic brands during crises",
@@ -936,7 +942,7 @@ class HowardMarks(BasePersona):
     - Very conservative position sizing
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Howard Marks (Oaktree Contrarian)",
             description="Second-level thinking: buy quality when others panic, control risk",
@@ -1023,7 +1029,7 @@ class SupportResistanceCommodity(BasePersona):
     - Position size based on ATR (wider ATR = smaller position)
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Support/Resistance Commodity",
             description="Breakout trading on commodity ETFs with defined S/R levels and ATR stops",

@@ -1,0 +1,18 @@
+# Hypothesis: Sell in May: stocks Nov-Apr, bonds May-Oct captures seasonal alpha
+
+**Persona:** Sell in May (Halloween Effect)
+**Period:** 2022-01-01 to 2024-12-31
+**Universe:** SPY, QQQ, TLT, IEF, SHY
+
+## Results
+- Total Return: 2.21%
+- CAGR: 0.74%
+- Sharpe: -0.16
+- Max Drawdown: -24.15%
+- Win Rate: 50.87%
+
+## Verdict
+**NOT SUPPORTED - Strategy underperforms benchmark on risk-adjusted basis**
+
+## Key Observations
+- Total trades: 76

@@ -40,6 +40,15 @@ except ImportError:
     from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
     from trade_recommender import save_strategy_recommendation
 
+try:
+    from agents_assemble.strategies.unconventional import UNCONVENTIONAL_STRATEGIES, get_unconventional_strategy
+except ImportError:
+    try:
+        from unconventional_strategies import UNCONVENTIONAL_STRATEGIES, get_unconventional_strategy
+    except ImportError:
+        UNCONVENTIONAL_STRATEGIES = {}
+        def get_unconventional_strategy(name, **kw): raise ImportError("unconventional_strategies not available")
+
 
 # ---------------------------------------------------------------------------
 # Knowledge base
@@ -338,6 +347,55 @@ HYPOTHESES = [
         "start": "2021-01-01",
         "end": "2024-12-31",
     },
+    # === Unconventional Strategies ===
+    {
+        "name": "sell_in_may_seasonal",
+        "persona": "sell_in_may",
+        "persona_source": "unconventional",
+        "hypothesis": "Sell in May: stocks Nov-Apr, bonds May-Oct captures seasonal alpha",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "turn_of_month_effect",
+        "persona": "turn_of_month",
+        "persona_source": "unconventional",
+        "hypothesis": "Turn-of-month effect: last 3 + first 3 days capture cash flow driven returns",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "vix_buy_fear",
+        "persona": "vix_mean_reversion",
+        "persona_source": "unconventional",
+        "hypothesis": "Buying stocks when VIX spikes (vol proxy > 30) captures mean-reversion premium",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "dogs_of_dow_contrarian",
+        "persona": "dogs_of_dow",
+        "persona_source": "unconventional",
+        "hypothesis": "Dogs of Dow: worst-performing blue chips revert to mean, outperforming equally-weighted Dow",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "quality_factor_low_vol",
+        "persona": "quality_factor",
+        "persona_source": "unconventional",
+        "hypothesis": "Quality factor (low vol + uptrend) generates stable returns with minimal drawdowns",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
+    {
+        "name": "tail_risk_crash_buying",
+        "persona": "tail_risk_harvest",
+        "persona_source": "unconventional",
+        "hypothesis": "Buying quality stocks after >3% single-day drops captures overreaction mean-reversion",
+        "start": "2021-01-01",
+        "end": "2024-12-31",
+    },
 ]
 
 
@@ -363,6 +421,8 @@ def run_hypothesis(hyp: Dict[str, Any], verbose: bool = True) -> Dict[str, Any]:
         persona = get_theme_strategy(persona_key)
     elif source == "recession":
         persona = get_recession_strategy(persona_key)
+    elif source == "unconventional":
+        persona = get_unconventional_strategy(persona_key)
     else:
         persona = get_persona(persona_key)
     symbols = persona.config.universe

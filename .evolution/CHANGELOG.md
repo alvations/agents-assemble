@@ -144,3 +144,21 @@ All tests pass. Summary of changes:
 - **Eliminated duplicate grading in `diagnose_strategy`**: Composite score is now computed directly from already-graded values instead of calling `compute_composite_score` which re-grades every metric
 - **Fixed inconsistent missing-metric defaults in suggestion logic**: `diagnose_strategy`
 
+## [2026-04-07T08:53:17.596650+00:00] Branch: main | Run: 20260407T085049_pid33764 | Iter 1 | $0.6318
+### famous_investors.py
+All edits pass syntax check. Summary of changes:
+
+- **Removed unused imports**: `dataclass`, `field`, `Any`, `Dict`, `numpy` — none were referenced in the file
+- **Removed dead variable** in `PeterLynch.generate_signals`: `ret` (daily_return) was fetched but never used
+- **Removed dead variable** in `NassefSawiris.generate_signals`: `sma50` was fetched but never used
+- **Fixed `HowardMarks` buy/exit conflict**: The risk control exit (`price < sma200 * 0.80`) was checked *after* candidates were a
+
+## [2026-04-07T08:55:58.851191+00:00] Branch: main | Run: 20260407T085049_pid33764 | Iter 2 | $0.5898
+### famous_investors.py
+All edits pass syntax check. Summary of changes:
+
+- **Removed unused `import pandas as pd`** and **`from typing import List, Optional`** — neither is referenced anywhere in the file
+- **Modernized type hints** — replaced `Optional[List[str]]` with `list[str] | None` across all 13 classes (already guarded by `from __future__ import annotations`)
+- **Removed dead variable `vol`** in `GeorgeSoros.generate_signals` — fetched via `_get_indicator` but never used in any computation or check
+- **Removed
+
