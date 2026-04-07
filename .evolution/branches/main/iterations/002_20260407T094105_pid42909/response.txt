@@ -1,0 +1,6 @@
+All changes pass syntax validation. Summary:
+
+- **Added `_safe_float()` helper** to safely coerce metric values to float, preventing `TypeError` crashes when metrics contain `None`, strings, or other non-numeric values
+- **Applied `_safe_float` to all metric reads** across `generate_trade_recommendations`, `_assess_strategy`, `_timing_guidance`, `_generate_position_rec`, and the "Lessons Learned" markdown section — same class of bug as the iteration 1 alpha fix, now systematically addressed
+- **Fixed FLAT positions getting long-side stop/target calculations** — changed `if avg_cost > 0` to `if avg_cost > 0 and qty != 0`, and `if qty >= 0` to `if qty > 0`, so zero-quantity positions correctly get "N/A" for stops/targets instead of misleading buy-side levels
+- **Optimized `save_all_recommendations`** to call `_ensure_dirs()` once upfront instead of redundantly per strategy via `save_strategy_recommendation`

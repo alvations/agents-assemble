@@ -452,7 +452,7 @@ class JimSimons(BasePersona):
                 trend_signal += 0.5
 
             # Factor 4: Bollinger band position
-            if bb_upper and bb_lower and bb_upper != bb_lower:
+            if bb_upper is not None and bb_lower is not None and bb_upper != bb_lower:
                 bb_pos = (price - bb_lower) / (bb_upper - bb_lower)
                 bb_signal = 1 - 2 * bb_pos  # -1 at upper, +1 at lower
             else:
@@ -690,7 +690,7 @@ class LiKaShing(BasePersona):
             # Buy steady assets on discount
             if discount >= 0:  # At or below SMA200
                 score = max(discount, 0.01)
-                if rsi and rsi < 40:
+                if rsi is not None and rsi < 40:
                     score += 0.1
                 candidates.append((sym, score + 0.3))  # Base ensures we hold
 
@@ -986,7 +986,7 @@ class HowardMarks(BasePersona):
             # Second-level thinking: buy when others panic
             if fear_mode and discount > 0.05 and rsi < 40:
                 # Prefer low-vol names (quality) that are temporarily oversold
-                vol_penalty = vol if vol else 0.02
+                vol_penalty = vol if vol is not None else 0.02
                 quality_score = (1 / max(vol_penalty, 0.005)) * discount
                 candidates.append((sym, quality_score))
             elif not fear_mode and discount > 0.15 and rsi < 30:

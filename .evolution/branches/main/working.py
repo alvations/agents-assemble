@@ -20,6 +20,13 @@ import numpy as np
 import pandas as pd
 
 
+def _safe_float(val: Any, default: float = 0.0) -> float:
+    """Coerce a value to float, returning default if non-numeric."""
+    if isinstance(val, (int, float)) and not isinstance(val, bool):
+        return float(val)
+    return default
+
+
 STRATEGY_DIR = Path(__file__).parent / "strategy"
 WINNING_DIR = STRATEGY_DIR / "winning"
 LOSING_DIR = STRATEGY_DIR / "losing"
@@ -42,15 +49,17 @@ def generate_trade_recommendations(
     Returns:
         Dict with strategy assessment, individual trade recs, and risk params.
     """
-    is_winning = metrics.get("total_return", 0) > 0 and metrics.get("sharpe_ratio", 0) > 0
+    total_ret = _safe_float(metrics.get("total_return"), 0.0)
+    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
+    is_winning = total_ret > 0 and sharpe > 0
 
     # Risk parameters based on strategy performance
-    max_dd = abs(metrics.get("max_drawdown", 0.20))
-    vol = metrics.get("annual_volatility", 0.15)
+    max_dd = abs(_safe_float(metrics.get("max_drawdown"), 0.20))
+    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
 
     # Position sizing via Kelly criterion (simplified)
-    win_rate = metrics.get("win_rate", 0.5)
-    profit_factor = metrics.get("profit_factor", 1.0)
+    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
+    profit_factor = _safe_float(metrics.get("profit_factor"), 1.0)
     if profit_factor > 1 and win_rate > 0:
         avg_win_loss_ratio = profit_factor * (1 - win_rate) / win_rate if win_rate < 1 else 1
         kelly_fraction = win_rate - (1 - win_rate) / avg_win_loss_ratio if avg_win_loss_ratio > 0 else 0
@@ -62,7 +71,7 @@ def generate_trade_recommendations(
     stop_loss_pct = min(max_dd * 1.2, 0.25)  # 120% of historical max DD, capped at 25%
 
     # Take-profit based on CAGR and vol
-    cagr = metrics.get("cagr", 0.10)
+    cagr = _safe_float(metrics.get("cagr"), 0.10)
     take_profit_pct = max(cagr * 0.5, 0.05)  # Half of annual return per position
 
     recs = {
@@ -85,10 +94,10 @@ def generate_trade_recommendations(
         },
         "position_recommendations": [],
         "metrics_summary": {
-            "total_return": f"{metrics.get('total_return', 0):.2%}",
-            "sharpe_ratio": f"{metrics.get('sharpe_ratio', 0):.2f}",
-            "max_drawdown": f"{metrics.get('max_drawdown', 0):.2%}",
-            "win_rate": f"{metrics.get('win_rate', 0):.2%}",
+            "total_return": f"{total_ret:.2%}",
+            "sharpe_ratio": f"{sharpe:.2f}",
+            "max_drawdown": f"{_safe_float(metrics.get('max_drawdown'), 0.0):.2%}",
+            "win_rate": f"{win_rate:.2%}",
             "alpha": f"{metrics.get('alpha', 0):.2%}" if isinstance(metrics.get('alpha'), (int, float)) else "N/A",
         },
     }
@@ -104,11 +113,10 @@ def generate_trade_recommendations(
 
 def _assess_strategy(metrics: Dict[str, float]) -> str:
     """Generate overall strategy assessment."""
-    sharpe = metrics.get("sharpe_ratio", 0)
-    alpha_raw = metrics.get("alpha", 0)
-    alpha = alpha_raw if isinstance(alpha_raw, (int, float)) else 0
-    max_dd = metrics.get("max_drawdown", 0)
-    total_ret = metrics.get("total_return", 0)
+    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
+    alpha = _safe_float(metrics.get("alpha"), 0.0)
+    max_dd = _safe_float(metrics.get("max_drawdown"), 0.0)
+    total_ret = _safe_float(metrics.get("total_return"), 0.0)
 
     if sharpe > 1.0 and alpha > 0.05:
         return "STRONG BUY — Excellent risk-adjusted returns with significant alpha. Deploy with confidence."
@@ -124,8 +132,8 @@ def _assess_strategy(metrics: Dict[str, float]) -> str:
 
 def _timing_guidance(metrics: Dict[str, float]) -> str:
     """Generate timing guidance based on strategy characteristics."""
-    vol = metrics.get("annual_volatility", 0.15)
-    win_rate = metrics.get("win_rate", 0.5)
+    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
+    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
 
     if vol > 0.25:
         return "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency."
@@ -143,8 +151,8 @@ def _generate_position_rec(
     position_size_pct: float,
 ) -> Dict[str, Any]:
     """Generate recommendation for a single position."""
-    avg_cost = pos_info.get("avg_cost", 0)
-    qty = pos_info.get("qty", 0)
+    avg_cost = _safe_float(pos_info.get("avg_cost"), 0.0)
+    qty = _safe_float(pos_info.get("qty"), 0.0)
 
     if qty > 0:
         action = "BUY"
@@ -153,8 +161,8 @@ def _generate_position_rec(
     else:
         action = "FLAT"
 
-    if avg_cost > 0:
-        if qty >= 0:
+    if avg_cost > 0 and qty != 0:
+        if qty > 0:
             stop_price = avg_cost * (1 - stop_loss_pct)
             target_price = avg_cost * (1 + take_profit_pct)
             stop_label = "below"
@@ -248,9 +256,9 @@ def save_strategy_recommendation(
             "## Lessons Learned",
             "",
             "This strategy lost money. Key issues:",
-            f"- Sharpe ratio: {metrics.get('sharpe_ratio', 0):.2f} (target > 0.5)",
-            f"- Max drawdown: {metrics.get('max_drawdown', 0):.2%} (target > -20%)",
-            f"- Alpha: {metrics.get('alpha', 0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
+            f"- Sharpe ratio: {_safe_float(metrics.get('sharpe_ratio'), 0.0):.2f} (target > 0.5)",
+            f"- Max drawdown: {_safe_float(metrics.get('max_drawdown'), 0.0):.2%} (target > -20%)",
+            f"- Alpha: {_safe_float(metrics.get('alpha'), 0.0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
             "",
             "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
         ])
@@ -267,6 +275,7 @@ def save_strategy_recommendation(
 
 def save_all_recommendations(all_results: List[Dict[str, Any]]) -> Dict[str, Path]:
     """Save recommendations for all strategy results."""
+    _ensure_dirs()
     paths = {}
     for r in all_results:
         if r.get("status") != "success":

@@ -295,3 +295,11 @@ All changes pass syntax validation. Summary:
 - **Fixed `qty == 0` incorrectly recommending SELL** — now reports "FLAT" for zero-quantity positions
 - **Fixed inverted stop-loss/take-profit for short positions** — shorts now correctly place
 
+## [2026-04-07T09:44:14.637979+00:00] Branch: main | Run: 20260407T094105_pid42909 | Iter 2 | $0.4843
+### trade_recommender.py
+All changes pass syntax validation. Summary:
+
+- **Added `_safe_float()` helper** to safely coerce metric values to float, preventing `TypeError` crashes when metrics contain `None`, strings, or other non-numeric values
+- **Applied `_safe_float` to all metric reads** across `generate_trade_recommendations`, `_assess_strategy`, `_timing_guidance`, `_generate_position_rec`, and the "Lessons Learned" markdown section — same class of bug as the iteration 1 alpha fix, now systematically addressed
+- **
+

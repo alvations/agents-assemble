@@ -113,11 +113,10 @@ def generate_trade_recommendations(
 
 def _assess_strategy(metrics: Dict[str, float]) -> str:
     """Generate overall strategy assessment."""
-    sharpe = metrics.get("sharpe_ratio", 0)
-    alpha_raw = metrics.get("alpha", 0)
-    alpha = alpha_raw if isinstance(alpha_raw, (int, float)) else 0
-    max_dd = metrics.get("max_drawdown", 0)
-    total_ret = metrics.get("total_return", 0)
+    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
+    alpha = _safe_float(metrics.get("alpha"), 0.0)
+    max_dd = _safe_float(metrics.get("max_drawdown"), 0.0)
+    total_ret = _safe_float(metrics.get("total_return"), 0.0)
 
     if sharpe > 1.0 and alpha > 0.05:
         return "STRONG BUY — Excellent risk-adjusted returns with significant alpha. Deploy with confidence."
@@ -133,8 +132,8 @@ def _assess_strategy(metrics: Dict[str, float]) -> str:
 
 def _timing_guidance(metrics: Dict[str, float]) -> str:
     """Generate timing guidance based on strategy characteristics."""
-    vol = metrics.get("annual_volatility", 0.15)
-    win_rate = metrics.get("win_rate", 0.5)
+    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
+    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
 
     if vol > 0.25:
         return "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency."
@@ -257,9 +256,9 @@ def save_strategy_recommendation(
             "## Lessons Learned",
             "",
             "This strategy lost money. Key issues:",
-            f"- Sharpe ratio: {metrics.get('sharpe_ratio', 0):.2f} (target > 0.5)",
-            f"- Max drawdown: {metrics.get('max_drawdown', 0):.2%} (target > -20%)",
-            f"- Alpha: {metrics.get('alpha', 0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
+            f"- Sharpe ratio: {_safe_float(metrics.get('sharpe_ratio'), 0.0):.2f} (target > 0.5)",
+            f"- Max drawdown: {_safe_float(metrics.get('max_drawdown'), 0.0):.2%} (target > -20%)",
+            f"- Alpha: {_safe_float(metrics.get('alpha'), 0.0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
             "",
             "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
         ])
@@ -276,6 +275,7 @@ def save_strategy_recommendation(
 
 def save_all_recommendations(all_results: List[Dict[str, Any]]) -> Dict[str, Path]:
     """Save recommendations for all strategy results."""
+    _ensure_dirs()
     paths = {}
     for r in all_results:
         if r.get("status") != "success":
