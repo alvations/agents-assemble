@@ -100,7 +100,7 @@ def diagnose_strategy(
     for metric in METRICS_WEIGHTS:
         value = metrics.get(metric, _METRIC_MISSING_DEFAULTS.get(metric, 0))
         grades[metric] = {
-            "value": value,
+            "value": _safe_float(value),
             "grade": grade_metric(metric, value),
         }
 
@@ -121,12 +121,12 @@ def diagnose_strategy(
             weaknesses.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
 
     # Strategy-specific suggestions (use same defaults as scoring, NaN-safe)
-    sharpe = _safe_float(metrics.get("sharpe_ratio", _METRIC_MISSING_DEFAULTS.get("sharpe_ratio", 0)))
-    max_dd = _safe_float(metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)))
-    win_rate = _safe_float(metrics.get("win_rate", _METRIC_MISSING_DEFAULTS.get("win_rate", 0)))
-    alpha = _safe_float(metrics.get("alpha", _METRIC_MISSING_DEFAULTS.get("alpha", 0)))
-    total_ret = _safe_float(metrics.get("total_return", _METRIC_MISSING_DEFAULTS.get("total_return", 0)))
-    num_trades = trade_metrics.get("num_trades", 0) if trade_metrics else 0
+    sharpe = _safe_float(metrics.get("sharpe_ratio"))
+    max_dd = _safe_float(metrics.get("max_drawdown"))
+    win_rate = _safe_float(metrics.get("win_rate"))
+    alpha = _safe_float(metrics.get("alpha"))
+    total_ret = _safe_float(metrics.get("total_return"))
+    num_trades = _safe_float(trade_metrics.get("num_trades", 0)) if trade_metrics else 0
 
     if max_dd < -0.25:
         suggestions.append("Add trailing stop-loss (e.g., 15-20% from peak) to limit drawdowns")
@@ -298,10 +298,10 @@ def suggest_parameter_tuning(
 ) -> list[dict[str, str]]:
     """Suggest specific parameter changes based on performance."""
     suggestions = []
-    sharpe = _safe_float(metrics.get("sharpe_ratio", 0))
-    max_dd = _safe_float(metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)))
-    win_rate = _safe_float(metrics.get("win_rate", 0))
-    vol = _safe_float(metrics.get("annual_volatility", 0))
+    sharpe = _safe_float(metrics.get("sharpe_ratio"))
+    max_dd = _safe_float(metrics.get("max_drawdown"))
+    win_rate = _safe_float(metrics.get("win_rate"))
+    vol = _safe_float(metrics.get("annual_volatility"))
 
     if max_dd < -0.20:
         suggestions.append({

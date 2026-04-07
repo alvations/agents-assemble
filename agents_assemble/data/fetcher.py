@@ -782,6 +782,20 @@ UNIVERSE = {
     "cannabis": ["TLRY", "CGC", "ACB", "MO", "STZ"],
     "space": ["RKLB", "ASTS", "LUNR", "BA", "LMT", "NOC"],
     "ev_full": ["TSLA", "RIVN", "LCID", "NIO", "XPEV", "LI", "GM", "F", "TM", "HMC"],
+    # Dividend Aristocrats (25+ years consecutive increases, S&P 500)
+    "dividend_aristocrats": [
+        "JNJ", "PG", "KO", "PEP", "ABBV", "MRK", "MMM", "ABT", "CL", "EMR",
+        "GPC", "ADM", "ADP", "AFL", "APD", "BDX", "BEN", "CAH", "CB", "CTAS",
+        "CVX", "DOV", "ECL", "ED", "GD", "GWW", "HRL", "ITW", "KMB", "LOW",
+        "MCD", "NDSN", "NEE", "NUE", "PH", "PPG", "ROP", "SHW", "SYY", "TGT",
+        "TROW", "WMT", "XOM", "T", "VZ", "IBM", "O",
+    ],
+    # Dividend Kings (50+ years)
+    "dividend_kings": [
+        "JNJ", "PG", "KO", "CL", "EMR", "GPC", "DOV", "PH", "GWW",
+        "MMM", "ABT", "ADM", "BDX", "ITW", "KMB", "LOW", "NUE", "PPG",
+        "SWK", "SYY", "TGT",
+    ],
     # Global diversified — comprehensive (top picks from each region)
     "global_diversified": [
         # US mega cap

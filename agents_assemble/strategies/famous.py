@@ -16,7 +16,13 @@ Personas:
     4. MichaelBurry   — Deep value contrarian, distressed assets, short overbought
     5. JimSimons      — Pure quant: mean-reversion + momentum factor combination
     6. CarlIcahn      — Activist value: undervalued large caps with catalysts
-    7. WarrenBuffett   — (Enhanced) Moat-based, owner earnings, margin of safety
+    7. MasayoshiSon   — Vision Fund: high-conviction tech platform bets
+    8. LiKaShing      — Infrastructure/utility value, steady cash flows
+    9. NassefSawiris  — Emerging market industrials, materials, global value
+   10. JorgePauloLemann — 3G Capital: consumer brand dominance
+   11. PrinceAlwaleed — Global blue-chip contrarian, crisis buying
+   12. HowardMarks    — Oaktree: second-level thinking, buy quality in panic
+   13. SupportResistanceCommodity — Breakout trading on commodity ETFs
 """
 
 from __future__ import annotations
@@ -1080,14 +1086,14 @@ class SupportResistanceCommodity(BasePersona):
                 scored.append((sym, score))
 
             # Bounce off support — BUY (support test)
-            elif sma50 and sma50 > 0 and abs(price - sma50) / sma50 < 0.02 and rsi < 45:
+            elif sma50 is not None and sma50 > 0 and abs(price - sma50) / sma50 < 0.02 and rsi < 45:
                 score = 1.5
                 if vol_ratio > 1.2:
                     score += 0.5
                 scored.append((sym, score))
 
             # Trending above both MAs — HOLD/accumulate
-            elif sma50 and sma200 and price > sma50 > sma200 and rsi < 70:
+            elif sma50 is not None and price > sma50 > sma200 and rsi < 70:
                 scored.append((sym, 1.0))
 
         scored.sort(key=lambda x: x[1], reverse=True)
