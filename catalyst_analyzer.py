@@ -212,7 +212,7 @@ class CatalystAnalyzer:
             start = (datetime.now() - timedelta(days=self._DEFAULT_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
         if self._price_data is not None:
             start_dt = pd.Timestamp(start)
-            if self._price_data.index[0] > start_dt:
+            if len(self._price_data) == 0 or self._price_data.index[0] > start_dt:
                 self._price_data = None  # Cache doesn't cover requested range
         if self._price_data is None:
             df = fetch_ohlcv(self.symbol, start=start)
@@ -230,10 +230,12 @@ class CatalystAnalyzer:
 
     # ----- 1. News -----
 
+    _NEWS_FETCH_CAP = 50  # Always fetch generously; max_items is a return-time slice
+
     def get_news(self, max_items: int = 20) -> list[NewsItem]:
         """Pull recent news for the ticker."""
         if self._news_cache is not None:
-            return self._news_cache
+            return self._news_cache[:max_items]
 
         items = []
 
@@ -241,7 +243,7 @@ class CatalystAnalyzer:
         try:
             import yfinance as yf
             ticker = yf.Ticker(self.symbol)
-            for n in (ticker.news or [])[:max_items]:
+            for n in (ticker.news or [])[:self._NEWS_FETCH_CAP]:
                 title = n.get("title", "")
                 ts = n.get("providerPublishTime", 0)
                 items.append(NewsItem(
@@ -265,7 +267,7 @@ class CatalystAnalyzer:
                                      params={"symbol": self.symbol, "from": start, "to": end, "token": key},
                                      timeout=15)
                 if resp.status_code == 200:
-                    for n in resp.json()[:max_items]:
+                    for n in resp.json()[:self._NEWS_FETCH_CAP]:
                         title = n.get("headline", "")
                         fh_ts = n.get("datetime", 0)
                         items.append(NewsItem(
@@ -289,7 +291,7 @@ class CatalystAnalyzer:
 
         unique = unique[:max_items]
         self._news_cache = unique
-        return unique
+        return unique[:max_items]
 
     # ----- 2. Historical event patterns -----
 

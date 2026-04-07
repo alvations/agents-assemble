@@ -1,0 +1,44 @@
+{
+  "MSTR": {
+    "hold": "14d",
+    "win_rate": 0.67,
+    "return": 2.26,
+    "verdict": "WINNER - shorts wrong on BTC thesis"
+  },
+  "HOOD": {
+    "hold": "20d",
+    "win_rate": 0.8,
+    "return": 1.68,
+    "verdict": "WINNER - retail boom overcame shorts"
+  },
+  "SMCI": {
+    "hold": "10d",
+    "win_rate": 0.71,
+    "return": 1.41,
+    "verdict": "WINNER - AI demand > short thesis"
+  },
+  "AI": {
+    "hold": "5d",
+    "win_rate": 0.75,
+    "return": 0.66,
+    "verdict": "QUICK BOUNCE - fades after 10d"
+  },
+  "CLOV": {
+    "hold": "5d",
+    "win_rate": 0.64,
+    "return": 0.44,
+    "verdict": "QUICK BOUNCE only"
+  },
+  "LCID": {
+    "hold": "3d",
+    "win_rate": 0.29,
+    "return": -0.14,
+    "verdict": "LOSER - shorts were right"
+  },
+  "DKNG": {
+    "hold": "14d",
+    "win_rate": 0.56,
+    "return": -0.17,
+    "verdict": "LOSER - slow bleed"
+  }
+}
