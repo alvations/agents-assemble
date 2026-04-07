@@ -227,7 +227,7 @@ class DogsOfTheDow(BasePersona):
                 "AAPL", "MSFT", "AMZN", "UNH", "GS", "HD", "MCD",
                 "V", "CRM", "DIS", "NKE", "BA", "CAT", "JPM",
                 "IBM", "JNJ", "KO", "PG", "WMT", "MRK",
-                "MMM", "CVX", "DOW", "INTC", "VZ", "WBA",
+                "MMM", "CVX", "DOW", "INTC", "VZ",
             ],
         )
         super().__init__(config)

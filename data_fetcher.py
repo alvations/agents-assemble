@@ -744,13 +744,13 @@ UNIVERSE = {
     ],
     "europe_netherlands": ["ASML", "ING", "PHG", "STLA", "NXP", "NXPI"],
     "europe_france": ["TTE", "SNY", "DANOY", "BNPQF"],
-    "europe_switzerland": ["NVS", "RHHBY", "UBS", "LOGI", "ABB"],
+    "europe_switzerland": ["NVS", "RHHBY", "UBS", "LOGI", "ABBNY"],
     "europe_nordic": ["NVO", "SPOT", "NOK", "ERIC", "NHYDY", "EQNR"],
     "europe_spain_italy": ["SAN", "BBVA", "TEF", "RACE", "ENEL"],
     "europe_all": [
         "SAP", "ASML", "NVO", "AZN", "SHEL", "TTE", "UL", "DEO", "BP", "HSBC",
         "GSK", "BCS", "LYG", "DB", "SAN", "BBVA", "ING", "PHG", "SPOT", "NOK",
-        "ERIC", "ABB", "NVS", "UBS", "LOGI", "STM", "NXPI", "RIO", "VOD",
+        "ERIC", "ABBNY", "NVS", "UBS", "LOGI", "STM", "NXPI", "RIO", "VOD",
         "BTI", "NGG", "SNY", "EQNR", "NHYDY", "RACE", "STLA", "BUD",
     ],
     "europe_etf": ["VGK", "EZU", "EWG", "EWU", "EWQ", "EWI", "EWP", "IEUR", "HEDJ"],
@@ -819,10 +819,10 @@ UNIVERSE = {
     "ev_full": ["TSLA", "RIVN", "LCID", "NIO", "XPEV", "LI", "GM", "F", "TM", "HMC"],
     # 2026 Emerging Themes
     "robotics_autonomous": [
-        "ISRG", "INTC", "NVDA", "TER", "CGNX", "BRKS", "IRBT",
+        "ISRG", "INTC", "NVDA", "TER", "CGNX", "AZTA", "IRBT",
         "BOTZ", "ROBO",  # Robotics ETFs
         "GOOGL", "TSLA", "GM", "F",  # Autonomous vehicles
-        "ABB", "FANUY",  # Industrial automation
+        "ABBNY", "FANUY",  # Industrial automation
     ],
     "glp1_obesity": [
         "LLY", "NVO", "AMGN", "VKTX",  # GLP-1 leaders
@@ -874,7 +874,7 @@ UNIVERSE = {
         # US mega cap
         "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "JPM", "V",
         # Europe
-        "SAP", "ASML", "NVO", "AZN", "SHEL", "UL", "NVS", "SPOT", "ABB",
+        "SAP", "ASML", "NVO", "AZN", "SHEL", "UL", "NVS", "SPOT", "ABBNY",
         # Japan
         "TM", "SONY", "MUFG",
         # China

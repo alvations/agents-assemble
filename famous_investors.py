@@ -881,7 +881,7 @@ class PrinceAlwaleed(BasePersona):
             universe=universe or [
                 "C", "JPM", "BAC", "GS",  # Financials (Citigroup focus)
                 "AAPL", "MSFT", "GOOGL", "META",  # Tech giants
-                "LVMH", "MAR", "HLT",  # Luxury/hospitality
+                "LVMUY", "MAR", "HLT",  # Luxury/hospitality
                 "DIS", "NFLX",  # Entertainment
                 "V", "MA",  # Payment networks
             ],

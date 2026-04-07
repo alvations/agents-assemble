@@ -755,9 +755,8 @@ class RoboticsAutonomous(BasePersona):
             max_positions=8,
             rebalance_frequency="weekly",
             universe=universe or [
-                "ISRG", "NVDA", "INTC", "TER", "CGNX", "BRKS",
+                "ISRG", "NVDA", "INTC", "TER", "CGNX",
                 "GOOGL", "TSLA", "GM",
-                "ABB",
             ],
         )
         super().__init__(config)
