@@ -297,3 +297,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# Short horizons: 1w/2w/1m/3m/6m now supported
