@@ -58,10 +58,6 @@ class Position:
     avg_cost: float = 0.0
     realized_pnl: float = 0.0
 
-    @property
-    def market_value(self) -> float:
-        return 0.0  # Updated externally with current price
-
     def update(self, side: Side, qty: float, price: float) -> float:
         """Update position with a new trade. Returns realized P&L."""
         realized = 0.0
@@ -298,7 +294,7 @@ def compute_metrics(
         "sortino_ratio": sortino,
         "calmar_ratio": calmar,
         "max_drawdown": max_drawdown,
-        "max_drawdown_date": str(max_dd_end),
+        "max_drawdown_date": str(max_dd_end) if max_dd_end is not None else None,
         "win_rate": win_rate,
         "profit_factor": profit_factor,
         "num_trading_days": total_days,
@@ -733,14 +729,14 @@ def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
 # ---------------------------------------------------------------------------
 def _fmt_ratio(value: float) -> str:
     """Format a ratio that may be infinite (calmar, profit_factor)."""
-    if not math.isfinite(value):
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
         return "       N/A"
     return f"{value:>10.2f}"
 
 
 def _fmt_pct(value: float) -> str:
     """Format a percentage that may be infinite (alpha on extreme short backtests)."""
-    if not math.isfinite(value):
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
         return "       N/A"
     return f"{value:>10.2%}"
 
@@ -759,14 +755,14 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         f"{'=' * 60}",
         "",
         "--- Performance ---",
-        f"  Total Return:       {m.get('total_return', 0):>10.2%}",
-        f"  CAGR:               {m.get('cagr', 0):>10.2%}",
-        f"  Annual Volatility:  {m.get('annual_volatility', 0):>10.2%}",
+        f"  Total Return:       {_fmt_pct(m.get('total_return', 0))}",
+        f"  CAGR:               {_fmt_pct(m.get('cagr', 0))}",
+        f"  Annual Volatility:  {_fmt_pct(m.get('annual_volatility', 0))}",
         f"  Sharpe Ratio:       {_fmt_ratio(m.get('sharpe_ratio', 0))}",
         f"  Sortino Ratio:      {_fmt_ratio(m.get('sortino_ratio', 0))}",
         f"  Calmar Ratio:       {_fmt_ratio(m.get('calmar_ratio', 0))}",
-        f"  Max Drawdown:       {m.get('max_drawdown', 0):>10.2%}",
-        f"  Win Rate:           {m.get('win_rate', 0):>10.2%}",
+        f"  Max Drawdown:       {_fmt_pct(m.get('max_drawdown', 0))}",
+        f"  Win Rate:           {_fmt_pct(m.get('win_rate', 0))}",
         f"  Profit Factor:      {_fmt_ratio(m.get('profit_factor', 0))}",
         "",
         "--- Trades ---",
