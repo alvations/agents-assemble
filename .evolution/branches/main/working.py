@@ -1,467 +1,307 @@
-"""Mathematically-driven trading strategies for agents-assemble.
+"""Trade recommendation generator for agents-assemble.
 
-These strategies use specific mathematical techniques beyond simple
-moving averages. Each is grounded in a specific mathematical concept.
-
-Strategies:
-    1. KellyOptimal        — Kelly criterion position sizing with momentum
-    2. ZScoreReversion     — Statistical Z-score mean reversion
-    3. HurstExponent       — Regime detection via Hurst exponent proxy
-    4. VolatilityBreakout  — Donchian channel breakouts scaled by ATR
-    5. EqualRiskContrib    — Equal risk contribution (ERC) portfolio
+Generates actionable trade recommendations from backtest results:
+- Entry price and limit price
+- Stop-loss and take-profit targets
+- Position sizing
+- Timing guidance
+- Saves winning strategies to strategy/winning/
+- Saves losing strategies to strategy/losing/
 """
 
 from __future__ import annotations
 
+import json
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-
+import math
 
 import pandas as pd
 
-from personas import BasePersona, PersonaConfig
+
+def _safe_float(val: Any, default: float = 0.0) -> float:
+    """Coerce a value to float, returning default if non-numeric."""
+    if isinstance(val, (int, float)) and not isinstance(val, bool):
+        f = float(val)
+        if math.isfinite(f):
+            return f
+    return default
 
 
-# ---------------------------------------------------------------------------
-# 1. Kelly Criterion Optimal Sizing
-# ---------------------------------------------------------------------------
-class KellyOptimal(BasePersona):
-    """Kelly criterion position sizing with momentum signal.
+STRATEGY_DIR = Path(__file__).parent / "strategy"
+WINNING_DIR = STRATEGY_DIR / "winning"
+LOSING_DIR = STRATEGY_DIR / "losing"
 
-    Source: Kelly (1956) "A New Interpretation of Information Rate"
 
-    f* = (p*b - q) / b
-    where p = win probability, q = 1-p, b = win/loss ratio
+def _ensure_dirs():
+    WINNING_DIR.mkdir(parents=True, exist_ok=True)
+    LOSING_DIR.mkdir(parents=True, exist_ok=True)
 
-    We estimate p and b from rolling 60-day returns, then use
-    fractional Kelly (half-Kelly) for safety.
+
+def generate_trade_recommendations(
+    name: str,
+    metrics: dict[str, float],
+    final_positions: dict[str, Any],
+    equity_curve: pd.Series | None = None,
+    persona_config: dict | None = None,
+) -> dict[str, Any]:
+    """Generate actionable trade recommendations from a strategy.
+
+    Returns:
+        Dict with strategy assessment, individual trade recs, and risk params.
     """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Kelly Criterion Optimal",
-            description="Position sizing via Kelly criterion from rolling win rate and payoff ratio",
-            risk_tolerance=0.5,
-            max_position_size=0.20,
-            max_positions=10,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
-                "JPM", "V", "UNH", "HD", "MCD", "PG",
-                "SPY", "QQQ",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices or sym not in data:
-                continue
-
-            df = data[sym]
-            if "daily_return" not in df.columns or date not in df.index:
-                continue
-
-            # Get rolling 60-day returns window
-            loc = df.index.get_loc(date)
-            if loc < 60:
-                continue
-            window = df["daily_return"].iloc[loc-60:loc].dropna()
-            if len(window) < 30:
-                continue
-
-            # Estimate Kelly parameters
-            wins = window[window > 0]
-            losses = window[window < 0]
-            if len(wins) == 0 or len(losses) == 0:
-                continue
-
-            p = len(wins) / len(window)  # Win probability
-            avg_win = wins.mean()
-            avg_loss = abs(losses.mean())
-            b = avg_win / avg_loss if avg_loss > 0 else 1  # Payoff ratio
-
-            q = 1 - p
-            kelly = (p * b - q) / b if b > 0 else 0
-
-            # Half-Kelly for safety
-            half_kelly = max(0, kelly * 0.5)
-
-            # Only invest if Kelly > 0 and momentum is positive
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            price = prices[sym]
-            if half_kelly > 0.01 and sma50 is not None and price > sma50:
-                candidates.append((sym, half_kelly))
-
-        # Normalize weights with redistribution from capped positions
-        if candidates:
-            candidates.sort(key=lambda x: x[1], reverse=True)
-            top = candidates[:self.config.max_positions]
-            total_kelly = sum(k for _, k in top)
-            if total_kelly > 0.95:
-                scale = 0.95 / total_kelly
-            else:
-                scale = 1.0
-            cap = self.config.max_position_size
-            for sym, k in top:
-                weights[sym] = min(k * scale, cap)
-            # Redistribute budget lost from capping to uncapped positions
-            allocated = sum(weights.values())
-            uncapped = [s for s, k in top if k * scale < cap]
-            uncapped_total = sum(weights[s] for s in uncapped)
-            if uncapped and uncapped_total > 0 and allocated < 0.95:
-                boost = 1 + (0.95 - allocated) / uncapped_total
-                for s in uncapped:
-                    weights[s] = min(weights[s] * boost, cap)
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 2. Z-Score Mean Reversion
-# ---------------------------------------------------------------------------
-class ZScoreReversion(BasePersona):
-    """Statistical Z-score based mean reversion.
-
-    Buy when a stock's price is >2 standard deviations below its
-    60-day mean (Z < -2). Sell when it reverts to Z > 0.
-
-    This is more rigorous than simple RSI — it uses actual
-    statistical significance thresholds.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Z-Score Mean Reversion",
-            description="Buy at Z < -2 (statistically oversold), sell at Z > 0",
-            risk_tolerance=0.5,
-            max_position_size=0.12,
-            max_positions=10,
-            rebalance_frequency="daily",
-            universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
-                "JPM", "V", "UNH", "JNJ", "PG", "KO",
-                "HD", "MCD", "WMT", "XOM", "CVX", "BAC",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices or sym not in data:
-                continue
-
-            df = data[sym]
-            if "Close" not in df.columns or date not in df.index:
-                continue
-
-            loc = df.index.get_loc(date)
-            if loc < 60:
-                continue
-
-            window = df["Close"].iloc[loc-60:loc]
-            if len(window) < 30:
-                continue
-
-            mean = window.mean()
-            std = window.std()
-            if not (std > 0):
-                continue
-
-            price = prices[sym]
-            z_score = (price - mean) / std
-
-            # Buy signal: Z < -2 (statistically significant oversold)
-            if z_score < -2.0:
-                # Score by how extreme the Z is
-                score = abs(z_score) - 2.0
-                sma200 = self._get_indicator(data, sym, "sma_200", date)
-                # Only if not in structural downtrend
-                if sma200 is not None and price > sma200 * 0.85:
-                    candidates.append((sym, score))
-
-            # Exit: Z > 0 (reverted to mean)
-            elif z_score > 0.5:
-                pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0:
-                    weights[sym] = 0.0
-
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        top = candidates[:self.config.max_positions]
-        if top:
-            per_stock = min(0.85 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 3. Hurst Exponent Regime Detection
-# ---------------------------------------------------------------------------
-class HurstExponent(BasePersona):
-    """Regime detection using Hurst exponent proxy.
-
-    H > 0.5: trending (use momentum)
-    H < 0.5: mean-reverting (use mean reversion)
-    H = 0.5: random walk (stay out)
-
-    We estimate H from the autocorrelation of returns as a fast proxy.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Hurst Regime Detector",
-            description="Adaptive: momentum when trending, mean-reversion when reverting",
-            risk_tolerance=0.5,
-            max_position_size=0.12,
-            max_positions=10,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
-                "JPM", "V", "UNH", "JNJ", "PG", "KO",
-                "HD", "MCD", "WMT", "SPY", "QQQ",
-            ],
-        )
-        super().__init__(config)
-
-    def _estimate_hurst(self, returns: pd.Series) -> float:
-        """Estimate Hurst exponent from autocorrelation proxy."""
-        if len(returns) < 20:
-            return 0.5  # Unknown → random walk
-        # Use lag-1 autocorrelation as quick Hurst proxy
-        # H ≈ 0.5 + autocorr/2
-        autocorr = returns.autocorr(lag=1)
-        if pd.isna(autocorr):
-            return 0.5
-        return 0.5 + autocorr / 2
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        mom_candidates = []
-        mr_candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices or sym not in data:
-                continue
-
-            df = data[sym]
-            if "daily_return" not in df.columns or date not in df.index:
-                continue
-
-            loc = df.index.get_loc(date)
-            if loc < 60:
-                continue
-
-            returns = df["daily_return"].iloc[loc-60:loc].dropna()
-            hurst = self._estimate_hurst(returns)
-
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-
-            if any(v is None for v in [sma50, rsi]):
-                continue
-
-            if hurst > 0.55:
-                # Trending regime → use momentum
-                if price > sma50 and rsi < 75:
-                    score = hurst * 2
-                    if sma200 is not None and sma50 > sma200:
-                        score += 1
-                    mom_candidates.append((sym, score))
-            elif hurst < 0.45:
-                # Mean-reverting regime → buy oversold
-                if rsi < 30 and bb_lower is not None and price < bb_lower:
-                    score = (0.5 - hurst) * 5
-                    mr_candidates.append((sym, score))
-            # 0.45-0.55 → random walk, stay out
-
-        # Combine both signal types
-        all_candidates = mom_candidates + mr_candidates
-        all_candidates.sort(key=lambda x: x[1], reverse=True)
-        top = all_candidates[:self.config.max_positions]
-
-        if top:
-            per_stock = min(0.85 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 4. Volatility Breakout (Donchian + ATR)
-# ---------------------------------------------------------------------------
-class VolatilityBreakout(BasePersona):
-    """Volatility breakout: Donchian channel breakout scaled by ATR.
-
-    Source: Turtle Trading system (Richard Dennis, 1983)
-
-    Buy when price breaks above the 20-day high (Donchian upper).
-    Position size = risk budget / ATR (risk-normalize position).
-    Exit when price breaks below 10-day low.
-
-    We approximate Donchian with BB upper and use ATR for sizing.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Volatility Breakout (Turtle)",
-            description="Donchian breakout with ATR position sizing (Turtle Trading)",
-            risk_tolerance=0.6,
-            max_position_size=0.15,
-            max_positions=8,
-            rebalance_frequency="daily",
-            universe=universe or [
-                "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA",
-                "GLD", "TLT", "XLE", "SPY", "QQQ",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-
-            price = prices[sym]
-            bb_upper = self._get_indicator(data, sym, "bb_upper", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            atr = self._get_indicator(data, sym, "atr_14", date)
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-
-            if any(v is None for v in [bb_upper, atr, sma20]):
-                continue
-
-            # Breakout: price above BB upper (Donchian proxy)
-            if price > bb_upper and rsi is not None and rsi < 80:
-                # ATR-scaled scoring (lower ATR = stronger breakout signal)
-                if atr > 0:
-                    atr_pct = atr / price
-                    score = 3.0 / max(atr_pct * 100, 0.5)  # Inverse of ATR %
-                    scored.append((sym, score, atr))
-
-            # Exit: price below SMA20 (simplified Donchian lower)
-            elif price < sma20:
-                weights[sym] = 0.0
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-
-        if top:
-            risk_per_position = 0.002  # 0.2% portfolio risk per ATR per position
-            for sym, score, atr in top:
-                if atr > 0:
-                    # Turtle sizing: w = risk / (ATR/price)
-                    w = min(risk_per_position * prices[sym] / atr,
-                            self.config.max_position_size)
-                    weights[sym] = w
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 5. Equal Risk Contribution (ERC)
-# ---------------------------------------------------------------------------
-class EqualRiskContrib(BasePersona):
-    """Equal Risk Contribution portfolio.
-
-    Source: Maillard, Roncalli, Teiletche (2010)
-
-    Each asset contributes equally to portfolio risk.
-    Weight_i proportional to 1 / (sigma_i * sum(1/sigma_j))
-
-    Combined with a momentum filter to avoid investing in downtrending assets.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Equal Risk Contribution (ERC)",
-            description="Each asset contributes equal risk, with momentum filter",
-            risk_tolerance=0.4,
-            max_position_size=0.25,
-            max_positions=8,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "SPY", "QQQ", "IWM",  # US equities
-                "EFA", "EEM",          # International
-                "TLT", "IEF",         # Bonds
-                "GLD",                  # Gold
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        eligible = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            price = prices[sym]
-
-            if vol is None or vol <= 0:
-                continue
-
-            # Momentum filter: only include assets above SMA50
-            if sma50 is not None and price > sma50:
-                eligible.append((sym, vol))
-
-        if not eligible:
-            # Everything bearish → defensive allocation from available universe
-            fallback = {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
-            universe_set = set(self.config.universe)
-            available = {s: w for s, w in fallback.items()
-                         if s in prices and s in universe_set}
-            if available:
-                return available
-            return {}
-
-        # ERC: weight inversely proportional to vol
-        total_inv_vol = sum(1 / v for _, v in eligible)
-        for sym, vol in eligible:
-            w = (1 / vol) / total_inv_vol * 0.90
-            weights[sym] = min(w, self.config.max_position_size)
-
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# Registry
-# ---------------------------------------------------------------------------
-MATH_STRATEGIES = {
-    "kelly_optimal": KellyOptimal,
-    "zscore_reversion": ZScoreReversion,
-    "hurst_regime": HurstExponent,
-    "volatility_breakout": VolatilityBreakout,
-    "equal_risk_contrib": EqualRiskContrib,
-}
-
-
-def get_math_strategy(name: str, **kwargs) -> BasePersona:
-    cls = MATH_STRATEGIES.get(name)
-    if cls is None:
-        raise ValueError(f"Unknown: {name}. Available: {list(MATH_STRATEGIES.keys())}")
-    return cls(**kwargs)
+    total_ret = _safe_float(metrics.get("total_return"), 0.0)
+    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
+    is_winning = total_ret > 0 and sharpe > 0
+
+    # Risk parameters based on strategy performance
+    max_dd = abs(_safe_float(metrics.get("max_drawdown"), 0.20))
+    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
+
+    # Position sizing via Kelly criterion (simplified)
+    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
+    profit_factor = _safe_float(metrics.get("profit_factor"), 1.0)
+    if profit_factor > 1 and win_rate > 0:
+        avg_win_loss_ratio = profit_factor * (1 - win_rate) / win_rate if win_rate < 1 else 1
+        kelly_fraction = win_rate - (1 - win_rate) / avg_win_loss_ratio if avg_win_loss_ratio > 0 else 0
+        kelly_fraction = max(0, min(kelly_fraction, 0.25))  # Cap at 25%
+    else:
+        kelly_fraction = 0.05  # Minimum
+
+    # Stop-loss based on historical drawdown (floored at 2% to avoid noise-triggered exits)
+    stop_loss_pct = max(min(max_dd * 1.2, 0.25), 0.02)
+
+    # Take-profit based on CAGR and vol
+    cagr = _safe_float(metrics.get("cagr"), 0.10)
+    take_profit_pct = max(cagr * 0.5, 0.05)  # Half of annual return per position
+
+    recs = {
+        "strategy_name": name,
+        "is_winning": is_winning,
+        "generated_at": datetime.now().isoformat(),
+        "overall_assessment": _assess_strategy(metrics),
+        "risk_parameters": {
+            "max_portfolio_allocation": f"{kelly_fraction:.1%}",
+            "stop_loss": f"{stop_loss_pct:.1%}",
+            "take_profit_target": f"{take_profit_pct:.1%}",
+            "max_drawdown_tolerance": f"{max_dd:.1%}",
+            "rebalance_frequency": persona_config.get("rebalance_frequency", "weekly") if persona_config else "weekly",
+        },
+        "execution_guidance": {
+            "order_type": "limit" if vol < 0.20 else "market",
+            "limit_offset": "0.5% below current price for buys" if vol < 0.20 else "use market orders in volatile names",
+            "timing": _timing_guidance(metrics),
+            "scaling": "Enter in 3 tranches over 1-2 weeks to average in",
+        },
+        "position_recommendations": [],
+        "metrics_summary": {
+            "total_return": f"{total_ret:.2%}",
+            "sharpe_ratio": f"{sharpe:.2f}",
+            "max_drawdown": f"{_safe_float(metrics.get('max_drawdown'), 0.0):.2%}",
+            "win_rate": f"{win_rate:.2%}",
+            "alpha": f"{metrics.get('alpha', 0):.2%}" if isinstance(metrics.get('alpha'), (int, float)) else "N/A",
+        },
+    }
+
+    # Generate individual position recommendations
+    if final_positions:
+        for sym, pos_info in final_positions.items():
+            rec = _generate_position_rec(sym, pos_info, stop_loss_pct, take_profit_pct, kelly_fraction)
+            recs["position_recommendations"].append(rec)
+
+    return recs
+
+
+def _assess_strategy(metrics: dict[str, float]) -> str:
+    """Generate overall strategy assessment."""
+    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
+    alpha = _safe_float(metrics.get("alpha"), 0.0)
+    max_dd = _safe_float(metrics.get("max_drawdown"), 0.0)
+    total_ret = _safe_float(metrics.get("total_return"), 0.0)
+
+    if sharpe > 1.0 and alpha > 0.05:
+        return "STRONG BUY — Excellent risk-adjusted returns with significant alpha. Deploy with confidence."
+    elif sharpe > 0.5 and total_ret > 0.20:
+        return "BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes."
+    elif sharpe > 0 and total_ret > 0:
+        return "HOLD — Positive but underwhelming returns. Use as diversifier, not primary strategy."
+    elif sharpe < 0 and total_ret < 0:
+        return "AVOID — Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign."
+    else:
+        return "NEUTRAL — Mixed signals. Paper trade before committing capital."
+
+
+def _timing_guidance(metrics: dict[str, float]) -> str:
+    """Generate timing guidance based on strategy characteristics."""
+    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
+    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
+
+    if vol > 0.25:
+        return "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency."
+    elif win_rate < 0.40:
+        return "Strategy has low win rate — enter only on strong setup days. Be patient."
+    else:
+        return "Enter on any weekly rebalance day. No specific timing edge detected."
+
+
+def _generate_position_rec(
+    symbol: str,
+    pos_info: dict[str, Any],
+    stop_loss_pct: float,
+    take_profit_pct: float,
+    position_size_pct: float,
+) -> dict[str, Any]:
+    """Generate recommendation for a single position."""
+    avg_cost = _safe_float(pos_info.get("avg_cost"), 0.0)
+    qty = _safe_float(pos_info.get("qty"), 0.0)
+
+    if qty > 0:
+        action = "BUY"
+    elif qty < 0:
+        action = "SELL"
+    else:
+        action = "FLAT"
+
+    if avg_cost > 0 and qty != 0:
+        if qty > 0:
+            stop_price = avg_cost * (1 - stop_loss_pct)
+            target_price = avg_cost * (1 + take_profit_pct)
+            stop_label = "below"
+            target_label = "above"
+            limit_price = avg_cost * 0.995
+            limit_desc = "0.5% below avg cost"
+        else:
+            stop_price = avg_cost * (1 + stop_loss_pct)
+            target_price = avg_cost * (1 - take_profit_pct)
+            stop_label = "above"
+            target_label = "below"
+            limit_price = avg_cost * 1.005
+            limit_desc = "0.5% above avg cost"
+        entry_info = {
+            "limit_price": f"${limit_price:.2f} ({limit_desc})",
+            "market_price": "Use market order if volatile",
+        }
+        stop_str = f"${stop_price:.2f} ({stop_loss_pct:.1%} {stop_label} entry)"
+        target_str = f"${target_price:.2f} ({take_profit_pct:.1%} {target_label} entry)"
+    else:
+        entry_info = {"limit_price": "N/A (no cost basis)", "market_price": "N/A"}
+        stop_str = "N/A (no cost basis)"
+        target_str = "N/A (no cost basis)"
+
+    return {
+        "symbol": symbol,
+        "action": action,
+        "current_position": qty,
+        "avg_cost_basis": f"${avg_cost:.2f}" if avg_cost > 0 else "N/A",
+        "recommended_entry": entry_info,
+        "stop_loss": stop_str,
+        "take_profit": target_str,
+        "position_size": f"{position_size_pct:.1%} of portfolio",
+        "trailing_stop": f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain",
+    }
+
+
+def save_strategy_recommendation(
+    name: str,
+    results: dict[str, Any],
+    persona_config: dict | None = None,
+) -> Path:
+    """Save strategy recommendation to winning/ or losing/ directory."""
+    _ensure_dirs()
+
+    metrics = results.get("metrics", {})
+    final_positions = results.get("final_positions", {})
+    equity_curve = results.get("equity_curve")
+
+    recs = generate_trade_recommendations(
+        name, metrics, final_positions, equity_curve, persona_config
+    )
+
+    # Determine winning or losing
+    is_winning = recs["is_winning"]
+    target_dir = WINNING_DIR if is_winning else LOSING_DIR
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Save as markdown for readability
+    md_lines = [
+        f"# {'WINNING' if is_winning else 'LOSING'} Strategy: {name}",
+        f"**Generated:** {recs['generated_at']}",
+        f"**Assessment:** {recs['overall_assessment']}",
+        "",
+        "## Performance Summary",
+    ]
+    for k, v in recs["metrics_summary"].items():
+        md_lines.append(f"- **{k}:** {v}")
+
+    md_lines.extend(["", "## Risk Parameters"])
+    for k, v in recs["risk_parameters"].items():
+        md_lines.append(f"- **{k}:** {v}")
+
+    md_lines.extend(["", "## Execution Guidance"])
+    for k, v in recs["execution_guidance"].items():
+        md_lines.append(f"- **{k}:** {v}")
+
+    if recs["position_recommendations"]:
+        md_lines.extend(["", "## Position Recommendations", ""])
+        for rec in recs["position_recommendations"]:
+            md_lines.append(f"### {rec['symbol']} — {rec['action']}")
+            md_lines.append(f"- Entry limit: {rec['recommended_entry']['limit_price']}")
+            md_lines.append(f"- Stop-loss: {rec['stop_loss']}")
+            md_lines.append(f"- Take-profit: {rec['take_profit']}")
+            md_lines.append(f"- Position size: {rec['position_size']}")
+            md_lines.append(f"- Trailing stop: {rec['trailing_stop']}")
+            md_lines.append("")
+
+    if not is_winning:
+        md_lines.extend([
+            "## Lessons Learned",
+            "",
+            "This strategy lost money. Key issues:",
+            f"- Sharpe ratio: {_safe_float(metrics.get('sharpe_ratio'), 0.0):.2f} (target > 0.5)",
+            f"- Max drawdown: {_safe_float(metrics.get('max_drawdown'), 0.0):.2%} (target > -20%)",
+            f"- Alpha: {_safe_float(metrics.get('alpha'), 0.0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
+            "",
+            "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
+        ])
+
+    md_path = target_dir / f"{name}_{timestamp}.md"
+    md_path.write_text("\n".join(md_lines))
+
+    # Also save raw JSON
+    json_path = target_dir / f"{name}_{timestamp}.json"
+    json_path.write_text(json.dumps(recs, indent=2, default=str))
+
+    return md_path
+
+
+def save_all_recommendations(all_results: list[dict[str, Any]]) -> dict[str, Path]:
+    """Save recommendations for all strategy results."""
+    _ensure_dirs()
+    paths = {}
+    for r in all_results:
+        if r.get("status") != "success":
+            continue
+        name = r["name"]
+        path = save_strategy_recommendation(name, r)
+        paths[name] = path
+    return paths
 
 
 if __name__ == "__main__":
-    print("=== Math-Driven Strategies ===\n")
-    for key, cls in MATH_STRATEGIES.items():
-        inst = cls()
-        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")
+    # Test with sample data
+    sample_results = {
+        "metrics": {
+            "total_return": 0.99, "sharpe_ratio": 1.20, "max_drawdown": -0.166,
+            "win_rate": 0.37, "profit_factor": 1.31, "alpha": 0.171,
+            "cagr": 0.234, "annual_volatility": 0.167,
+        },
+        "final_positions": {
+            "NVDA": {"qty": 50, "avg_cost": 120.5},
+            "META": {"qty": 30, "avg_cost": 350.2},
+        },
+    }
+    path = save_strategy_recommendation("momentum_test", sample_results)
+    print(f"Saved to: {path}")
+    print(path.read_text())

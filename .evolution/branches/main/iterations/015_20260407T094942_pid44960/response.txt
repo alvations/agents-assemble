@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_safe_float` NaN/inf bug**: Added `math.isfinite()` guard — metrics producing `NaN` (e.g., Sharpe when vol=0) or `inf` (e.g., profit_factor with zero losses) now correctly return the default instead of silently poisoning downstream comparisons (NaN < threshold is always False)
+- **Removed unused `numpy` import**: Replaced with `math` (needed for the `isfinite` check); `numpy` was never referenced in this file
+- **Modernized type hints**: Replaced `Dict`, `List`, `Optional` with `dict`, `list`, `| None` across all 7 function signatures (already guarded by `from __future__ import annotations`)
+- **Fixed unreasonably tight stop-loss**: Added 2% floor to `stop_loss_pct` — a strategy with tiny historical max drawdown (e.g., 0.1%) would previously produce a 0.12% stop loss, instantly triggered by normal market noise

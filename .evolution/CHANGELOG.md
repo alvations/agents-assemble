@@ -348,3 +348,11 @@ All edits pass syntax validation. Summary of changes:
 - **Removed unused `numpy` import** — `np` is never referenced in this file; only `pandas` is needed (for `pd.isna` in `_estimate_hurst`)
 - **Fixed 6 truthiness bugs on indicator values** — `sma50`, `sma200`, `rsi`, and `bb_lower` were checked with bare `and` (falsy for 0.0) instead of `is not None`, across all 5 strategies: KellyOptimal (line 95), ZScoreReversion (line 185), HurstExponent (lines 277, 282), VolatilityBreakout (line 349), Equ
 
+## [2026-04-07T09:51:34.079649+00:00] Branch: main | Run: 20260407T094942_pid44960 | Iter 15 | $0.5222
+### trade_recommender.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_safe_float` NaN/inf bug**: Added `math.isfinite()` guard — metrics producing `NaN` (e.g., Sharpe when vol=0) or `inf` (e.g., profit_factor with zero losses) now correctly return the default instead of silently poisoning downstream comparisons (NaN < threshold is always False)
+- **Removed unused `numpy` import**: Replaced with `math` (needed for the `isfinite` check); `numpy` was never referenced in this file
+- **Modernized type h
+
