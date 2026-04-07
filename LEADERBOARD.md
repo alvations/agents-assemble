@@ -1,91 +1,85 @@
 # Strategy Leaderboard
 
-**Last Updated:** 2026-04-07 05:30 UTC
-**Horizons:** 1Y (2024), 3Y (2022-2024), 5Y (2020-2024), 10Y (2015-2024)
+**Last Updated:** 2026-04-07 06:20 UTC
+**Horizons Tested:** 1Y (2024), 3Y (2022-2024), 5Y (2020-2024), 10Y (2015-2024)
 **Initial Capital:** $100,000 | **Slippage:** 10 bps | **Commission:** $0
-**Benchmark:** SPY | **Total strategies:** 44+ across 6 categories
+**Benchmark:** SPY | **Total Strategies:** 61 | **Total Tickers:** 510
 
-## Cross-Horizon Consistency Ranking (THE definitive ranking)
+## Definitive 3Y Rankings (2022-01-01 to 2024-12-31)
 
-Sorted by average Sharpe ratio across all 4 horizons. This is the most reliable way to evaluate a strategy — a high Sharpe on one period could be luck.
+All 61 strategies backtested on identical 3-year period.
 
-| Rank | Strategy | Category | Avg Sharpe | 1Y | 3Y | 5Y | 10Y | 10Y Return | Consistent? |
-|------|----------|----------|-----------|------|------|------|------|-----------|-------------|
-| 1 | **Momentum** | Generic | **1.08** | 1.49 | 1.36 | 0.60 | 0.86 | 570% | YES |
-| 2 | **Momentum Crash-Hedged** | Research | **1.05** | 1.18 | 1.26 | 0.72 | 1.05 | 743% | **MOST CONSISTENT** |
-| 3 | **AI Revolution** | Theme | **0.94** | 0.55 | 1.41 | 0.85 | 0.95 | 783% | YES |
-| 4 | **Masayoshi Son** | Famous | **0.87** | 1.19 | 0.77 | 0.62 | 0.90 | 1068% | YES |
-| 5 | **Defensive Rotation** | Recession | 0.59 | 0.88 | 0.33 | 0.60 | 0.57 | 212% | YES |
-| 6 | Mean-Variance | Research | 0.53 | 0.12 | 0.40 | 0.88 | 0.71 | 206% | MIXED |
-| 7 | Global Rotation | Research | 0.51 | -0.27 | 1.00 | 0.61 | 0.71 | 257% | MIXED |
-| 8 | Small Cap Value | Theme | 0.50 | 1.25 | 1.10 | -0.12 | -0.25 | -3% | NO (recent only) |
-| 9 | Dual Momentum | Research | 0.34 | 0.14 | 0.47 | 0.55 | 0.21 | 80% | MIXED |
-| 10 | Multi-Factor Smart Beta | Research | 0.32 | -0.68 | 0.54 | 0.74 | 0.70 | 253% | MIXED |
+| Rank | Strategy | Category | 3Y Return | 3Y Sharpe | 3Y Max DD |
+|------|----------|----------|-----------|-----------|-----------|
+| 1 | **AI Revolution** | Theme | **183.6%** | **1.41** | -22.0% |
+| 2 | **Momentum** | Generic | **135.0%** | **1.36** | -17.9% |
+| 3 | **Momentum Crash-Hedged** | Research | **117.1%** | **1.26** | -20.8% |
+| 4 | **Small Cap Value** | Theme | 56.1% | **1.10** | **-4.6%** |
+| 5 | Prince Alwaleed | Famous | 44.5% | **1.02** | -9.5% |
+| 6 | Global Rotation | Research | 52.4% | **1.00** | -8.1% |
+| 7 | **GLP-1 Obesity** | Theme | **80.7%** | **0.92** | -12.5% |
+| 8 | Defense & Aerospace | Theme | **92.9%** | 0.64 | -46.1% |
+| 9 | Healthcare + Asia | Hedge Fund | 61.5% | 0.82 | -16.0% |
+| 10 | Buffett Value | Generic | 27.0% | 0.81 | -7.5% |
+| 11 | Masayoshi Son | Famous | **90.8%** | 0.77 | -28.1% |
+| 12 | George Soros | Famous | 56.9% | 0.77 | -23.7% |
+| 13 | Kelly Optimal | Math | 49.1% | 0.72 | -14.6% |
+| 14 | Crypto Ecosystem | Theme | **90.4%** | 0.67 | -31.7% |
+| 15 | Quality Factor | Unconventional | 31.9% | 0.70 | -8.9% |
 
-## Highest Absolute Returns (10Y)
+## Cross-Horizon Consistency (Avg Sharpe across 1Y/3Y/5Y/10Y)
 
-| Strategy | 10Y Return | 10Y Sharpe | 10Y Max DD |
-|----------|-----------|-----------|-----------|
-| Masayoshi Son | 1068% | 0.90 | -53.8% |
-| AI Revolution | 783% | 0.95 | -30.2% |
-| Momentum Crash-Hedged | 743% | 1.05 | -25.1% |
-| Momentum | 570% | 0.86 | -35.3% |
-| Global Rotation | 257% | 0.71 | -26.1% |
-| Multi-Factor Smart Beta | 253% | 0.70 | -24.2% |
-| Quality Factor | 230% | 0.68 | -25.8% |
+| Rank | Strategy | 1Y | 3Y | 5Y | 10Y | **Avg Sharpe** |
+|------|----------|----|----|----|----|-----------|
+| 1 | **Momentum** | 1.49 | 1.36 | 0.60 | 0.86 | **1.08** |
+| 2 | **Momentum Crash-Hedged** | 1.18 | 1.26 | 0.72 | 1.05 | **1.05** |
+| 3 | **AI Revolution** | 0.55 | 1.41 | 0.85 | 0.95 | **0.94** |
+| 4 | **Masayoshi Son** | 1.19 | 0.77 | 0.62 | 0.90 | **0.87** |
+| 5 | **Healthcare+Asia** | 0.88 | 0.80 | 0.94 | 0.61 | **0.81** |
+| 5 | **Pairs Trading** | 0.87 | 0.62 | 1.03 | 0.72 | **0.81** |
 
-## Best Risk-Adjusted (Lowest Max Drawdown)
+## Failed Strategies (don't repeat — see knowledge/failures_log.md)
 
-| Strategy | 10Y Return | 10Y Max DD | 10Y Sharpe |
-|----------|-----------|-----------|-----------|
-| Mean-Variance | 206% | **-15.6%** | 0.71 |
-| Low Vol Anomaly | 52% | -12.7% | 0.07 |
-| Momentum Crash-Hedged | 743% | -25.1% | 1.05 |
-| Multi-Factor Smart Beta | 253% | -24.2% | 0.70 |
-| Quality Factor | 230% | -25.8% | 0.68 |
+| Strategy | Avg Sharpe | Why Failed |
+|----------|-----------|------------|
+| Factor ETF Rotation | -0.07 | ETFs too correlated with SPY |
+| Faber Sector Rotation | 0.09 | Bond fallback failed in rate hikes |
+| Sell in May | -0.16 | Calendar effects too weak |
+| Z-Score Reversion | -1.42 (3Y) | Too few signals in bull market |
+| Equal Risk Contribution | -0.59 (3Y) | TLT drag in 2022 |
 
-## Losing Strategies (avoid)
+## Recommended Portfolio
 
-| Strategy | Avg Sharpe | Why It Failed |
-|----------|-----------|---------------|
-| Carl Icahn | -0.46 | Deep value needs patience > 10Y, 2022 crushed financials |
-| Prince Alwaleed | -0.27 | Too selective, crisis buying rare in bull markets |
-| Dogs of Dow | -0.00 | Contrarian works 3Y+ but terrible short-term |
-| Low Vol Anomaly | 0.07 | Works in theory but missed tech rally entirely |
-| Small Cap Value | 0.50 (1Y/3Y only) | Great recent, terrible 5Y/10Y (COVID crash destroyed it) |
+| Component | Strategy | Weight | Role | Sharpe |
+|-----------|----------|--------|------|--------|
+| Core | Momentum Crash-Hedged | 35% | Consistent alpha | 1.05 |
+| Growth | AI Revolution | 25% | Tech megatrend | 0.94 |
+| Health | GLP-1 Obesity | 15% | Pharma theme | 0.92 |
+| Hedge | Defensive Rotation | 15% | Recession protection | 0.59 |
+| Intl | Global Rotation | 10% | Geographic diversification | 0.51 |
 
-## Recommended Deployable Portfolio
+## Library Summary
 
-| Component | Strategy | Weight | Role | Avg Sharpe |
-|-----------|----------|--------|------|-----------|
-| Core | Momentum Crash-Hedged | 40% | Consistent alpha, vol-scaled | 1.05 |
-| Growth | AI Revolution | 30% | Capture tech megatrend | 0.94 |
-| Hedge | Defensive Rotation | 20% | Recession protection | 0.59 |
-| Diversifier | Global Rotation | 10% | International exposure | 0.51 |
+- **61 strategies** across 8 categories
+- **510 unique tickers** across 71 categories
+- **20+ knowledge files** with research, results, failures
+- **45+ self-evolution iterations** across all modules
+- **51 commits** since project start
 
-## Methodology
-
-- All backtests use yfinance daily OHLCV data
-- 44+ strategies across 6 categories: generic, famous investors, themes, recession, unconventional, research
-- Universe: 500+ tickers across 40+ categories (US, Europe, Japan, China, India, LatAm, Africa, Middle East, SE Asia)
-- Indicators: SMA20/50/200, MACD, RSI14, Bollinger Bands, ATR14, vol_20
-- Self-evolved 20+ iterations across all modules (~$15 total API cost)
-
-## How to Reproduce
+## How to Run
 
 ```bash
-cd agents-assemble
-# Single strategy, all horizons
+pip install -e .
+
+# All strategies, all horizons
+python run_multi_horizon.py
+
+# Single strategy
 python run_multi_horizon.py --persona momentum_crash_hedge
 
-# All strategies in a category
+# Category
 python run_multi_horizon.py --category research
 
-# Everything
-python run_multi_horizon.py
+# Test suite
+python test_strategies.py
 ```
-
-## Results Files
-
-All raw results are in `results/` as JSON. Multi-horizon reports in `knowledge/multi_horizon/`.
-Trade recommendations (entry/exit/stop-loss) in `strategy/winning/` and `strategy/losing/`.

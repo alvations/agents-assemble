@@ -249,7 +249,7 @@ def compute_metrics(
     # Profit factor
     gross_profit = returns[returns > 0].sum()
     gross_loss = abs(returns[returns < 0].sum())
-    profit_factor = gross_profit / gross_loss if gross_loss > 0 else (float("inf") if gross_profit > 0 else 0.0)
+    profit_factor = gross_profit / gross_loss if gross_loss > 0 else float("inf")
 
     # Skewness and kurtosis
     skew = returns.skew()
@@ -583,15 +583,9 @@ class Backtester:
         buys.sort(key=lambda x: x[2], reverse=True)
         for sym, qty, _ in buys:
             price = prices[sym]
-            cost_per_share = price * (1 + portfolio.slippage_pct)
-            total_cost = qty * cost_per_share + portfolio.commission_per_trade
+            total_cost = qty * price * (1 + portfolio.slippage_pct) + portfolio.commission_per_trade
             if portfolio.cash >= total_cost:
                 portfolio.execute_trade(date, sym, Side.BUY, qty, price)
-            else:
-                # Partial fill — buy as many shares as cash allows
-                affordable = int((portfolio.cash - portfolio.commission_per_trade) / cost_per_share) if cost_per_share > 0 else 0
-                if affordable > 0:
-                    portfolio.execute_trade(date, sym, Side.BUY, affordable, price)
 
 
 # ---------------------------------------------------------------------------
@@ -632,9 +626,6 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
     """Format backtest results as a readable report."""
     m = results["metrics"]
     tm = results["trade_metrics"]
-
-    if "error" in m:
-        return f"{'=' * 60}\n  {title}\n{'=' * 60}\n\n  Error: {m['error']}\n\n{'=' * 60}"
 
     lines = [
         f"{'=' * 60}",
@@ -697,8 +688,7 @@ def save_results(results: dict[str, Any], path: str) -> None:
         elif isinstance(v, list) and v and isinstance(v[0], Trade):
             serializable[k] = [
                 {"date": str(t.date), "symbol": t.symbol, "side": t.side.value,
-                 "quantity": t.quantity, "price": t.price,
-                 "commission": t.commission, "slippage": t.slippage}
+                 "quantity": t.quantity, "price": t.price}
                 for t in v
             ]
         elif isinstance(v, list):

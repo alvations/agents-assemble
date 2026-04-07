@@ -438,3 +438,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `GLP1Obesity` exit/buy priority bug** — The thesis-broken exit (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` after the score check, so a stock with `score >= 2.0` that was 10%+ below SMA200 (e.g., sma200=100, sma50=85, price=86) would be bought instead of exited. Moved exit check before scoring with `continue`.
 - **Fixed `RoboticsAutonomous` same exit/buy priority bug** — Same pattern with the `price < sma200 * 0.85` exit
 
+## [2026-04-07T10:18:45.280682+00:00] Branch: main | Run: 20260407T100044_pid47596 | Iter 19 | $0.9954
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_rebalance` all-or-nothing buy** — When cash is insufficient for the target qty, now computes the maximum affordable whole shares instead of skipping the position entirely. Prevents systematic under-investment in lower-priority positions when cash is tight after higher-priority buys.
+- **Fixed `profit_factor` for zero-activity periods** — Returns `0.0` when both gross profit and gross loss are zero (flat returns), instead of `floa
+

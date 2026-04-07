@@ -1,824 +1,736 @@
-"""Theme-based trading strategies for agents-assemble.
+"""Backtesting engine for agents-assemble.
 
-These personas trade based on macro themes and megatrends rather than
-individual investor philosophies. Each theme targets a specific sector
-thesis with its own universe and timing signals.
+Event-driven backtester with portfolio simulation, position management,
+performance metrics, and transaction cost modeling.
 
-Themes:
-    1. AIRevolution      — AI/ML infrastructure and applications
-    2. CleanEnergy       — Renewables, EVs, batteries, grid
-    3. DefenseAerospace  — Defense contractors, space, cybersecurity
-    4. BiotechBreakout   — Biotech/pharma innovation and FDA catalysts
-    5. ChinaTechRebound  — China tech ADRs recovery play
-    6. LatAmGrowth       — Latin American growth (fintech, commodities)
-    7. InfrastructureBoom — Infrastructure spending (bridges, 5G, data centers)
-    8. SmallCapValue     — Small cap deep value (IWM universe)
-    9. CryptoEcosystem   — Crypto-adjacent public companies
-    10. AgingPopulation  — Healthcare, senior living, pharma for aging demographics
-    11. GLP1Obesity      — GLP-1 / weight loss drug megatrend
-    12. RoboticsAutonomous — Humanoid robots + autonomous vehicles
+Supports:
+- Long/short positions
+- Multiple assets simultaneously
+- Commission and slippage modeling
+- Benchmark comparison
+- Comprehensive metrics (Sharpe, Sortino, max drawdown, Calmar, etc.)
+- Signal-based and weight-based strategies
 """
 
 from __future__ import annotations
 
-from personas import BasePersona, PersonaConfig
+import json
+import math
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
+from typing import Any, Callable
+
+import pandas as pd
 
 
 # ---------------------------------------------------------------------------
-# 1. AI Revolution
+# Data structures
 # ---------------------------------------------------------------------------
-class AIRevolution(BasePersona):
-    """AI/ML megatrend strategy.
+class Side(Enum):
+    BUY = "BUY"
+    SELL = "SELL"
 
-    Thesis: AI is a generational shift. Companies building AI infrastructure
-    (GPUs, cloud, data centers) and AI applications will outperform.
 
-    Signals: Buy on trend alignment (SMA50 > SMA200), momentum.
+@dataclass
+class Trade:
+    date: pd.Timestamp
+    symbol: str
+    side: Side
+    quantity: float
+    price: float
+    commission: float = 0.0
+    slippage: float = 0.0
+
+    @property
+    def cost(self) -> float:
+        """Total cost including fees."""
+        base = self.quantity * self.price
+        if self.side == Side.BUY:
+            return base + self.commission + self.slippage
+        return base - self.commission - self.slippage
+
+
+@dataclass
+class Position:
+    symbol: str
+    quantity: float = 0.0
+    avg_cost: float = 0.0
+    realized_pnl: float = 0.0
+
+    @property
+    def market_value(self) -> float:
+        return 0.0  # Updated externally with current price
+
+    def update(self, side: Side, qty: float, price: float) -> float:
+        """Update position with a new trade. Returns realized P&L."""
+        realized = 0.0
+        if side == Side.BUY:
+            if self.quantity >= 0:
+                # Adding to or opening a long position
+                total_cost = self.avg_cost * self.quantity + price * qty
+                self.quantity += qty
+                if self.quantity > 0:
+                    self.avg_cost = total_cost / self.quantity
+            else:
+                # Covering a short position
+                cover_qty = min(qty, abs(self.quantity))
+                realized = (self.avg_cost - price) * cover_qty
+                self.quantity += cover_qty
+                remaining = qty - cover_qty
+                if remaining > 0:
+                    # Flipped from short to long
+                    self.quantity = remaining
+                    self.avg_cost = price
+                elif self.quantity == 0:
+                    self.avg_cost = 0.0
+        else:  # SELL
+            if self.quantity > 0:
+                # Reducing or closing a long position
+                close_qty = min(qty, self.quantity)
+                realized = (price - self.avg_cost) * close_qty
+                self.quantity -= close_qty
+                remaining = qty - close_qty
+                if remaining > 0:
+                    # Flipped from long to short
+                    self.quantity = -remaining
+                    self.avg_cost = price
+                elif self.quantity == 0:
+                    self.avg_cost = 0.0
+            else:
+                # Adding to a short position
+                total_cost = self.avg_cost * abs(self.quantity) + price * qty
+                self.quantity -= qty
+                if self.quantity < 0:
+                    self.avg_cost = total_cost / abs(self.quantity)
+        self.realized_pnl += realized
+        return realized
+
+
+@dataclass
+class Portfolio:
+    """Tracks cash, positions, and portfolio value over time."""
+    initial_cash: float = 100_000.0
+    cash: float = 100_000.0
+    positions: dict[str, Position] = field(default_factory=dict)
+    trades: list[Trade] = field(default_factory=list)
+    history: list[dict[str, Any]] = field(default_factory=list)
+
+    # Transaction cost model
+    commission_per_trade: float = 0.0  # Robinhood = $0
+    slippage_pct: float = 0.001  # 10 bps default slippage
+
+    def execute_trade(self, date: pd.Timestamp, symbol: str, side: Side,
+                      quantity: float, price: float) -> Trade:
+        """Execute a trade and update portfolio."""
+        if quantity <= 0:
+            raise ValueError(f"Quantity must be positive, got {quantity}")
+
+        slippage = price * self.slippage_pct * quantity
+        commission = self.commission_per_trade
+
+        trade = Trade(date=date, symbol=symbol, side=side, quantity=quantity,
+                      price=price, commission=commission, slippage=slippage)
+
+        if symbol not in self.positions:
+            self.positions[symbol] = Position(symbol=symbol)
+
+        self.positions[symbol].update(side, quantity, price)
+
+        if side == Side.BUY:
+            self.cash -= trade.cost
+        else:
+            self.cash += trade.cost
+
+        self.trades.append(trade)
+        return trade
+
+    def get_position(self, symbol: str) -> Position | None:
+        pos = self.positions.get(symbol)
+        if pos and pos.quantity != 0:
+            return pos
+        return None
+
+    def total_value(self, prices: dict[str, float]) -> float:
+        """Calculate total portfolio value given current prices."""
+        value = self.cash
+        for sym, pos in self.positions.items():
+            if pos.quantity != 0 and sym in prices:
+                value += pos.quantity * prices[sym]
+        return value
+
+    def snapshot(self, date: pd.Timestamp, prices: dict[str, float]) -> dict[str, Any]:
+        """Take a snapshot of portfolio state."""
+        total = self.total_value(prices)
+        holdings = {}
+        for sym, pos in self.positions.items():
+            if pos.quantity != 0 and sym in prices:
+                mv = pos.quantity * prices[sym]
+                holdings[sym] = {
+                    "quantity": pos.quantity,
+                    "avg_cost": pos.avg_cost,
+                    "market_value": mv,
+                    "weight": mv / total if total > 0 else 0,
+                    "unrealized_pnl": (prices[sym] - pos.avg_cost) * pos.quantity,
+                }
+        snap = {
+            "date": date,
+            "cash": self.cash,
+            "total_value": total,
+            "holdings": holdings,
+            "num_positions": len(holdings),
+        }
+        self.history.append(snap)
+        return snap
+
+
+# ---------------------------------------------------------------------------
+# Performance metrics
+# ---------------------------------------------------------------------------
+def compute_metrics(
+    returns: pd.Series,
+    benchmark_returns: pd.Series | None = None,
+    risk_free_rate: float = 0.04,
+    periods_per_year: int = 252,
+) -> dict[str, float]:
+    """Compute comprehensive performance metrics.
+
+    Args:
+        returns: Daily portfolio returns
+        benchmark_returns: Daily benchmark returns (e.g., SPY)
+        risk_free_rate: Annual risk-free rate (default 4% ~= current T-bill)
+        periods_per_year: Trading days per year
+
+    Returns:
+        Dict of performance metrics
+    """
+    if returns.empty or len(returns) < 2:
+        return {"error": "Insufficient data"}
+
+    # Basic return stats
+    total_return = (1 + returns).prod() - 1
+    n_years = len(returns) / periods_per_year
+    growth = 1 + total_return
+    if growth > 0:
+        cagr = growth ** (1 / max(n_years, 0.01)) - 1
+    else:
+        cagr = -1.0  # Total loss
+
+    # Volatility
+    daily_vol = returns.std()
+    sqrt_periods = math.sqrt(periods_per_year)
+    annual_vol = daily_vol * sqrt_periods
+
+    # Sharpe ratio
+    daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
+    excess = returns - daily_rf
+    sharpe = excess.mean() / excess.std() * sqrt_periods if excess.std() > 0 else 0
+
+    # Sortino ratio (downside deviation only)
+    downside_diff = (returns - daily_rf).clip(upper=0)
+    downside_dev = math.sqrt((downside_diff**2).mean()) * sqrt_periods
+    sortino = (cagr - risk_free_rate) / downside_dev if downside_dev > 0 else 0
+
+    # Drawdown analysis
+    cum_returns = (1 + returns).cumprod()
+    rolling_max = cum_returns.cummax()
+    drawdowns = cum_returns / rolling_max - 1
+    max_drawdown = drawdowns.min()
+    max_dd_end = drawdowns.idxmin()
+
+    # Calmar ratio
+    calmar = cagr / abs(max_drawdown) if max_drawdown < 0 else (float("inf") if cagr > 0 else 0)
+
+    # Win rate
+    winning_days = (returns > 0).sum()
+    total_days = len(returns)
+    win_rate = winning_days / total_days if total_days > 0 else 0
+
+    # Profit factor
+    gross_profit = returns[returns > 0].sum()
+    gross_loss = abs(returns[returns < 0].sum())
+    profit_factor = gross_profit / gross_loss if gross_loss > 0 else (float("inf") if gross_profit > 0 else 0.0)
+
+    # Skewness and kurtosis
+    skew = returns.skew()
+    kurt = returns.kurtosis()
+
+    metrics = {
+        "total_return": total_return,
+        "cagr": cagr,
+        "annual_volatility": annual_vol,
+        "sharpe_ratio": sharpe,
+        "sortino_ratio": sortino,
+        "calmar_ratio": calmar,
+        "max_drawdown": max_drawdown,
+        "max_drawdown_date": str(max_dd_end),
+        "win_rate": win_rate,
+        "profit_factor": profit_factor,
+        "num_trading_days": total_days,
+        "skewness": skew,
+        "kurtosis": kurt,
+        "best_day": returns.max(),
+        "worst_day": returns.min(),
+        "avg_daily_return": returns.mean(),
+    }
+
+    # Benchmark comparison
+    if benchmark_returns is not None and not benchmark_returns.empty:
+        aligned = pd.DataFrame({"port": returns, "bench": benchmark_returns}).dropna()
+        if len(aligned) > 10:
+            aligned_n_years = len(aligned) / periods_per_year
+            bench_total = (1 + aligned["bench"]).prod() - 1
+            bench_cagr = (1 + bench_total) ** (1 / max(aligned_n_years, 0.01)) - 1
+            port_aligned_total = (1 + aligned["port"]).prod() - 1
+            port_aligned_cagr = (1 + port_aligned_total) ** (1 / max(aligned_n_years, 0.01)) - 1
+            metrics["benchmark_total_return"] = bench_total
+            metrics["benchmark_cagr"] = bench_cagr
+            metrics["alpha"] = port_aligned_cagr - bench_cagr
+
+            # Beta
+            cov = aligned[["port", "bench"]].cov()
+            beta = cov.iloc[0, 1] / cov.iloc[1, 1] if cov.iloc[1, 1] > 0 else 0
+            metrics["beta"] = beta
+
+            # Information ratio
+            tracking = aligned["port"] - aligned["bench"]
+            tracking_error = tracking.std() * sqrt_periods
+            info_ratio = (port_aligned_cagr - bench_cagr) / tracking_error if tracking_error > 0 else 0
+            metrics["information_ratio"] = info_ratio
+            metrics["tracking_error"] = tracking_error
+
+    return metrics
+
+
+def compute_trade_metrics(trades: list[Trade]) -> dict[str, Any]:
+    """Compute trade-level metrics."""
+    if not trades:
+        return {"num_trades": 0}
+
+    total_commission = sum(t.commission for t in trades)
+    total_slippage = sum(t.slippage for t in trades)
+    buys = [t for t in trades if t.side == Side.BUY]
+    sells = [t for t in trades if t.side == Side.SELL]
+
+    return {
+        "num_trades": len(trades),
+        "num_buys": len(buys),
+        "num_sells": len(sells),
+        "total_commission": total_commission,
+        "total_slippage": total_slippage,
+        "total_transaction_costs": total_commission + total_slippage,
+        "avg_trade_size": sum(t.quantity * t.price for t in trades) / len(trades),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Backtester engine
+# ---------------------------------------------------------------------------
+class Backtester:
+    """Event-driven backtester.
+
+    Usage:
+        def my_strategy(date, prices, portfolio, data):
+            # Return dict of {symbol: target_weight} or {symbol: signal}
+            if prices['AAPL'] < data['AAPL']['sma_50'].loc[date]:
+                return {'AAPL': 0.5}  # 50% weight in AAPL
+            return {'AAPL': 0.0}  # Exit
+
+        bt = Backtester(
+            strategy=my_strategy,
+            symbols=['AAPL'],
+            start='2022-01-01',
+            end='2024-01-01'
+        )
+        results = bt.run()
+        print(results['metrics'])
     """
 
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="AI Revolution",
-            description="AI megatrend: GPUs, cloud, data centers, AI applications",
-            risk_tolerance=0.8,
-            max_position_size=0.20,
-            max_positions=8,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "NVDA", "AMD", "AVGO", "MRVL", "ARM",  # AI chips
-                "MSFT", "GOOGL", "AMZN", "META",  # AI cloud/apps
-                "PLTR", "AI", "PATH", "SNOW",  # AI software
-                "SMH", "SOXX",  # Semiconductor ETFs
-                "SMCI", "DELL", "HPE",  # AI servers
-            ],
+    def __init__(
+        self,
+        strategy: Callable,
+        symbols: list[str],
+        start: str = "2020-01-01",
+        end: str | None = None,
+        initial_cash: float = 100_000.0,
+        commission: float = 0.0,
+        slippage_pct: float = 0.001,
+        benchmark: str = "SPY",
+        rebalance_frequency: str = "daily",  # daily, weekly, monthly
+        data: dict[str, pd.DataFrame] | None = None,
+    ):
+        self.strategy = strategy
+        self.symbols = symbols
+        self.start = start
+        self.end = end
+        self.initial_cash = initial_cash
+        self.commission = commission
+        self.slippage_pct = slippage_pct
+        self.benchmark = benchmark
+        self.rebalance_frequency = rebalance_frequency
+        self._external_data = data
+
+    def _load_data(self) -> tuple[dict[str, pd.DataFrame], pd.DataFrame | None]:
+        """Load price data for all symbols + benchmark."""
+        from data_fetcher import fetch_ohlcv, fetch_multiple_ohlcv
+
+        if self._external_data:
+            all_data = self._external_data
+        else:
+            all_data = fetch_multiple_ohlcv(
+                self.symbols, start=self.start, end=self.end
+            )
+
+        bench_data = None
+        if self.benchmark and self.benchmark not in self.symbols:
+            try:
+                bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
+            except Exception:
+                pass
+
+        return all_data, bench_data
+
+    def _should_rebalance(self, date: pd.Timestamp, dates: list[pd.Timestamp], idx: int) -> bool:
+        """Check if we should rebalance on this date."""
+        if self.rebalance_frequency == "daily":
+            return True
+        if self.rebalance_frequency == "weekly":
+            if idx == 0:
+                return True
+            return date.weekday() < dates[idx - 1].weekday()  # New week
+        if self.rebalance_frequency == "monthly":
+            if idx == 0:
+                return True
+            return date.month != dates[idx - 1].month
+        return True
+
+    def run(self) -> dict[str, Any]:
+        """Run the backtest.
+
+        Returns dict with:
+            - metrics: performance metrics
+            - trade_metrics: trade statistics
+            - portfolio_history: daily portfolio snapshots
+            - trades: list of all trades
+            - daily_returns: pd.Series of daily returns
+            - equity_curve: pd.Series of portfolio value over time
+        """
+        all_data, bench_data = self._load_data()
+
+        if not all_data:
+            raise ValueError("No data loaded for any symbol")
+
+        # Normalize all indexes to tz-naive for consistent comparison
+        for sym in list(all_data.keys()):
+            if all_data[sym].index.tz is not None:
+                all_data[sym].index = all_data[sym].index.tz_localize(None)
+        if bench_data is not None and bench_data.index.tz is not None:
+            bench_data.index = bench_data.index.tz_localize(None)
+
+        portfolio = Portfolio(
+            initial_cash=self.initial_cash,
+            cash=self.initial_cash,
+            commission_per_trade=self.commission,
+            slippage_pct=self.slippage_pct,
         )
-        super().__init__(config)
 
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
+        # Build close prices matrix — union index with forward-fill for partial data
+        close_prices = pd.DataFrame({sym: df["Close"] for sym, df in all_data.items()})
+        close_prices = close_prices.sort_index().ffill()
+        common_dates = list(close_prices.index)
 
-        for sym in self.config.universe:
+        if not common_dates:
+            raise ValueError("No trading dates found across symbols")
+
+        # Pre-compute technical indicators per symbol
+        enriched_data = {}
+        for sym, df in all_data.items():
+            enriched = df.copy()
+            close = enriched["Close"]
+            enriched["sma_20"] = close.rolling(20).mean()
+            enriched["sma_50"] = close.rolling(50).mean()
+            enriched["sma_200"] = close.rolling(200).mean()
+            enriched["ema_12"] = close.ewm(span=12).mean()
+            enriched["ema_26"] = close.ewm(span=26).mean()
+            enriched["macd"] = enriched["ema_12"] - enriched["ema_26"]
+            enriched["macd_signal"] = enriched["macd"].ewm(span=9).mean()
+            enriched["rsi_14"] = _compute_rsi(close, 14)
+            enriched["bb_upper"], enriched["bb_lower"] = _compute_bollinger(close, 20, 2)
+            enriched["atr_14"] = _compute_atr(enriched, 14)
+            enriched["daily_return"] = close.pct_change()
+            enriched["vol_20"] = enriched["daily_return"].rolling(20).std()
+            enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
+            enriched_data[sym] = enriched
+
+        # Run simulation
+        equity_values = []
+        equity_dates = []
+
+        for idx, date in enumerate(common_dates):
+            # Get prices from pre-computed forward-filled matrix
+            row = close_prices.loc[date]
+            prices = {sym: float(v) for sym, v in row.items() if not pd.isna(v)}
+
+            if not self._should_rebalance(date, common_dates, idx) or not prices:
+                snap = portfolio.snapshot(date, prices)
+                equity_values.append(snap["total_value"])
+                equity_dates.append(date)
+                continue
+
+            # Call strategy
+            try:
+                target_weights = self.strategy(date, prices, portfolio, enriched_data)
+            except Exception:
+                target_weights = {}
+
+            if target_weights:
+                self._rebalance(portfolio, target_weights, prices, date)
+
+            snap = portfolio.snapshot(date, prices)
+            equity_values.append(snap["total_value"])
+            equity_dates.append(date)
+
+        if not equity_values:
+            raise ValueError("No data points generated during backtest")
+
+        # Compute results
+        equity_curve = pd.Series(equity_values, index=equity_dates)
+        daily_returns = equity_curve.pct_change().dropna()
+
+        bench_returns = None
+        if bench_data is not None and not bench_data.empty:
+            bench_close = bench_data["Close"]
+            bench_returns = bench_close.pct_change().dropna()
+
+        metrics = compute_metrics(daily_returns, bench_returns)
+        trade_metrics = compute_trade_metrics(portfolio.trades)
+
+        return {
+            "metrics": metrics,
+            "trade_metrics": trade_metrics,
+            "portfolio_history": portfolio.history,
+            "trades": portfolio.trades,
+            "daily_returns": daily_returns,
+            "equity_curve": equity_curve,
+            "initial_value": self.initial_cash,
+            "final_value": equity_values[-1] if equity_values else self.initial_cash,
+            "final_positions": {
+                sym: {"qty": pos.quantity, "avg_cost": pos.avg_cost, "realized_pnl": pos.realized_pnl}
+                for sym, pos in portfolio.positions.items() if pos.quantity != 0
+            },
+        }
+
+    def _rebalance(self, portfolio: Portfolio, target_weights: dict[str, float],
+                   prices: dict[str, float], date: pd.Timestamp) -> None:
+        """Rebalance portfolio to target weights."""
+        total_value = portfolio.total_value(prices)
+
+        # Phase 1: Collect and execute all sells (reductions, closes, short initiations)
+        sells: list[tuple[str, int]] = []
+
+        for sym, target_w in target_weights.items():
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-
-            if any(v is None for v in [sma50, sma200, rsi]):
+            if price <= 0:
                 continue
+            target_value = total_value * target_w
+            current_pos = portfolio.get_position(sym)
+            current_value = (current_pos.quantity * price) if current_pos else 0.0
+            diff_value = target_value - current_value
+            if diff_value < 0 and abs(diff_value) >= price * 0.5:
+                qty = int(abs(diff_value) / price)
+                if qty > 0:
+                    sells.append((sym, qty))
 
-            # Thesis broken
-            if price < sma200 * 0.90:
-                weights[sym] = 0.0
-                continue
+        # Close long positions not in target weights
+        for sym in list(portfolio.positions.keys()):
+            if sym not in target_weights:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0 and sym in prices:
+                    sells.append((sym, int(pos.quantity)))
 
-            score = 0.0
-            if price > sma50 > sma200:
-                score += 3.0  # Full trend alignment
-            elif price > sma50:
-                score += 1.5
-            if macd is not None and macd_sig is not None and macd > macd_sig:
-                score += 1.0
-            if 40 < rsi < 75:
-                score += 0.5
+        for sym, qty in sells:
+            portfolio.execute_trade(date, sym, Side.SELL, qty, prices[sym])
 
-            if score > 2:
-                scored.append((sym, score))
+        # Phase 2: Recompute total value after sells, then collect buys
+        total_value = portfolio.total_value(prices)
+        buys: list[tuple[str, int, float]] = []
 
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 2. Clean Energy
-# ---------------------------------------------------------------------------
-class CleanEnergy(BasePersona):
-    """Clean energy / green transition strategy.
-
-    Thesis: Global energy transition to renewables creates multi-decade growth.
-    Buy solar, wind, EV, battery, and grid companies.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Clean Energy Transition",
-            description="Renewables, EVs, batteries: buy the green transition",
-            risk_tolerance=0.7,
-            max_position_size=0.15,
-            max_positions=10,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "ENPH", "SEDG", "FSLR", "RUN",  # Solar
-                "TSLA", "RIVN", "LCID", "NIO", "LI", "XPEV",  # EVs
-                "ALB", "LTHM", "SQM",  # Lithium/batteries
-                "NEE", "AES", "BEP",  # Utilities/renewables
-                "ICLN", "TAN", "QCLN",  # Clean energy ETFs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
+        for sym, target_w in target_weights.items():
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if any(v is None for v in [sma50, rsi]):
+            if price <= 0:
                 continue
+            target_value = total_value * target_w
+            current_pos = portfolio.get_position(sym)
+            current_value = (current_pos.quantity * price) if current_pos else 0.0
+            diff_value = target_value - current_value
+            if diff_value >= price * 0.5:
+                qty = int(diff_value / price)
+                if qty > 0:
+                    buys.append((sym, qty, target_w))
 
-            # Buy dips in uptrend or recovery from oversold
-            if sma200 is not None and price > sma200 and rsi < 55:
-                score = 2.0
-                if sma50 > 0 and abs(price - sma50) / sma50 < 0.05:
-                    score += 1.0  # Near SMA50 support
-                scored.append((sym, score))
-            elif rsi < 30:
-                scored.append((sym, 1.5))  # Oversold bounce
-            elif rsi > 80:
-                weights[sym] = 0.0
+        # Close short positions not in target weights (highest priority)
+        for sym in list(portfolio.positions.keys()):
+            if sym not in target_weights:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity < 0 and sym in prices:
+                    buys.append((sym, int(abs(pos.quantity)), float("inf")))
 
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 3. Defense & Aerospace
-# ---------------------------------------------------------------------------
-class DefenseAerospace(BasePersona):
-    """Defense, aerospace, and cybersecurity strategy.
-
-    Thesis: Geopolitical tensions drive sustained defense spending.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Defense & Aerospace",
-            description="Defense spending boom: contractors, space, cybersecurity",
-            risk_tolerance=0.4,
-            max_position_size=0.15,
-            max_positions=10,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "LMT", "RTX", "NOC", "GD", "BA", "LHX",  # Defense
-                "PLTR", "CRWD", "PANW", "ZS", "FTNT",  # Cybersecurity
-                "RKLB", "ASTS", "LUNR",  # Space
-                "ITA", "XAR",  # Defense ETFs
-                "HII", "TDG", "HWM",  # Niche defense
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
+        # Execute buys with highest-weight positions first
+        buys.sort(key=lambda x: x[2], reverse=True)
+        for sym, qty, _ in buys:
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if sma200 is None:
-                continue
-
-            # Defense stocks tend to be stable — buy near SMA200
-            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
-            if discount > -0.10 and (rsi is None or rsi < 65):
-                score = max(discount + 0.10, 0.01) + 0.3
-                candidates.append((sym, score))
-            elif rsi is not None and rsi > 80:
-                weights[sym] = 0.05
-
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        top = candidates[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
+            cost_per_share = price * (1 + portfolio.slippage_pct)
+            total_cost = qty * cost_per_share + portfolio.commission_per_trade
+            if portfolio.cash >= total_cost:
+                portfolio.execute_trade(date, sym, Side.BUY, qty, price)
+            else:
+                # Partial fill — buy as many shares as cash allows
+                affordable = int((portfolio.cash - portfolio.commission_per_trade) / cost_per_share) if cost_per_share > 0 else 0
+                if affordable > 0:
+                    portfolio.execute_trade(date, sym, Side.BUY, affordable, price)
 
 
 # ---------------------------------------------------------------------------
-# 4. Biotech Breakout
+# Technical indicator helpers
 # ---------------------------------------------------------------------------
-class BiotechBreakout(BasePersona):
-    """Biotech innovation and catalyst strategy.
+def _compute_rsi(prices: pd.Series, period: int = 14) -> pd.Series:
+    delta = prices.diff()
+    gain = delta.where(delta > 0, 0.0).rolling(window=period).mean()
+    loss = (-delta.where(delta < 0, 0.0)).rolling(window=period).mean()
+    rs = gain / loss.replace(0, float("nan"))
+    rsi = 100 - (100 / (1 + rs))
+    # When loss==0 but gain>0 (all up days in window), RSI should be 100 not NaN
+    rsi.loc[(loss == 0) & (gain > 0)] = 100.0
+    # When both gain and loss are 0 (flat prices), RSI is neutral at 50
+    rsi.loc[(loss == 0) & (gain == 0)] = 50.0
+    return rsi
 
-    Thesis: Biotech has binary outcomes — buy diversified basket,
-    overweight momentum leaders, cut losers fast.
-    """
 
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Biotech Breakout",
-            description="Biotech innovation: diversified basket, momentum leaders, cut losers",
-            risk_tolerance=0.8,
-            max_position_size=0.12,
-            max_positions=12,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "MRNA", "REGN", "VRTX", "GILD", "BIIB",  # Large biotech
-                "SGEN", "ALNY", "IONS", "BMRN",  # Mid biotech
-                "XBI", "IBB", "BBH",  # Biotech ETFs
-                "ISRG", "DXCM", "HIMS",  # MedTech
-                "LLY", "ABBV", "MRK",  # Big pharma with biotech pipelines
-            ],
-        )
-        super().__init__(config)
+def _compute_bollinger(prices: pd.Series, period: int = 20,
+                       num_std: float = 2) -> tuple[pd.Series, pd.Series]:
+    sma = prices.rolling(period).mean()
+    std = prices.rolling(period).std()
+    return sma + num_std * std, sma - num_std * std
 
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
 
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            if any(v is None for v in [sma50, rsi]):
-                continue
-
-            # Cut losers fast (biotech-specific)
-            if sma200 is not None and price < sma200 * 0.85:
-                weights[sym] = 0.0
-                continue
-
-            score = 0.0
-            if price > sma50:
-                score += 1.5
-            if sma200 is not None and sma50 > sma200:
-                score += 1.0
-            if 35 < rsi < 70:
-                score += 0.5
-            # Prefer lower-vol names (less binary risk)
-            if vol is not None and vol < 0.03:
-                score += 0.5
-
-            if score > 1.5:
-                scored.append((sym, score))
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
+def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
+    high = df["High"]
+    low = df["Low"]
+    close = df["Close"].shift(1)
+    tr = pd.concat([high - low, (high - close).abs(), (low - close).abs()], axis=1).max(axis=1)
+    return tr.rolling(period).mean()
 
 
 # ---------------------------------------------------------------------------
-# 5. China Tech Rebound
+# Report generation
 # ---------------------------------------------------------------------------
-class ChinaTechRebound(BasePersona):
-    """China tech ADR recovery strategy.
-
-    Thesis: China tech crackdown created deep value. Recovery plays in
-    BABA, JD, PDD etc when regulation stabilizes.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="China Tech Rebound",
-            description="China tech ADR recovery: deep value after regulatory crackdown",
-            risk_tolerance=0.7,
-            max_position_size=0.15,
-            max_positions=8,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "BABA", "JD", "PDD", "BIDU", "NIO", "XPEV", "LI",
-                "TME", "BILI", "NTES", "IQ", "WB",
-                "KWEB", "MCHI", "FXI",  # China ETFs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if any(v is None for v in [sma50, rsi]):
-                continue
-
-            # Recovery signal: price crossing above SMA50
-            if price > sma50 and rsi < 60:
-                score = 2.0
-                if sma200 is not None and price > sma200:
-                    score += 1.5  # Full recovery
-                scored.append((sym, score))
-            elif rsi < 25:
-                scored.append((sym, 1.5))  # Deep oversold bounce
-            elif rsi > 75:
-                weights[sym] = 0.0  # Take profits
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 6. LatAm Growth
-# ---------------------------------------------------------------------------
-class LatAmGrowth(BasePersona):
-    """Latin American growth strategy.
-
-    Thesis: LatAm fintech, e-commerce, and commodity exporters benefit
-    from structural digitization and commodity supercycle.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="LatAm Growth",
-            description="Latin American fintech, e-commerce, commodities growth",
-            risk_tolerance=0.6,
-            max_position_size=0.15,
-            max_positions=8,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "MELI", "NU", "STNE", "PAGS",  # Fintech/e-commerce
-                "VALE", "PBR", "ITUB", "BSBR",  # Brazilian blue chips
-                "SQM", "GGAL",  # Chile/Argentina
-                "EWZ", "EWW", "ILF",  # LatAm ETFs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if any(v is None for v in [sma50, rsi]):
-                continue
-
-            if price > sma50 and rsi < 65:
-                score = 1.5
-                if sma200 is not None and price > sma200:
-                    score += 1.0
-                scored.append((sym, score))
-            elif rsi < 30:
-                scored.append((sym, 1.0))
-            elif rsi > 75:
-                weights[sym] = 0.0
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 7. Infrastructure Boom
-# ---------------------------------------------------------------------------
-class InfrastructureBoom(BasePersona):
-    """Infrastructure spending megatrend.
-
-    Thesis: IIJA + CHIPS Act + global infra spending creates multi-year
-    tailwind for construction, 5G, data centers.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Infrastructure Boom",
-            description="Infrastructure spending: construction, 5G, data centers, utilities",
-            risk_tolerance=0.4,
-            max_position_size=0.15,
-            max_positions=10,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "CAT", "DE", "VMC", "MLM",  # Construction/materials
-                "AMT", "CCI", "EQIX", "DLR",  # Towers/data centers
-                "T", "VZ", "TMUS",  # Telecom/5G
-                "NEE", "DUK", "SO",  # Utilities
-                "PAVE", "IFRA",  # Infrastructure ETFs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if sma200 is None:
-                continue
-
-            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
-            if rsi is not None and rsi > 70:
-                weights[sym] = 0.0
-            elif discount > -0.10:
-                score = max(discount + 0.10, 0.01) + 0.3
-                if rsi is not None and rsi < 40:
-                    score += 0.2
-                candidates.append((sym, score))
-
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        top = candidates[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 8. Small Cap Deep Value
-# ---------------------------------------------------------------------------
-class SmallCapValue(BasePersona):
-    """Small cap deep value strategy.
-
-    Thesis: Small caps are inefficiently priced. Buy deeply oversold
-    small caps with volume confirmation for mean-reversion.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Small Cap Deep Value",
-            description="Small cap inefficiency: buy deeply oversold with volume spikes",
-            risk_tolerance=0.7,
-            max_position_size=0.12,
-            max_positions=12,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "SMCI", "CELH", "CAVA", "DUOL", "RELY", "CWAN",
-                "HUBS", "SAIA", "RCL", "BURL", "DECK", "LULU",
-                "EXAS", "FTNT", "MTDR", "CEIX",
-                "IWM", "IWO", "SCHA",  # Small cap ETFs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
-            if rsi is None:
-                continue
-
-            # Deep value: oversold + volume spike
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
-            if rsi < 30 and vol_ratio > 1.5:
-                score = (30 - rsi) / 30 * 3 + min(vol_ratio, 3.0)
-                scored.append((sym, score))
-            elif bb_lower is not None and price < bb_lower and rsi < 35:
-                score = 2.0
-                scored.append((sym, score))
-            elif rsi > 80:
-                weights[sym] = 0.0
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 9. Crypto Ecosystem
-# ---------------------------------------------------------------------------
-class CryptoEcosystem(BasePersona):
-    """Crypto-adjacent public companies strategy.
-
-    Thesis: Crypto adoption creates value for miners, exchanges,
-    and companies with BTC on balance sheet.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Crypto Ecosystem",
-            description="Crypto-adjacent: miners, exchanges, BTC treasury companies",
-            risk_tolerance=0.9,
-            max_position_size=0.20,
-            max_positions=6,
-            rebalance_frequency="daily",
-            universe=universe or [
-                "COIN", "MARA", "RIOT", "CLSK",  # Mining/exchange
-                "MSTR", "HUT",  # BTC treasury
-                "SQ", "PYPL",  # Payment + crypto
-                "BITO", "IBIT",  # Bitcoin ETFs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
-            if any(v is None for v in [sma20, rsi]):
-                continue
-
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
-
-            # Crypto is momentum-driven — ride breakouts
-            if price > sma20 and rsi < 75 and vol_ratio > 1.2:
-                score = 2.0 + vol_ratio
-                if sma50 is not None and price > sma50:
-                    score += 1.0
-                scored.append((sym, score))
-            elif rsi > 85:
-                weights[sym] = 0.0
-            elif rsi < 20 and vol_ratio > 2:
-                scored.append((sym, 3.0))  # Capitulation buy
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            total_score = sum(s for _, s in top)
-            for sym, score in top:
-                w = min((score / total_score) * 0.90, self.config.max_position_size)
-                weights[sym] = w
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 10. Aging Population
-# ---------------------------------------------------------------------------
-class AgingPopulation(BasePersona):
-    """Aging population demographic megatrend.
-
-    Thesis: Global aging drives demand for healthcare, senior living,
-    pharmaceuticals, and medical devices.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Aging Population",
-            description="Demographic megatrend: healthcare, pharma, senior care",
-            risk_tolerance=0.3,
-            max_position_size=0.12,
-            max_positions=12,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "UNH", "HUM", "CI", "ELV",  # Health insurance
-                "JNJ", "PFE", "MRK", "LLY", "ABBV",  # Big pharma
-                "ISRG", "SYK", "MDT", "ABT",  # Medical devices
-                "XLV", "VHT",  # Healthcare ETFs
-                "WELL", "VTR",  # Senior housing REITs
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        candidates = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if sma200 is None:
-                continue
-
-            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
-            # Defensive: buy near or below SMA200
-            if rsi is not None and rsi > 70:
-                weights[sym] = 0.0
-            elif discount > -0.10:
-                score = max(discount + 0.10, 0.01) + 0.3
-                if rsi is not None and rsi < 40:
-                    score += 0.1
-                candidates.append((sym, score))
-
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        top = candidates[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# Registry
-# ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
-# 12. GLP-1 / Obesity Revolution
-# ---------------------------------------------------------------------------
-class GLP1Obesity(BasePersona):
-    """GLP-1 / weight loss drug megatrend.
-
-    2026: $73-87B market, LLY past $1T. Oral pills coming.
-    30M Americans on GLP-1 by 2030.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="GLP-1 / Obesity Revolution",
-            description="Weight loss drug megatrend: $73-87B market, LLY/NVO leaders",
-            risk_tolerance=0.6,
-            max_position_size=0.15,
-            max_positions=8,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "LLY", "NVO", "AMGN", "VKTX",
-                "PFE", "ABBV", "JNJ", "MRK",
-                "HIMS", "PLNT",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            if any(v is None for v in [sma50, rsi]):
-                continue
-            if sma200 is not None and price < sma200 * 0.90:
-                weights[sym] = 0.0
-                continue
-
-            score = 0.0
-            if sma200 is not None and price > sma50 > sma200:
-                score += 3.0
-            elif price > sma50:
-                score += 1.5
-            if 35 < rsi < 75:
-                score += 0.5
-            if score >= 2.0:
-                scored.append((sym, score))
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
-# 13. Robotics & Autonomous Vehicles
-# ---------------------------------------------------------------------------
-class RoboticsAutonomous(BasePersona):
-    """Robotics and autonomous vehicles megatrend.
-
-    CES 2026: humanoid robots commercially viable, Level 4 autonomy.
-    Global robotics market > $200B by decade end.
-    """
-
-    def __init__(self, universe: list[str] | None = None):
-        config = PersonaConfig(
-            name="Robotics & Autonomous",
-            description="Humanoid robots + autonomous vehicles: $200B market by 2030",
-            risk_tolerance=0.7,
-            max_position_size=0.15,
-            max_positions=8,
-            rebalance_frequency="weekly",
-            universe=universe or [
-                "ISRG", "NVDA", "INTC", "TER", "CGNX", "BRKS",
-                "GOOGL", "TSLA", "GM",
-                "ABB",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            if any(v is None for v in [sma50, rsi]):
-                continue
-            if sma200 is not None and price < sma200 * 0.85:
-                weights[sym] = 0.0
-                continue
-
-            score = 0.0
-            if sma200 is not None and price > sma50 > sma200:
-                score += 3.0
-            elif price > sma50:
-                score += 1.5
-            if macd is not None and macd_sig is not None and macd > macd_sig:
-                score += 1.0
-            if 40 < rsi < 75:
-                score += 0.5
-            if score >= 2.5:
-                scored.append((sym, score))
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-THEME_STRATEGIES = {
-    "ai_revolution": AIRevolution,
-    "clean_energy": CleanEnergy,
-    "defense_aerospace": DefenseAerospace,
-    "biotech_breakout": BiotechBreakout,
-    "china_tech_rebound": ChinaTechRebound,
-    "latam_growth": LatAmGrowth,
-    "infrastructure_boom": InfrastructureBoom,
-    "small_cap_value": SmallCapValue,
-    "crypto_ecosystem": CryptoEcosystem,
-    "aging_population": AgingPopulation,
-    "glp1_obesity": GLP1Obesity,
-    "robotics_autonomous": RoboticsAutonomous,
-}
-
-
-def get_theme_strategy(name: str, **kwargs) -> BasePersona:
-    cls = THEME_STRATEGIES.get(name)
-    if cls is None:
-        raise ValueError(f"Unknown theme: {name}. Available: {list(THEME_STRATEGIES.keys())}")
-    return cls(**kwargs)
-
-
-def list_theme_strategies():
-    result = []
-    for key, cls in THEME_STRATEGIES.items():
-        instance = cls()
-        result.append({
-            "key": key,
-            "name": instance.config.name,
-            "description": instance.config.description,
-        })
-    return result
+def format_report(results: dict[str, Any], title: str = "Backtest Report") -> str:
+    """Format backtest results as a readable report."""
+    m = results["metrics"]
+    tm = results["trade_metrics"]
+
+    if "error" in m:
+        return f"{'=' * 60}\n  {title}\n{'=' * 60}\n\n  Error: {m['error']}\n\n{'=' * 60}"
+
+    lines = [
+        f"{'=' * 60}",
+        f"  {title}",
+        f"{'=' * 60}",
+        "",
+        "--- Performance ---",
+        f"  Total Return:       {m.get('total_return', 0):>10.2%}",
+        f"  CAGR:               {m.get('cagr', 0):>10.2%}",
+        f"  Annual Volatility:  {m.get('annual_volatility', 0):>10.2%}",
+        f"  Sharpe Ratio:       {m.get('sharpe_ratio', 0):>10.2f}",
+        f"  Sortino Ratio:      {m.get('sortino_ratio', 0):>10.2f}",
+        f"  Calmar Ratio:       {m.get('calmar_ratio', 0):>10.2f}",
+        f"  Max Drawdown:       {m.get('max_drawdown', 0):>10.2%}",
+        f"  Win Rate:           {m.get('win_rate', 0):>10.2%}",
+        f"  Profit Factor:      {m.get('profit_factor', 0):>10.2f}",
+        "",
+        "--- Trades ---",
+        f"  Total Trades:       {tm.get('num_trades', 0):>10d}",
+        f"  Buys:               {tm.get('num_buys', 0):>10d}",
+        f"  Sells:              {tm.get('num_sells', 0):>10d}",
+        f"  Total Costs:        ${tm.get('total_transaction_costs', 0):>9.2f}",
+        "",
+        "--- Portfolio ---",
+        f"  Initial Value:      ${results.get('initial_value', 100_000):>10,.2f}",
+        f"  Final Value:        ${results.get('final_value', 0):>10,.2f}",
+    ]
+
+    if "benchmark_total_return" in m:
+        lines.extend([
+            "",
+            "--- vs Benchmark ---",
+            f"  Benchmark Return:   {m.get('benchmark_total_return', 0):>10.2%}",
+            f"  Alpha:              {m.get('alpha', 0):>10.2%}",
+            f"  Beta:               {m.get('beta', 0):>10.2f}",
+            f"  Info Ratio:         {m.get('information_ratio', 0):>10.2f}",
+        ])
+
+    lines.append(f"\n{'=' * 60}")
+    return "\n".join(lines)
+
+
+def _sanitize_for_json(obj):
+    """Replace float inf/nan with None for JSON compliance."""
+    if isinstance(obj, float) and (math.isinf(obj) or math.isnan(obj)):
+        return None
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    return obj
+
+
+def save_results(results: dict[str, Any], path: str) -> None:
+    """Save backtest results to JSON."""
+    serializable = {}
+    for k, v in results.items():
+        if isinstance(v, pd.Series):
+            serializable[k] = {str(idx): float(val) for idx, val in v.items()}
+        elif isinstance(v, list) and v and isinstance(v[0], Trade):
+            serializable[k] = [
+                {"date": str(t.date), "symbol": t.symbol, "side": t.side.value,
+                 "quantity": t.quantity, "price": t.price,
+                 "commission": t.commission, "slippage": t.slippage}
+                for t in v
+            ]
+        elif isinstance(v, list):
+            serializable[k] = json.loads(json.dumps(v, default=str))
+        elif isinstance(v, dict):
+            serializable[k] = {str(kk): vv for kk, vv in v.items()
+                                if not isinstance(vv, (pd.Series, pd.DataFrame))}
+        else:
+            try:
+                json.dumps(v)
+                serializable[k] = v
+            except (TypeError, ValueError):
+                serializable[k] = str(v)
+
+    serializable = _sanitize_for_json(serializable)
+    Path(path).write_text(json.dumps(serializable, indent=2, default=str))
 
 
 if __name__ == "__main__":
-    print("=== Theme-Based Strategies ===\n")
-    for p in list_theme_strategies():
-        print(f"  {p['key']:25s} | {p['name']:30s} | {p['description']}")
+    from data_fetcher import fetch_ohlcv
+
+    # Simple buy-and-hold strategy test
+    def buy_and_hold(date, prices, portfolio, data):
+        if not portfolio.get_position("AAPL"):
+            return {"AAPL": 0.95}
+        return {}
+
+    bt = Backtester(
+        strategy=buy_and_hold,
+        symbols=["AAPL"],
+        start="2023-01-01",
+        end="2024-12-31",
+    )
+    results = bt.run()
+    print(format_report(results, "Buy & Hold AAPL"))

@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_rebalance` all-or-nothing buy** — When cash is insufficient for the target qty, now computes the maximum affordable whole shares instead of skipping the position entirely. Prevents systematic under-investment in lower-priority positions when cash is tight after higher-priority buys.
+- **Fixed `profit_factor` for zero-activity periods** — Returns `0.0` when both gross profit and gross loss are zero (flat returns), instead of `float("inf")` which falsely implies infinite profitability.
+- **Fixed `save_results` dropping transaction costs** — Trade serialization now includes `commission` and `slippage` fields, preserving the cost model outputs that were previously lost.
+- **Fixed `format_report` showing misleading all-zeros** — When `compute_metrics` returns `{"error": ...}` (insufficient data), the report now displays the error message instead of a full report with all metrics as zero.

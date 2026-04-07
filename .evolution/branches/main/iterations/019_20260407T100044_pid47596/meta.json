@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-04-07T10:18:45.280682+00:00",
+  "iteration": 19,
+  "run_id": "20260407T100044_pid47596",
+  "branch": "main",
+  "target_file": "backtester.py",
+  "model": "default",
+  "cost_usd": 0.99541825,
+  "duration_ms": 450202,
+  "num_turns": 7,
+  "changes_summary": "All edits pass syntax validation. Summary of changes:\n\n- **Fixed `_rebalance` all-or-nothing buy** \u2014 When cash is insufficient for the target qty, now computes the maximum affordable whole shares instead of skipping the position entirely. Prevents systematic under-investment in lower-priority positions when cash is tight after higher-priority buys.\n- **Fixed `profit_factor` for zero-activity periods** \u2014 Returns `0.0` when both gross profit and gross loss are zero (flat returns), instead of `floa",
+  "prompt_version": 1
+}
