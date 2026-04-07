@@ -30,6 +30,7 @@ from theme_strategies import get_theme_strategy, THEME_STRATEGIES
 from recession_strategies import get_recession_strategy, RECESSION_STRATEGIES
 from unconventional_strategies import get_unconventional_strategy, UNCONVENTIONAL_STRATEGIES
 from research_strategies import get_research_strategy, RESEARCH_STRATEGIES
+from math_strategies import get_math_strategy, MATH_STRATEGIES
 from trade_recommender import save_strategy_recommendation
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
@@ -63,6 +64,8 @@ def _get_all_strategies() -> List[Dict[str, Any]]:
         strategies.append({"key": key, "source": "unconventional", "getter": get_unconventional_strategy})
     for key in RESEARCH_STRATEGIES:
         strategies.append({"key": key, "source": "research", "getter": get_research_strategy})
+    for key in MATH_STRATEGIES:
+        strategies.append({"key": key, "source": "math", "getter": get_math_strategy})
     return strategies
 
 

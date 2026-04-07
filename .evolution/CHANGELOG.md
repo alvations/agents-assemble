@@ -201,3 +201,12 @@ All changes pass syntax check. Summary:
 - **Filtered `SellInMayGoAway` and `TurnOfMonth` signals by `prices`** — these were the only two strategies returning hard-coded symbol dicts without checking if the symbols exist in the price data, which could cause downstream issues in the backtester
 - **Fixed `TailRiskHarvest` exit/crash-buy conflict** — moved exit check before crash-buy check with `continue`, so a position marked for ex
 
+## [2026-04-07T09:24:11.113077+00:00] Branch: main | Run: 20260407T091902_pid38331 | Iter 2 | $0.5748
+### unconventional_strategies.py
+All changes pass syntax check. Summary:
+
+- **Fixed module docstring** — listed 10 strategies but only 6 are implemented; now accurately lists the 6 actual strategies
+- **Removed unused `numpy` and `pandas` imports** — neither `np` nor `pd` are referenced directly in this file
+- **Precomputed `_SQRT_252` as module-level constant** — the only numpy usage was `np.sqrt(252)` inside `VIXMeanReversion.generate_signals`, recomputed on every backtest bar; now computed once at import time
+- **Fixed VIXMe
+

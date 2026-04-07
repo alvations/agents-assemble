@@ -20,7 +20,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 
 
@@ -514,7 +513,7 @@ class FixedIncomeStrat(BasePersona):
         hyg_rsi = self._get_indicator(data, "HYG", "rsi_14", date)
 
         # Duration allocation
-        if tlt_sma50 and tlt_sma200 and tlt_price:
+        if tlt_sma50 is not None and tlt_sma200 is not None and tlt_price is not None:
             if tlt_sma50 > tlt_sma200:
                 # Bond uptrend — rates falling, go long duration
                 weights["TLT"] = 0.35
@@ -533,7 +532,7 @@ class FixedIncomeStrat(BasePersona):
 
         # Credit allocation
         if hyg_macd is not None and hyg_sig is not None:
-            if hyg_macd > hyg_sig and hyg_rsi and hyg_rsi > 40:
+            if hyg_macd > hyg_sig and hyg_rsi is not None and hyg_rsi > 40:
                 # Risk-on: prefer high yield
                 weights["HYG"] = 0.15
                 weights["LQD"] = 0.10
@@ -612,7 +611,7 @@ class GrowthInvestor(BasePersona):
 
             # Buy the dip in uptrend
             if price > sma200 and 30 < rsi < 55:
-                proximity_to_sma50 = abs(price - sma50) / sma50
+                proximity_to_sma50 = abs(price - sma50) / sma50 if sma50 > 0 else 1.0
                 if proximity_to_sma50 < 0.05:  # Near SMA50 support
                     score = 3.0
                 elif price > sma50:
@@ -620,7 +619,7 @@ class GrowthInvestor(BasePersona):
                 else:
                     score = 1.0
 
-                if macd and macd_sig and macd > macd_sig:
+                if macd is not None and macd_sig is not None and macd > macd_sig:
                     score += 1.0
 
             if score > 0:
@@ -692,7 +691,7 @@ class SectorRotation(BasePersona):
 
             if momentum > 1.0:
                 score = momentum + trend
-                if rsi and 40 < rsi < 75:
+                if rsi is not None and 40 < rsi < 75:
                     score += 0.2  # Bonus for healthy RSI
                 scored.append((sym, score))
             elif momentum < 0.97:
@@ -829,12 +828,13 @@ class EnsembleStrategist(BasePersona):
             universe=universe or all_syms,
         )
         super().__init__(config)
-        # Sub-strategies with weights
+        # Sub-strategies with weights — use resolved universe so custom overrides propagate
+        uni = self.config.universe
         self._sub_strategies = [
-            (MomentumTrader(universe=all_syms), 0.35),   # Best Sharpe
-            (GrowthInvestor(universe=all_syms), 0.25),
-            (BuffettValue(universe=all_syms), 0.25),
-            (DividendInvestor(universe=all_syms), 0.15),
+            (MomentumTrader(universe=uni), 0.35),   # Best Sharpe
+            (GrowthInvestor(universe=uni), 0.25),
+            (BuffettValue(universe=uni), 0.25),
+            (DividendInvestor(universe=uni), 0.15),
         ]
 
     def generate_signals(self, date, prices, portfolio, data):

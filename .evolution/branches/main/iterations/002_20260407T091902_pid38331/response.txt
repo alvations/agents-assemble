@@ -1,0 +1,6 @@
+All changes pass syntax check. Summary:
+
+- **Fixed module docstring** — listed 10 strategies but only 6 are implemented; now accurately lists the 6 actual strategies
+- **Removed unused `numpy` and `pandas` imports** — neither `np` nor `pd` are referenced directly in this file
+- **Precomputed `_SQRT_252` as module-level constant** — the only numpy usage was `np.sqrt(252)` inside `VIXMeanReversion.generate_signals`, recomputed on every backtest bar; now computed once at import time
+- **Fixed VIXMeanReversion fallback not filtering by `prices`** — when `spy_vol` is None, the early return now filters the hardcoded dict against available `prices`, consistent with the iter 1 fix applied to SellInMayGoAway and TurnOfMonth

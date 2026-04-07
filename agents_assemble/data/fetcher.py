@@ -11,12 +11,11 @@ Premium sources (API key required): Alpha Vantage, Polygon.io, Quandl,
 
 from __future__ import annotations
 
-import json
 import os
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -385,7 +384,10 @@ def fetch_yield_curve(date: Optional[str] = None) -> Dict[str, float]:
             if not df.empty:
                 if date:
                     idx = pd.to_datetime(date)
-                    nearest = df.index[df.index.get_indexer([idx], method="nearest")[0]]
+                    pos = df.index.get_indexer([idx], method="nearest")[0]
+                    nearest = df.index[pos]
+                    if abs((nearest - idx).days) > 10:
+                        continue
                     curve[label] = float(df.loc[nearest, "value"])
                 else:
                     curve[label] = float(df.iloc[-1]["value"])
@@ -417,6 +419,8 @@ def fetch_alpha_vantage(
     # Detect rate-limit or invalid-key responses
     if "Note" in data:
         raise ValueError(f"Alpha Vantage rate limit hit: {data['Note']}")
+    if "Error Message" in data:
+        raise ValueError(f"Alpha Vantage error: {data['Error Message']}")
     if "Information" in data:
         raise ValueError(f"Alpha Vantage API error: {data['Information']}")
 
@@ -768,18 +772,6 @@ UNIVERSE = {
     # Penny stocks / speculative (very high risk, available on most platforms)
     "speculative": ["ASTS", "LUNR", "RKLB", "JOBY", "LILM", "EVTL",
                      "MVST", "LAZR", "LIDR", "OUST"],
-    # Japan ADRs (tradeable on US, Tiger, IBKR)
-    "japan_adr": ["TM", "SONY", "MUFG", "SMFG", "NMR"],
-    # Korea ADRs
-    "korea_adr": ["LPL", "KB", "SHG"],
-    # India ADRs
-    "india_adr": ["INFY", "WIT", "IBN", "HDB"],
-    # Australia ADRs
-    "australia_adr": ["BHP", "RIO"],
-    # SE Asia ADRs
-    "se_asia_adr": ["SE", "GRAB"],
-    # Africa/mining ADRs
-    "africa_mining": ["GOLD", "HMY", "AU"],
     # Global diversified — comprehensive (top picks from each region)
     "global_diversified": [
         # US mega cap
