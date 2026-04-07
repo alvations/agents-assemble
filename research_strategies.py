@@ -173,28 +173,13 @@ class MultiFactorSmartBeta(BasePersona):
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
         if top:
-            cap = self.config.max_position_size
-            budget = 0.90
-            remaining = list(top)
-            while remaining:
-                per_stock = budget / len(remaining)
-                if per_stock <= cap:
-                    for sym, _ in remaining:
-                        weights[sym] = per_stock
-                    break
-                # Cap exceeds — assign cap and redistribute
-                new_remaining = []
-                for sym, score in remaining:
-                    if budget / len(remaining) >= cap:
-                        weights[sym] = cap
-                        budget -= cap
-                    else:
-                        new_remaining.append((sym, score))
-                if not new_remaining or budget <= 0:
-                    break
-                remaining = new_remaining
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        # Explicitly close positions in non-qualifying stocks
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -762,10 +747,11 @@ class FaberSectorRotation(BasePersona):
                                 self.config.max_position_size)
                 for s in havens:
                     weights[s] = per_haven
-        result = {k: v for k, v in weights.items() if k in prices}
-        if not result:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
-        return result
+        # Explicitly close positions in non-winning sectors
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return {k: v for k, v in weights.items() if k in prices}
 
 
 RESEARCH_STRATEGIES = {
