@@ -778,6 +778,9 @@ UNIVERSE = {
     # Penny stocks / speculative (very high risk, available on most platforms)
     "speculative": ["ASTS", "LUNR", "RKLB", "JOBY", "LILM", "EVTL",
                      "MVST", "LAZR", "LIDR", "OUST"],
+    # Penny / under $5 stocks (EXTREME risk, momentum-only, small positions)
+    "penny_momentum": ["LAC", "KULR", "OPTT", "LODE", "EDIT", "CDXS",
+                        "GSAT", "DNA", "OPEN", "WISH"],
     # Sector themes (missing categories)
     "fintech_payments": ["SQ", "PYPL", "AFRM", "UPST", "SOFI", "COIN", "HOOD", "NU", "STNE"],
     "cybersecurity": ["CRWD", "PANW", "ZS", "FTNT", "S", "CYBR", "RPD", "TENB"],
