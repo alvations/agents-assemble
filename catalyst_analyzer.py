@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dataclass_field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -119,18 +119,32 @@ class NewsItem:
         return {k: v for k, v in self.__dict__.items() if v is not None}
 
 
+SELL_HORIZONS = [1, 2, 3, 5, 7, 14, 20, 30]  # Days after event to measure
+
+
 @dataclass
 class EventPattern:
     date: str
     return_pct: float
     volume_ratio: float
     direction: str  # "up" or "down"
-    post_5d: float
-    post_10d: float
-    post_20d: float
+    # Returns at each sell horizon
+    post_returns: Dict[int, float] = dataclass_field(default_factory=dict)  # {1: 0.02, 2: 0.03, ...}
+
+    # Legacy compat
+    @property
+    def post_5d(self): return self.post_returns.get(5, 0)
+    @property
+    def post_10d(self): return self.post_returns.get(10, 0)
+    @property
+    def post_20d(self): return self.post_returns.get(20, 0)
 
     def to_dict(self):
-        return self.__dict__
+        d = {"date": self.date, "return_pct": self.return_pct,
+             "volume_ratio": self.volume_ratio, "direction": self.direction}
+        for h in SELL_HORIZONS:
+            d[f"post_{h}d"] = self.post_returns.get(h, None)
+        return d
 
 
 @dataclass
@@ -274,18 +288,21 @@ class CatalystAnalyzer:
         ret = df["daily_return"]
         vr = df["vol_ratio"]
 
-        for i in range(25, len(df) - 20):
+        max_horizon = max(SELL_HORIZONS)
+        for i in range(25, len(df) - max_horizon):
             if pd.isna(vr.iloc[i]) or pd.isna(ret.iloc[i]):
                 continue
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
+                post = {}
+                for h in SELL_HORIZONS:
+                    j = min(i + h, len(df) - 1)
+                    post[h] = float(close.iloc[j] / close.iloc[i] - 1)
                 events.append(EventPattern(
                     date=str(df.index[i].date()),
                     return_pct=float(ret.iloc[i]),
                     volume_ratio=float(vr.iloc[i]),
                     direction="up" if ret.iloc[i] > 0 else "down",
-                    post_5d=float(close.iloc[min(i+5, len(df)-1)] / close.iloc[i] - 1),
-                    post_10d=float(close.iloc[min(i+10, len(df)-1)] / close.iloc[i] - 1),
-                    post_20d=float(close.iloc[min(i+20, len(df)-1)] / close.iloc[i] - 1),
+                    post_returns=post,
                 ))
 
         up = [e for e in events if e.direction == "up"]
@@ -298,20 +315,37 @@ class CatalystAnalyzer:
             "events": [e.to_dict() for e in events[-20:]],
         }
 
+        # Sell-horizon analysis for up events
         if up:
-            result["after_up"] = {
-                "avg_5d": np.mean([e.post_5d for e in up]),
-                "avg_10d": np.mean([e.post_10d for e in up]),
-                "avg_20d": np.mean([e.post_20d for e in up]),
-                "win_5d": np.mean([1 if e.post_5d > 0 else 0 for e in up]),
-            }
+            sell_analysis = {}
+            for h in SELL_HORIZONS:
+                rets = [e.post_returns.get(h, 0) for e in up]
+                sell_analysis[f"{h}d"] = {
+                    "avg_return": float(np.mean(rets)),
+                    "win_rate": float(np.mean([1 if r > 0 else 0 for r in rets])),
+                    "best": float(max(rets)),
+                    "worst": float(min(rets)),
+                }
+            result["after_up"] = sell_analysis
+            result["optimal_sell_after_up"] = max(
+                sell_analysis.items(), key=lambda x: x[1]["avg_return"]
+            )[0]
+
+        # Sell-horizon analysis for down events
         if down:
-            result["after_down"] = {
-                "avg_5d": np.mean([e.post_5d for e in down]),
-                "avg_10d": np.mean([e.post_10d for e in down]),
-                "avg_20d": np.mean([e.post_20d for e in down]),
-                "bounce_5d": np.mean([1 if e.post_5d > 0 else 0 for e in down]),
-            }
+            sell_analysis = {}
+            for h in SELL_HORIZONS:
+                rets = [e.post_returns.get(h, 0) for e in down]
+                sell_analysis[f"{h}d"] = {
+                    "avg_return": float(np.mean(rets)),
+                    "bounce_rate": float(np.mean([1 if r > 0 else 0 for r in rets])),
+                    "best": float(max(rets)),
+                    "worst": float(min(rets)),
+                }
+            result["after_down"] = sell_analysis
+            result["optimal_sell_after_down"] = max(
+                sell_analysis.items(), key=lambda x: x[1]["avg_return"]
+            )[0]
 
         return result
 
@@ -325,7 +359,7 @@ class CatalystAnalyzer:
 
         results = {}
         for strat in ["buy_spike", "buy_dip", "momentum"]:
-            for hold in [5, 10, 20]:
+            for hold in SELL_HORIZONS:
                 key = f"{strat}_{hold}d"
                 r = self._run_single_backtest(df, strat, hold)
                 if r.total_trades > 0:
@@ -505,16 +539,28 @@ class CatalystAnalyzer:
             for n in news[:5]:
                 print(f"    [{n['catalyst_type']}] {n['date']} — {n['title'][:65]}")
 
-        # Patterns
+        # Patterns with sell-horizon grid
         p = report["historical_patterns"]
         if "total_events" in p:
             print(f"\n  Historical Events: {p['total_events']} ({p['up_events']} up, {p['down_events']} down)")
+
             if "after_up" in p:
                 au = p["after_up"]
-                print(f"  After UP events:   +{au['avg_5d']:.1%} (5d), +{au['avg_10d']:.1%} (10d), +{au['avg_20d']:.1%} (20d)")
+                print(f"\n  SELL HORIZON AFTER UP EVENTS (optimal: {p.get('optimal_sell_after_up', '?')}):")
+                print(f"  {'Horizon':>8s} | {'Avg Ret':>8s} | {'Win Rate':>8s} | {'Best':>8s} | {'Worst':>8s}")
+                print(f"  {'-'*48}")
+                for h_key in sorted(au.keys(), key=lambda x: int(x.replace('d', ''))):
+                    v = au[h_key]
+                    print(f"  {h_key:>8s} | {v['avg_return']:>+7.1%} | {v['win_rate']:>7.0%} | {v['best']:>+7.1%} | {v['worst']:>+7.1%}")
+
             if "after_down" in p:
                 ad = p["after_down"]
-                print(f"  After DOWN events: {ad['avg_5d']:+.1%} (5d), {ad['avg_10d']:+.1%} (10d), {ad['avg_20d']:+.1%} (20d)")
+                print(f"\n  SELL HORIZON AFTER DOWN EVENTS (optimal: {p.get('optimal_sell_after_down', '?')}):")
+                print(f"  {'Horizon':>8s} | {'Avg Ret':>8s} | {'Bounce':>8s} | {'Best':>8s} | {'Worst':>8s}")
+                print(f"  {'-'*48}")
+                for h_key in sorted(ad.keys(), key=lambda x: int(x.replace('d', ''))):
+                    v = ad[h_key]
+                    print(f"  {h_key:>8s} | {v['avg_return']:>+7.1%} | {v['bounce_rate']:>7.0%} | {v['best']:>+7.1%} | {v['worst']:>+7.1%}")
 
         # Backtests
         bts = report["backtests"]
