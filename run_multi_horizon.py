@@ -167,8 +167,14 @@ def run_multi_horizon(
                 "source": r["source"],
                 "horizon": r["horizon"],
                 "total_return": None,
+                "cagr": None,
                 "sharpe": None,
+                "sortino": None,
                 "max_drawdown": None,
+                "alpha": None,
+                "beta": None,
+                "win_rate": None,
+                "num_trades": None,
                 "error": r.get("error", ""),
             })
 
@@ -220,7 +226,7 @@ def save_multi_horizon_report(df: pd.DataFrame) -> Path:
     lines.append("")
 
     avg_sharpe = successes.groupby("strategy")["sharpe"].mean().sort_values(ascending=False)
-    std_sharpe = successes.groupby("strategy")["sharpe"].std()
+    std_sharpe = successes.groupby("strategy")["sharpe"].std().fillna(0)
 
     lines.append("| Strategy | Avg Sharpe | Std Sharpe | Consistent? |")
     lines.append("|----------|-----------|-----------|-------------|")
@@ -239,7 +245,7 @@ def save_multi_horizon_report(df: pd.DataFrame) -> Path:
 def main():
     parser = argparse.ArgumentParser(description="Multi-horizon backtest runner")
     parser.add_argument("--persona", "-p", help="Run only this strategy")
-    parser.add_argument("--category", "-c", help="Run only this category (generic/famous/theme/recession/unconventional/research)")
+    parser.add_argument("--category", "-c", help="Run only this category (generic/famous/theme/recession/unconventional/research/math)")
     parser.add_argument("--horizon", help="Run only this horizon (1y/3y/5y/10y)")
     parser.add_argument("--quiet", "-q", action="store_true")
     args = parser.parse_args()

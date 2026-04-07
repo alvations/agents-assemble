@@ -1,0 +1,7 @@
+Syntax is valid. Summary of changes:
+
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 7 classes (already guarded by `from __future__ import annotations`)
+- **Replaced `numpy` with `math`** — The only numpy usage was `np.sqrt(252)` for vol annualization; now uses a precomputed `_SQRT_252` module-level constant via `math.sqrt`, avoiding the heavy numpy import
+- **Fixed module docstring** — Listed 6 strategies but `GlobalRotation` (strategy 7) was missing
+- **Fixed `RiskParityMomentum` fallback allocating to untradeable symbols** — The safe-haven fallback checked `self.config.universe` instead of `prices`, so it could assign weights to TLT/GLD even when they had no price data for the day
+- **Removed redundant `sma200 is not None` guard in `GlobalRotation`** — Already guaranteed non-None by the `any(v is None ...)` check + `continue` on line 525

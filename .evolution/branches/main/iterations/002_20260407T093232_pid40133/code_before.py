@@ -3,8 +3,9 @@
 Source: CNBC Hedge Fund Winners 2025, Aberdeen, Barclays Outlook.
 
 Strategies:
-    1. HealthcareAsiaMomentum — Healthcare + Asian equities momentum (2025 top trade)
-    2. DynamicEnsemble       — Ensemble weighted by rolling Sharpe ratio
+    1. HealthcareAsiaMom  — Healthcare + Asian equities momentum (2025 top trade)
+    2. StatArbExpanded    — Statistical arbitrage with expanded pairs
+    3. DynamicEnsemble    — Ensemble weighted by rolling Sharpe ratio
 """
 
 from __future__ import annotations
@@ -52,10 +53,10 @@ class HealthcareAsiaMomentum(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             macd = self._get_indicator(data, sym, "macd", date)
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            if pd.isna(sma50) or pd.isna(rsi):
+            if any(v is None for v in [sma50, rsi]):
                 continue
             score = 0.0
-            if pd.notna(sma200) and price > sma50 > sma200:
+            if sma200 and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
@@ -65,7 +66,7 @@ class HealthcareAsiaMomentum(BasePersona):
                 score += 0.5
             if score >= 2.5:
                 scored.append((sym, score))
-            elif pd.notna(sma200) and price < sma200 * 0.90:
+            elif sma200 and price < sma200 * 0.90:
                 weights[sym] = 0.0
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
@@ -118,7 +119,7 @@ class DynamicEnsemble(BasePersona):
             macd = self._get_indicator(data, sym, "macd", date)
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
 
-            if pd.isna(sma50) or pd.isna(rsi) or pd.isna(vol):
+            if any(v is None for v in [sma50, rsi, vol]):
                 continue
 
             signals = 0
@@ -126,7 +127,7 @@ class DynamicEnsemble(BasePersona):
 
             # Momentum signal (weight: performance-adaptive)
             mom = 0
-            if pd.notna(sma200) and price > sma50 > sma200:
+            if sma200 and price > sma50 > sma200:
                 mom = 1
             elif price > sma50:
                 mom = 0.5
@@ -138,7 +139,7 @@ class DynamicEnsemble(BasePersona):
 
             # Value signal
             val = 0
-            if pd.notna(sma200):
+            if sma200:
                 discount = (sma200 - price) / sma200
                 if discount > 0 and rsi < 45:
                     val = 1
@@ -147,12 +148,12 @@ class DynamicEnsemble(BasePersona):
 
             # Quality signal (low vol + above SMA200)
             qual = 0
-            if vol < 0.02 and pd.notna(sma200) and price > sma200:
+            if vol < 0.02 and sma200 and price > sma200:
                 qual = 1
                 signals += 1
             total_weight += qual * 0.3
 
-            if signals > 0:
+            if signals > 0 or total_weight >= 0.3:
                 scored[sym] = total_weight
 
         # Rank and select top N

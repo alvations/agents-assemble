@@ -249,3 +249,26 @@ Syntax is valid. Here's what I changed:
 - **Fixed incomplete `signals` counter**: Value and quality signals now increment `signals`, so stocks with any triggered signal pass the filter (previously only momentum did)
 - **Fixed non-deterministic ordering**: Removed `list(set(...))` wrapper in `
 
+## [2026-04-07T09:35:39.482197+00:00] Branch: main | Run: 20260407T092840_pid39575 | Iter 3 | $0.5486
+### math_strategies.py
+All edits pass syntax check. Summary of changes:
+
+- **Fixed VolatilityBreakout exit condition** — removed requirement for `bb_lower` to be non-None; positions now exit when `price < sma20` regardless of whether the Bollinger Band indicator is available
+- **Fixed EqualRiskContrib fallback allocating outside universe** — defensive allocation (TLT/IEF/GLD) now filters by the configured universe, so custom universes without those symbols won't get phantom allocations
+- **Fixed KellyOptimal under-all
+
+## [2026-04-07T09:35:55.910775+00:00] Branch: main | Run: 20260407T093450_pid40550 | Iter 9 | $0.3589
+### research_strategies.py
+Syntax is valid. Summary of changes:
+
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 7 classes (already guarded by `from __future__ import annotations`)
+- **Replaced `numpy` with `math`** — The only numpy usage was `np.sqrt(252)` for vol annualization; now uses a precomputed `_SQRT_252` module-level constant via `math.sqrt`, avoiding the heavy numpy import
+- **Fixed module docstring** — Listed 6 strategies but `Glo
+
+## [2026-04-07T09:35:58.868666+00:00] Branch: main | Run: 20260407T093232_pid40133 | Iter 2 | $0.5075
+### hedge_fund_strategies.py
+Syntax is valid. Here's what I changed:
+
+- **Fixed NaN safety in both strategies**: `_get_indicator` can return `np.nan` via its nearest-date code path (missing NaN check at `personas.py:76`). Replaced `v is None` guards with `pd.isna()` and bare truthiness checks (`if sma200`) with `pd.notna(sma200)` — prevents NaN from silently corrupting score calculations
+- **Removed dead code in `DynamicEnsemble` filter**: `total_weight >= 0.3` with `signals == 0` is unreachable since all three signal branc
+

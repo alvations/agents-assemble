@@ -12,16 +12,15 @@ Strategies:
     4. MomentumCrashHedge   — 12-1 momentum with crash protection
     5. RiskParityMomentum   — Risk parity allocation + momentum overlay
     6. MeanVarianceOptimal  — Simplified Markowitz-inspired allocation
-    7. GlobalRotation        — International momentum rotation
 """
 
 from __future__ import annotations
 
-import math
+from typing import List, Optional
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+import numpy as np
 
-_SQRT_252 = math.sqrt(252)
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -44,7 +43,7 @@ class DualMomentum(BasePersona):
     - If winner < 0: invest in AGG (bonds)
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Dual Momentum (Antonacci)",
             description="Absolute + relative momentum: stocks vs intl vs bonds",
@@ -99,7 +98,7 @@ class MultiFactorSmartBeta(BasePersona):
     Composite score → rank → equal-weight top N.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Multi-Factor Smart Beta",
             description="Value + momentum + quality composite factor ranking",
@@ -189,7 +188,7 @@ class LowVolAnomaly(BasePersona):
     - Must be above SMA200 (not in downtrend)
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Low Volatility Anomaly",
             description="Buy lowest-vol stocks: anomaly where low risk = higher returns",
@@ -259,7 +258,7 @@ class MomentumCrashHedge(BasePersona):
     - When SPY vol > 3x average → cut to 25% or go to cash
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Momentum Crash-Hedged",
             description="Momentum with vol-scaling: reduce exposure when volatility spikes",
@@ -283,7 +282,7 @@ class MomentumCrashHedge(BasePersona):
         if spy_vol is None:
             vol_scale = 1.0
         else:
-            annualized_vol = spy_vol * _SQRT_252
+            annualized_vol = spy_vol * np.sqrt(252)
             if annualized_vol > 0.40:      # >40% = crisis
                 vol_scale = 0.25
             elif annualized_vol > 0.25:    # >25% = high vol
@@ -348,7 +347,7 @@ class RiskParityMomentum(BasePersona):
     - Assets below SMA50 get zero weight (trend filter)
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Risk Parity + Momentum",
             description="Risk parity allocation with momentum tilt across asset classes",
@@ -387,11 +386,11 @@ class RiskParityMomentum(BasePersona):
 
         if not candidates:
             # Everything trending down → safe haven, zero out all equities
-            fallback = {sym: 0.0 for sym in self.config.universe if sym in prices}
-            # Only allocate to safe havens if they have price data
-            if "TLT" in prices:
+            fallback = {sym: 0.0 for sym in self.config.universe}
+            # Only allocate to safe havens if they're in the universe
+            if "TLT" in self.config.universe:
                 fallback["TLT"] = 0.50
-            if "GLD" in prices:
+            if "GLD" in self.config.universe:
                 fallback["GLD"] = 0.30
             return fallback
 
@@ -421,7 +420,7 @@ class MeanVarianceOptimal(BasePersona):
     - Weight proportional to score
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Mean-Variance Simplified",
             description="Markowitz-inspired: rank by return/risk ratio, weight proportionally",
@@ -491,7 +490,7 @@ class GlobalRotation(BasePersona):
     geographically diversified universe.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Global Rotation",
             description="Rotate into strongest regions: US, Europe, Asia, EM, LatAm",
@@ -541,7 +540,7 @@ class GlobalRotation(BasePersona):
 
             if score > 1.5:
                 scored.append((sym, score))
-            elif price < sma200 * 0.95:
+            elif sma200 is not None and price < sma200 * 0.95:
                 weights[sym] = 0.0
 
         scored.sort(key=lambda x: x[1], reverse=True)

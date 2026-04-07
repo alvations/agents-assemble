@@ -1,0 +1,6 @@
+All edits pass syntax check. Summary of changes:
+
+- **Fixed VolatilityBreakout exit condition** — removed requirement for `bb_lower` to be non-None; positions now exit when `price < sma20` regardless of whether the Bollinger Band indicator is available
+- **Fixed EqualRiskContrib fallback allocating outside universe** — defensive allocation (TLT/IEF/GLD) now filters by the configured universe, so custom universes without those symbols won't get phantom allocations
+- **Fixed KellyOptimal under-allocation after capping** — added redistribution pass that boosts uncapped positions to recover budget lost when other positions hit `max_position_size`, improving capital utilization
+- **Fixed VolatilityBreakout ATR sizing being non-functional** — reduced `risk_per_position` from 0.02 to 0.002; the old value produced weights of ~1.3x for typical stocks (always capped at 0.15), making ATR-based differentiation dead code. New value gives ~0.07-0.13 for typical stocks, so volatile vs calm breakouts actually get different position sizes

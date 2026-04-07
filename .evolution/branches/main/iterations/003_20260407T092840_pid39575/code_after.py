@@ -19,7 +19,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------

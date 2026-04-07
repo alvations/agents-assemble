@@ -1,0 +1,5 @@
+Syntax is valid. Here's what I changed:
+
+- **Fixed NaN safety in both strategies**: `_get_indicator` can return `np.nan` via its nearest-date code path (missing NaN check at `personas.py:76`). Replaced `v is None` guards with `pd.isna()` and bare truthiness checks (`if sma200`) with `pd.notna(sma200)` — prevents NaN from silently corrupting score calculations
+- **Removed dead code in `DynamicEnsemble` filter**: `total_weight >= 0.3` with `signals == 0` is unreachable since all three signal branches increment `signals` whenever they contribute to `total_weight`. Simplified to just `signals > 0`
+- **Fixed module docstring**: Removed reference to `StatArbExpanded` class that doesn't exist in this file, and corrected the `HealthcareAsiaMom` abbreviation to match the actual class name
