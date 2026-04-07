@@ -54,14 +54,16 @@ def _empty_chart(path: Path, message: str = "No data available") -> Path:
     """Create a minimal 'no data' chart so callers always get a valid file."""
     plt, _ = _get_plt()
     fig, ax = plt.subplots(figsize=(6, 3))
-    fig.patch.set_facecolor("#1a1a2e")
-    ax.set_facecolor("#1a1a2e")
-    ax.text(0.5, 0.5, message, color="white", fontsize=14,
-            ha="center", va="center", transform=ax.transAxes)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    fig.savefig(path, dpi=100, facecolor="#1a1a2e", bbox_inches="tight")
-    plt.close(fig)
+    try:
+        fig.patch.set_facecolor("#1a1a2e")
+        ax.set_facecolor("#1a1a2e")
+        ax.text(0.5, 0.5, message, color="white", fontsize=14,
+                ha="center", va="center", transform=ax.transAxes)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        fig.savefig(path, dpi=100, facecolor="#1a1a2e", bbox_inches="tight")
+    finally:
+        plt.close(fig)
     return path
 
 
@@ -120,7 +122,7 @@ class Terminal:
             ax.grid(True, alpha=0.15, color="white")
             ax.set_title(f"  {symbol}  |  {close.iloc[-1]:.2f}  |  "
                          f"{(close.iloc[-1]/close.iloc[0]-1)*100:+.1f}%  |  "
-                         f"{start} → {df.index[-1].strftime('%Y-%m-%d')}",
+                         f"{df.index[0].strftime('%Y-%m-%d')} → {df.index[-1].strftime('%Y-%m-%d')}",
                          color="#00ff88", fontsize=12, loc="left", fontweight="bold")
 
             panel = 1
@@ -188,17 +190,36 @@ class Terminal:
         self, strategies: list[str], start: str = "2022-01-01", end: str = "2024-12-31",
     ) -> Path:
         """Compare equity curves of multiple strategies."""
-        plt, mdates = _get_plt()
+        plt, _ = _get_plt()
         from run_multi_horizon import run_single, _get_all_strategies
 
         all_strats = _get_all_strategies()
+
+        # Derive horizon label from actual date range
+        try:
+            days = (pd.Timestamp(end or datetime.now().strftime("%Y-%m-%d"))
+                    - pd.Timestamp(start)).days
+            if days >= 3650:
+                horizon_label = "10y"
+            elif days >= 1825:
+                horizon_label = "5y"
+            elif days >= 1095:
+                horizon_label = "3y"
+            elif days >= 365:
+                horizon_label = "1y"
+            elif days >= 180:
+                horizon_label = "6m"
+            else:
+                horizon_label = "3m"
+        except Exception:
+            horizon_label = "3y"
 
         results = {}
         for name in strategies:
             strat_info = next((s for s in all_strats if s["key"] == name), None)
             if not strat_info:
                 continue
-            r = run_single(strat_info, "3y", start, end, verbose=False)
+            r = run_single(strat_info, horizon_label, start, end, verbose=False)
             if r["status"] == "success":
                 results[name] = r["metrics"]
 
@@ -282,9 +303,9 @@ class Terminal:
             return _empty_chart(path, "No strategy data available")
 
         df = pd.DataFrame(data).T.fillna(0)
-        # Sort by 3Y return
-        if "3y" in df.columns:
-            df = df.sort_values("3y", ascending=False).head(top_n)
+        # Sort by longest available horizon
+        sort_col = next((c for c in ["3y", "1y", "6m", "3m"] if c in df.columns), df.columns[-1])
+        df = df.sort_values(sort_col, ascending=False).head(top_n)
 
         fig, ax = plt.subplots(figsize=(10, max(6, top_n * 0.4)))
         try:
@@ -324,22 +345,29 @@ class Terminal:
         from run_multi_horizon import run_single, _get_all_strategies
 
         now = pd.Timestamp.now()
-        end_str = now.strftime("%Y-%m-%d")
-        offset_map = {"1y": 1, "3y": 3, "5y": 5}
-        years = offset_map.get(horizon, 3)
-        start = (now - pd.DateOffset(years=years)).strftime("%Y-%m-%d")
-        end = end_str
+        end = now.strftime("%Y-%m-%d")
+        offset_map = {
+            "3m": pd.DateOffset(months=3), "6m": pd.DateOffset(months=6),
+            "1y": pd.DateOffset(years=1), "3y": pd.DateOffset(years=3),
+            "5y": pd.DateOffset(years=5), "10y": pd.DateOffset(years=10),
+        }
+        offset = offset_map.get(horizon, pd.DateOffset(years=3))
+        start = (now - offset).strftime("%Y-%m-%d")
 
         points = []
         for strat_info in _get_all_strategies():
             r = run_single(strat_info, horizon, start, end, verbose=False)
             if r["status"] == "success":
                 m = r["metrics"]
+                ret = m.get("total_return")
+                vol = m.get("annual_volatility")
+                if ret is None or vol is None:
+                    continue
                 points.append({
                     "name": strat_info["key"],
                     "source": strat_info["source"],
-                    "return": m.get("total_return", 0) * 100,
-                    "vol": m.get("annual_volatility", 0) * 100,
+                    "return": ret * 100,
+                    "vol": vol * 100,
                     "sharpe": m.get("sharpe_ratio", 0),
                     "max_dd": m.get("max_drawdown", 0) * 100,
                 })
@@ -397,7 +425,7 @@ class Terminal:
 
     def catalyst_timeline(self, symbol: str) -> Path:
         """Bloomberg-style event timeline for a ticker."""
-        plt, mdates = _get_plt()
+        plt, _ = _get_plt()
         from catalyst_analyzer import CatalystAnalyzer
 
         analyzer = CatalystAnalyzer(symbol)
@@ -425,6 +453,9 @@ class Terminal:
                     idx = df.index.get_indexer([date], method="nearest")[0]
                     if idx < 0:
                         continue
+                    # Reject events too far from available price data
+                    if abs((df.index[idx] - date).days) > 10:
+                        continue
                     price = df["Close"].iloc[idx]
                     marker = "^" if e["direction"] == "up" else "v"
                     ax1.scatter(date, price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
@@ -441,7 +472,10 @@ class Terminal:
             ax2.set_facecolor("#1a1a2e")
             if "after_up" in patterns:
                 horizons_data = patterns["after_up"]
-                h_names = sorted(horizons_data.keys(), key=lambda x: int(x.replace("d", "")))
+                def _horizon_sort_key(x: str) -> int:
+                    digits = "".join(c for c in x if c.isdigit())
+                    return int(digits) if digits else 0
+                h_names = sorted(horizons_data.keys(), key=_horizon_sort_key)
                 avg_rets = [horizons_data[h]["avg_return"] * 100 for h in h_names]
                 win_rates = [horizons_data[h].get("win_rate", 0) * 100 for h in h_names]
                 colors = ["#00ff88" if r > 0 else "#ff4444" for r in avg_rets]
@@ -539,8 +573,9 @@ class Terminal:
             ("5/5", "Risk/return scatter", lambda: self.risk_return_scatter("3y")),
         ]
 
-        for step_id, label, fn in steps:
-            print(f"  [{step_id}] {label}...")
+        total = len(steps)
+        for i, (_step_id, label, fn) in enumerate(steps, 1):
+            print(f"  [{i}/{total}] {label}...")
             try:
                 paths.append(fn())
             except Exception as e:

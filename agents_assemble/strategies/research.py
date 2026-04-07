@@ -133,12 +133,13 @@ class MultiFactorSmartBeta(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            vol = inds["vol_20"]
 
             if any(_is_missing(v) for v in [sma200, rsi, vol]) or vol <= 0:
                 continue
@@ -249,8 +250,10 @@ class LowVolAnomaly(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
+        # Explicitly close positions in non-qualifying stocks
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -312,11 +315,12 @@ class MomentumCrashHedge(BasePersona):
             if sym == "SPY" or sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
 
             if any(_is_missing(v) for v in [sma50, sma200, rsi]):
                 continue
@@ -343,8 +347,10 @@ class MomentumCrashHedge(BasePersona):
             per_stock = min((0.90 * vol_scale) / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices and sym != "SPY"}
+        # Explicitly close positions in non-qualifying stocks (SPY is vol-only)
+        for sym in self.config.universe:
+            if sym in prices and sym != "SPY" and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -439,6 +445,10 @@ class RiskParityMomentum(BasePersona):
                 break
             remaining = new_remaining
 
+        # Explicitly close positions in non-qualifying stocks
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -483,9 +493,10 @@ class MeanVarianceOptimal(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "vol_20", "sma_200"], date)
+            sma50 = inds["sma_50"]
+            vol = inds["vol_20"]
+            sma200 = inds["sma_200"]
 
             if any(_is_missing(v) for v in [sma50, vol]) or vol <= 0:
                 continue
@@ -531,8 +542,10 @@ class MeanVarianceOptimal(BasePersona):
                     break
                 remaining = new_remaining
 
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
+        # Explicitly close positions in non-qualifying stocks
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -574,10 +587,11 @@ class GlobalRotation(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
 
             if any(_is_missing(v) for v in [sma50, sma200, rsi]):
                 continue
@@ -606,8 +620,10 @@ class GlobalRotation(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
+        # Explicitly close positions in non-qualifying stocks
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 

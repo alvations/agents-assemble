@@ -204,8 +204,16 @@ class CatalystAnalyzer:
                 return ind
         return "general"
 
-    def _get_price_data(self, start: str = "2022-01-01") -> pd.DataFrame:
+    _DEFAULT_LOOKBACK_DAYS = 3 * 365
+
+    def _get_price_data(self, start: str | None = None) -> pd.DataFrame:
         """Fetch and cache price data with indicators."""
+        if start is None:
+            start = (datetime.now() - timedelta(days=self._DEFAULT_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
+        if self._price_data is not None:
+            start_dt = pd.Timestamp(start)
+            if self._price_data.index[0] > start_dt:
+                self._price_data = None  # Cache doesn't cover requested range
         if self._price_data is None:
             df = fetch_ohlcv(self.symbol, start=start)
             if df.index.tz is not None:
@@ -268,8 +276,17 @@ class CatalystAnalyzer:
             except Exception:
                 pass
 
-        self._news_cache = items
-        return items
+        # Deduplicate across sources by title
+        seen = set()
+        unique = []
+        for item in items:
+            key = item.title.lower().strip()
+            if key not in seen:
+                seen.add(key)
+                unique.append(item)
+
+        self._news_cache = unique
+        return unique
 
     # ----- 2. Historical event patterns -----
 
@@ -289,13 +306,28 @@ class CatalystAnalyzer:
         vr = df["vol_ratio"]
 
         max_horizon = max(SELL_HORIZONS)
+        last_event_i = -999  # cooldown to prevent counting consecutive spike days as independent events
         for i in range(25, len(df) - max_horizon):
             if pd.isna(vr.iloc[i]) or pd.isna(ret.iloc[i]):
                 continue
+            if not math.isfinite(vr.iloc[i]):
+                continue
+            if i - last_event_i < 5:
+                continue
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
+                entry_price = close.iloc[i]
+                if pd.isna(entry_price) or entry_price == 0:
+                    continue
                 post = {}
+                skip = False
                 for h in SELL_HORIZONS:
-                    post[h] = float(close.iloc[i + h] / close.iloc[i] - 1)
+                    future_price = close.iloc[i + h]
+                    if pd.isna(future_price):
+                        skip = True
+                        break
+                    post[h] = float(future_price / entry_price - 1)
+                if skip:
+                    continue
                 events.append(EventPattern(
                     date=str(df.index[i].date()),
                     return_pct=float(ret.iloc[i]),
@@ -375,6 +407,8 @@ class CatalystAnalyzer:
 
         for i in range(25, len(df)):
             price = close.iloc[i]
+            if pd.isna(price):
+                continue
             r = ret.iloc[i] if not pd.isna(ret.iloc[i]) else 0
             v = vr.iloc[i] if not pd.isna(vr.iloc[i]) else 1
 
@@ -383,13 +417,17 @@ class CatalystAnalyzer:
                     trades.append(price / position[0] - 1)
                     position = None
 
-            if position is None:
+            if position is None and price > 0:
                 if strategy == "buy_spike" and r > 0.03 and v > 2.0:
                     position = (price, i)
                 elif strategy == "buy_dip" and r < -0.03 and v > 2.0:
                     position = (price, i)
                 elif strategy == "momentum" and r > 0.02 and v > 1.5:
                     position = (price, i)
+
+        # Drop incomplete final trade — its holding period differs from
+        # the strategy's, biasing backtest metrics (e.g. buy_spike_1d could
+        # include a 200-day forced close)
 
         if not trades:
             return BacktestResult(strategy, holding_days, 0, 0, 0, 0, 0, 0, 0)
@@ -601,9 +639,19 @@ class CatalystAnalyzer:
             return "delivery_numbers"
         return "general"
 
+    @staticmethod
+    def _sanitize_for_json(obj):
+        if isinstance(obj, float) and not math.isfinite(obj):
+            return None
+        if isinstance(obj, dict):
+            return {k: CatalystAnalyzer._sanitize_for_json(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [CatalystAnalyzer._sanitize_for_json(v) for v in obj]
+        return obj
+
     def save_report(self, directory: str | None = None) -> Path:
         """Save full report as JSON."""
-        report = self.full_report()
+        report = self._sanitize_for_json(self.full_report())
         out_dir = Path(directory or str(Path(__file__).parent / "knowledge" / "catalyst_scans"))
         out_dir.mkdir(parents=True, exist_ok=True)
         ts = datetime.now().strftime("%Y%m%d_%H%M")
@@ -639,7 +687,8 @@ def scan_all_industries() -> dict[str, dict]:
         try:
             analyzer = CatalystAnalyzer(sym, industry)
             backtests = analyzer.backtest_event_strategy()
-            best = max(backtests.values(), key=lambda b: b.total_return) if backtests else None
+            viable = [b for b in backtests.values() if b.total_trades >= 3]
+            best = max(viable, key=lambda b: b.total_return) if viable else None
             results[f"{industry}/{sym}"] = {
                 "best_strategy": best.strategy if best else None,
                 "holding_days": best.holding_days if best else None,

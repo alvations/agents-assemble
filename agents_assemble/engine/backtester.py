@@ -477,7 +477,11 @@ class Backtester:
 
         # Build close prices matrix — union index with forward-fill for partial data
         close_prices = pd.DataFrame({sym: df["Close"] for sym, df in all_data.items()})
-        close_prices = close_prices.sort_index().ffill()
+        close_prices = close_prices.sort_index()
+        # Deduplicate index — external data with duplicate dates causes
+        # the simulation to process the same date twice (double-trading)
+        close_prices = close_prices[~close_prices.index.duplicated(keep='last')]
+        close_prices = close_prices.ffill()
 
         # Filter to requested date range (critical for external data which
         # bypasses fetch_multiple_ohlcv's own start/end filtering)
@@ -580,6 +584,12 @@ class Backtester:
     def _rebalance(self, portfolio: Portfolio, target_weights: dict[str, float],
                    prices: dict[str, float], date: pd.Timestamp) -> None:
         """Rebalance portfolio to target weights."""
+        # Filter out non-finite weights (NaN/inf from strategy bugs).
+        # NaN weights silently fail all comparisons, leaving stale positions;
+        # inf weights cause OverflowError in int(round(inf / price)).
+        # Filtered symbols fall through to orphan-close logic below.
+        target_weights = {k: v for k, v in target_weights.items()
+                          if isinstance(v, (int, float)) and math.isfinite(v)}
         total_value = portfolio.total_value(prices)
         if total_value <= 0:
             return
