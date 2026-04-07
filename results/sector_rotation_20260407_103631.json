@@ -1,0 +1,35 @@
+{
+  "metrics": {
+    "total_return": 0.17513386524607233,
+    "cagr": 0.055645229874207836,
+    "annual_volatility": 0.11807932533079,
+    "sharpe_ratio": 0.18548400151747263,
+    "sortino_ratio": 0.18449562102119754,
+    "calmar_ratio": 0.3683542634467745,
+    "max_drawdown": -0.15106443822184323,
+    "max_drawdown_date": "2022-07-18 00:00:00",
+    "win_rate": 0.4647137150466045,
+    "profit_factor": 1.099595515202731,
+    "num_trading_days": 751,
+    "skewness": -0.17514654952387868,
+    "kurtosis": 3.648479998499405,
+    "best_day": 0.03862136351966172,
+    "worst_day": -0.04202131682257626,
+    "avg_daily_return": 0.00024256186977078024,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": -0.03259948387928979,
+    "beta": 0.48679142693727495,
+    "information_ratio": -0.26838915871766,
+    "tracking_error": 0.12146348993769825
+  },
+  "trade_metrics": {
+    "num_trades": 700,
+    "num_buys": 306,
+    "num_sells": 394,
+    "total_commission": 0.0,
+    "total_slippage": 11925.474694799426,
+    "total_transaction_costs": 11925.474694799426,
+    "avg_trade_size": 17036.392421142034
+  }
+}

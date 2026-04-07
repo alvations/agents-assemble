@@ -125,6 +125,8 @@ class Portfolio:
         """Execute a trade and update portfolio."""
         if quantity <= 0:
             raise ValueError(f"Quantity must be positive, got {quantity}")
+        if price <= 0:
+            raise ValueError(f"Price must be positive, got {price}")
 
         slippage = price * self.slippage_pct * quantity
         commission = self.commission_per_trade
@@ -578,7 +580,9 @@ class Backtester:
             if diff_value >= price * 0.5:
                 qty = int(diff_value / price)
                 if qty > 0:
-                    buys.append((sym, qty, target_w))
+                    # Covering shorts gets highest priority (same as orphaned short closes)
+                    priority = float("inf") if (current_pos and current_pos.quantity < 0) else target_w
+                    buys.append((sym, qty, priority))
 
         # Close short positions not in target weights (highest priority)
         for sym in list(portfolio.positions.keys()):
@@ -636,6 +640,13 @@ def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
 # ---------------------------------------------------------------------------
 # Report generation
 # ---------------------------------------------------------------------------
+def _fmt_ratio(value: float) -> str:
+    """Format a ratio that may be infinite (calmar, profit_factor)."""
+    if not math.isfinite(value):
+        return "       N/A"
+    return f"{value:>10.2f}"
+
+
 def format_report(results: dict[str, Any], title: str = "Backtest Report") -> str:
     """Format backtest results as a readable report."""
     m = results["metrics"]
@@ -654,11 +665,11 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         f"  CAGR:               {m.get('cagr', 0):>10.2%}",
         f"  Annual Volatility:  {m.get('annual_volatility', 0):>10.2%}",
         f"  Sharpe Ratio:       {m.get('sharpe_ratio', 0):>10.2f}",
-        f"  Sortino Ratio:      {m.get('sortino_ratio', 0):>10.2f}",
-        f"  Calmar Ratio:       {m.get('calmar_ratio', 0):>10.2f}",
+        f"  Sortino Ratio:      {_fmt_ratio(m.get('sortino_ratio', 0))}",
+        f"  Calmar Ratio:       {_fmt_ratio(m.get('calmar_ratio', 0))}",
         f"  Max Drawdown:       {m.get('max_drawdown', 0):>10.2%}",
         f"  Win Rate:           {m.get('win_rate', 0):>10.2%}",
-        f"  Profit Factor:      {m.get('profit_factor', 0):>10.2f}",
+        f"  Profit Factor:      {_fmt_ratio(m.get('profit_factor', 0))}",
         "",
         "--- Trades ---",
         f"  Total Trades:       {tm.get('num_trades', 0):>10d}",
@@ -722,7 +733,9 @@ def save_results(results: dict[str, Any], path: str) -> None:
                 serializable[k] = str(v)
 
     serializable = _sanitize_for_json(serializable)
-    Path(path).write_text(json.dumps(serializable, indent=2, default=str))
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(serializable, indent=2, default=str))
 
 
 if __name__ == "__main__":

@@ -543,3 +543,24 @@ All edits pass syntax validation. Summary of changes:
 - **Removed dead `sma50_a`/`sma50_b` in `PairsTrader.generate_signals`** (lines 806-809) — fetched and required non-None but never used in any logic branch. Pairs were needlessly skipped when SMA50 data was unavailable even though the strategy only uses RSI for relative strength signals.
 - **Fixed `SectorRotation` cap redistribution losing budget** (lines 730-746) — when few sectors qualify and individual score-proportional weights exceed `m
 
+## [2026-04-07T14:34:50.629834+00:00] Branch: main | Run: 20260407T142708_pid61031 | Iter 25 | $1.0323
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed MultiFactorSmartBeta quality factor overweighting** (line 164) — `quality_score *= 1.3` could push quality to 1.3, giving it 30% more influence than value or momentum in the "equal weight" composite. Now capped at 1.0 after the SMA200 bonus: `min(1.0, quality_score * 1.3)`.
+- **Fixed FaberSectorRotation hardcoded `[:3]`** (line 709) — replaced with `[:self.config.max_positions]` so the strategy respects its config if subclassed or 
+
+## [2026-04-07T14:36:27.162723+00:00] Branch: main | Run: 20260407T142706_pid61022 | Iter 25 | $1.1378
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Added `price > 0` validation in `Portfolio.execute_trade`** — Zero or negative prices corrupt `avg_cost` calculations in `Position.update` (e.g., buying at price=0 dilutes avg_cost toward zero) and produce meaningless trades with zero slippage. Now raises `ValueError` like the existing qty check.
+- **Fixed short cover priority inversion in `_rebalance`** — When a strategy returns `{sym: 0.0}` for a short position, the buy-to-cover was as
+
+## [2026-04-07T14:37:12.123988+00:00] Branch: main | Run: 20260407T142709_pid61050 | Iter 25 | $1.4155
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `QuantStrategist` ZeroDivisionError when `price = 0`** (line 476) — `vol * price` produces 0 even when `vol > 0` if `price` is 0 (delisted stock), causing a crash. Added `price > 0` guard.
+- **Fixed `PairsTrader` ignoring `max_position_size` per symbol** — The neutral path hardcoded 0.06 weight without capping at `max_position_size`. A custom `max_position_size < 0.06` was silently violated. Now caps all weights at `max_position_si
+

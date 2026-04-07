@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed MultiFactorSmartBeta quality factor overweighting** (line 164) — `quality_score *= 1.3` could push quality to 1.3, giving it 30% more influence than value or momentum in the "equal weight" composite. Now capped at 1.0 after the SMA200 bonus: `min(1.0, quality_score * 1.3)`.
+- **Fixed FaberSectorRotation hardcoded `[:3]`** (line 709) — replaced with `[:self.config.max_positions]` so the strategy respects its config if subclassed or modified (also renamed `top3` → `top` for consistency).
+- **Fixed FactorETFRotation safe-haven violating `max_position_size`** (lines 660-663) — TLT was allocated 0.50 which exceeds the 0.35 cap; now uses `min(0.50, cap)` and `min(0.30, cap)`, matching FaberSectorRotation's safe-haven pattern which already respects the constraint.

@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `QuantStrategist` ZeroDivisionError when `price = 0`** (line 476) — `vol * price` produces 0 even when `vol > 0` if `price` is 0 (delisted stock), causing a crash. Added `price > 0` guard.
+- **Fixed `PairsTrader` ignoring `max_position_size` per symbol** — The neutral path hardcoded 0.06 weight without capping at `max_position_size`. A custom `max_position_size < 0.06` was silently violated. Now caps all weights at `max_position_size` before total exposure normalization.
+- **Fixed `PairsTrader` ignoring `max_positions`** — With 7 pairs producing up to 14 positions but `max_positions=8`, the limit was never enforced. Now keeps only the top N highest-weight positions. Every other strategy enforces this limit.
+- **Fixed `EnsembleStrategist` ignoring `max_positions`** — Consensus positions were unbounded; in broadly trending markets, many stocks could get 2+ strategy agreement, exceeding `max_positions=12`. Now keeps top N positive weights while preserving all exit signals (weight=0).

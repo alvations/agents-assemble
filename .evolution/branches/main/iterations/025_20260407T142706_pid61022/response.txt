@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Added `price > 0` validation in `Portfolio.execute_trade`** — Zero or negative prices corrupt `avg_cost` calculations in `Position.update` (e.g., buying at price=0 dilutes avg_cost toward zero) and produce meaningless trades with zero slippage. Now raises `ValueError` like the existing qty check.
+- **Fixed short cover priority inversion in `_rebalance`** — When a strategy returns `{sym: 0.0}` for a short position, the buy-to-cover was assigned priority 0.0 (lowest), executing after all new buys. This could exhaust cash on new positions before covering risky short exposure. Now assigns `float("inf")` priority to match the handling of orphaned shorts not in target_weights.
+- **Fixed `format_report` displaying raw `inf`** — `calmar_ratio`, `sortino_ratio`, and `profit_factor` can be `float("inf")` (e.g., no drawdown, no losing days), which formatted as `"       inf"`. Added `_fmt_ratio` helper that displays `"       N/A"` for non-finite values.
+- **Fixed `save_results` crash when output directory doesn't exist** — `Path(path).write_text()` raises `FileNotFoundError` if the parent directory is missing. Now creates parent directories before writing.

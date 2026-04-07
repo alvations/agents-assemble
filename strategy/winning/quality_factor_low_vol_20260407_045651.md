@@ -1,0 +1,130 @@
+# WINNING Strategy: quality_factor_low_vol
+**Generated:** 2026-04-07T04:56:51.108795
+**Assessment:** BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
+
+## Performance Summary
+- **total_return:** 31.94%
+- **sharpe_ratio:** 0.70
+- **max_drawdown:** -8.85%
+- **win_rate:** 38.62%
+- **alpha:** 0.92%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 7.9%
+- **stop_loss:** 10.6%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 8.9%
+- **rebalance_frequency:** monthly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** Strategy has low win rate — enter only on strong setup days. Be patient.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Position Recommendations
+
+### LIN — BUY
+- Entry limit: $462.57 (0.5% below avg cost)
+- Stop-loss: $415.52 (10.6% below entry)
+- Take-profit: $488.14 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### MCD — BUY
+- Entry limit: $282.77 (0.5% below avg cost)
+- Stop-loss: $254.01 (10.6% below entry)
+- Take-profit: $298.40 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### JNJ — BUY
+- Entry limit: $154.02 (0.5% below avg cost)
+- Stop-loss: $138.35 (10.6% below entry)
+- Take-profit: $162.53 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### BRK-B — BUY
+- Entry limit: $455.12 (0.5% below avg cost)
+- Stop-loss: $408.83 (10.6% below entry)
+- Take-profit: $480.28 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### NEE — BUY
+- Entry limit: $73.86 (0.5% below avg cost)
+- Stop-loss: $66.35 (10.6% below entry)
+- Take-profit: $77.94 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### UNH — BUY
+- Entry limit: $584.13 (0.5% below avg cost)
+- Stop-loss: $524.71 (10.6% below entry)
+- Take-profit: $616.41 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### V — BUY
+- Entry limit: $286.11 (0.5% below avg cost)
+- Stop-loss: $257.01 (10.6% below entry)
+- Take-profit: $301.93 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### DUK — BUY
+- Entry limit: $109.67 (0.5% below avg cost)
+- Stop-loss: $98.51 (10.6% below entry)
+- Take-profit: $115.73 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### MA — BUY
+- Entry limit: $489.69 (0.5% below avg cost)
+- Stop-loss: $439.88 (10.6% below entry)
+- Take-profit: $516.76 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### HD — BUY
+- Entry limit: $376.61 (0.5% below avg cost)
+- Stop-loss: $338.30 (10.6% below entry)
+- Take-profit: $397.43 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### ABT — BUY
+- Entry limit: $109.97 (0.5% below avg cost)
+- Stop-loss: $98.78 (10.6% below entry)
+- Take-profit: $116.05 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### ACN — BUY
+- Entry limit: $339.10 (0.5% below avg cost)
+- Stop-loss: $304.61 (10.6% below entry)
+- Take-profit: $357.84 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### GOOGL — BUY
+- Entry limit: $169.46 (0.5% below avg cost)
+- Stop-loss: $152.23 (10.6% below entry)
+- Take-profit: $178.83 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### MSFT — BUY
+- Entry limit: $424.72 (0.5% below avg cost)
+- Stop-loss: $381.52 (10.6% below entry)
+- Take-profit: $448.19 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain
+
+### COST — BUY
+- Entry limit: $847.10 (0.5% below avg cost)
+- Stop-loss: $760.94 (10.6% below entry)
+- Take-profit: $893.93 (5.0% above entry)
+- Position size: 7.9% of portfolio
+- Trailing stop: 8.5% trailing stop after 2.5% gain

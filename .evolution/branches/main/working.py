@@ -473,7 +473,7 @@ class QuantStrategist(BasePersona):
             # Mean reversion score
             if price < bb_lower and rsi < 35:
                 # Oversold — buy signal
-                z_score = (sma20 - price) / (vol * price) if vol > 0 else 0
+                z_score = (sma20 - price) / (vol * price) if vol > 0 and price > 0 else 0
                 inv_vol = 1.0 / max(vol, 0.005)  # Size inversely to vol
                 score = z_score * inv_vol
                 candidates.append((sym, max(score, 0.1), vol))
@@ -845,6 +845,15 @@ class PairsTrader(BasePersona):
                 weights[sym_a] = weights.get(sym_a, 0) + 0.06
                 weights[sym_b] = weights.get(sym_b, 0) + 0.06
 
+        # Enforce per-position cap
+        cap = self.config.max_position_size
+        weights = {k: min(v, cap) for k, v in weights.items()}
+
+        # Enforce max_positions: keep top N by weight
+        if len(weights) > self.config.max_positions:
+            sorted_items = sorted(weights.items(), key=lambda x: x[1], reverse=True)
+            weights = dict(sorted_items[:self.config.max_positions])
+
         # Cap total exposure
         total = sum(weights.values())
         if total > 0.95:
@@ -936,6 +945,16 @@ class EnsembleStrategist(BasePersona):
                 weights[sym] = w
             elif info["exit_count"] >= 2:
                 weights[sym] = 0.0  # Consensus exit
+
+        # Enforce max_positions: keep top N positive weights + all exits
+        positive = sorted(
+            ((s, w) for s, w in weights.items() if w > 0),
+            key=lambda x: x[1], reverse=True,
+        )
+        exits = [(s, w) for s, w in weights.items() if w <= 0]
+        if len(positive) > self.config.max_positions:
+            positive = positive[:self.config.max_positions]
+        weights = dict(positive + exits)
 
         # Normalize if over-allocated
         total = sum(v for v in weights.values() if v > 0)
