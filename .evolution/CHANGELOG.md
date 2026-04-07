@@ -364,3 +364,18 @@ All edits pass syntax validation. Summary of changes:
 - **Added `_is_missing(v)` helper** — catches both `None` and `NaN` using the `v != v` idiom, since `_get_indicator`'s nearest-date code path (line 76 of `personas.py`) can return NaN without checking
 - **Fixed NaN bug in `QualityFactor`** — `any(v is None for v in ...)` → `any(_is_missing(v) for v in
 
+## [2026-04-07T09:53:13.541636+00:00] Branch: main | Run: 20260407T094942_pid44960 | Iter 16 | $0.4291
+### trade_recommender.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed losing strategies getting 5% allocation** — `kelly_fraction` now requires `is_winning` to compute a positive value; losing strategies get 0% instead of recommending capital to money-losing strategies. Winning strategies get a 2% floor (was 0, which would produce "0.0% of portfolio" for barely-winning strategies).
+- **Fixed `alpha` bool bypass** — Added `not isinstance(..., bool)` guard on both alpha format strings (lines 104, 264);
+
+## [2026-04-07T09:53:17.178535+00:00] Branch: main | Run: 20260407T094828_pid44697 | Iter 15 | $0.5316
+### math_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed KeyError crash in VolatilityBreakout** (line 335): Added missing `sym not in data` guard — all other strategies check this before calling `_get_indicator`, but this one didn't
+- **Fixed KeyError crash in EqualRiskContrib** (line 411): Same missing guard
+- **Fixed NaN vol bug in EqualRiskContrib** (line 418): `vol <= 0` doesn't catch NaN (`NaN <= 0` is `False`), changed to `not (vol > 0)` — same bug class fixed in ZScoreReversion it
+

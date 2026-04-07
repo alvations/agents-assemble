@@ -73,7 +73,10 @@ class BasePersona(ABC):
                 idx = df.index.get_indexer([date], method="nearest")[0]
                 if idx == -1:
                     return None
-                return float(df.iloc[idx][indicator])
+                val = df.iloc[idx][indicator]
+                if pd.isna(val):
+                    return None
+                return float(val)
             except (IndexError, KeyError):
                 return None
         val = df.loc[date, indicator]

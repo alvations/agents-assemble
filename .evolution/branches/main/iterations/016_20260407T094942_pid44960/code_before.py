@@ -63,12 +63,12 @@ def generate_trade_recommendations(
     # Position sizing via Kelly criterion (simplified)
     win_rate = _safe_float(metrics.get("win_rate"), 0.5)
     profit_factor = _safe_float(metrics.get("profit_factor"), 1.0)
-    if profit_factor > 1 and win_rate > 0 and is_winning:
+    if profit_factor > 1 and win_rate > 0:
         avg_win_loss_ratio = profit_factor * (1 - win_rate) / win_rate if win_rate < 1 else 1
         kelly_fraction = win_rate - (1 - win_rate) / avg_win_loss_ratio if avg_win_loss_ratio > 0 else 0
-        kelly_fraction = max(0.02, min(kelly_fraction, 0.25))  # Floor at 2%, cap at 25%
+        kelly_fraction = max(0, min(kelly_fraction, 0.25))  # Cap at 25%
     else:
-        kelly_fraction = 0.0
+        kelly_fraction = 0.05  # Minimum
 
     # Stop-loss based on historical drawdown (floored at 2% to avoid noise-triggered exits)
     stop_loss_pct = max(min(max_dd * 1.2, 0.25), 0.02)
@@ -101,7 +101,7 @@ def generate_trade_recommendations(
             "sharpe_ratio": f"{sharpe:.2f}",
             "max_drawdown": f"{_safe_float(metrics.get('max_drawdown'), 0.0):.2%}",
             "win_rate": f"{win_rate:.2%}",
-            "alpha": f"{metrics['alpha']:.2%}" if isinstance(metrics.get('alpha'), (int, float)) and not isinstance(metrics.get('alpha'), bool) else "N/A",
+            "alpha": f"{metrics.get('alpha', 0):.2%}" if isinstance(metrics.get('alpha'), (int, float)) else "N/A",
         },
     }
 
@@ -118,6 +118,7 @@ def _assess_strategy(metrics: dict[str, float]) -> str:
     """Generate overall strategy assessment."""
     sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
     alpha = _safe_float(metrics.get("alpha"), 0.0)
+    max_dd = _safe_float(metrics.get("max_drawdown"), 0.0)
     total_ret = _safe_float(metrics.get("total_return"), 0.0)
 
     if sharpe > 1.0 and alpha > 0.05:
@@ -260,17 +261,16 @@ def save_strategy_recommendation(
             "This strategy lost money. Key issues:",
             f"- Sharpe ratio: {_safe_float(metrics.get('sharpe_ratio'), 0.0):.2f} (target > 0.5)",
             f"- Max drawdown: {_safe_float(metrics.get('max_drawdown'), 0.0):.2%} (target > -20%)",
-            f"- Alpha: {_safe_float(metrics.get('alpha'), 0.0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) and not isinstance(metrics.get('alpha'), bool) else "- Alpha: N/A (target > 0%)",
+            f"- Alpha: {_safe_float(metrics.get('alpha'), 0.0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
             "",
             "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
         ])
 
-    safe_name = name.replace("/", "_").replace("\\", "_").replace("..", "_")
-    md_path = target_dir / f"{safe_name}_{timestamp}.md"
+    md_path = target_dir / f"{name}_{timestamp}.md"
     md_path.write_text("\n".join(md_lines))
 
     # Also save raw JSON
-    json_path = target_dir / f"{safe_name}_{timestamp}.json"
+    json_path = target_dir / f"{name}_{timestamp}.json"
     json_path.write_text(json.dumps(recs, indent=2, default=str))
 
     return md_path
@@ -284,7 +284,7 @@ def save_all_recommendations(all_results: list[dict[str, Any]]) -> dict[str, Pat
         if r.get("status") != "success":
             continue
         name = r["name"]
-        path = save_strategy_recommendation(name, r, r.get("persona_config"))
+        path = save_strategy_recommendation(name, r)
         paths[name] = path
     return paths
 

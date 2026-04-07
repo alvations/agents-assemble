@@ -332,7 +332,7 @@ class VolatilityBreakout(BasePersona):
         scored = []
 
         for sym in self.config.universe:
-            if sym not in prices or sym not in data:
+            if sym not in prices:
                 continue
 
             price = prices[sym]
@@ -408,14 +408,14 @@ class EqualRiskContrib(BasePersona):
         eligible = []
 
         for sym in self.config.universe:
-            if sym not in prices or sym not in data:
+            if sym not in prices:
                 continue
 
             vol = self._get_indicator(data, sym, "vol_20", date)
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             price = prices[sym]
 
-            if vol is None or not (vol > 0):
+            if vol is None or vol <= 0:
                 continue
 
             # Momentum filter: only include assets above SMA50
@@ -431,10 +431,6 @@ class EqualRiskContrib(BasePersona):
             if available:
                 return available
             return {}
-
-        # Cap at max_positions, preferring strongest momentum
-        eligible.sort(key=lambda x: prices[x[0]] / (self._get_indicator(data, x[0], "sma_50", date) or prices[x[0]]), reverse=True)
-        eligible = eligible[:self.config.max_positions]
 
         # ERC: weight inversely proportional to vol
         total_inv_vol = sum(1 / v for _, v in eligible)

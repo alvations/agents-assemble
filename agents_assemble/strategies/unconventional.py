@@ -17,6 +17,12 @@ from __future__ import annotations
 
 _SQRT_252 = 252 ** 0.5
 
+
+def _is_missing(v):
+    """Check if value is None or NaN."""
+    return v is None or v != v
+
+
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 
@@ -155,9 +161,8 @@ class VIXMeanReversion(BasePersona):
         weights = {}
 
         spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
-        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
 
-        if spy_vol is None:
+        if _is_missing(spy_vol):
             fallback = {"SPY": 0.30, "QQQ": 0.20, "TLT": 0.20, "GLD": 0.10}
             return {k: v for k, v in fallback.items() if k in prices}
 
@@ -236,7 +241,7 @@ class DogsOfTheDow(BasePersona):
                 continue
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma200 is None or sma200 <= 0:
+            if _is_missing(sma200) or sma200 <= 0:
                 continue
 
             discount = (sma200 - price) / sma200
@@ -301,7 +306,7 @@ class QualityFactor(BasePersona):
             vol = self._get_indicator(data, sym, "vol_20", date)
             sma50 = self._get_indicator(data, sym, "sma_50", date)
 
-            if any(v is None for v in [sma200, rsi, vol]):
+            if any(_is_missing(v) for v in [sma200, rsi, vol]):
                 continue
 
             # Quality filters
@@ -374,7 +379,7 @@ class TailRiskHarvest(BasePersona):
             volume = self._get_indicator(data, sym, "Volume", date)
             vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
 
-            if daily_ret is None:
+            if _is_missing(daily_ret):
                 continue
 
             # Exit recovered positions (RSI > 60 = recovered from crash)

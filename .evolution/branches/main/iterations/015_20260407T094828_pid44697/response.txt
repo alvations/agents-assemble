@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed KeyError crash in VolatilityBreakout** (line 335): Added missing `sym not in data` guard — all other strategies check this before calling `_get_indicator`, but this one didn't
+- **Fixed KeyError crash in EqualRiskContrib** (line 411): Same missing guard
+- **Fixed NaN vol bug in EqualRiskContrib** (line 418): `vol <= 0` doesn't catch NaN (`NaN <= 0` is `False`), changed to `not (vol > 0)` — same bug class fixed in ZScoreReversion iteration 1 but not applied here
+- **Fixed EqualRiskContrib not capping at `max_positions`** — every other strategy limits candidates to `max_positions` before allocating; this one allocated to all eligible symbols. Now sorts by momentum strength and takes top N

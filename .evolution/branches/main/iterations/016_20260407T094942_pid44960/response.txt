@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed losing strategies getting 5% allocation** — `kelly_fraction` now requires `is_winning` to compute a positive value; losing strategies get 0% instead of recommending capital to money-losing strategies. Winning strategies get a 2% floor (was 0, which would produce "0.0% of portfolio" for barely-winning strategies).
+- **Fixed `alpha` bool bypass** — Added `not isinstance(..., bool)` guard on both alpha format strings (lines 104, 264); `True`/`False` no longer formats as "100.00%"/"0.00%" since `bool` is a subclass of `int` in Python.
+- **Removed dead variable `max_dd`** in `_assess_strategy` — was computed but never referenced in any condition.
+- **Sanitized `name` in file paths** — `save_strategy_recommendation` now strips `/`, `\`, and `..` from strategy names before building file paths, preventing path traversal at the system boundary.
+- **Passed `persona_config` through `save_all_recommendations`** — was silently dropped, causing all bulk-saved recommendations to use default "weekly" rebalance frequency.
