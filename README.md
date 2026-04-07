@@ -97,18 +97,6 @@ agents-assemble/
 - **Bond fallback fails in rate hikes** — use gold/cash as third option
 - See `knowledge/failures_log.md` for strategies NOT to repeat
 
-## Self-Evolution
-
-The library self-evolves using `self_evolve.py` from the parent jean-claude project:
-
-```bash
-cd agents-assemble
-PYTHONPATH=$(pwd) python3 ../self_evolve.py backtester.py -n 3 --verbose --resume
-python3 sync_package.py  # Sync flat files → package
-```
-
-50+ evolution iterations completed. See `.evolution/` for full history.
-
 ## API Keys (optional, set as env vars)
 
 | Key | Source | Free Tier |
