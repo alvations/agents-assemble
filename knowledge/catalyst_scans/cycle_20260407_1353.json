@@ -1,0 +1,22 @@
+{
+  "ITUB": {
+    "strategy": "momentum_30d",
+    "win_rate": 0.7857142857142857,
+    "total_return": 0.7245058576293046
+  },
+  "IREN": {
+    "strategy": "momentum_20d",
+    "win_rate": 0.65,
+    "total_return": 19.4615624554639
+  },
+  "SN": {
+    "strategy": "momentum_30d",
+    "win_rate": 1.0,
+    "total_return": 2.3910124599642906
+  },
+  "KB": {
+    "strategy": "momentum_30d",
+    "win_rate": 0.7,
+    "total_return": 0.5532717262984279
+  }
+}
