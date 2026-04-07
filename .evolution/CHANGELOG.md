@@ -171,3 +171,17 @@ All edits pass syntax check. Summary of changes:
 - **Fixed division-by-zero in `JorgePauloLemann`** — added `sma50 > 0` guard with fallback to `1.0` (which skips the proximity bonus) when computing `proximity` (line 824)
 - **Fixed division-by-
 
+## [2026-04-07T09:09:58.947502+00:00] Branch: main | Run: 20260407T090350_pid35770 | Iter 1 | $0.2574
+### research_strategies.py
+Syntax is valid. Summary of changes:
+
+- **Bug fix (LowVolAnomaly line 234)**: Changed `max(n, self.config.max_positions)` → `min(n, self.config.max_positions)`. The old code always selected at least 15 stocks (75% of a 20-stock universe), completely defeating the bottom-quintile selection that is the core of the strategy.
+- **Bug fix (DualMomentum line 71)**: Changed truthiness checks (`efa_price and efa_sma200`) to explicit `is not None` checks. A price of `0.0` would have been incorrectly trea
+
+## [2026-04-07T09:17:01.496265+00:00] Branch: main | Run: 20260407T090350_pid35770 | Iter 2 | $0.3824
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Bug fix (MultiFactorSmartBeta lines 142, 145, 148, 155)**: Changed truthiness checks on `sma50`, `sma200`, `rsi` to proper `is not None` checks or removed redundant guards. A 0.0 value would have incorrectly skipped momentum/quality scoring — same bug class fixed in iteration 1 for DualMomentum.
+- **Bug fix (RiskParityMomentum line 383)**: Changed `if sma50 and` → `if sma50 is not None and` to prevent 0.0 values from bypassing the moment
+

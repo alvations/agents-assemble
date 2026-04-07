@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Bug fix (MultiFactorSmartBeta lines 142, 145, 148, 155)**: Changed truthiness checks on `sma50`, `sma200`, `rsi` to proper `is not None` checks or removed redundant guards. A 0.0 value would have incorrectly skipped momentum/quality scoring — same bug class fixed in iteration 1 for DualMomentum.
+- **Bug fix (RiskParityMomentum line 383)**: Changed `if sma50 and` → `if sma50 is not None and` to prevent 0.0 values from bypassing the momentum filter.
+- **Bug fix (MeanVarianceOptimal line 457)**: Changed `if sma200 and` → `if sma200 is not None and` so the structural uptrend filter isn't silently bypassed when sma200 data is missing (None is falsy, so the filter was skipped entirely).
+- **Bug fix (RiskParityMomentum line 389)**: All-downtrend fallback now zeros out all universe symbols (SPY, EFA, TLT, GLD, XLE), not just SPY. Previously, held positions in EFA and XLE would not be sold during the defensive rotation.

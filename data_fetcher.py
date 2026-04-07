@@ -677,22 +677,78 @@ UNIVERSE = {
     "etf_commodity": ["GLD", "SLV", "USO", "UNG", "DBA", "WEAT", "COPX"],
     "crypto_adjacent": ["COIN", "MARA", "RIOT", "MSTR"],
     # China / HK ADRs (tradeable on US exchanges, Tiger Brokers, IBKR)
-    "china_adr": ["BABA", "JD", "PDD", "NIO", "XPEV", "LI", "BIDU", "TME", "BILI", "FUTU"],
-    "china_tech": ["BABA", "PDD", "JD", "BIDU", "NTES", "TME", "BILI", "IQ", "WB", "ZTO"],
-    "china_ev": ["NIO", "XPEV", "LI", "BYD"],
-    # Hong Kong / Singapore via ETFs (Tiger Brokers supports HK stocks directly)
-    "hk_etf": ["EWH", "FXI", "MCHI", "KWEB", "GXC"],
+    # China ADRs — comprehensive (100+)
+    "china_adr": [
+        "BABA", "JD", "PDD", "NIO", "XPEV", "LI", "BIDU", "TME", "BILI", "FUTU",
+        "NTES", "IQ", "WB", "ZTO", "VNET", "YMM", "DOYU", "HUYA", "GDS",
+        "HTHT", "TCOM", "EDU", "TAL", "MNSO", "LEGN", "ZLAB", "RLX",
+        "JOYY", "QFIN", "FINV", "SOHU", "DQ", "JKS", "SOL", "TIGR",
+        "KC", "VIPS", "LU", "BEKE", "CAN", "NOAH", "EH", "NIU",
+        "HSAI", "NAAS", "TUYA", "ZK", "DADA", "PUYI", "LX",
+        "FLX", "FANH", "SY", "IMAB", "ZEPP", "ZH", "XNET",
+        "TC", "MF", "XYF", "QSG", "FENG", "PT", "UCL", "WIMI",
+    ],
+    "china_etf": ["FXI", "MCHI", "KWEB", "GXC", "ASHR", "CQQQ", "CNXT"],
+    # Japan ADRs
+    "japan_adr": [
+        "TM", "SONY", "MUFG", "SMFG", "NMR", "HMC", "NTDOY",
+        "MSBHF", "TKOMY", "FANUY", "DNZOY", "SHECY", "RKUNY",
+    ],
+    "japan_etf": ["EWJ", "DXJ", "BBJP", "HEWJ"],
+    # Hong Kong / Singapore
+    "hk_etf": ["EWH", "FLHK"],
     "singapore_etf": ["EWS"],
-    # European stocks (ADRs tradeable on US, Tiger, IBKR)
-    "europe_adr": ["SAP", "ASML", "NVO", "AZN", "SHEL", "TTE", "UL", "DEO", "BP", "HSBC"],
-    "europe_luxury": ["LVMH", "MC.PA"],  # Some need European exchange
-    "europe_etf": ["VGK", "EZU", "EWG", "EWU", "EWQ", "EWI", "EWP"],
-    # Latin America
-    "latam_adr": ["MELI", "NU", "VALE", "PBR", "ITUB", "BSBR", "SQM", "GGAL"],
-    "latam_etf": ["EWZ", "EWW", "ILF"],
-    # India / Other Asia
-    "india_etf": ["INDA", "SMIN", "EPI"],
-    "asia_etf": ["AAXJ", "EWT", "EWY", "EWA", "EWJ"],
+    # Europe ADRs — comprehensive by country
+    "europe_uk": [
+        "SHEL", "BP", "HSBC", "AZN", "GSK", "UL", "DEO", "BCS", "LYG",
+        "RIO", "WPP", "VOD", "BTI", "NGG", "SNN", "SN", "BUD",
+    ],
+    "europe_germany": [
+        "SAP", "DB", "BAYRY", "BASFY", "SIFY", "DTEGY",
+    ],
+    "europe_netherlands": ["ASML", "ING", "PHG", "STLA", "NXP", "NXPI"],
+    "europe_france": ["TTE", "SNY", "DANOY", "BNPQF"],
+    "europe_switzerland": ["NVS", "RHHBY", "UBS", "LOGI", "ABB"],
+    "europe_nordic": ["NVO", "SPOT", "NOK", "ERIC", "NHYDY", "EQNR"],
+    "europe_spain_italy": ["SAN", "BBVA", "TEF", "RACE", "ENEL"],
+    "europe_all": [
+        "SAP", "ASML", "NVO", "AZN", "SHEL", "TTE", "UL", "DEO", "BP", "HSBC",
+        "GSK", "BCS", "LYG", "DB", "SAN", "BBVA", "ING", "PHG", "SPOT", "NOK",
+        "ERIC", "ABB", "NVS", "UBS", "LOGI", "STM", "NXPI", "RIO", "VOD",
+        "BTI", "NGG", "SNY", "EQNR", "NHYDY", "RACE", "STLA", "BUD",
+    ],
+    "europe_etf": ["VGK", "EZU", "EWG", "EWU", "EWQ", "EWI", "EWP", "IEUR", "HEDJ"],
+    # Latin America — comprehensive
+    "latam_brazil": [
+        "VALE", "PBR", "ITUB", "BSBR", "ABEV", "BBD", "ERJ",
+        "SBS", "CBD", "GGB", "SID", "CIG", "BRFS", "VTEX", "NU",
+    ],
+    "latam_mexico": ["AMX", "KOF", "FMX", "BSMX", "OMAB", "PAC"],
+    "latam_argentina": ["GGAL", "YPF", "BMA", "LOMA", "SUPV", "GLOB"],
+    "latam_chile_colombia_peru": ["SQM", "BCH", "CIB", "BVN", "CREG"],
+    "latam_all": [
+        "MELI", "NU", "VALE", "PBR", "ITUB", "BSBR", "SQM", "GGAL",
+        "STNE", "PAGS", "ABEV", "ERJ", "VTEX", "DLO", "AMX", "KOF",
+        "FMX", "YPF", "BMA", "GLOB", "BCH", "CIB", "BVN",
+        "BBD", "GGB", "SID", "BRFS", "SBS", "CIG", "LOMA",
+    ],
+    "latam_etf": ["EWZ", "EWW", "ILF", "ARGT", "ECH"],
+    # India ADRs
+    "india_adr": [
+        "INFY", "WIT", "IBN", "HDB", "RDY", "WNS", "MMYT", "SIFY",
+    ],
+    "india_etf": ["INDA", "SMIN", "EPI", "NDIA", "INDL"],
+    # Korea / Taiwan
+    "korea_adr": ["LPL", "KB", "SHG", "PKX"],
+    "taiwan_adr": ["TSM", "UMC", "ASX", "CAMT", "IMOS"],
+    "asia_etf": ["AAXJ", "EWT", "EWY", "EWA", "EWJ", "VPL", "IPAC"],
+    # Australia ADRs
+    "australia_adr": ["BHP", "RIO", "JHX", "WBD"],
+    # Africa / Middle East ADRs
+    "africa_adr": ["GOLD", "HMY", "AU", "SBSW", "SSRM", "MTN"],
+    "middle_east_adr": ["MBLY", "CYBR", "MNDY", "WIX", "GLBE", "CEVA"],
+    # Southeast Asia
+    "se_asia_adr": ["SE", "GRAB"],
     # Commodities (via ETFs/stocks)
     "commodities": ["GLD", "SLV", "USO", "UNG", "DBA", "WEAT", "COPX", "CPER",
                      "FCX", "NEM", "GOLD", "BHP", "RIO", "VALE"],
@@ -712,6 +768,39 @@ UNIVERSE = {
     # Penny stocks / speculative (very high risk, available on most platforms)
     "speculative": ["ASTS", "LUNR", "RKLB", "JOBY", "LILM", "EVTL",
                      "MVST", "LAZR", "LIDR", "OUST"],
+    # Japan ADRs (tradeable on US, Tiger, IBKR)
+    "japan_adr": ["TM", "SONY", "MUFG", "SMFG", "NMR"],
+    # Korea ADRs
+    "korea_adr": ["LPL", "KB", "SHG"],
+    # India ADRs
+    "india_adr": ["INFY", "WIT", "IBN", "HDB"],
+    # Australia ADRs
+    "australia_adr": ["BHP", "RIO"],
+    # SE Asia ADRs
+    "se_asia_adr": ["SE", "GRAB"],
+    # Africa/mining ADRs
+    "africa_mining": ["GOLD", "HMY", "AU"],
+    # Global diversified — comprehensive (top picks from each region)
+    "global_diversified": [
+        # US mega cap
+        "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "JPM", "V",
+        # Europe
+        "SAP", "ASML", "NVO", "AZN", "SHEL", "UL", "NVS", "SPOT", "ABB",
+        # Japan
+        "TM", "SONY", "MUFG",
+        # China
+        "BABA", "PDD", "JD", "BIDU", "NIO",
+        # India
+        "INFY", "IBN", "HDB",
+        # SE Asia
+        "SE", "GRAB", "TSM",
+        # LatAm
+        "MELI", "NU", "VALE", "PBR", "AMX",
+        # Australia / Africa
+        "BHP", "RIO", "GOLD",
+        # Regional ETFs
+        "SPY", "EFA", "EEM", "VWO", "INDA", "EWJ", "EWZ",
+    ],
 }
 
 

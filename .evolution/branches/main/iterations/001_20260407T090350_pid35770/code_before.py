@@ -16,11 +16,12 @@ Strategies:
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
+import pandas as pd
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -67,7 +68,7 @@ class DualMomentum(BasePersona):
 
         # Relative momentum: SPY vs EFA
         spy_mom = (spy_price - spy_sma200) / spy_sma200 if spy_sma200 > 0 else 0
-        efa_mom = (efa_price - efa_sma200) / efa_sma200 if efa_price is not None and efa_sma200 is not None and efa_sma200 > 0 else -1
+        efa_mom = (efa_price - efa_sma200) / efa_sma200 if efa_price and efa_sma200 and efa_sma200 > 0 else -1
 
         if spy_mom > efa_mom:
             winner, winner_mom = "SPY", spy_mom
@@ -139,20 +140,20 @@ class MultiFactorSmartBeta(BasePersona):
 
             # Factor 2: Momentum (trend alignment)
             mom_score = 0.0
-            if sma50 is not None and price > sma50:
+            if sma50 and price > sma50:
                 mom_score += 0.25
-            if price > sma200:
+            if sma200 and price > sma200:
                 mom_score += 0.25
             if macd is not None and macd_sig is not None and macd > macd_sig:
                 mom_score += 0.25
-            if 40 < rsi < 70:
+            if rsi and 40 < rsi < 70:
                 mom_score += 0.25
 
             # Factor 3: Quality (inverse vol, above SMA200)
             quality_score = 0.0
             if vol > 0:
                 quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
-            if price > sma200:
+            if sma200 and price > sma200:
                 quality_score *= 1.3
 
             # Composite: equal weight the 3 factors
@@ -220,7 +221,7 @@ class LowVolAnomaly(BasePersona):
             if vol is None or vol <= 0:
                 continue
             # Must be above SMA200 (not broken)
-            if sma200 is not None and price < sma200 * 0.95:
+            if sma200 and price < sma200 * 0.95:
                 continue
 
             vol_ranked.append((sym, vol))
@@ -230,7 +231,7 @@ class LowVolAnomaly(BasePersona):
 
         # Take bottom quintile
         n = max(1, len(vol_ranked) // 5)
-        top = vol_ranked[:min(n, self.config.max_positions)]
+        top = vol_ranked[:max(n, self.config.max_positions)]
 
         if top:
             per_stock = min(0.90 / len(top), self.config.max_position_size)
@@ -380,16 +381,13 @@ class RiskParityMomentum(BasePersona):
                 continue
 
             # Momentum filter: only include if above SMA50
-            if sma50 is not None and price > sma50:
+            if sma50 and price > sma50:
                 candidates.append((sym, vol))
             # else: excluded (negative momentum)
 
         if not candidates:
-            # Everything trending down → safe haven, zero out all equities
-            fallback = {sym: 0.0 for sym in self.config.universe}
-            fallback["TLT"] = 0.50
-            fallback["GLD"] = 0.30
-            return fallback
+            # Everything trending down → 100% short-term bonds proxy
+            return {"SPY": 0.0, "TLT": 0.50, "GLD": 0.30}
 
         # Risk parity: inverse-vol weighting
         total_inv_vol = sum(1 / v for _, v in candidates)
@@ -457,7 +455,7 @@ class MeanVarianceOptimal(BasePersona):
                 continue
 
             # Must be above SMA200 (structural uptrend)
-            if sma200 is not None and price < sma200:
+            if sma200 and price < sma200:
                 continue
 
             # Sharpe-like score
@@ -477,79 +475,6 @@ class MeanVarianceOptimal(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# 7. Global Rotation (international momentum)
-# ---------------------------------------------------------------------------
-class GlobalRotation(BasePersona):
-    """Global rotation: momentum across regional ETFs + individual ADRs.
-
-    Rotate capital into the strongest-performing regions and individual
-    international names. Uses same momentum framework but across a
-    geographically diversified universe.
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Global Rotation",
-            description="Rotate into strongest regions: US, Europe, Asia, EM, LatAm",
-            risk_tolerance=0.5,
-            max_position_size=0.15,
-            max_positions=10,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                # Regional ETFs
-                "SPY", "EFA", "EEM", "VWO", "EWJ", "EWZ", "INDA", "EWY",
-                # Top intl ADRs
-                "TM", "SONY", "BABA", "PDD", "INFY", "SE",
-                "MELI", "NU", "SAP", "ASML", "NVO",
-                "BHP", "VALE", "GOLD",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        weights = {}
-        scored = []
-
-        for sym in self.config.universe:
-            if sym not in prices:
-                continue
-            price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-
-            if any(v is None for v in [sma50, sma200, rsi]):
-                continue
-
-            # Momentum score (same as proven momentum framework)
-            score = 0.0
-            if price > sma50 > sma200:
-                score += 3.0
-            elif price > sma50:
-                score += 1.5
-            if 40 < rsi < 75:
-                score += 0.5
-
-            # Vol-adjusted (prefer lower vol for same momentum)
-            if vol is not None and vol > 0:
-                score *= min(1.5, 0.02 / vol)
-
-            if score > 1.5:
-                scored.append((sym, score))
-            elif sma200 and price < sma200 * 0.95:
-                weights[sym] = 0.0
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:self.config.max_positions]
-        if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
-        return weights
-
-
-# ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
 RESEARCH_STRATEGIES = {
@@ -559,7 +484,6 @@ RESEARCH_STRATEGIES = {
     "momentum_crash_hedge": MomentumCrashHedge,
     "risk_parity_momentum": RiskParityMomentum,
     "mean_variance_optimal": MeanVarianceOptimal,
-    "global_rotation": GlobalRotation,
 }
 
 

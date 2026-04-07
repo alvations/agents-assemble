@@ -1,0 +1,5 @@
+Syntax is valid. Summary of changes:
+
+- **Bug fix (LowVolAnomaly line 234)**: Changed `max(n, self.config.max_positions)` → `min(n, self.config.max_positions)`. The old code always selected at least 15 stocks (75% of a 20-stock universe), completely defeating the bottom-quintile selection that is the core of the strategy.
+- **Bug fix (DualMomentum line 71)**: Changed truthiness checks (`efa_price and efa_sma200`) to explicit `is not None` checks. A price of `0.0` would have been incorrectly treated as missing data.
+- **Removed unused imports**: `Dict`, `Any`, and `pandas` (`pd`) were imported but never used anywhere in the file.
