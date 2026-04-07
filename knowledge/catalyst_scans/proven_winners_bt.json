@@ -1,0 +1,32 @@
+{
+  "MARA": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.71,
+    "total_return": 2.714,
+    "pf": 2.7
+  },
+  "HOOD": {
+    "strategy": "buy_spike_10d",
+    "win_rate": 0.91,
+    "total_return": 2.354,
+    "pf": 11.6
+  },
+  "AVGO": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.67,
+    "total_return": 1.882,
+    "pf": 6.3
+  },
+  "KOS": {
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.6,
+    "total_return": 1.617,
+    "pf": 4.7
+  },
+  "MU": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.58,
+    "total_return": 1.133,
+    "pf": 2.8
+  }
+}
