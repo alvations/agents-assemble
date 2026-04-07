@@ -100,86 +100,88 @@ class Terminal:
 
         fig, axes = plt.subplots(n_panels, 1, figsize=(14, 3 * n_panels),
                                   gridspec_kw={"height_ratios": ratios}, sharex=True)
-        if n_panels == 1:
-            axes = [axes]
-        fig.patch.set_facecolor("#1a1a2e")
+        try:
+            if n_panels == 1:
+                axes = [axes]
+            fig.patch.set_facecolor("#1a1a2e")
 
-        # Price panel
-        ax = axes[0]
-        ax.set_facecolor("#1a1a2e")
-        ax.plot(close.index, close, color="#00ff88", linewidth=1.2, label="Price")
-        ax.plot(sma20.index, sma20, color="#ffaa00", linewidth=0.7, alpha=0.7, label="SMA20")
-        ax.plot(sma50.index, sma50, color="#ff4444", linewidth=0.7, alpha=0.7, label="SMA50")
-        if len(close) > 200:
-            ax.plot(sma200.index, sma200, color="#4488ff", linewidth=0.7, alpha=0.7, label="SMA200")
-        ax.fill_between(close.index, close, close.min(), alpha=0.1, color="#00ff88")
-        ax.set_ylabel("Price ($)", color="white", fontsize=9)
-        ax.legend(loc="upper left", fontsize=7, facecolor="#1a1a2e", edgecolor="#333",
-                  labelcolor="white")
-        ax.tick_params(colors="white", labelsize=8)
-        ax.grid(True, alpha=0.15, color="white")
-        ax.set_title(f"  {symbol}  |  {close.iloc[-1]:.2f}  |  "
-                     f"{(close.iloc[-1]/close.iloc[0]-1)*100:+.1f}%  |  "
-                     f"{start} → {df.index[-1].strftime('%Y-%m-%d')}",
-                     color="#00ff88", fontsize=12, loc="left", fontweight="bold")
-
-        panel = 1
-
-        # Volume panel
-        if show_volume:
-            ax = axes[panel]; panel += 1
+            # Price panel
+            ax = axes[0]
             ax.set_facecolor("#1a1a2e")
-            colors = ["#00ff88" if c >= o else "#ff4444"
-                      for c, o in zip(df["Close"], df["Open"])]
-            ax.bar(df.index, df["Volume"], color=colors, alpha=0.6, width=0.8)
-            ax.set_ylabel("Vol", color="white", fontsize=8)
-            ax.tick_params(colors="white", labelsize=7)
-            ax.grid(True, alpha=0.1, color="white")
+            ax.plot(close.index, close, color="#00ff88", linewidth=1.2, label="Price")
+            ax.plot(sma20.index, sma20, color="#ffaa00", linewidth=0.7, alpha=0.7, label="SMA20")
+            ax.plot(sma50.index, sma50, color="#ff4444", linewidth=0.7, alpha=0.7, label="SMA50")
+            if len(close) > 200:
+                ax.plot(sma200.index, sma200, color="#4488ff", linewidth=0.7, alpha=0.7, label="SMA200")
+            ax.fill_between(close.index, close, close.min(), alpha=0.1, color="#00ff88")
+            ax.set_ylabel("Price ($)", color="white", fontsize=9)
+            ax.legend(loc="upper left", fontsize=7, facecolor="#1a1a2e", edgecolor="#333",
+                      labelcolor="white")
+            ax.tick_params(colors="white", labelsize=8)
+            ax.grid(True, alpha=0.15, color="white")
+            ax.set_title(f"  {symbol}  |  {close.iloc[-1]:.2f}  |  "
+                         f"{(close.iloc[-1]/close.iloc[0]-1)*100:+.1f}%  |  "
+                         f"{start} → {df.index[-1].strftime('%Y-%m-%d')}",
+                         color="#00ff88", fontsize=12, loc="left", fontweight="bold")
 
-        # RSI panel
-        if show_rsi:
-            ax = axes[panel]; panel += 1
-            delta = close.diff()
-            gain = delta.where(delta > 0, 0).rolling(14).mean()
-            loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-            rs = gain / loss.replace(0, float('nan'))
-            rsi = 100 - (100 / (1 + rs))
-            ax.set_facecolor("#1a1a2e")
-            ax.plot(rsi.index, rsi, color="#ffaa00", linewidth=1)
-            ax.axhline(70, color="#ff4444", linewidth=0.5, linestyle="--", alpha=0.5)
-            ax.axhline(30, color="#00ff88", linewidth=0.5, linestyle="--", alpha=0.5)
-            ax.fill_between(rsi.index, rsi, 70, where=rsi > 70, color="#ff4444", alpha=0.2)
-            ax.fill_between(rsi.index, rsi, 30, where=rsi < 30, color="#00ff88", alpha=0.2)
-            ax.set_ylabel("RSI", color="white", fontsize=8)
-            ax.set_ylim(0, 100)
-            ax.tick_params(colors="white", labelsize=7)
-            ax.grid(True, alpha=0.1, color="white")
+            panel = 1
 
-        # MACD panel
-        if show_macd:
-            ax = axes[panel]; panel += 1
-            ema12 = close.ewm(span=12).mean()
-            ema26 = close.ewm(span=26).mean()
-            macd = ema12 - ema26
-            signal = macd.ewm(span=9).mean()
-            hist = macd - signal
-            ax.set_facecolor("#1a1a2e")
-            ax.plot(macd.index, macd, color="#00aaff", linewidth=0.8, label="MACD")
-            ax.plot(signal.index, signal, color="#ff8800", linewidth=0.8, label="Signal")
-            colors = ["#00ff88" if h >= 0 else "#ff4444" for h in hist]
-            ax.bar(hist.index, hist, color=colors, alpha=0.5, width=0.8)
-            ax.set_ylabel("MACD", color="white", fontsize=8)
-            ax.legend(loc="upper left", fontsize=6, facecolor="#1a1a2e",
-                      edgecolor="#333", labelcolor="white")
-            ax.tick_params(colors="white", labelsize=7)
-            ax.grid(True, alpha=0.1, color="white")
+            # Volume panel
+            if show_volume:
+                ax = axes[panel]; panel += 1
+                ax.set_facecolor("#1a1a2e")
+                colors = ["#00ff88" if c >= o else "#ff4444"
+                          for c, o in zip(df["Close"], df["Open"])]
+                ax.bar(df.index, df["Volume"], color=colors, alpha=0.6, width=0.8)
+                ax.set_ylabel("Vol", color="white", fontsize=8)
+                ax.tick_params(colors="white", labelsize=7)
+                ax.grid(True, alpha=0.1, color="white")
 
-        axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-        plt.tight_layout()
-        path = self.output_dir / f"{symbol}_chart.png"
-        fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
-        plt.close(fig)
-        return path
+            # RSI panel
+            if show_rsi:
+                ax = axes[panel]; panel += 1
+                delta = close.diff()
+                gain = delta.where(delta > 0, 0).rolling(14).mean()
+                loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
+                rs = gain / loss.replace(0, float('nan'))
+                rsi = 100 - (100 / (1 + rs))
+                ax.set_facecolor("#1a1a2e")
+                ax.plot(rsi.index, rsi, color="#ffaa00", linewidth=1)
+                ax.axhline(70, color="#ff4444", linewidth=0.5, linestyle="--", alpha=0.5)
+                ax.axhline(30, color="#00ff88", linewidth=0.5, linestyle="--", alpha=0.5)
+                ax.fill_between(rsi.index, rsi, 70, where=rsi > 70, color="#ff4444", alpha=0.2)
+                ax.fill_between(rsi.index, rsi, 30, where=rsi < 30, color="#00ff88", alpha=0.2)
+                ax.set_ylabel("RSI", color="white", fontsize=8)
+                ax.set_ylim(0, 100)
+                ax.tick_params(colors="white", labelsize=7)
+                ax.grid(True, alpha=0.1, color="white")
+
+            # MACD panel
+            if show_macd:
+                ax = axes[panel]; panel += 1
+                ema12 = close.ewm(span=12).mean()
+                ema26 = close.ewm(span=26).mean()
+                macd = ema12 - ema26
+                signal = macd.ewm(span=9).mean()
+                hist = macd - signal
+                ax.set_facecolor("#1a1a2e")
+                ax.plot(macd.index, macd, color="#00aaff", linewidth=0.8, label="MACD")
+                ax.plot(signal.index, signal, color="#ff8800", linewidth=0.8, label="Signal")
+                colors = ["#00ff88" if h >= 0 else "#ff4444" for h in hist]
+                ax.bar(hist.index, hist, color=colors, alpha=0.5, width=0.8)
+                ax.set_ylabel("MACD", color="white", fontsize=8)
+                ax.legend(loc="upper left", fontsize=6, facecolor="#1a1a2e",
+                          edgecolor="#333", labelcolor="white")
+                ax.tick_params(colors="white", labelsize=7)
+                ax.grid(True, alpha=0.1, color="white")
+
+            axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+            plt.tight_layout()
+            path = self.output_dir / f"{symbol}_chart.png"
+            fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
+            return path
+        finally:
+            plt.close(fig)
 
     # ----- 2. Strategy Equity Curve Comparison -----
 
@@ -192,10 +194,6 @@ class Terminal:
 
         all_strats = _get_all_strategies()
 
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 8),
-                                        gridspec_kw={"height_ratios": [3, 1]})
-        fig.patch.set_facecolor("#1a1a2e")
-
         results = {}
         for name in strategies:
             strat_info = next((s for s in all_strats if s["key"] == name), None)
@@ -205,8 +203,15 @@ class Terminal:
             if r["status"] == "success":
                 results[name] = r["metrics"]
 
-        # Bar chart of returns + Sharpe
-        if results:
+        if not results:
+            path = self.output_dir / "strategy_comparison.png"
+            return _empty_chart(path, "No strategy results to compare")
+
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 8),
+                                        gridspec_kw={"height_ratios": [3, 1]})
+        try:
+            fig.patch.set_facecolor("#1a1a2e")
+
             names = list(results.keys())
             returns = [results[n].get("total_return", 0) * 100 for n in names]
             sharpes = [results[n].get("sharpe_ratio", 0) for n in names]
@@ -232,14 +237,15 @@ class Terminal:
             ax2.tick_params(colors="white", labelsize=8)
             ax2.grid(True, axis="y", alpha=0.15, color="white")
 
-        for ax in [ax1, ax2]:
-            plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
+            for ax in [ax1, ax2]:
+                plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
 
-        plt.tight_layout()
-        path = self.output_dir / "strategy_comparison.png"
-        fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
-        plt.close(fig)
-        return path
+            plt.tight_layout()
+            path = self.output_dir / "strategy_comparison.png"
+            fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
+            return path
+        finally:
+            plt.close(fig)
 
     # ----- 3. Leaderboard Heatmap -----
 
@@ -280,32 +286,34 @@ class Terminal:
             df = df.sort_values("3y", ascending=False).head(top_n)
 
         fig, ax = plt.subplots(figsize=(10, max(6, top_n * 0.4)))
-        fig.patch.set_facecolor("#1a1a2e")
-        ax.set_facecolor("#1a1a2e")
+        try:
+            fig.patch.set_facecolor("#1a1a2e")
+            ax.set_facecolor("#1a1a2e")
 
-        im = ax.imshow(df.values, aspect="auto", cmap="RdYlGn",
-                        vmin=-50, vmax=150)
-        ax.set_xticks(range(len(df.columns)))
-        ax.set_xticklabels(df.columns, color="white", fontsize=9)
-        ax.set_yticks(range(len(df.index)))
-        ax.set_yticklabels(df.index, color="white", fontsize=8)
+            im = ax.imshow(df.values, aspect="auto", cmap="RdYlGn",
+                            vmin=-50, vmax=150)
+            ax.set_xticks(range(len(df.columns)))
+            ax.set_xticklabels(df.columns, color="white", fontsize=9)
+            ax.set_yticks(range(len(df.index)))
+            ax.set_yticklabels(df.index, color="white", fontsize=8)
 
-        for i in range(len(df.index)):
-            for j in range(len(df.columns)):
-                val = df.values[i, j]
-                color = "white" if abs(val) > 50 else "black"
-                ax.text(j, i, f"{val:.0f}%", ha="center", va="center",
-                        color=color, fontsize=7, fontweight="bold")
+            for i in range(len(df.index)):
+                for j in range(len(df.columns)):
+                    val = df.values[i, j]
+                    color = "white" if abs(val) > 50 else "black"
+                    ax.text(j, i, f"{val:.0f}%", ha="center", va="center",
+                            color=color, fontsize=7, fontweight="bold")
 
-        ax.set_title("Strategy Returns Heatmap (%)", color="#00ff88",
-                      fontsize=12, fontweight="bold")
-        plt.colorbar(im, ax=ax, label="Return (%)", shrink=0.8)
-        plt.tight_layout()
+            ax.set_title("Strategy Returns Heatmap (%)", color="#00ff88",
+                          fontsize=12, fontweight="bold")
+            plt.colorbar(im, ax=ax, label="Return (%)", shrink=0.8)
+            plt.tight_layout()
 
-        path = self.output_dir / "leaderboard_heatmap.png"
-        fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
-        plt.close(fig)
-        return path
+            path = self.output_dir / "leaderboard_heatmap.png"
+            fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
+            return path
+        finally:
+            plt.close(fig)
 
     # ----- 4. Risk/Return Scatter -----
 
