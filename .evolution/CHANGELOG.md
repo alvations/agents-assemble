@@ -536,3 +536,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `fetch_multiple_ohlcv` batch path missing NaN Close filter** — Individual `fetch_ohlcv` drops rows with NaN Close, but the batch `yf.download` path only did `dropna(how="all")`, allowing rows with NaN Close into results. Added `dropna(subset=["Close"])` for consistency.
 - **Fixed `fetch_fred_series` empty observations returning wrong structure** — Returned `pd.DataFrame(columns=["value"])` with a RangeIndex instead of a DatetimeInd
 
+## [2026-04-07T10:41:39.854961+00:00] Branch: main | Run: 20260407T103016_pid51115 | Iter 24 | $0.9772
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `sma50_a`/`sma50_b` in `PairsTrader.generate_signals`** (lines 806-809) — fetched and required non-None but never used in any logic branch. Pairs were needlessly skipped when SMA50 data was unavailable even though the strategy only uses RSI for relative strength signals.
+- **Fixed `SectorRotation` cap redistribution losing budget** (lines 730-746) — when few sectors qualify and individual score-proportional weights exceed `m
+

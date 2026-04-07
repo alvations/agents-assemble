@@ -321,9 +321,27 @@ class MemeStockTrader(BasePersona):
 
         if top:
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                w = min((score / total_score) * 0.90, self.config.max_position_size)
-                weights[sym] = w
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.90 for sym, score in top}
+            # Iteratively redistribute clipped excess so budget isn't lost
+            remaining = dict(raw)
+            while remaining:
+                over = {s: w for s, w in remaining.items() if w > cap}
+                if not over:
+                    break
+                excess = sum(w - cap for w in over.values())
+                for sym in over:
+                    weights[sym] = cap
+                    del remaining[sym]
+                if not remaining:
+                    break
+                under_total = sum(remaining.values())
+                if under_total <= 0:
+                    break
+                for sym in remaining:
+                    remaining[sym] += excess * (remaining[sym] / under_total)
+            for sym, w in remaining.items():
+                weights[sym] = min(w, cap)
 
         return weights
 
@@ -731,19 +749,25 @@ class SectorRotation(BasePersona):
             total_score = sum(s for _, s in top)
             cap = self.config.max_position_size
             raw = {sym: (score / total_score) * 0.90 for sym, score in top}
-            # Redistribute clipped excess so budget isn't lost
-            uncapped = {s: w for s, w in raw.items() if w <= cap}
-            capped = {s: w for s, w in raw.items() if w > cap}
-            if capped and uncapped:
-                excess = sum(w - cap for w in capped.values())
-                uncapped_total = sum(uncapped.values())
-                for sym in capped:
+            # Iteratively redistribute clipped excess so budget isn't lost
+            remaining = dict(raw)
+            while remaining:
+                over = {s: w for s, w in remaining.items() if w > cap}
+                if not over:
+                    break
+                excess = sum(w - cap for w in over.values())
+                for sym in over:
                     weights[sym] = cap
-                for sym, w in uncapped.items():
-                    weights[sym] = min(w + excess * (w / uncapped_total), cap)
-            else:
-                for sym, w in raw.items():
-                    weights[sym] = min(w, cap)
+                    del remaining[sym]
+                if not remaining:
+                    break
+                under_total = sum(remaining.values())
+                if under_total <= 0:
+                    break
+                for sym in remaining:
+                    remaining[sym] += excess * (remaining[sym] / under_total)
+            for sym, w in remaining.items():
+                weights[sym] = min(w, cap)
 
         return weights
 
@@ -803,10 +827,8 @@ class PairsTrader(BasePersona):
             price_b = prices[sym_b]
             rsi_a = self._get_indicator(data, sym_a, "rsi_14", date)
             rsi_b = self._get_indicator(data, sym_b, "rsi_14", date)
-            sma50_a = self._get_indicator(data, sym_a, "sma_50", date)
-            sma50_b = self._get_indicator(data, sym_b, "sma_50", date)
 
-            if any(v is None for v in [rsi_a, rsi_b, sma50_a, sma50_b]):
+            if rsi_a is None or rsi_b is None:
                 continue
 
             # Mean reversion in the pair

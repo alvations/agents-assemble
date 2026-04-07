@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `sma50_a`/`sma50_b` in `PairsTrader.generate_signals`** (lines 806-809) — fetched and required non-None but never used in any logic branch. Pairs were needlessly skipped when SMA50 data was unavailable even though the strategy only uses RSI for relative strength signals.
+- **Fixed `SectorRotation` cap redistribution losing budget** (lines 730-746) — when few sectors qualify and individual score-proportional weights exceed `max_position_size` (e.g., 2 sectors each get 0.45 but cap is 0.25), the old code clipped both to 0.25 and lost 0.40 of budget. Now iteratively redistributes clipped excess to remaining positions — same fix applied to `QuantStrategist` in iteration 23.
+- **Fixed `MemeStockTrader` cap redistribution losing budget** (lines 322-328) — `min((score/total)*0.90, cap)` silently discarded clipped excess. With concentrated scores (e.g., one dominant dip-buy), the highest-score stock's allocation was cut from 0.75 to 0.30 with the 0.45 difference lost instead of redistributed to other positions.
