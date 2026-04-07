@@ -58,10 +58,6 @@ class Position:
     avg_cost: float = 0.0
     realized_pnl: float = 0.0
 
-    @property
-    def market_value(self) -> float:
-        return 0.0  # Updated externally with current price
-
     def update(self, side: Side, qty: float, price: float) -> float:
         """Update position with a new trade. Returns realized P&L."""
         realized = 0.0
@@ -733,14 +729,14 @@ def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
 # ---------------------------------------------------------------------------
 def _fmt_ratio(value: float) -> str:
     """Format a ratio that may be infinite (calmar, profit_factor)."""
-    if not math.isfinite(value):
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
         return "       N/A"
     return f"{value:>10.2f}"
 
 
 def _fmt_pct(value: float) -> str:
     """Format a percentage that may be infinite (alpha on extreme short backtests)."""
-    if not math.isfinite(value):
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
         return "       N/A"
     return f"{value:>10.2%}"
 
