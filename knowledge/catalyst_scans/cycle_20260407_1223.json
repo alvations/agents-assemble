@@ -1,0 +1,22 @@
+{
+  "NOK": {
+    "strategy": "buy_dip_30d",
+    "win_rate": 0.6666666666666666,
+    "total_return": 1.679025430648549
+  },
+  "EMR": {
+    "strategy": "momentum_30d",
+    "win_rate": 0.6666666666666666,
+    "total_return": 0.37712590633362586
+  },
+  "RELY": {
+    "strategy": "momentum_20d",
+    "win_rate": 0.72,
+    "total_return": 1.899327539245573
+  },
+  "NEM": {
+    "strategy": "momentum_30d",
+    "win_rate": 0.5294117647058824,
+    "total_return": 1.1242152278161819
+  }
+}
