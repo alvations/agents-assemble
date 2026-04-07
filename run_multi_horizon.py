@@ -31,7 +31,6 @@ from recession_strategies import get_recession_strategy, RECESSION_STRATEGIES
 from unconventional_strategies import get_unconventional_strategy, UNCONVENTIONAL_STRATEGIES
 from research_strategies import get_research_strategy, RESEARCH_STRATEGIES
 from math_strategies import get_math_strategy, MATH_STRATEGIES
-from trade_recommender import save_strategy_recommendation
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 RESULTS_DIR = Path(__file__).parent / "results"
@@ -250,9 +249,15 @@ def main():
 
     if args.persona:
         strategies = [s for s in strategies if s["key"] == args.persona]
+        if not strategies:
+            parser.error(f"Unknown strategy: {args.persona}")
     if args.category:
         strategies = [s for s in strategies if s["source"] == args.category]
+        if not strategies:
+            parser.error(f"Unknown category: {args.category}")
     if args.horizon:
+        if args.horizon not in HORIZONS:
+            parser.error(f"Unknown horizon: {args.horizon!r}. Choose from: {', '.join(HORIZONS)}")
         horizons = {args.horizon: HORIZONS[args.horizon]}
 
     print(f"Running {len(strategies)} strategies x {len(horizons)} horizons = {len(strategies) * len(horizons)} backtests")

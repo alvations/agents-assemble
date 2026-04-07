@@ -96,7 +96,7 @@ class KellyOptimal(BasePersona):
             if half_kelly > 0.01 and sma50 and price > sma50:
                 candidates.append((sym, half_kelly))
 
-        # Normalize weights
+        # Normalize weights with redistribution from capped positions
         if candidates:
             candidates.sort(key=lambda x: x[1], reverse=True)
             top = candidates[:self.config.max_positions]
@@ -105,8 +105,17 @@ class KellyOptimal(BasePersona):
                 scale = 0.95 / total_kelly
             else:
                 scale = 1.0
+            cap = self.config.max_position_size
             for sym, k in top:
-                weights[sym] = min(k * scale, self.config.max_position_size)
+                weights[sym] = min(k * scale, cap)
+            # Redistribute budget lost from capping to uncapped positions
+            allocated = sum(weights.values())
+            uncapped = [s for s, k in top if k * scale < cap]
+            uncapped_total = sum(weights[s] for s in uncapped)
+            if uncapped and uncapped_total > 0 and allocated < 0.95:
+                boost = 1 + (0.95 - allocated) / uncapped_total
+                for s in uncapped:
+                    weights[s] = min(weights[s] * boost, cap)
 
         return weights
 
@@ -346,17 +355,17 @@ class VolatilityBreakout(BasePersona):
                     scored.append((sym, score, atr))
 
             # Exit: price below SMA20 (simplified Donchian lower)
-            elif price < sma20 and bb_lower and price < bb_lower:
+            elif price < sma20:
                 weights[sym] = 0.0
 
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
 
         if top:
-            risk_per_position = 0.02  # 2% of portfolio per position
+            risk_per_position = 0.002  # 0.2% portfolio risk per ATR per position
             for sym, score, atr in top:
                 if atr > 0:
-                    # w = risk_budget * price / ATR (total_value cancels out)
+                    # Turtle sizing: w = risk / (ATR/price)
                     w = min(risk_per_position * prices[sym] / atr,
                             self.config.max_position_size)
                     weights[sym] = w
@@ -417,7 +426,9 @@ class EqualRiskContrib(BasePersona):
         if not eligible:
             # Everything bearish → defensive allocation from available universe
             fallback = {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
-            available = {s: w for s, w in fallback.items() if s in prices}
+            universe_set = set(self.config.universe)
+            available = {s: w for s, w in fallback.items()
+                         if s in prices and s in universe_set}
             if available:
                 return available
             return {}
