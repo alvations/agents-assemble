@@ -16,7 +16,6 @@ from __future__ import annotations
 
 
 
-import numpy as np
 import pandas as pd
 
 from personas import BasePersona, PersonaConfig
@@ -93,7 +92,7 @@ class KellyOptimal(BasePersona):
             # Only invest if Kelly > 0 and momentum is positive
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             price = prices[sym]
-            if half_kelly > 0.01 and sma50 and price > sma50:
+            if half_kelly > 0.01 and sma50 is not None and price > sma50:
                 candidates.append((sym, half_kelly))
 
         # Normalize weights with redistribution from capped positions
@@ -183,7 +182,7 @@ class ZScoreReversion(BasePersona):
                 score = abs(z_score) - 2.0
                 sma200 = self._get_indicator(data, sym, "sma_200", date)
                 # Only if not in structural downtrend
-                if sma200 and price > sma200 * 0.85:
+                if sma200 is not None and price > sma200 * 0.85:
                     candidates.append((sym, score))
 
             # Exit: Z > 0 (reverted to mean)
