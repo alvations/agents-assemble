@@ -1,290 +1,491 @@
-"""Unconventional and less obvious trading strategies for agents-assemble.
+"""Theme-based trading strategies for agents-assemble.
 
-These go beyond the standard momentum/value playbook into more
-creative and contrarian approaches.
+These personas trade based on macro themes and megatrends rather than
+individual investor philosophies. Each theme targets a specific sector
+thesis with its own universe and timing signals.
 
-Strategies:
-    1. SellInMayGoAway    — Seasonal "sell in May" calendar effect
-    2. TurnOfMonth        — End-of-month/start-of-month buying window
-    3. VIXMeanReversion   — Buy stocks when VIX spikes (fear = opportunity)
-    4. DogsOfTheDow       — Buy worst performers yearly (contrarian)
-    5. QualityFactor      — Low vol + high profitability + low leverage
-    6. TailRiskHarvest    — Sell premium (proxy: buy after sharp drops)
+Themes:
+    1. AIRevolution      — AI/ML infrastructure and applications
+    2. CleanEnergy       — Renewables, EVs, batteries, grid
+    3. DefenseAerospace  — Defense contractors, space, cybersecurity
+    4. BiotechBreakout   — Biotech/pharma innovation and FDA catalysts
+    5. ChinaTechRebound  — China tech ADRs recovery play
+    6. LatAmGrowth       — Latin American growth (fintech, commodities)
+    7. InfrastructureBoom — Infrastructure spending (bridges, 5G, data centers)
+    8. SmallCapValue     — Small cap deep value (IWM universe)
+    9. CryptoEcosystem   — Crypto-adjacent public companies
+    10. AgingPopulation  — Healthcare, senior living, pharma for aging demographics
 """
 
 from __future__ import annotations
-
-from typing import List, Optional
-
-_SQRT_252 = 252 ** 0.5
 
 from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
-# 1. Sell in May and Go Away (Halloween Effect)
+# 1. AI Revolution
 # ---------------------------------------------------------------------------
-class SellInMayGoAway(BasePersona):
-    """Seasonal calendar strategy: "Sell in May and go away."
+class AIRevolution(BasePersona):
+    """AI/ML megatrend strategy.
 
-    Historical evidence: Nov-Apr returns >> May-Oct returns.
-    Source: Bouman & Jacobsen (2002) "The Halloween Indicator"
+    Thesis: AI is a generational shift. Companies building AI infrastructure
+    (GPUs, cloud, data centers) and AI applications will outperform.
 
-    Implementation:
-    - Nov 1 to Apr 30: 100% in SPY/QQQ
-    - May 1 to Oct 31: Move to bonds (TLT/IEF) or cash (SHY)
-    - Simple but historically robust across many markets
+    Signals: Buy on trend alignment (SMA50 > SMA200), momentum.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Sell in May (Halloween Effect)",
-            description="Seasonal: stocks Nov-Apr, bonds May-Oct",
-            risk_tolerance=0.4,
-            max_position_size=0.50,
-            max_positions=4,
-            rebalance_frequency="monthly",
-            universe=universe or ["SPY", "QQQ", "TLT", "IEF", "SHY"],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        month = date.month
-
-        if month >= 11 or month <= 4:
-            # "Winter" = stocks
-            raw = {
-                "SPY": 0.50,
-                "QQQ": 0.40,
-                "TLT": 0.0,
-                "IEF": 0.0,
-                "SHY": 0.0,
-            }
-        else:
-            # "Summer" = bonds/cash
-            raw = {
-                "SPY": 0.0,
-                "QQQ": 0.0,
-                "TLT": 0.30,
-                "IEF": 0.30,
-                "SHY": 0.30,
-            }
-        return {k: v for k, v in raw.items() if k in prices}
-
-
-# ---------------------------------------------------------------------------
-# 2. Turn of Month Effect
-# ---------------------------------------------------------------------------
-class TurnOfMonth(BasePersona):
-    """Turn-of-month buying window.
-
-    Research shows the last 3 trading days + first 3 trading days of
-    each month account for most of the monthly return due to cash flows
-    (pension funds, paychecks, portfolio rebalancing).
-
-    Source: Ariel (1987), Lakonishok & Smidt (1988)
-
-    Implementation:
-    - Buy SPY/QQQ on day 26+ of month and hold through day 3 of next month
-    - Move to SHY/cash for the rest of the month
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="Turn of Month Effect",
-            description="Buy last 3 + first 3 days of month, cash otherwise",
-            risk_tolerance=0.3,
-            max_position_size=0.50,
-            max_positions=3,
-            rebalance_frequency="daily",
-            universe=universe or ["SPY", "QQQ", "SHY"],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        day = date.day
-
-        if day >= 26 or day <= 3:
-            # Turn of month window — be in stocks
-            raw = {
-                "SPY": 0.50,
-                "QQQ": 0.40,
-                "SHY": 0.0,
-            }
-        else:
-            # Mid-month — park in short-term treasuries
-            raw = {
-                "SPY": 0.0,
-                "QQQ": 0.0,
-                "SHY": 0.90,
-            }
-        return {k: v for k, v in raw.items() if k in prices}
-
-
-# ---------------------------------------------------------------------------
-# 3. VIX Mean Reversion (Buy the Fear)
-# ---------------------------------------------------------------------------
-class VIXMeanReversion(BasePersona):
-    """Buy stocks when VIX spikes (fear = opportunity).
-
-    Research: VIX mean-reverts. Spikes above 30 are historically
-    followed by strong equity returns (Whaley 2000).
-
-    Implementation (using SPY volatility as VIX proxy since we don't
-    have VIX directly):
-    - When realized vol spikes > 2x 60-day average → aggressively buy
-    - When vol is low → normal allocation
-    - When vol is extremely low → reduce (complacency risk)
-    """
-
-    def __init__(self, universe: Optional[List[str]] = None):
-        config = PersonaConfig(
-            name="VIX Mean Reversion (Buy Fear)",
-            description="Buy aggressively when volatility spikes, reduce when complacent",
-            risk_tolerance=0.6,
-            max_position_size=0.35,
-            max_positions=5,
-            rebalance_frequency="daily",
+            name="AI Revolution",
+            description="AI megatrend: GPUs, cloud, data centers, AI applications",
+            risk_tolerance=0.8,
+            max_position_size=0.20,
+            max_positions=8,
+            rebalance_frequency="weekly",
             universe=universe or [
-                "SPY", "QQQ", "IWM",  # Broad market
-                "TLT", "GLD",  # Safe havens
+                "NVDA", "AMD", "AVGO", "MRVL", "ARM",  # AI chips
+                "MSFT", "GOOGL", "AMZN", "META",  # AI cloud/apps
+                "PLTR", "AI", "PATH", "SNOW",  # AI software
+                "SMH", "SOXX",  # Semiconductor ETFs
+                "SMCI", "DELL", "HPE",  # AI servers
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
+        scored = []
 
-        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
-        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            macd = self._get_indicator(data, sym, "macd", date)
+            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
 
-        if spy_vol is None:
-            fallback = {"SPY": 0.30, "QQQ": 0.20, "TLT": 0.20, "GLD": 0.10}
-            return {k: v for k, v in fallback.items() if k in prices}
+            if any(v is None for v in [sma50, sma200, rsi]):
+                continue
 
-        # Estimate VIX from realized vol (rough: annualized * 100)
-        implied_vix = spy_vol * _SQRT_252 * 100
+            # Thesis broken
+            if price < sma200 * 0.90:
+                weights[sym] = 0.0
+                continue
 
-        if implied_vix > 30:
-            # High fear — BUY aggressively (VIX will mean-revert)
-            weights["SPY"] = 0.40
-            weights["QQQ"] = 0.30
-            weights["IWM"] = 0.20
-            weights["TLT"] = 0.0
-            weights["GLD"] = 0.0
-        elif implied_vix > 20:
-            # Moderate fear — balanced
-            weights["SPY"] = 0.30
-            weights["QQQ"] = 0.20
-            weights["TLT"] = 0.15
-            weights["GLD"] = 0.10
-            weights["IWM"] = 0.10
-        elif implied_vix < 12:
-            # Very low vol — complacency, reduce and hedge
-            weights["SPY"] = 0.15
-            weights["QQQ"] = 0.10
-            weights["TLT"] = 0.25
-            weights["GLD"] = 0.20
-            weights["IWM"] = 0.0
-        else:
-            # Normal vol
-            weights["SPY"] = 0.25
-            weights["QQQ"] = 0.20
-            weights["TLT"] = 0.15
-            weights["GLD"] = 0.10
-            weights["IWM"] = 0.10
+            score = 0.0
+            if price > sma50 > sma200:
+                score += 3.0  # Full trend alignment
+            elif price > sma50:
+                score += 1.5
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if 40 < rsi < 75:
+                score += 0.5
 
-        return {k: v for k, v in weights.items() if k in prices}
+            if score > 2:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
 
 
 # ---------------------------------------------------------------------------
-# 4. Dogs of the Dow (Contrarian Yearly)
+# 2. Clean Energy
 # ---------------------------------------------------------------------------
-class DogsOfTheDow(BasePersona):
-    """Dogs of the Dow contrarian strategy.
+class CleanEnergy(BasePersona):
+    """Clean energy / green transition strategy.
 
-    Source: Michael O'Higgins, "Beating the Dow" (1991)
-
-    Buy the 10 highest-yielding Dow stocks at start of year.
-    Proxy: buy the worst-performing stocks (highest discount to SMA200)
-    from blue-chip universe at each rebalance, equal weight.
+    Thesis: Global energy transition to renewables creates multi-decade growth.
+    Buy solar, wind, EV, battery, and grid companies.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Dogs of the Dow (Contrarian)",
-            description="Buy worst-performing blue chips yearly, contrarian equal-weight",
+            name="Clean Energy Transition",
+            description="Renewables, EVs, batteries: buy the green transition",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "ENPH", "SEDG", "FSLR", "RUN",  # Solar
+                "TSLA", "RIVN", "LCID", "NIO", "LI", "XPEV",  # EVs
+                "ALB", "LTHM", "SQM",  # Lithium/batteries
+                "NEE", "AES", "BEP",  # Utilities/renewables
+                "ICLN", "TAN", "QCLN",  # Clean energy ETFs
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            # Buy dips in uptrend or recovery from oversold
+            if sma200 is not None and price > sma200 and rsi < 55:
+                score = 2.0
+                if sma50 > 0 and abs(price - sma50) / sma50 < 0.05:
+                    score += 1.0  # Near SMA50 support
+                scored.append((sym, score))
+            elif rsi < 30:
+                scored.append((sym, 1.5))  # Oversold bounce
+            elif rsi > 80:
+                weights[sym] = 0.0
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 3. Defense & Aerospace
+# ---------------------------------------------------------------------------
+class DefenseAerospace(BasePersona):
+    """Defense, aerospace, and cybersecurity strategy.
+
+    Thesis: Geopolitical tensions drive sustained defense spending.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Defense & Aerospace",
+            description="Defense spending boom: contractors, space, cybersecurity",
             risk_tolerance=0.4,
-            max_position_size=0.12,
+            max_position_size=0.15,
             max_positions=10,
             rebalance_frequency="monthly",
-            # Dow 30 components (approximate)
             universe=universe or [
-                "AAPL", "MSFT", "AMZN", "UNH", "GS", "HD", "MCD",
-                "V", "CRM", "DIS", "NKE", "BA", "CAT", "JPM",
-                "IBM", "JNJ", "KO", "PG", "WMT", "MRK",
-                "MMM", "CVX", "DOW", "INTC", "VZ", "WBA",
+                "LMT", "RTX", "NOC", "GD", "BA", "LHX",  # Defense
+                "PLTR", "CRWD", "PANW", "ZS", "FTNT",  # Cybersecurity
+                "RKLB", "ASTS", "LUNR",  # Space
+                "ITA", "XAR",  # Defense ETFs
+                "HII", "TDG", "HWM",  # Niche defense
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
-        discount_scores = []
+        candidates = []
 
         for sym in self.config.universe:
             if sym not in prices:
                 continue
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma200 is None or sma200 <= 0:
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if sma200 is None:
                 continue
 
-            discount = (sma200 - price) / sma200
-            discount_scores.append((sym, discount))
+            # Defense stocks tend to be stable — buy near SMA200
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount > -0.10 and (rsi is None or rsi < 65):
+                score = max(discount + 0.10, 0.01) + 0.3
+                candidates.append((sym, score))
+            elif rsi is not None and rsi > 80:
+                weights[sym] = 0.05
 
-        # Sort by discount (highest = furthest below SMA200 = "dogs")
-        discount_scores.sort(key=lambda x: x[1], reverse=True)
-
-        # Take the 10 "worst" performers (highest discount = most beaten down)
-        dogs = discount_scores[:self.config.max_positions]
-
-        if dogs:
-            per_stock = min(0.90 / len(dogs), self.config.max_position_size)
-            for sym, _ in dogs:
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
                 weights[sym] = per_stock
-
         return weights
 
 
 # ---------------------------------------------------------------------------
-# 5. Quality Factor (Buffett + Quant Hybrid)
+# 4. Biotech Breakout
 # ---------------------------------------------------------------------------
-class QualityFactor(BasePersona):
-    """Quality factor: low volatility + strong trend = quality.
+class BiotechBreakout(BasePersona):
+    """Biotech innovation and catalyst strategy.
 
-    Source: AQR "Quality Minus Junk" (Asness, Frazzini, Pedersen 2019)
-
-    Buy stocks that are:
-    - Low volatility (stable earnings proxy)
-    - Above SMA200 (quality doesn't break down)
-    - Not overbought (RSI < 70)
-    - Moderate momentum (not hot, not cold)
+    Thesis: Biotech has binary outcomes — buy diversified basket,
+    overweight momentum leaders, cut losers fast.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Quality Factor (Low Vol + Trend)",
-            description="Buy low-vol stocks in uptrends — quality minus junk",
-            risk_tolerance=0.3,
-            max_position_size=0.10,
-            max_positions=15,
+            name="Biotech Breakout",
+            description="Biotech innovation: diversified basket, momentum leaders, cut losers",
+            risk_tolerance=0.8,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "MRNA", "REGN", "VRTX", "GILD", "BIIB",  # Large biotech
+                "SGEN", "ALNY", "IONS", "BMRN",  # Mid biotech
+                "XBI", "IBB", "BBH",  # Biotech ETFs
+                "ISRG", "DXCM", "HIMS",  # MedTech
+                "LLY", "ABBV", "MRK",  # Big pharma with biotech pipelines
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            # Cut losers fast (biotech-specific)
+            if sma200 is not None and price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            if price > sma50:
+                score += 1.5
+            if sma200 is not None and sma50 > sma200:
+                score += 1.0
+            if 35 < rsi < 70:
+                score += 0.5
+            # Prefer lower-vol names (less binary risk)
+            if vol and vol < 0.03:
+                score += 0.5
+
+            if score > 1.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 5. China Tech Rebound
+# ---------------------------------------------------------------------------
+class ChinaTechRebound(BasePersona):
+    """China tech ADR recovery strategy.
+
+    Thesis: China tech crackdown created deep value. Recovery plays in
+    BABA, JD, PDD etc when regulation stabilizes.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="China Tech Rebound",
+            description="China tech ADR recovery: deep value after regulatory crackdown",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "BABA", "JD", "PDD", "BIDU", "NIO", "XPEV", "LI",
+                "TME", "BILI", "NTES", "IQ", "WB",
+                "KWEB", "MCHI", "FXI",  # China ETFs
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            # Recovery signal: price crossing above SMA50
+            if price > sma50 and rsi < 60:
+                score = 2.0
+                if sma200 is not None and price > sma200:
+                    score += 1.5  # Full recovery
+                scored.append((sym, score))
+            elif rsi < 25:
+                scored.append((sym, 1.5))  # Deep oversold bounce
+            elif rsi > 75:
+                weights[sym] = 0.0  # Take profits
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 6. LatAm Growth
+# ---------------------------------------------------------------------------
+class LatAmGrowth(BasePersona):
+    """Latin American growth strategy.
+
+    Thesis: LatAm fintech, e-commerce, and commodity exporters benefit
+    from structural digitization and commodity supercycle.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="LatAm Growth",
+            description="Latin American fintech, e-commerce, commodities growth",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "MELI", "NU", "STNE", "PAGS",  # Fintech/e-commerce
+                "VALE", "PBR", "ITUB", "BSBR",  # Brazilian blue chips
+                "SQM", "GGAL",  # Chile/Argentina
+                "EWZ", "EWW", "ILF",  # LatAm ETFs
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            if price > sma50 and rsi < 65:
+                score = 1.5
+                if sma200 is not None and price > sma200:
+                    score += 1.0
+                scored.append((sym, score))
+            elif rsi < 30:
+                scored.append((sym, 1.0))
+            elif rsi > 75:
+                weights[sym] = 0.0
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 7. Infrastructure Boom
+# ---------------------------------------------------------------------------
+class InfrastructureBoom(BasePersona):
+    """Infrastructure spending megatrend.
+
+    Thesis: IIJA + CHIPS Act + global infra spending creates multi-year
+    tailwind for construction, 5G, data centers.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Infrastructure Boom",
+            description="Infrastructure spending: construction, 5G, data centers, utilities",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=10,
             rebalance_frequency="monthly",
             universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "JNJ", "PG", "KO", "PEP",
-                "V", "MA", "UNH", "HD", "MCD", "COST", "ABT",
-                "LLY", "TMO", "ACN", "AVGO", "TXN", "LIN",
-                "BRK-B", "WMT", "NEE", "DUK",
+                "CAT", "DE", "VMC", "MLM",  # Construction/materials
+                "AMT", "CCI", "EQIX", "DLR",  # Towers/data centers
+                "T", "VZ", "TMUS",  # Telecom/5G
+                "NEE", "DUK", "SO",  # Utilities
+                "PAVE", "IFRA",  # Infrastructure ETFs
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if sma200 is None:
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount > -0.10:
+                score = max(discount + 0.10, 0.01) + 0.3
+                if rsi is not None and rsi < 40:
+                    score += 0.2
+                candidates.append((sym, score))
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 8. Small Cap Deep Value
+# ---------------------------------------------------------------------------
+class SmallCapValue(BasePersona):
+    """Small cap deep value strategy.
+
+    Thesis: Small caps are inefficiently priced. Buy deeply oversold
+    small caps with volume confirmation for mean-reversion.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Small Cap Deep Value",
+            description="Small cap inefficiency: buy deeply oversold with volume spikes",
+            risk_tolerance=0.7,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "SMCI", "CELH", "CAVA", "DUOL", "RELY", "CWAN",
+                "HUBS", "SAIA", "RCL", "BURL", "DECK", "LULU",
+                "EXAS", "FTNT", "MTDR", "CEIX",
+                "IWM", "IWO", "SCHA",  # Small cap ETFs
             ],
         )
         super().__init__(config)
@@ -298,28 +499,23 @@ class QualityFactor(BasePersona):
                 continue
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
+            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-
-            if any(v is None for v in [sma200, rsi, vol]):
+            volume = self._get_indicator(data, sym, "Volume", date)
+            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            if rsi is None:
                 continue
 
-            # Quality filters
-            if price < sma200:
-                continue  # Must be above long-term trend
-            if rsi > 70:
-                continue  # Not overbought
-            if vol > 0.025:
-                continue  # Not too volatile (daily vol < 2.5%)
-
-            # Score: inverse of volatility * trend alignment
-            trend_bonus = 1.0
-            if sma50 and price > sma50:
-                trend_bonus = 1.3
-
-            quality_score = (1 / max(vol, 0.005)) * trend_bonus
-            scored.append((sym, quality_score))
+            # Deep value: oversold + volume spike
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
+            if rsi < 30 and vol_ratio > 1.5:
+                score = (30 - rsi) / 30 * 3 + vol_ratio
+                scored.append((sym, score))
+            elif bb_lower and price < bb_lower and rsi < 35:
+                score = 2.0
+                scored.append((sym, score))
+            elif rsi > 80:
+                weights[sym] = 0.0
 
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
@@ -331,102 +527,166 @@ class QualityFactor(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# 6. Tail Risk Harvest (Buy After Sharp Drops)
+# 9. Crypto Ecosystem
 # ---------------------------------------------------------------------------
-class TailRiskHarvest(BasePersona):
-    """Buy after sharp single-day drops in quality names.
+class CryptoEcosystem(BasePersona):
+    """Crypto-adjacent public companies strategy.
 
-    Research: Large single-day drops in blue chips tend to
-    mean-revert over 5-20 trading days (overreaction effect).
-
-    Implementation:
-    - Track daily returns
-    - Buy when a quality stock drops > 3% in a day with high volume
-    - Hold for ~20 trading days, then re-evaluate
+    Thesis: Crypto adoption creates value for miners, exchanges,
+    and companies with BTC on balance sheet.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Tail Risk Harvest (Buy Crashes)",
-            description="Buy quality names after sharp single-day drops, capture mean-reversion",
-            risk_tolerance=0.6,
-            max_position_size=0.15,
-            max_positions=8,
+            name="Crypto Ecosystem",
+            description="Crypto-adjacent: miners, exchanges, BTC treasury companies",
+            risk_tolerance=0.9,
+            max_position_size=0.20,
+            max_positions=6,
             rebalance_frequency="daily",
             universe=universe or [
-                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
-                "JPM", "V", "MA", "UNH", "JNJ", "PG",
-                "HD", "MCD", "KO", "WMT",
+                "COIN", "MARA", "RIOT", "CLSK",  # Mining/exchange
+                "MSTR", "HUT",  # BTC treasury
+                "SQ", "PYPL",  # Payment + crypto
+                "BITO", "IBIT",  # Bitcoin ETFs
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
-        crash_buys = []
+        scored = []
 
         for sym in self.config.universe:
             if sym not in prices:
                 continue
             price = prices[sym]
-            daily_ret = self._get_indicator(data, sym, "daily_return", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            sma20 = self._get_indicator(data, sym, "sma_20", date)
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             volume = self._get_indicator(data, sym, "Volume", date)
             vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
-
-            if daily_ret is None:
+            if any(v is None for v in [sma20, rsi]):
                 continue
 
-            # Exit recovered positions (RSI > 60 = recovered from crash)
-            if rsi and rsi > 65 and sma200 and price > sma200:
-                pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0:
-                    weights[sym] = 0.0
-                    continue  # Don't consider for crash buy
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
 
-            # Crash buy signal: sharp drop + above SMA200 (still quality)
-            if daily_ret < -0.03:  # > 3% drop
-                vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
-                if sma200 and price > sma200 * 0.90:
-                    # Quality + crash = buy
-                    score = abs(daily_ret) * 10
-                    if vol_ratio > 2:
-                        score *= 1.5  # Panic selling = better opportunity
-                    crash_buys.append((sym, score))
+            # Crypto is momentum-driven — ride breakouts
+            if price > sma20 and rsi < 75 and vol_ratio > 1.2:
+                score = 2.0 + vol_ratio
+                if sma50 and price > sma50:
+                    score += 1.0
+                scored.append((sym, score))
+            elif rsi > 85:
+                weights[sym] = 0.0
+            elif rsi < 20 and vol_ratio > 2:
+                scored.append((sym, 3.0))  # Capitulation buy
 
-        crash_buys.sort(key=lambda x: x[1], reverse=True)
-        top = crash_buys[:self.config.max_positions]
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
         if top:
-            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            total_score = sum(s for _, s in top)
+            for sym, score in top:
+                w = min((score / total_score) * 0.90, self.config.max_position_size)
+                weights[sym] = w
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 10. Aging Population
+# ---------------------------------------------------------------------------
+class AgingPopulation(BasePersona):
+    """Aging population demographic megatrend.
+
+    Thesis: Global aging drives demand for healthcare, senior living,
+    pharmaceuticals, and medical devices.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Aging Population",
+            description="Demographic megatrend: healthcare, pharma, senior care",
+            risk_tolerance=0.3,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "UNH", "HUM", "CI", "ELV",  # Health insurance
+                "JNJ", "PFE", "MRK", "LLY", "ABBV",  # Big pharma
+                "ISRG", "SYK", "MDT", "ABT",  # Medical devices
+                "XLV", "VHT",  # Healthcare ETFs
+                "WELL", "VTR",  # Senior housing REITs
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if sma200 is None:
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            # Defensive: buy near or below SMA200
+            if discount > -0.10:
+                score = max(discount + 0.10, 0.01) + 0.3
+                if rsi is not None and rsi < 40:
+                    score += 0.1
+                candidates.append((sym, score))
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-
         return weights
 
 
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
-UNCONVENTIONAL_STRATEGIES = {
-    "sell_in_may": SellInMayGoAway,
-    "turn_of_month": TurnOfMonth,
-    "vix_mean_reversion": VIXMeanReversion,
-    "dogs_of_dow": DogsOfTheDow,
-    "quality_factor": QualityFactor,
-    "tail_risk_harvest": TailRiskHarvest,
+THEME_STRATEGIES = {
+    "ai_revolution": AIRevolution,
+    "clean_energy": CleanEnergy,
+    "defense_aerospace": DefenseAerospace,
+    "biotech_breakout": BiotechBreakout,
+    "china_tech_rebound": ChinaTechRebound,
+    "latam_growth": LatAmGrowth,
+    "infrastructure_boom": InfrastructureBoom,
+    "small_cap_value": SmallCapValue,
+    "crypto_ecosystem": CryptoEcosystem,
+    "aging_population": AgingPopulation,
 }
 
 
-def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
-    cls = UNCONVENTIONAL_STRATEGIES.get(name)
+def get_theme_strategy(name: str, **kwargs) -> BasePersona:
+    cls = THEME_STRATEGIES.get(name)
     if cls is None:
-        raise ValueError(f"Unknown: {name}. Available: {list(UNCONVENTIONAL_STRATEGIES.keys())}")
+        raise ValueError(f"Unknown theme: {name}. Available: {list(THEME_STRATEGIES.keys())}")
     return cls(**kwargs)
 
 
+def list_theme_strategies():
+    result = []
+    for key, cls in THEME_STRATEGIES.items():
+        instance = cls()
+        result.append({
+            "key": key,
+            "name": instance.config.name,
+            "description": instance.config.description,
+        })
+    return result
+
+
 if __name__ == "__main__":
-    print("=== Unconventional Strategies ===\n")
-    for key, cls in UNCONVENTIONAL_STRATEGIES.items():
-        inst = cls()
-        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")
+    print("=== Theme-Based Strategies ===\n")
+    for p in list_theme_strategies():
+        print(f"  {p['key']:25s} | {p['name']:30s} | {p['description']}")

@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused imports** — `Any`, `Dict`, `List`, `Optional` from `typing`, plus `numpy` (`np`) and `pandas` (`pd`) which were never referenced in the file
+- **Fixed 12 truthiness bugs** across all 10 strategies — `if rsi and ...`, `if sma200 and ...`, `if macd and ...`, `if volume and ...` → explicit `is not None` checks. A 0.0 value (valid indicator reading) would have been incorrectly treated as missing data, skipping signals entirely.
+- **Fixed division-by-zero in `CleanEnergy`** — `abs(price - sma50) / sma50` now guarded with `sma50 > 0` instead of truthiness check
+- **Simplified awkward guard in `SmallCapValue`** — `any(v is None for v in [rsi])` → `if rsi is None`
+- **Modernized type hints** — replaced `Optional[List[str]]` with `list[str] | None` across all 10 classes (already guarded by `from __future__ import annotations`)

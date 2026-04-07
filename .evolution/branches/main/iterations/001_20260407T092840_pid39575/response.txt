@@ -1,0 +1,7 @@
+All edits pass syntax check. Summary of changes:
+
+- **Removed unused imports** `Any`, `Dict` from typing
+- **Removed 3 redundant `max(0, loc-60)` guards** — `loc >= 60` is already guaranteed by the `if loc < 60: continue` check above each one
+- **Fixed NaN bug in ZScoreReversion** — `std <= 0` doesn't catch NaN (since `NaN <= 0` is `False`), changed to `not (std > 0)` which correctly skips both zero and NaN std
+- **Simplified VolatilityBreakout position sizing** — removed misleading `total_value = 100_000` intermediate; the algebra `(total_value * r) / atr * price / total_value` simplifies to `r * price / atr`
+- **Fixed EqualRiskContrib fallback** — hardcoded `{"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}` could return symbols not in a custom universe; now filters to only universe members

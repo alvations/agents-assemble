@@ -13,7 +13,7 @@ Strategies:
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -68,7 +68,7 @@ class KellyOptimal(BasePersona):
             loc = df.index.get_loc(date)
             if loc < 60:
                 continue
-            window = df["daily_return"].iloc[loc-60:loc+1].dropna()
+            window = df["daily_return"].iloc[max(0, loc-60):loc+1].dropna()
             if len(window) < 30:
                 continue
 
@@ -155,13 +155,13 @@ class ZScoreReversion(BasePersona):
             if loc < 60:
                 continue
 
-            window = df["Close"].iloc[loc-60:loc+1]
+            window = df["Close"].iloc[max(0, loc-60):loc+1]
             if len(window) < 30:
                 continue
 
             mean = window.mean()
             std = window.std()
-            if not (std > 0):
+            if std <= 0:
                 continue
 
             price = prices[sym]
@@ -249,7 +249,7 @@ class HurstExponent(BasePersona):
             if loc < 60:
                 continue
 
-            returns = df["daily_return"].iloc[loc-60:loc+1].dropna()
+            returns = df["daily_return"].iloc[max(0, loc-60):loc+1].dropna()
             hurst = self._estimate_hurst(returns)
 
             price = prices[sym]
@@ -352,11 +352,14 @@ class VolatilityBreakout(BasePersona):
         top = scored[:self.config.max_positions]
 
         if top:
+            # ATR-based position sizing
             risk_per_position = 0.02  # 2% of portfolio per position
+            total_value = 100_000  # Approximate
             for sym, score, atr in top:
                 if atr > 0:
-                    # w = risk_budget * price / ATR (total_value cancels out)
-                    w = min(risk_per_position * prices[sym] / atr,
+                    # Position size = (risk_budget) / ATR
+                    shares_by_risk = (total_value * risk_per_position) / atr
+                    w = min((shares_by_risk * prices[sym]) / total_value,
                             self.config.max_position_size)
                     weights[sym] = w
 
@@ -414,12 +417,8 @@ class EqualRiskContrib(BasePersona):
                 eligible.append((sym, vol))
 
         if not eligible:
-            # Everything bearish → defensive allocation from available universe
-            fallback = {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
-            available = {s: w for s, w in fallback.items() if s in self.config.universe}
-            if available:
-                return available
-            return {}
+            # Everything bearish → bonds only
+            return {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
 
         # ERC: weight inversely proportional to vol
         total_inv_vol = sum(1 / v for _, v in eligible)

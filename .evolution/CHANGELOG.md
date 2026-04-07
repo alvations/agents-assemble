@@ -210,3 +210,19 @@ All changes pass syntax check. Summary:
 - **Precomputed `_SQRT_252` as module-level constant** — the only numpy usage was `np.sqrt(252)` inside `VIXMeanReversion.generate_signals`, recomputed on every backtest bar; now computed once at import time
 - **Fixed VIXMe
 
+## [2026-04-07T09:30:17.747010+00:00] Branch: main | Run: 20260407T092840_pid39575 | Iter 1 | $0.3694
+### math_strategies.py
+All edits pass syntax check. Summary of changes:
+
+- **Removed unused imports** `Any`, `Dict` from typing
+- **Removed 3 redundant `max(0, loc-60)` guards** — `loc >= 60` is already guaranteed by the `if loc < 60: continue` check above each one
+- **Fixed NaN bug in ZScoreReversion** — `std <= 0` doesn't catch NaN (since `NaN <= 0` is `False`), changed to `not (std > 0)` which correctly skips both zero and NaN std
+- **Simplified VolatilityBreakout position sizing** — removed misleading `total_value
+
+## [2026-04-07T09:30:30.355844+00:00] Branch: main | Run: 20260407T092841_pid39593 | Iter 7 | $0.5853
+### theme_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused imports** — `Any`, `Dict`, `List`, `Optional` from `typing`, plus `numpy` (`np`) and `pandas` (`pd`) which were never referenced in the file
+- **Fixed 12 truthiness bugs** across all 10 strategies — `if rsi and ...`, `if sma200 and ...`, `if macd and ...`, `if volume and ...` → explicit `is not None` checks. A 0.0 value (valid indicator reading) would have been incorrectly treated as missing data, skipping signals entirely
+

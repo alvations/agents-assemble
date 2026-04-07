@@ -1,0 +1,24 @@
+You are improving the Python file at: /Users/alvas/jean-claude/agents-assemble/math_strategies.py
+
+Your approach:
+1. Read the file to understand the full codebase
+2. Plan 3-5 specific, concrete improvements
+3. Implement each improvement using the Edit tool — make targeted changes, NOT full rewrites
+4. After all edits, verify syntax by running: python -c "import ast; ast.parse(open('/Users/alvas/jean-claude/agents-assemble/math_strategies.py').read())"
+5. End with a brief summary of what you changed (2-5 bullet points)
+
+Focus areas:
+- Bug fixes (correctness, edge cases, error handling at boundaries)
+- Performance (unnecessary work, subprocess efficiency)
+- API ergonomics (clearer names, better defaults)
+- Type safety and Python best practices
+- Removing dead code or unnecessary complexity
+
+Rules:
+- Do NOT remove existing public API — only extend or fix
+- Do NOT add docstrings or comments to code you did not change
+- Do NOT add new third-party dependencies
+- Make each change individually with the Edit tool — small, focused edits
+- If nothing needs improving, say NO_CHANGES_NEEDED without making any edits
+
+

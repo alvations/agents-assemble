@@ -19,6 +19,11 @@ Themes:
 
 from __future__ import annotations
 
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
+
 from personas import BasePersona, PersonaConfig
 
 
@@ -34,7 +39,7 @@ class AIRevolution(BasePersona):
     Signals: Buy on trend alignment (SMA50 > SMA200), momentum.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="AI Revolution",
             description="AI megatrend: GPUs, cloud, data centers, AI applications",
@@ -79,9 +84,9 @@ class AIRevolution(BasePersona):
                 score += 3.0  # Full trend alignment
             elif price > sma50:
                 score += 1.5
-            if macd is not None and macd_sig is not None and macd > macd_sig:
+            if macd and macd_sig and macd > macd_sig:
                 score += 1.0
-            if 40 < rsi < 75:
+            if rsi and 40 < rsi < 75:
                 score += 0.5
 
             if score > 2:
@@ -106,7 +111,7 @@ class CleanEnergy(BasePersona):
     Buy solar, wind, EV, battery, and grid companies.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Clean Energy Transition",
             description="Renewables, EVs, batteries: buy the green transition",
@@ -139,9 +144,9 @@ class CleanEnergy(BasePersona):
                 continue
 
             # Buy dips in uptrend or recovery from oversold
-            if sma200 is not None and price > sma200 and rsi < 55:
+            if sma200 and price > sma200 and rsi < 55:
                 score = 2.0
-                if sma50 > 0 and abs(price - sma50) / sma50 < 0.05:
+                if sma50 and abs(price - sma50) / sma50 < 0.05:
                     score += 1.0  # Near SMA50 support
                 scored.append((sym, score))
             elif rsi < 30:
@@ -167,7 +172,7 @@ class DefenseAerospace(BasePersona):
     Thesis: Geopolitical tensions drive sustained defense spending.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Defense & Aerospace",
             description="Defense spending boom: contractors, space, cybersecurity",
@@ -203,7 +208,7 @@ class DefenseAerospace(BasePersona):
             if discount > -0.10 and (rsi is None or rsi < 65):
                 score = max(discount + 0.10, 0.01) + 0.3
                 candidates.append((sym, score))
-            elif rsi is not None and rsi > 80:
+            elif rsi and rsi > 80:
                 weights[sym] = 0.05
 
         candidates.sort(key=lambda x: x[1], reverse=True)
@@ -225,7 +230,7 @@ class BiotechBreakout(BasePersona):
     overweight momentum leaders, cut losers fast.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Biotech Breakout",
             description="Biotech innovation: diversified basket, momentum leaders, cut losers",
@@ -259,14 +264,14 @@ class BiotechBreakout(BasePersona):
                 continue
 
             # Cut losers fast (biotech-specific)
-            if sma200 is not None and price < sma200 * 0.85:
+            if sma200 and price < sma200 * 0.85:
                 weights[sym] = 0.0
                 continue
 
             score = 0.0
             if price > sma50:
                 score += 1.5
-            if sma200 is not None and sma50 > sma200:
+            if sma200 and sma50 > sma200:
                 score += 1.0
             if 35 < rsi < 70:
                 score += 0.5
@@ -296,7 +301,7 @@ class ChinaTechRebound(BasePersona):
     BABA, JD, PDD etc when regulation stabilizes.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="China Tech Rebound",
             description="China tech ADR recovery: deep value after regulatory crackdown",
@@ -329,7 +334,7 @@ class ChinaTechRebound(BasePersona):
             # Recovery signal: price crossing above SMA50
             if price > sma50 and rsi < 60:
                 score = 2.0
-                if sma200 is not None and price > sma200:
+                if sma200 and price > sma200:
                     score += 1.5  # Full recovery
                 scored.append((sym, score))
             elif rsi < 25:
@@ -356,7 +361,7 @@ class LatAmGrowth(BasePersona):
     from structural digitization and commodity supercycle.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="LatAm Growth",
             description="Latin American fintech, e-commerce, commodities growth",
@@ -389,7 +394,7 @@ class LatAmGrowth(BasePersona):
 
             if price > sma50 and rsi < 65:
                 score = 1.5
-                if sma200 is not None and price > sma200:
+                if sma200 and price > sma200:
                     score += 1.0
                 scored.append((sym, score))
             elif rsi < 30:
@@ -416,7 +421,7 @@ class InfrastructureBoom(BasePersona):
     tailwind for construction, 5G, data centers.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Infrastructure Boom",
             description="Infrastructure spending: construction, 5G, data centers, utilities",
@@ -450,7 +455,7 @@ class InfrastructureBoom(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
-                if rsi is not None and rsi < 40:
+                if rsi and rsi < 40:
                     score += 0.2
                 candidates.append((sym, score))
 
@@ -473,7 +478,7 @@ class SmallCapValue(BasePersona):
     small caps with volume confirmation for mean-reversion.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Small Cap Deep Value",
             description="Small cap inefficiency: buy deeply oversold with volume spikes",
@@ -503,11 +508,11 @@ class SmallCapValue(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             volume = self._get_indicator(data, sym, "Volume", date)
             vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
-            if rsi is None:
+            if any(v is None for v in [rsi]):
                 continue
 
             # Deep value: oversold + volume spike
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
             if rsi < 30 and vol_ratio > 1.5:
                 score = (30 - rsi) / 30 * 3 + vol_ratio
                 scored.append((sym, score))
@@ -536,7 +541,7 @@ class CryptoEcosystem(BasePersona):
     and companies with BTC on balance sheet.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Crypto Ecosystem",
             description="Crypto-adjacent: miners, exchanges, BTC treasury companies",
@@ -569,7 +574,7 @@ class CryptoEcosystem(BasePersona):
             if any(v is None for v in [sma20, rsi]):
                 continue
 
-            vol_ratio = volume / vol_avg if volume is not None and vol_avg and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
 
             # Crypto is momentum-driven — ride breakouts
             if price > sma20 and rsi < 75 and vol_ratio > 1.2:
@@ -602,7 +607,7 @@ class AgingPopulation(BasePersona):
     pharmaceuticals, and medical devices.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Aging Population",
             description="Demographic megatrend: healthcare, pharma, senior care",
@@ -637,7 +642,7 @@ class AgingPopulation(BasePersona):
             # Defensive: buy near or below SMA200
             if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
-                if rsi is not None and rsi < 40:
+                if rsi and rsi < 40:
                     score += 0.1
                 candidates.append((sym, score))
 
