@@ -1,0 +1,22 @@
+{
+  "LI": {
+    "strategy": "momentum_14d",
+    "win_rate": 0.6363636363636364,
+    "total_return": 1.4667276935504603
+  },
+  "XLK": {
+    "strategy": "buy_dip_14d",
+    "win_rate": 0.8333333333333334,
+    "total_return": 0.5814223687098548
+  },
+  "ALB": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.6363636363636364,
+    "total_return": 0.6997354656039758
+  },
+  "ERIC": {
+    "strategy": "momentum_30d",
+    "win_rate": 0.7272727272727273,
+    "total_return": 1.1229991468918845
+  }
+}
