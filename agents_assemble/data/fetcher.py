@@ -805,6 +805,20 @@ UNIVERSE = {
         "PLTR", "IRDM", "VSAT",
         "ARKX",  # Space ETF
     ],
+    # Frontier / underexplored markets
+    "frontier_etf": ["VNM", "EIDO", "FM", "FRN"],
+    # Copper / uranium / lithium (commodity supercycle plays)
+    "copper_uranium_lithium": [
+        "SCCO", "COPX", "FCX",  # Copper
+        "URA", "CCJ", "UUUU", "NXE",  # Uranium
+        "LIT", "ALB", "SQM",  # Lithium
+    ],
+    # Recent IPOs with momentum
+    "recent_ipos": ["ARM", "VRT", "RDDT", "BIRK", "CART"],
+    # Data center infrastructure (AI capex beneficiaries)
+    "data_centers": ["VRT", "EQIX", "DLR", "AMT", "DELL", "HPE", "SMCI"],
+    # LatAm expanded (from research)
+    "latam_expanded": ["COPA", "ARCO", "TV", "LOMA", "CRESY"],
     # Dividend Aristocrats (25+ years consecutive increases, S&P 500)
     "dividend_aristocrats": [
         "JNJ", "PG", "KO", "PEP", "ABBV", "MRK", "MMM", "ABT", "CL", "EMR",
