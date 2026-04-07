@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `QuantStrategist` single-pass redistribution losing budget** (lines 495-511) — The old code split entries into capped/uncapped and did one round of redistribution, but if the redistribution pushed uncapped entries over cap, the `min()` clip silently discarded the excess. Replaced with the iterative while-loop pattern (already used by MemeStockTrader and SectorRotation) that keeps redistributing until no entries exceed cap.
+- **Fixed `DividendInvestor` trim weight violating `max_position_size`** (line 409) — The hardcoded `0.05` weight for trimmed positions (30%+ above SMA200) could exceed a custom `max_position_size` (e.g., 0.03). Now caps at `min(0.05, self.config.max_position_size)`.
+- **Removed redundant `or` in `EnsembleStrategist.__init__`** (line 905) — `universe or all_syms` was always equivalent to `all_syms` since the `if/else` above already sets `all_syms = universe` when `universe` is not None.

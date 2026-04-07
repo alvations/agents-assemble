@@ -406,7 +406,7 @@ class DividendInvestor(BasePersona):
                 candidates.append((sym, score + 0.5))  # Base score ensures we hold
             elif discount < -0.30:
                 # Way above SMA200 — trim
-                weights[sym] = min(0.05, self.config.max_position_size)
+                weights[sym] = 0.05  # Keep small position
 
         # Rank by score, take top max_positions, equal weight
         candidates.sort(key=lambda x: x[1], reverse=True)
@@ -492,25 +492,19 @@ class QuantStrategist(BasePersona):
             for sym, score, vol in top:
                 inv_vol = 1 / max(vol, 0.005)
                 raw[sym] = (inv_vol / total_inv_vol) * 0.85
-            # Iteratively redistribute clipped excess so budget isn't lost
-            remaining = dict(raw)
-            while remaining:
-                over = {s: w for s, w in remaining.items() if w > cap}
-                if not over:
-                    break
-                excess = sum(w - cap for w in over.values())
-                for sym in over:
+            # Redistribute clipped excess so budget isn't lost
+            uncapped = {s: w for s, w in raw.items() if w <= cap}
+            capped = {s: w for s, w in raw.items() if w > cap}
+            if capped and uncapped:
+                excess = sum(w - cap for w in capped.values())
+                uncapped_total = sum(uncapped.values())
+                for sym in capped:
                     weights[sym] = cap
-                    del remaining[sym]
-                if not remaining:
-                    break
-                under_total = sum(remaining.values())
-                if under_total <= 0:
-                    break
-                for sym in remaining:
-                    remaining[sym] += excess * (remaining[sym] / under_total)
-            for sym, w in remaining.items():
-                weights[sym] = min(w, cap)
+                for sym, w in uncapped.items():
+                    weights[sym] = min(w + excess * (w / uncapped_total), cap)
+            else:
+                for sym, w in raw.items():
+                    weights[sym] = min(w, cap)
 
         return weights
 
@@ -902,7 +896,7 @@ class EnsembleStrategist(BasePersona):
             max_position_size=0.15,
             max_positions=12,
             rebalance_frequency="weekly",
-            universe=all_syms,
+            universe=universe or all_syms,
         )
         super().__init__(config)
         # Sub-strategies with weights — use resolved universe so custom overrides propagate

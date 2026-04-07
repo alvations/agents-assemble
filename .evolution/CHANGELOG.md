@@ -578,3 +578,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed MultiFactorSmartBeta stale positions** (line 179) — When no stock passes the composite score threshold of 0.25, now returns explicit 0.0 weights for all universe symbols, so the backtester closes existing positions. Previously returned `{}` which skipped rebalancing, leaving bull-market positions stranded through bear markets.
 - **Fixed LowVolAnomaly stale positions** (line 250) — Same pattern: when all stocks fail the vol/SMA200 f
 
+## [2026-04-07T14:52:55.348301+00:00] Branch: main | Run: 20260407T142709_pid61050 | Iter 26 | $2.2116
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `QuantStrategist` single-pass redistribution losing budget** (lines 495-511) — The old code split entries into capped/uncapped and did one round of redistribution, but if the redistribution pushed uncapped entries over cap, the `min()` clip silently discarded the excess. Replaced with the iterative while-loop pattern (already used by MemeStockTrader and SectorRotation) that keeps redistributing until no entries exceed cap.
+- **Fixe
+

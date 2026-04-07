@@ -24,6 +24,7 @@ FILE_MAP = {
     "research_strategies.py": "agents_assemble/strategies/research.py",
     "math_strategies.py": "agents_assemble/strategies/math.py",
     "hedge_fund_strategies.py": "agents_assemble/strategies/hedge_fund.py",
+    "news_event_strategies.py": "agents_assemble/strategies/news_event.py",
 }
 
 # Import rewrites: flat import -> package import
