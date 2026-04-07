@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `fetch_fred_series` crash on FRED API error responses** — HTTP 200 responses with `error_message` or missing `observations` key (e.g., invalid series ID) would `KeyError`; now raises descriptive `ValueError`. Empty observations return an empty DataFrame instead of crashing on `df["date"]`.
+- **Fixed `scan_52_week_lows` truthiness bugs** — `price and low_52 and high_52` → explicit `is not None` checks; a stock at exactly $0.00 price was silently skipped.
+- **Fixed division-by-zero in `fetch_sector_performance` and `fetch_market_breadth`** — `hist["Close"].iloc[0]` could be 0.0 or NaN, causing division by zero; now guarded.
+- **Fixed `fetch_ohlcv` accepting all-NaN DataFrames** — `ticker.history()` can return non-empty DataFrames where Close is all NaN (delisted/suspended tickers); now drops NaN Close rows and raises if none remain.
+- **Fixed `screen_by_fundamentals` rejecting stocks with missing data** — `(f["market_cap"] or 0)` and `(f["dividend_yield"] or 0)` treated `None` as 0, silently filtering out stocks with missing fundamentals; now skips the filter when data is unavailable.

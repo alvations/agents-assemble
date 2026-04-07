@@ -501,3 +501,38 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `MichaelBurry` `bb_lower` truthiness bug (line 365)**: `bb_lower and price < bb_lower` → `bb_lower is not None and price < bb_lower` — a Bollinger lower band of exactly 0.0 (extreme case) would skip the deep-oversold entry signal
 - **Fixed `SupportResistanceCommodity` `atr` truthiness bug (line 1083)**: `if atr and atr > 0:` → `if atr is not None and atr > 0:` — an ATR of 0.0 would skip the risk-normalization sizing, using unscaled
 
+## [2026-04-07T10:35:11.192918+00:00] Branch: main | Run: 20260407T103325_pid51573 | Iter 23 | $0.4941
+### judge.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_safe_float` treating `bool` as numeric** — `isinstance(True, int)` is `True` in Python, so `_safe_float(True)` silently returned `1.0`, making `alpha=True` grade as "A". Added early `isinstance(value, bool)` guard to return NaN instead.
+- **Fixed NaN metrics appearing in strengths/weaknesses** — NaN-valued metrics (from missing data) got grade "F" and showed as `"sharpe_ratio: nan (F)"` in weaknesses. Now skipped via `math.isfini
+
+## [2026-04-07T10:35:44.195991+00:00] Branch: main | Run: 20260407T103016_pid51115 | Iter 23 | $0.7123
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_get_indicator` crash on duplicate index dates** (line 88) — `df.loc[date, indicator]` returns a `pd.Series` when the DataFrame index has duplicate entries, causing `pd.isna(val)` to raise "ambiguous truth value". Now takes `.iloc[-1]` when a Series is returned.
+- **Fixed `QuantStrategist` weight capping discarding unallocated capital** (lines 466-483) — When low-vol stocks' inverse-vol weights exceeded `max_position_size`, the cl
+
+## [2026-04-07T10:36:04.795911+00:00] Branch: main | Run: 20260407T102920_pid50912 | Iter 23 | $0.9811
+### data_fetcher.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `fetch_fred_series` crash on FRED API error responses** — HTTP 200 responses with `error_message` or missing `observations` key (e.g., invalid series ID) would `KeyError`; now raises descriptive `ValueError`. Empty observations return an empty DataFrame instead of crashing on `df["date"]`.
+- **Fixed `scan_52_week_lows` truthiness bugs** — `price and low_52 and high_52` → explicit `is not None` checks; a stock at exactly $0.00 price
+
+## [2026-04-07T10:37:03.053277+00:00] Branch: main | Run: 20260407T103325_pid51573 | Iter 24 | $0.4429
+### judge.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_safe_float` inf leak** — `float('inf')` and `float('-inf')` now return NaN instead of passing through. Prevents `inf > 0` → True from triggering misleading suggestions like "scale up position sizes" on a strategy with nonsensical metrics.
+- **Fixed 0-trade diagnosis** — `num_trades == 0` now gets a distinct message ("signals may never trigger or universe is empty") instead of the misleading "too selective, missing opportunities" 
+
+## [2026-04-07T10:38:13.745520+00:00] Branch: main | Run: 20260407T102920_pid50912 | Iter 24 | $0.7245
+### data_fetcher.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `fetch_multiple_ohlcv` batch path missing NaN Close filter** — Individual `fetch_ohlcv` drops rows with NaN Close, but the batch `yf.download` path only did `dropna(how="all")`, allowing rows with NaN Close into results. Added `dropna(subset=["Close"])` for consistency.
+- **Fixed `fetch_fred_series` empty observations returning wrong structure** — Returned `pd.DataFrame(columns=["value"])` with a RangeIndex instead of a DatetimeInd
+

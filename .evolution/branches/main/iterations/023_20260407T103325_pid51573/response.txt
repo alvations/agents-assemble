@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_safe_float` treating `bool` as numeric** — `isinstance(True, int)` is `True` in Python, so `_safe_float(True)` silently returned `1.0`, making `alpha=True` grade as "A". Added early `isinstance(value, bool)` guard to return NaN instead.
+- **Fixed NaN metrics appearing in strengths/weaknesses** — NaN-valued metrics (from missing data) got grade "F" and showed as `"sharpe_ratio: nan (F)"` in weaknesses. Now skipped via `math.isfinite` check.
+- **Fixed `rank_strategies` displaying "0.00" for missing metrics** — Missing sharpe/alpha/max_dd/total_return defaulted to `0`, showing misleading values in the report. Now default to NaN → "N/A" via `_fmt`.
+- **Fixed `suggest_parameter_tuning` NaN format strings** — Four format expressions (`max_dd:.1%`, `vol:.1%`, `win_rate:.1%`, `sharpe:.2f`) produced ugly `"nan%"` output when metrics were NaN. Now use `math.isfinite` guards to show "N/A".

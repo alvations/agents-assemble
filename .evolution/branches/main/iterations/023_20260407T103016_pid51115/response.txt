@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_get_indicator` crash on duplicate index dates** (line 88) — `df.loc[date, indicator]` returns a `pd.Series` when the DataFrame index has duplicate entries, causing `pd.isna(val)` to raise "ambiguous truth value". Now takes `.iloc[-1]` when a Series is returned.
+- **Fixed `QuantStrategist` weight capping discarding unallocated capital** (lines 466-483) — When low-vol stocks' inverse-vol weights exceeded `max_position_size`, the clipped excess was lost (same bug class fixed in iterations 19-21 for other strategies). Now redistributes excess proportionally to uncapped positions.
+- **Fixed `EnsembleStrategist` consensus_factor diluted by failed strategies** (line 892) — Used `len(self._sub_strategies)` (always 4) instead of `len(all_signals)` (strategies that actually ran), so when a sub-strategy throws an exception, consensus weight was incorrectly diluted by 25%.
+- **Avoided `EnsembleStrategist.__init__` creating 4 throwaway instances** (lines 838-845) — When `universe` is explicitly passed, the default `cls().config.universe` aggregation was still executed, creating and discarding 4 persona instances unnecessarily.

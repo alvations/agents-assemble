@@ -86,8 +86,6 @@ class BasePersona(ABC):
             except (IndexError, KeyError):
                 return None
         val = df.loc[date, indicator]
-        if isinstance(val, pd.Series):
-            val = val.iloc[-1]
         if pd.isna(val):
             return None
         return float(val)
@@ -464,29 +462,15 @@ class QuantStrategist(BasePersona):
                 # Overbought — close position
                 weights[sym] = 0.0
 
-        # Vol-weighted sizing with cap redistribution
+        # Vol-weighted sizing
         if candidates:
             candidates.sort(key=lambda x: x[1], reverse=True)
             top = candidates[:self.config.max_positions]
             total_inv_vol = sum(1 / max(v, 0.005) for _, _, v in top)
-            cap = self.config.max_position_size
-            raw = {}
             for sym, score, vol in top:
                 inv_vol = 1 / max(vol, 0.005)
-                raw[sym] = (inv_vol / total_inv_vol) * 0.85
-            # Redistribute clipped excess so budget isn't lost
-            uncapped = {s: w for s, w in raw.items() if w <= cap}
-            capped = {s: w for s, w in raw.items() if w > cap}
-            if capped and uncapped:
-                excess = sum(w - cap for w in capped.values())
-                uncapped_total = sum(uncapped.values())
-                for sym in capped:
-                    weights[sym] = cap
-                for sym, w in uncapped.items():
-                    weights[sym] = min(w + excess * (w / uncapped_total), cap)
-            else:
-                for sym, w in raw.items():
-                    weights[sym] = min(w, cap)
+                raw_w = (inv_vol / total_inv_vol) * 0.85
+                weights[sym] = min(raw_w, self.config.max_position_size)
 
         return weights
 
@@ -851,13 +835,10 @@ class EnsembleStrategist(BasePersona):
     """
 
     def __init__(self, universe: list[str] | None = None):
-        if universe is None:
-            all_syms = list(dict.fromkeys(
-                sym for cls in [BuffettValue, MomentumTrader, GrowthInvestor, DividendInvestor]
-                for sym in cls().config.universe
-            ))
-        else:
-            all_syms = universe
+        all_syms = list(dict.fromkeys(
+            sym for cls in [BuffettValue, MomentumTrader, GrowthInvestor, DividendInvestor]
+            for sym in cls().config.universe
+        ))
         config = PersonaConfig(
             name="Ensemble Strategist",
             description="Multi-strategy consensus: momentum + value + growth + dividend",
@@ -904,11 +885,11 @@ class EnsembleStrategist(BasePersona):
 
         # Only take positions where 2+ strategies agree (consensus)
         weights = {}
-        n_ran = len(all_signals)
+        n_strategies = len(self._sub_strategies)
         for sym, info in combined.items():
             if info["signal_count"] >= 2:
-                # Scale weight by consensus strength among strategies that actually ran
-                consensus_factor = info["signal_count"] / n_ran
+                # Scale weight by consensus strength (use total strategies, not just successful ones)
+                consensus_factor = info["signal_count"] / n_strategies
                 w = min(info["total_weight"] * consensus_factor,
                         self.config.max_position_size)
                 weights[sym] = w

@@ -57,8 +57,7 @@ def _safe_float(value: Any) -> float:
     if isinstance(value, bool):
         return float("nan")
     if isinstance(value, (int, float)):
-        v = float(value)
-        return v if math.isfinite(v) else float("nan")
+        return float(value)
     return float("nan")
 
 
@@ -153,10 +152,7 @@ def diagnose_strategy(
         suggestions.append("High trade count increases transaction costs — consider longer holding periods")
         suggestions.append("Increase rebalance frequency threshold or add minimum holding period")
 
-    if num_trades == 0:
-        suggestions.append("Strategy generated zero trades — signals may never trigger or universe is empty")
-        suggestions.append("Check entry criteria, data availability, and that universe symbols have price data")
-    elif num_trades < 20:
+    if num_trades < 20:
         suggestions.append("Very few trades — strategy may be too selective, missing opportunities")
         suggestions.append("Relax entry criteria or expand the universe of tradeable instruments")
 
@@ -277,10 +273,8 @@ def generate_judge_report(results: list[dict[str, Any]]) -> str:
             lines.append("Continue iterating on strategy design and parameter tuning.")
 
         if len(ranked) >= 3:
-            ensemble = [r for r in ranked[:3] if r["composite_score"] >= 55]
-            if len(ensemble) >= 2:
-                lines.append(f"\n**Ensemble candidate:** Combine top {len(ensemble)}: "
-                             f"{', '.join(r['name'] for r in ensemble)}")
+            lines.append(f"\n**Ensemble candidate:** Combine top 3: "
+                         f"{', '.join(r['name'] for r in ranked[:3])}")
 
     return "\n".join(lines)
 
@@ -353,15 +347,6 @@ def suggest_parameter_tuning(
             "current": "8-10",
             "suggested": "6-8 (concentrate in winners)",
             "reason": f"Good Sharpe {_fmt_f(sharpe)} — concentrating in fewer high-conviction picks may increase returns."
-        })
-
-    pf = _safe_float(metrics.get("profit_factor"))
-    if pf < 1.0:
-        suggestions.append({
-            "parameter": "exit_strategy",
-            "current": "rebalance-only",
-            "suggested": "Add trailing stop or time-based exit",
-            "reason": f"Profit factor {_fmt_f(pf)} < 1.0 — losses exceed gains. Cut losers faster or let winners run longer."
         })
 
     return suggestions

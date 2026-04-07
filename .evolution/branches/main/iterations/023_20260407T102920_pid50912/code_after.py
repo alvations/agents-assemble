@@ -200,8 +200,6 @@ def fetch_multiple_ohlcv(
             for sym in uncached:
                 try:
                     df = data[sym].dropna(how="all")
-                    if "Close" in df.columns:
-                        df = df.dropna(subset=["Close"])
                     if not df.empty:
                         results[sym] = df
                         _cache_set(f"ohlcv_{sym}_{start}_{end}_{interval}", df)
@@ -365,7 +363,7 @@ def fetch_fred_series(
             raise ValueError(f"FRED API unexpected response for {series_id}: {list(body.keys())}")
         data = body["observations"]
         if not data:
-            return pd.DataFrame({"value": pd.Series([], dtype=float)}, index=pd.DatetimeIndex([], name="date"))
+            return pd.DataFrame(columns=["value"])
         df = pd.DataFrame(data)
         df["date"] = pd.to_datetime(df["date"])
         df["value"] = pd.to_numeric(df["value"], errors="coerce")
@@ -399,10 +397,9 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
         start = (dt - timedelta(days=365)).strftime("%Y-%m-%d")
     else:
         start = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
-    end = (datetime.strptime(date, "%Y-%m-%d") + timedelta(days=15)).strftime("%Y-%m-%d") if date else None
     for series_id, label in maturities.items():
         try:
-            df = fetch_fred_series(series_id, start=start, end=end)
+            df = fetch_fred_series(series_id, start=start)
             if not df.empty:
                 if date:
                     idx = pd.to_datetime(date)
@@ -910,10 +907,11 @@ def scan_52_week_lows(
     import yfinance as yf
 
     if universe is None:
+        # Scan across all universe categories
         all_syms = set()
         for syms in UNIVERSE.values():
             all_syms.update(syms)
-        universe = sorted(all_syms)
+        universe = list(all_syms)
 
     results = []
     for sym in universe:
@@ -959,7 +957,7 @@ def scan_volatile_stocks(
         all_syms = set()
         for syms in UNIVERSE.values():
             all_syms.update(syms)
-        universe = sorted(all_syms)
+        universe = list(all_syms)
 
     results = []
     for sym in universe:
@@ -994,10 +992,13 @@ def discover_universe_from_etf(
     """
     import yfinance as yf
 
-    raise NotImplementedError(
-        f"discover_universe_from_etf('{etf_symbol}') is not implemented. "
-        "Use get_universe() with a category instead."
-    )
+    try:
+        # yfinance doesn't directly expose holdings, but we can try
+        # For now, return known theme ETFs and their typical holdings
+        pass
+    except Exception:
+        pass
+    return []
 
 
 def screen_by_fundamentals(

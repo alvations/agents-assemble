@@ -54,11 +54,8 @@ _METRIC_MISSING_DEFAULTS = {
 
 def _safe_float(value: Any) -> float:
     """Coerce a value to float, returning NaN for non-numeric types."""
-    if isinstance(value, bool):
-        return float("nan")
     if isinstance(value, (int, float)):
-        v = float(value)
-        return v if math.isfinite(v) else float("nan")
+        return float(value)
     return float("nan")
 
 
@@ -118,8 +115,6 @@ def diagnose_strategy(
     suggestions = []
 
     for metric, info in grades.items():
-        if not math.isfinite(info["value"]):
-            continue
         if info["grade"] in ("A", "B"):
             strengths.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
         elif info["grade"] in ("D", "F"):
@@ -153,10 +148,7 @@ def diagnose_strategy(
         suggestions.append("High trade count increases transaction costs — consider longer holding periods")
         suggestions.append("Increase rebalance frequency threshold or add minimum holding period")
 
-    if num_trades == 0:
-        suggestions.append("Strategy generated zero trades — signals may never trigger or universe is empty")
-        suggestions.append("Check entry criteria, data availability, and that universe symbols have price data")
-    elif num_trades < 20:
+    if num_trades < 20:
         suggestions.append("Very few trades — strategy may be too selective, missing opportunities")
         suggestions.append("Relax entry criteria or expand the universe of tradeable instruments")
 
@@ -194,10 +186,12 @@ def rank_strategies(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "name": r["name"],
             "composite_score": diagnosis["composite_score"],
             "overall_grade": diagnosis["overall_grade"],
-            "sharpe": _safe_float(r["metrics"].get("sharpe_ratio")),
-            "alpha": _safe_float(r["metrics"].get("alpha")),
-            "max_dd": _safe_float(r["metrics"].get("max_drawdown")),
-            "total_return": _safe_float(r["metrics"].get("total_return")),
+            "sharpe": _safe_float(r["metrics"].get("sharpe_ratio", 0)),
+            "alpha": _safe_float(r["metrics"].get("alpha", 0)),
+            "max_dd": _safe_float(r["metrics"].get(
+                "max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)
+            )),
+            "total_return": _safe_float(r["metrics"].get("total_return", 0)),
             "diagnosis": diagnosis,
         })
 
@@ -277,10 +271,8 @@ def generate_judge_report(results: list[dict[str, Any]]) -> str:
             lines.append("Continue iterating on strategy design and parameter tuning.")
 
         if len(ranked) >= 3:
-            ensemble = [r for r in ranked[:3] if r["composite_score"] >= 55]
-            if len(ensemble) >= 2:
-                lines.append(f"\n**Ensemble candidate:** Combine top {len(ensemble)}: "
-                             f"{', '.join(r['name'] for r in ensemble)}")
+            lines.append(f"\n**Ensemble candidate:** Combine top 3: "
+                         f"{', '.join(r['name'] for r in ranked[:3])}")
 
     return "\n".join(lines)
 
@@ -311,18 +303,12 @@ def suggest_parameter_tuning(
     win_rate = _safe_float(metrics.get("win_rate"))
     vol = _safe_float(metrics.get("annual_volatility"))
 
-    def _fmt_pct(v: float) -> str:
-        return format(v, ".1%") if math.isfinite(v) else "N/A"
-
-    def _fmt_f(v: float, spec: str = ".2f") -> str:
-        return format(v, spec) if math.isfinite(v) else "N/A"
-
     if max_dd < -0.20:
         suggestions.append({
             "parameter": "max_position_size",
             "current": "0.20-0.30",
             "suggested": "0.10-0.15",
-            "reason": f"Max drawdown {_fmt_pct(max_dd)} is too severe. Smaller positions reduce concentration risk."
+            "reason": f"Max drawdown {max_dd:.1%} is too severe. Smaller positions reduce concentration risk."
         })
         suggestions.append({
             "parameter": "stop_loss",
@@ -336,7 +322,7 @@ def suggest_parameter_tuning(
             "parameter": "rebalance_frequency",
             "current": "daily/weekly",
             "suggested": "monthly",
-            "reason": f"Annual vol {_fmt_pct(vol)} is high. Less frequent rebalancing reduces whipsaw losses."
+            "reason": f"Annual vol {vol:.1%} is high. Less frequent rebalancing reduces whipsaw losses."
         })
 
     if win_rate < 0.35:
@@ -344,7 +330,7 @@ def suggest_parameter_tuning(
             "parameter": "entry_threshold",
             "current": "current RSI/BB levels",
             "suggested": "Tighten RSI to < 25 for buy, > 80 for sell",
-            "reason": f"Win rate {_fmt_pct(win_rate)} is low. More selective entries improve hit rate."
+            "reason": f"Win rate {win_rate:.1%} is low. More selective entries improve hit rate."
         })
 
     if sharpe > 0.8:
@@ -352,16 +338,7 @@ def suggest_parameter_tuning(
             "parameter": "max_positions",
             "current": "8-10",
             "suggested": "6-8 (concentrate in winners)",
-            "reason": f"Good Sharpe {_fmt_f(sharpe)} — concentrating in fewer high-conviction picks may increase returns."
-        })
-
-    pf = _safe_float(metrics.get("profit_factor"))
-    if pf < 1.0:
-        suggestions.append({
-            "parameter": "exit_strategy",
-            "current": "rebalance-only",
-            "suggested": "Add trailing stop or time-based exit",
-            "reason": f"Profit factor {_fmt_f(pf)} < 1.0 — losses exceed gains. Cut losers faster or let winners run longer."
+            "reason": f"Good Sharpe {sharpe:.2f} — concentrating in fewer high-conviction picks may increase returns."
         })
 
     return suggestions

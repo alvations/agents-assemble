@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_safe_float` inf leak** — `float('inf')` and `float('-inf')` now return NaN instead of passing through. Prevents `inf > 0` → True from triggering misleading suggestions like "scale up position sizes" on a strategy with nonsensical metrics.
+- **Fixed 0-trade diagnosis** — `num_trades == 0` now gets a distinct message ("signals may never trigger or universe is empty") instead of the misleading "too selective, missing opportunities" which implies the strategy is working but conservative.
+- **Fixed unconditional ensemble suggestion** — Top-3 ensemble now requires each candidate to score >= 55 (grade C+), and at least 2 qualifying. Previously suggested combining a 90-score strategy with two 25-score strategies.
+- **Added `profit_factor` check to `suggest_parameter_tuning`** — profit_factor < 1.0 (losses exceed gains) now suggests tighter exit strategy. This was the only metric in `METRICS_WEIGHTS` with no corresponding parameter suggestion.
