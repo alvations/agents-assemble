@@ -1,58 +1,104 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments on Robinhood / Public.com.
+Trading agents and algorithms for publicly tradable instruments on Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG.
 
 ## Architecture
 
 ```
 agents-assemble/
-  data_fetcher.py      — Market data fetching (yfinance, FRED, SEC EDGAR, premium APIs)
-  backtester.py        — Event-driven backtesting engine with metrics
-  personas.py          — 10 trader persona strategies
-  run_hypotheses.py    — Hypothesis testing runner (10 hypotheses)
-  judge.py             — Strategy judge: grades, ranks, suggests improvements
-  knowledge/           — Saved findings, judge reports, evolution results
-  results/             — Backtest result JSON files
-  .cache/              — Parquet data cache
-  .evolution/          — Self-evolution history
+  agents_assemble/                # Python package (pip install -e .)
+    data/fetcher.py               — Market data (yfinance, FRED, SEC, premium)
+    engine/backtester.py          — Event-driven backtesting engine
+    engine/judge.py               — Strategy grading, ranking, diagnosis
+    engine/recommender.py         — Trade recommendation generator
+    strategies/generic.py         — 10 built-in personas
+    strategies/famous.py          — 13 famous investor personas
+    strategies/themes.py          — 11 theme-based strategies
+    strategies/recession.py       — 4 recession strategies + regime detector
+    strategies/unconventional.py  — 6 unconventional strategies
+    strategies/research.py        — 10 research-backed strategies
+    strategies/math.py            — 5 math-driven strategies
+    strategies/hedge_fund.py      — 2 hedge fund-inspired strategies
+
+  # Flat source files (for self-evolution)
+  backtester.py, personas.py, famous_investors.py, theme_strategies.py,
+  recession_strategies.py, unconventional_strategies.py, research_strategies.py,
+  math_strategies.py, hedge_fund_strategies.py, data_fetcher.py, judge.py,
+  trade_recommender.py
+
+  # Runners
+  run_hypotheses.py               — Single-horizon hypothesis runner
+  run_multi_horizon.py            — Multi-horizon (1Y/3Y/5Y/10Y) runner
+  sync_package.py                 — Sync flat files → package after evolution
+
+  # Data & Results
+  knowledge/                      — Research findings, results, failures
+  results/                        — Backtest result JSON files
+  strategy/winning/               — Winning trade recommendations
+  strategy/losing/                — Losing strategies (don't repeat!)
+  LEADERBOARD.md                  — Definitive multi-horizon rankings
 ```
 
-## Key design decisions
+## 59 Strategies (8 categories)
 
-- **No local data storage** — pull live from yfinance/FRED unless caching for repeated backtests
-- **Strategy = callable(date, prices, portfolio, data) -> {symbol: weight}** — all personas share this interface
-- **Free data first** — yfinance + FRED CSV work without API keys. Premium sources need env vars.
-- **Backtester normalizes tz** — yfinance returns tz-aware, we strip to tz-naive for consistent indexing
-- **Union date index** — backtester uses union of all symbols' dates (not intersection) so partial data works
+| Category | Count | Top Performer | Avg Sharpe |
+|----------|-------|--------------|-----------|
+| Generic | 10 | Momentum (1.08) | — |
+| Famous Investors | 13 | Masayoshi Son (0.87) | — |
+| Themes | 11 | AI Revolution (0.94) | — |
+| Recession | 4 | Defensive Rotation (0.59) | — |
+| Unconventional | 6 | Quality Factor (0.20) | — |
+| Research | 10 | Momentum Crash-Hedged (1.05) | — |
+| Math | 5 | Kelly Optimal (0.67) | — |
+| Hedge Fund | 2 | Healthcare+Asia (0.81) | — |
 
-## 10 Personas (ranked by judge score, 2022-2024 backtest)
+## Universe
 
-1. **Momentum** (B, 79) — MACD + SMA alignment on tech leaders. 99% return, 1.20 Sharpe.
-2. **Growth** (C, 64) — Dip-buying disruptive stocks in uptrends. 49% return.
-3. **Pairs** (C, 64) — Relative value between correlated stocks. 41% return.
-4. **Buffett Value** (C, 62) — Deep value, SMA200 discount + RSI. Low DD (-6%).
-5. **Dividend** (D, 50) — Equal-weight dividend aristocrats. Stable but no alpha.
-6. **Ensemble** (F, 39) — Consensus of momentum+value+growth+dividend. Too conservative.
-7. **Sector Rotation** (F, 33) — Rotate into strongest sector ETFs. Needs work.
-8. **Fixed Income** (F, 32) — Bond duration via ETF trends. Hurt by rate hikes.
-9. **Quant MR** (F, 26) — Mean-reversion (BB+RSI). Failed in trending market.
-10. **Meme Stock** (F, 21) — Volume spike dip-buying. Post-bubble wreckage.
+61 categories, 451 unique tickers spanning:
+US (mega/small/mid/micro), China (65 ADRs), Europe (37 by country),
+Japan (13), India (8), Korea/Taiwan (9), LatAm (30), Australia (4),
+Africa (6), Middle East (6), SE Asia (2), Dividend Aristocrats (47),
+Dividend Kings (21), sector themes (fintech, cybersecurity, gaming,
+water, nuclear, quantum, cannabis, space, EV).
 
-## Self-evolution
+## Self-Evolution
 
-Uses `self_evolve.py` from parent directory. Each module can be evolved independently:
+CRITICAL: Use PYTHONPATH when evolving files that import from each other:
+```bash
+cd agents-assemble
+PYTHONPATH=$(pwd) python3 ../self_evolve.py <file>.py -n 3 --verbose --resume
+python3 sync_package.py  # After evolution, sync to package
+```
+
+## Key Findings
+
+- **ALWAYS backtest** — never trust any strategy blindly
+- **Test 4 horizons** — 1Y, 3Y, 5Y, 10Y (a 3Y winner may be a 10Y loser)
+- **Momentum Crash-Hedged is MOST CONSISTENT** — >0.7 Sharpe on all 4 horizons
+- **Bond fallback fails in rate hike cycles** — use gold/cash as third option
+- **Factor ETF rotation doesn't work** — ETFs too correlated with SPY
+- **Insider buying proxy** — distance from 52-week high is #1 predictor
+- See knowledge/failures_log.md for strategies NOT to repeat
+
+## API Keys (env vars, optional)
+
+- `FRED_API_KEY` — Macro data (free registration)
+- `FINNHUB_API_KEY` — Social sentiment, insider trades (60/min free)
+- `ALPHA_VANTAGE_KEY` — Real-time quotes (5/min free)
+- `POLYGON_API_KEY` — Tick data (5/min free, delayed)
+- `NEWS_API_KEY` — Financial news (100/day free)
+
+## Quick Start
 
 ```bash
-cd /Users/alvas/jean-claude
-python3 self_evolve.py agents-assemble/backtester.py -n 3 --verbose
-python3 self_evolve.py agents-assemble/personas.py -n 3 --verbose
-python3 self_evolve.py agents-assemble/data_fetcher.py -n 3 --verbose
+pip install -e .
+
+# Run all strategies on 3-year horizon
+python run_multi_horizon.py --horizon 3y
+
+# Run single strategy
+python run_multi_horizon.py --persona momentum_crash_hedge
+
+# Run all strategies in a category
+python run_multi_horizon.py --category research
 ```
-
-## API keys (env vars)
-
-- `FRED_API_KEY` — FRED macro data (free registration)
-- `FINNHUB_API_KEY` — Social sentiment, news (60 calls/min free)
-- `ALPHA_VANTAGE_KEY` — Real-time quotes (5 calls/min free)
-- `POLYGON_API_KEY` — Tick data (5 calls/min free, delayed)
-- `NEWS_API_KEY` — Financial news headlines (100/day free)

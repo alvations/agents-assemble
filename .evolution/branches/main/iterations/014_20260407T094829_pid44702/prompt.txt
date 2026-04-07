@@ -1,0 +1,229 @@
+You are improving the Python file at: /Users/alvas/jean-claude/agents-assemble/unconventional_strategies.py
+
+Your approach:
+1. Read the file to understand the full codebase
+2. Plan 3-5 specific, concrete improvements
+3. Implement each improvement using the Edit tool — make targeted changes, NOT full rewrites
+4. After all edits, verify syntax by running: python -c "import ast; ast.parse(open('/Users/alvas/jean-claude/agents-assemble/unconventional_strategies.py').read())"
+5. End with a brief summary of what you changed (2-5 bullet points)
+
+Focus areas:
+- Bug fixes (correctness, edge cases, error handling at boundaries)
+- Performance (unnecessary work, subprocess efficiency)
+- API ergonomics (clearer names, better defaults)
+- Type safety and Python best practices
+- Removing dead code or unnecessary complexity
+
+Rules:
+- Do NOT remove existing public API — only extend or fix
+- Do NOT add docstrings or comments to code you did not change
+- Do NOT add new third-party dependencies
+- Make each change individually with the Edit tool — small, focused edits
+- If nothing needs improving, say NO_CHANGES_NEEDED without making any edits
+
+Previous improvements already made (do NOT repeat these):
+  - Iteration 1: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed `Position.update` short position handling**: BUY on a short position now correctly computes realized P&L when covering, and SELL on an existing short now blends avg_cost instead of incorrectly computing phantom P&L. Both branches handle position flips (short→long, long→short) and full closes properly.
+- **Fixed Sortino ratio calculation**: Replaced incorrect `std()` of only negative returns with the standard downside deviation
+  - Iteration 1: Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_yield_curve` ignoring pre-2024 dates** — The hardcoded `start="2024-01-01"` meant calling `fetch_yield_curve(date="2023-06-15")` would silently return wrong data. Now dynamically adjusts start date based on the requested date.
+- **Removed dead `not df.empty` guard in `fetch_ohlcv`** — Line 155 was unreachable since line 152-153 already raises `ValueError` on empty data.
+- **Fixed `screen_by_fundamentals` filter checks** — Change
+  - Iteration 1: All edits pass syntax validation. Summary of changes:
+
+- **Fix `_get_indicator` silent wrong-answer bug**: `get_indexer` can return -1 (empty index, NaT); `df.iloc[-1]` would silently return the last row. Now returns `None` when idx is -1.
+- **Fix `QuantStrategist` candidate ranking**: candidates were sliced `[:max_positions]` in iteration order, not by score. Added `sort(key=score, reverse=True)` so the best mean-reversion signals are selected.
+- **Fix `GrowthInvestor` truthiness check on RSI**
+  - Iteration 1: Syntax is clean. Here's what I changed:
+
+- **Fixed truthiness bugs in `detect_recession_regime`**: Changed 5 checks from `if val:` to `if val is not None:` — RSI of 0 or vol of 0.0 were incorrectly treated as missing data, skipping the signal entirely
+- **Fixed same bug in `GoldBug.generate_signals`**: `gld_sma50 and gld_sma200 and gld_price` → explicit `is not None` checks
+- **Fixed misleading comment**: `# 3+ signals` → `# majority of available signals` since the threshold is 50% of *available
+  - Iteration 1: Syntax is valid. Summary of changes:
+
+- **Removed dead imports**: `json`, `numpy`, `pandas`, and `Tuple` were imported but never used; replaced with `math` (needed for NaN/inf check)
+- **Fixed NaN/inf bug in `grade_metric`**: Added `math.isfinite()` guard — metrics producing `NaN` (e.g., Sharpe when vol=0) or `inf` (e.g., profit_factor with zero losses) now correctly grade as "F" instead of silently getting wrong grades
+- **Extracted `GRADE_SCORES` to module-level constant**: Was being recreated
+  - Iteration 1: All edits pass syntax check. Summary of changes:
+
+- **Removed unused imports**: `dataclass`, `field`, `Any`, `Dict`, `numpy` — none were referenced in the file
+- **Removed dead variable** in `PeterLynch.generate_signals`: `ret` (daily_return) was fetched but never used
+- **Removed dead variable** in `NassefSawiris.generate_signals`: `sma50` was fetched but never used
+- **Fixed `HowardMarks` buy/exit conflict**: The risk control exit (`price < sma200 * 0.80`) was checked *after* candidates were a
+  - Iteration 1: Syntax is valid. Summary of changes:
+
+- **Bug fix (LowVolAnomaly line 234)**: Changed `max(n, self.config.max_positions)` → `min(n, self.config.max_positions)`. The old code always selected at least 15 stocks (75% of a 20-stock universe), completely defeating the bottom-quintile selection that is the core of the strategy.
+- **Bug fix (DualMomentum line 71)**: Changed truthiness checks (`efa_price and efa_sma200`) to explicit `is not None` checks. A price of `0.0` would have been incorrectly trea
+  - Iteration 1: All changes pass syntax check. Summary:
+
+- **Removed unused imports** `Dict` and `Any` — dead code cleanup
+- **Filtered `SellInMayGoAway` and `TurnOfMonth` signals by `prices`** — these were the only two strategies returning hard-coded symbol dicts without checking if the symbols exist in the price data, which could cause downstream issues in the backtester
+- **Fixed `TailRiskHarvest` exit/crash-buy conflict** — moved exit check before crash-buy check with `continue`, so a position marked for ex
+  - Iteration 1: All edits pass syntax check. Summary of changes:
+
+- **Removed unused imports** `Any`, `Dict` from typing
+- **Removed 3 redundant `max(0, loc-60)` guards** — `loc >= 60` is already guaranteed by the `if loc < 60: continue` check above each one
+- **Fixed NaN bug in ZScoreReversion** — `std <= 0` doesn't catch NaN (since `NaN <= 0` is `False`), changed to `not (std > 0)` which correctly skips both zero and NaN std
+- **Simplified VolatilityBreakout position sizing** — removed misleading `total_value
+  - Iteration 1: Syntax is valid. Here's what I changed:
+
+- **Fixed filter bug in `DynamicEnsemble`**: Changed `total_weight > 0.3` to `total_weight >= 0.3` — pure value or pure quality stocks (each contributing exactly 0.3) were excluded by the strict inequality
+- **Fixed incomplete `signals` counter**: Value and quality signals now increment `signals`, so stocks with any triggered signal pass the filter (previously only momentum did)
+- **Fixed non-deterministic ordering**: Removed `list(set(...))` wrapper in `
+  - Iteration 1: All changes pass syntax validation. Summary:
+
+- **Fixed `TypeError` crash in `_assess_strategy`** when `alpha` is non-numeric (e.g., `None` or string) — now safely coerces to 0
+- **Fixed `TypeError` crash in "Lessons Learned" section** — same non-numeric alpha issue in the `:.2%` format string on line 222
+- **Fixed `qty == 0` incorrectly recommending SELL** — now reports "FLAT" for zero-quantity positions
+- **Fixed inverted stop-loss/take-profit for short positions** — shorts now correctly place
+  - Iteration 2: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed `_rebalance` leaking short positions**: Positions not in target weights are now properly closed regardless of direction — short positions get bought back (BUY), not just long positions sold.
+- **Fixed benchmark CAGR using wrong time span**: `bench_cagr` now uses `aligned_n_years` (from the aligned overlap period), and alpha compares portfolio vs benchmark CAGR over the same aligned window, preventing systematic misstatement wh
+  - Iteration 2: Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_yield_curve` for arbitrary historical dates** — Instead of the incomplete `"2020-01-01"` / `"2024-01-01"` conditional, now computes start as 1 year before the requested date, so any date (e.g., "2015-06-15") will be in range.
+- **Fixed `fetch_fred_series` CSV fallback index name mismatch** — API path produced index `"date"`, CSV fallback produced `"DATE"`. Now normalizes to `"date"` so downstream code works consistently regardle
+  - Iteration 2: All edits pass syntax validation. Summary of changes:
+
+- **Fix `QuantStrategist` vol-weighted sizing denominator**: `total_inv_vol` was computed over ALL candidates but only top N were allocated — diluting weights. Now computed only over the top N slice.
+- **Fix `MemeStockTrader` exit signal overwritten by buy**: A breakout (vol_ratio > 3, price > sma20) with RSI > 80 could score for buy AND trigger exit, with the buy overwriting the exit weight. Restructured as `elif` so exit conditions take pr
+  - Iteration 2: Syntax is clean. Here's what I changed:
+
+- **Eliminated redundant SPY lookups in `detect_recession_regime`**: `spy_sma200` was fetched twice (signals 1 and 2), and `"SPY" in data` was checked 3 separate times. All 5 SPY indicators are now fetched once upfront.
+- **Added staleness guard to `_safe_get`**: The nearest-date fallback via `get_indexer(method="nearest")` could return arbitrarily old data (months/years stale). Now rejects data more than 10 days from the requested date.
+- **Fixed NaN bug
+  - Iteration 2: Syntax is valid. Summary of changes:
+
+- **Fixed `grade_metric` for unknown metrics**: Returns "F" instead of silently grading as "A" when a metric isn't in `GRADE_THRESHOLDS` (the old `{}.get(grade, -999)` fallback meant any value passed all thresholds)
+- **Fixed missing `max_drawdown` false-A bug**: Added `_METRIC_MISSING_DEFAULTS` so missing `max_drawdown` defaults to -1.0 (grade "F") instead of 0 (grade "A" — "no drawdown")
+- **Cleaned up empty report sections**: "Strengths:" and "Weaknesses:
+  - Iteration 2: All edits pass syntax check. Summary of changes:
+
+- **Removed unused `import pandas as pd`** and **`from typing import List, Optional`** — neither is referenced anywhere in the file
+- **Modernized type hints** — replaced `Optional[List[str]]` with `list[str] | None` across all 13 classes (already guarded by `from __future__ import annotations`)
+- **Removed dead variable `vol`** in `GeorgeSoros.generate_signals` — fetched via `_get_indicator` but never used in any computation or check
+- **Removed
+  - Iteration 2: All edits pass syntax validation. Summary of changes:
+
+- **Bug fix (MultiFactorSmartBeta lines 142, 145, 148, 155)**: Changed truthiness checks on `sma50`, `sma200`, `rsi` to proper `is not None` checks or removed redundant guards. A 0.0 value would have incorrectly skipped momentum/quality scoring — same bug class fixed in iteration 1 for DualMomentum.
+- **Bug fix (RiskParityMomentum line 383)**: Changed `if sma50 and` → `if sma50 is not None and` to prevent 0.0 values from bypassing the moment
+  - Iteration 2: All changes pass syntax check. Summary:
+
+- **Fixed module docstring** — listed 10 strategies but only 6 are implemented; now accurately lists the 6 actual strategies
+- **Removed unused `numpy` and `pandas` imports** — neither `np` nor `pd` are referenced directly in this file
+- **Precomputed `_SQRT_252` as module-level constant** — the only numpy usage was `np.sqrt(252)` inside `VIXMeanReversion.generate_signals`, recomputed on every backtest bar; now computed once at import time
+- **Fixed VIXMe
+  - Iteration 2: All edits pass syntax check. Summary of changes:
+
+- **Fixed look-ahead bias in KellyOptimal** — rolling window now uses `iloc[loc-60:loc]` (excludes today's return) so Kelly parameters are estimated purely from historical data
+- **Fixed look-ahead bias in ZScoreReversion** — z-score reference window excludes today's close price, eliminating self-referential bias that suppressed signal strength
+- **Fixed look-ahead bias in HurstExponent** — Hurst estimation no longer includes today's return in th
+  - Iteration 2: Syntax is valid. Here's what I changed:
+
+- **Fixed NaN safety in both strategies**: `_get_indicator` can return `np.nan` via its nearest-date code path (missing NaN check at `personas.py:76`). Replaced `v is None` guards with `pd.isna()` and bare truthiness checks (`if sma200`) with `pd.notna(sma200)` — prevents NaN from silently corrupting score calculations
+- **Removed dead code in `DynamicEnsemble` filter**: `total_weight >= 0.3` with `signals == 0` is unreachable since all three signal branc
+  - Iteration 2: All changes pass syntax validation. Summary:
+
+- **Added `_safe_float()` helper** to safely coerce metric values to float, preventing `TypeError` crashes when metrics contain `None`, strings, or other non-numeric values
+- **Applied `_safe_float` to all metric reads** across `generate_trade_recommendations`, `_assess_strategy`, `_timing_guidance`, `_generate_position_rec`, and the "Lessons Learned" markdown section — same class of bug as the iteration 1 alpha fix, now systematically addressed
+- **
+  - Iteration 3: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed information ratio numerator**: Used `port_aligned_cagr` instead of full-period `cagr`, making it consistent with the aligned-window alpha fix from iteration 2.
+- **Fixed `_rebalance` sell qty cap for short positions**: The cap `min(qty, abs(current_pos.quantity))` now only applies when the position is long (`current_pos.quantity > 0`), allowing short positions to be increased via additional sells.
+- **Fixed missing equity curv
+  - Iteration 3: Syntax is valid. Here's a summary of the changes:
+
+- **Fixed `fetch_multiple_ohlcv` single-symbol batch inconsistency** — `yf.download([sym], group_by="ticker")` produces multi-level columns unlike `Ticker.history()`. Now skips batch for single symbols and falls through to the individual `fetch_ohlcv` fallback path, ensuring consistent DataFrame structure.
+- **Fixed `fetch_yield_curve(date=None)` stale hardcoded start** — Replaced `"2024-01-01"` with dynamic `(now - 90 days)` so the function sta
+  - Iteration 3: All edits pass syntax validation. Summary of changes:
+
+- **Remove dead `sma50` fetch in `BuffettValue`**: `sma_50` was fetched on every symbol but never used — wasted indicator lookup removed.
+- **Fix `DividendInvestor` RSI truthiness bug**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 would have skipped the oversold bonus due to falsy float.
+- **Fix `FixedIncomeStrat` TIP RSI truthiness bug**: Same pattern — `if tlt_rsi and tlt_rsi < 30` → `if tlt_rsi is not No
+  - Iteration 3: Syntax is clean. Here's what I changed:
+
+- **Fixed global state mutation** — `run_all` now shallow-copies `HYPOTHESES` dicts before overwriting `start`/`end`, so repeated calls with different dates don't corrupt the module-level data.
+- **Fixed alpha formatting in summary table** — Alpha was printed as a raw float (e.g., `0.053`) instead of formatted as `5.3%`. Now properly formats as percentage when numeric, falls back to `"N/A"` when missing.
+- **Fixed `--list` showing only builtin personas** 
+  - Iteration 3: Syntax is clean. Here's what I changed:
+
+- **Filtered `RecessionDetector.generate_signals` returns by `prices`**: Both branches now return `{k: v for k, v in weights.items() if k in prices}`, matching the pattern used by `DefensiveRotation` and `GoldBug` — prevents returning weights for symbols the backtester can't trade
+- **Filtered `TreasurySafe.generate_signals` returns by `prices`**: All three branches (recession/mixed/clear) now filter the same way — same consistency fix
+- **Fixed duplicate
+  - Iteration 3: All tests pass. Summary of changes:
+
+- **Fixed crash on `None`/non-numeric metric values**: Added `_safe_float()` helper; `grade_metric` now returns "F" for `None`, strings, etc. instead of raising `TypeError`
+- **Eliminated duplicate grading in `diagnose_strategy`**: Composite score is now computed directly from already-graded values instead of calling `compute_composite_score` which re-grades every metric
+- **Fixed inconsistent missing-metric defaults in suggestion logic**: `diagnose_strategy`
+  - Iteration 3: All edits pass syntax check. Summary of changes:
+
+- **Removed dead variable `sma50`** in `CarlIcahn.generate_signals` — fetched via `_get_indicator` but never referenced in the method body
+- **Fixed division-by-zero in `PeterLynch`** — added `sma50 > 0` guard before `abs(price - sma50) / sma50` (line 98)
+- **Fixed division-by-zero in `JorgePauloLemann`** — added `sma50 > 0` guard with fallback to `1.0` (which skips the proximity bonus) when computing `proximity` (line 824)
+- **Fixed division-by-
+  - Iteration 3: All edits pass syntax validation. Summary of changes:
+
+- **Bug fix (LowVolAnomaly line 223)**: Changed `if sma200 and` → `if sma200 is not None and` — a 0.0 SMA200 value would skip the downtrend filter, allowing broken-trend stocks into the low-vol portfolio. Same bug class fixed in iterations 1-2.
+- **Bug fix (GlobalRotation line 535)**: Changed `if vol and vol > 0:` → `if vol is not None and vol > 0:` — explicit None check for consistency and correctness.
+- **Bug fix (GlobalRotation line 540)*
+  - Iteration 3: All edits pass syntax check. Summary of changes:
+
+- **Fixed VolatilityBreakout exit condition** — removed requirement for `bb_lower` to be non-None; positions now exit when `price < sma20` regardless of whether the Bollinger Band indicator is available
+- **Fixed EqualRiskContrib fallback allocating outside universe** — defensive allocation (TLT/IEF/GLD) now filters by the configured universe, so custom universes without those symbols won't get phantom allocations
+- **Fixed KellyOptimal under-all
+  - Iteration 4: All edits pass syntax validation. Here's what was changed:
+
+- **Fixed phantom equity drops from missing data**: When using a union date index, days where a symbol had no price data excluded that position's value from `total_value`, creating false drawdowns and inflated volatility. Now carries forward last-known prices so positions are always valued consistently.
+- **Fixed `_rebalance` executing buys before sells**: Previously, iteration order determined trade execution, so a buy could fail the c
+  - Iteration 5: All edits pass syntax validation. Here's what was changed:
+
+- **Removed sell qty cap in `_rebalance`**: The `min(qty, int(current_pos.quantity))` cap prevented strategies from flipping long-to-short in a single rebalance. Since `Position.update` handles flips correctly and the cap is mathematically redundant for non-negative target weights, removing it fixes the bug.
+- **Recompute total value after sells**: Buy quantities are now computed from post-sell portfolio value instead of stale pre-sell 
+  - Iteration 6: All edits pass syntax validation. Here's what was changed:
+
+- **Pre-computed close prices DataFrame for performance**: Replaced the set-based date union construction and per-date per-symbol `.loc` lookups with a single `pd.DataFrame` of close prices, sorted and forward-filled via `.ffill()`. This eliminates O(n_dates × n_symbols) individual index lookups and the manual `last_known_prices` accumulator, replacing them with a one-time vectorized operation.
+- **Simplified simulation loop**: Removed 
+  - Iteration 7: All edits pass syntax validation. Summary of changes:
+
+- **Removed unused imports** — `Any`, `Dict`, `List`, `Optional` from `typing`, plus `numpy` (`np`) and `pandas` (`pd`) which were never referenced in the file
+- **Fixed 12 truthiness bugs** across all 10 strategies — `if rsi and ...`, `if sma200 and ...`, `if macd and ...`, `if volume and ...` → explicit `is not None` checks. A 0.0 value (valid indicator reading) would have been incorrectly treated as missing data, skipping signals entirely
+  - Iteration 8: All edits pass syntax validation. Summary of changes:
+
+- **Fixed truthiness bug on `vol`** (BiotechBreakout line 274): `if vol and vol < 0.03` → `if vol is not None and vol < 0.03` — a volatility of exactly `0.0` would have been treated as missing data, skipping the low-vol bonus that is the core risk-reduction signal for this biotech strategy.
+- **Fixed truthiness bug on `bb_lower`** (SmallCapValue line 514): `elif bb_lower and price < bb_lower` → `elif bb_lower is not None and price < bb_lower
+  - Iteration 9: All edits pass syntax validation. Summary of changes:
+
+- **Fixed `InfrastructureBoom` missing overbought exit** (line 451): Added `rsi > 70 → weight 0.0` guard before the buy condition. This was the only strategy without any RSI exit filter — stocks with RSI 90+ near SMA200 would be bought instead of exited.
+- **Fixed `AgingPopulation` missing overbought exit** (line 639): Same fix — defensive strategy should not buy overbought stocks. Both strategies now match the exit pattern used by the other
+  - Iteration 9: Syntax is valid. Summary of changes:
+
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 7 classes (already guarded by `from __future__ import annotations`)
+- **Replaced `numpy` with `math`** — The only numpy usage was `np.sqrt(252)` for vol annualization; now uses a precomputed `_SQRT_252` module-level constant via `math.sqrt`, avoiding the heavy numpy import
+- **Fixed module docstring** — Listed 6 strategies but `Glo
+  - Iteration 10: (interrupted — partial edits saved)
+  - Iteration 11: All edits pass syntax validation. Summary of changes:
+
+- **Fixed `LiKaShing` RSI truthiness bug (line 693)**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 (deeply oversold) was skipping the oversold bonus
+- **Fixed `HowardMarks` vol truthiness bug (line 989)**: `vol if vol else 0.02` → `vol if vol is not None else 0.02` — vol of 0.0 (lowest risk) was penalized with 0.02 fallback instead of getting the highest quality score
+- **Fixed `JimSimons` Bollinger band tr
+  - Iteration 11: All edits pass syntax validation. Summary of changes:
+
+- **Fixed `suggest_parameter_tuning` missing `_safe_float`/`_METRIC_MISSING_DEFAULTS`**: `max_drawdown` defaulting to `0` meant "no drawdown" which silently skipped the drawdown-reduction suggestions. All four metric values now use `_safe_float()` so non-numeric values don't crash comparisons.
+- **Fixed `diagnose_strategy` suggestion values not NaN-safe**: Wrapped all five metric lookups (lines 124-128) with `_safe_float()` — a `None` or str
+  - Iteration 12: All edits pass syntax validation. Summary of changes:
+
+- **Fixed `diagnose_strategy` format crash on non-numeric values**: Wrapped stored grade values through `_safe_float()` so `{info['value']:.4f}` at lines 119/121 won't raise `TypeError` when metrics contain `None` or strings
+- **Fixed `diagnose_strategy` false suggestions from fabricated defaults**: Removed `_METRIC_MISSING_DEFAULTS` fallbacks from the suggestion logic — missing metrics now become NaN (via `_safe_float(None)`), which correct
+  - Iteration 13: All edits pass syntax validation. Summary of changes:
+
+- **Fixed `FactorETFRotation` top-N ordering bug** — positive momentum filter now runs *before* the top-N slice, so a negative-momentum item in slot 3 no longer blocks a positive item in slot 4
+- **Fixed `FactorETFRotation` safe haven not checking `prices`** — TLT/GLD allocation now verifies the symbols exist in `prices`, matching the pattern established in iteration 3
+- **Fixed `RiskParityMomentum` fallback allocating outside universe** — s
+  - Iteration 13: Syntax is valid. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file
+- **Fixed exit/buy priority in `HealthcareAsiaMomentum`** — The exit condition (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` branch after `score >= 2.5`, so a stock deeply below SMA200 could still be bought if it scored high enough (e.g., price > sma50 with MACD cross + RSI bonus = 3.0). Now the exit check runs first, and the buy branch is `elif`, so stocks 10%+ below SMA20

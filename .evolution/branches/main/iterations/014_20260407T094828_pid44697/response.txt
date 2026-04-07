@@ -1,0 +1,4 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file; only `pandas` is needed (for `pd.isna` in `_estimate_hurst`)
+- **Fixed 6 truthiness bugs on indicator values** — `sma50`, `sma200`, `rsi`, and `bb_lower` were checked with bare `and` (falsy for 0.0) instead of `is not None`, across all 5 strategies: KellyOptimal (line 95), ZScoreReversion (line 185), HurstExponent (lines 277, 282), VolatilityBreakout (line 349), EqualRiskContrib (line 422)

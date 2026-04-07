@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 6 classes (already guarded by `from __future__ import annotations`)
+- **Fixed `sma50` truthiness bug in `QualityFactor`** (line 318) — `if sma50 and price > sma50` → `if sma50 is not None and price > sma50` — an SMA50 of 0.0 would skip the trend bonus
+- **Fixed `rsi`/`sma200` truthiness bugs in `TailRiskHarvest` exit** (line 382) — `if rsi and rsi > 65 and sma200 and price > sma200` → explicit `is not None` checks — a 0.0 RSI or SMA200 would skip the exit-recovery logic, holding positions indefinitely
+- **Fixed `volume`/`vol_avg`/`sma200` truthiness bugs in `TailRiskHarvest` crash-buy** (lines 390-391) — same `is not None` fix for the volume ratio calculation and the quality filter gate

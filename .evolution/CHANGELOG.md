@@ -333,3 +333,18 @@ Syntax is valid. Summary of changes:
 - **Removed unused `numpy` import** — `np` is never referenced in this file
 - **Fixed exit/buy priority in `HealthcareAsiaMomentum`** — The exit condition (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` branch after `score >= 2.5`, so a stock deeply below SMA200 could still be bought if it scored high enough (e.g., price > sma50 with MACD cross + RSI bonus = 3.0). Now the exit check runs first, and the buy branch is `elif`, so stocks 10%+ below SMA20
 
+## [2026-04-07T09:49:37.179818+00:00] Branch: main | Run: 20260407T094829_pid44702 | Iter 14 | $0.3217
+### unconventional_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 6 classes (already guarded by `from __future__ import annotations`)
+- **Fixed `sma50` truthiness bug in `QualityFactor`** (line 318) — `if sma50 and price > sma50` → `if sma50 is not None and price > sma50` — an SMA50 of 0.0 would skip the trend bonus
+- **Fixed `rsi`/`sma200` truthiness bugs in `TailRiskHarvest` ex
+
+## [2026-04-07T09:49:47.425082+00:00] Branch: main | Run: 20260407T094828_pid44697 | Iter 14 | $0.3957
+### math_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file; only `pandas` is needed (for `pd.isna` in `_estimate_hurst`)
+- **Fixed 6 truthiness bugs on indicator values** — `sma50`, `sma200`, `rsi`, and `bb_lower` were checked with bare `and` (falsy for 0.0) instead of `is not None`, across all 5 strategies: KellyOptimal (line 95), ZScoreReversion (line 185), HurstExponent (lines 277, 282), VolatilityBreakout (line 349), Equ
+
