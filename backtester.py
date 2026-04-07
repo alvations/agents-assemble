@@ -107,7 +107,7 @@ class Position:
 class Portfolio:
     """Tracks cash, positions, and portfolio value over time."""
     initial_cash: float = 100_000.0
-    cash: float = 100_000.0
+    cash: float | None = None
     positions: dict[str, Position] = field(default_factory=dict)
     trades: list[Trade] = field(default_factory=list)
     history: list[dict[str, Any]] = field(default_factory=list)
@@ -115,6 +115,10 @@ class Portfolio:
     # Transaction cost model
     commission_per_trade: float = 0.0  # Robinhood = $0
     slippage_pct: float = 0.001  # 10 bps default slippage
+
+    def __post_init__(self):
+        if self.cash is None:
+            self.cash = self.initial_cash
 
     def execute_trade(self, date: pd.Timestamp, symbol: str, side: Side,
                       quantity: float, price: float) -> Trade:
