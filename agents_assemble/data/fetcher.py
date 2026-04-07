@@ -661,7 +661,7 @@ def fetch_sector_performance(period: str = "1mo") -> dict[str, float]:
             hist = ticker.history(period=period)
             if not hist.empty and len(hist) > 1:
                 first_close = hist["Close"].iloc[0]
-                if first_close and first_close > 0:
+                if first_close is not None and not pd.isna(first_close) and first_close > 0:
                     ret = (hist["Close"].iloc[-1] / first_close) - 1
                     results[name] = float(ret)
         except Exception:
@@ -681,9 +681,10 @@ def fetch_market_breadth() -> dict[str, Any]:
             if not hist.empty:
                 close = hist["Close"]
                 sma20 = close.rolling(20).mean()
-                above_sma = (close > sma20).sum() / len(close) if len(close) > 0 else 0
-                first_close = close.iloc[0] if len(close) > 1 else 0
-                ret_1m = (close.iloc[-1] / first_close - 1) if first_close and first_close > 0 else 0
+                valid_sma = sma20.notna()
+                above_sma = (close[valid_sma] > sma20[valid_sma]).sum() / valid_sma.sum() if valid_sma.sum() > 0 else 0
+                first_close = close.iloc[0] if len(close) > 1 else None
+                ret_1m = (close.iloc[-1] / first_close - 1) if first_close is not None and not pd.isna(first_close) and first_close > 0 else 0
                 breadth[sym] = {
                     "pct_above_sma20": float(above_sma),
                     "return_1m": float(ret_1m),
@@ -911,6 +912,14 @@ def get_universe(category: str = "mega_cap") -> list[str]:
     return list(UNIVERSE.get(category, UNIVERSE["mega_cap"]))
 
 
+def _all_universe_symbols() -> list[str]:
+    """Return sorted list of all unique symbols across every UNIVERSE category."""
+    all_syms: set[str] = set()
+    for syms in UNIVERSE.values():
+        all_syms.update(syms)
+    return sorted(all_syms)
+
+
 def scan_52_week_lows(
     universe: list[str] | None = None,
     max_results: int = 20,
@@ -923,10 +932,7 @@ def scan_52_week_lows(
     import yfinance as yf
 
     if universe is None:
-        all_syms = set()
-        for syms in UNIVERSE.values():
-            all_syms.update(syms)
-        universe = sorted(all_syms)
+        universe = _all_universe_symbols()
 
     results = []
     for sym in universe:
@@ -969,10 +975,7 @@ def scan_volatile_stocks(
     import yfinance as yf
 
     if universe is None:
-        all_syms = set()
-        for syms in UNIVERSE.values():
-            all_syms.update(syms)
-        universe = sorted(all_syms)
+        universe = _all_universe_symbols()
 
     results = []
     for sym in universe:
@@ -1021,18 +1024,26 @@ def screen_by_fundamentals(
     max_debt_to_equity: float | None = None,
 ) -> list[dict[str, Any]]:
     """Screen stocks by fundamental criteria."""
+    def _valid(v: Any) -> bool:
+        """Check if a fundamental value is present and numeric (not None/NaN)."""
+        return v is not None and not (isinstance(v, float) and v != v)
+
     results = []
     for sym in symbols:
         try:
             f = fetch_fundamentals(sym)
-            if min_market_cap is not None and f["market_cap"] is not None and f["market_cap"] < min_market_cap:
-                continue
-            if max_pe is not None and f["pe_ratio"] is not None and f["pe_ratio"] > max_pe:
-                continue
-            if min_dividend_yield is not None and f["dividend_yield"] is not None and f["dividend_yield"] < min_dividend_yield:
-                continue
-            if max_debt_to_equity is not None and f["debt_to_equity"] is not None and f["debt_to_equity"] > max_debt_to_equity:
-                continue
+            if min_market_cap is not None:
+                if not _valid(f["market_cap"]) or f["market_cap"] < min_market_cap:
+                    continue
+            if max_pe is not None:
+                if not _valid(f["pe_ratio"]) or f["pe_ratio"] > max_pe:
+                    continue
+            if min_dividend_yield is not None:
+                if not _valid(f["dividend_yield"]) or f["dividend_yield"] < min_dividend_yield:
+                    continue
+            if max_debt_to_equity is not None:
+                if not _valid(f["debt_to_equity"]) or f["debt_to_equity"] > max_debt_to_equity:
+                    continue
             results.append(f)
         except Exception:
             pass
@@ -1055,16 +1066,15 @@ def fetch_asset_bundle(
     ohlcv_data = fetch_multiple_ohlcv(symbols, start=start, end=end)
     bundle = {}
     for sym in symbols:
-        entry: dict[str, Any] = {}
-        if sym in ohlcv_data:
-            entry["ohlcv"] = ohlcv_data[sym]
+        if sym not in ohlcv_data:
+            continue
+        entry: dict[str, Any] = {"ohlcv": ohlcv_data[sym]}
         if include_fundamentals:
             try:
                 entry["fundamentals"] = fetch_fundamentals(sym)
             except Exception:
                 entry["fundamentals"] = {}
-        if entry:
-            bundle[sym] = entry
+        bundle[sym] = entry
 
     return bundle
 

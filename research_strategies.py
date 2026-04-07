@@ -675,8 +675,10 @@ class FactorETFRotation(BasePersona):
                 weights["TLT"] = min(0.50, cap)
             if "GLD" in self.config.universe and "GLD" in prices:
                 weights["GLD"] = min(0.30, cap)
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
+        # Explicitly close positions in non-winning ETFs
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
