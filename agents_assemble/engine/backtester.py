@@ -385,6 +385,10 @@ class Backtester:
         self.symbols = symbols
         self.start = start
         self.end = end
+        if initial_cash <= 0:
+            raise ValueError(f"initial_cash must be positive, got {initial_cash}")
+        if slippage_pct < 0:
+            raise ValueError(f"slippage_pct must be non-negative, got {slippage_pct}")
         self.initial_cash = initial_cash
         self.commission = commission
         self.slippage_pct = slippage_pct
@@ -509,10 +513,12 @@ class Backtester:
             enriched["macd_signal"] = enriched["macd"].ewm(span=9).mean()
             enriched["rsi_14"] = _compute_rsi(close, 14)
             enriched["bb_upper"], enriched["bb_lower"] = _compute_bollinger(close, 20, 2)
-            enriched["atr_14"] = _compute_atr(enriched, 14)
+            if "High" in enriched.columns and "Low" in enriched.columns:
+                enriched["atr_14"] = _compute_atr(enriched, 14)
             enriched["daily_return"] = close.pct_change()
             enriched["vol_20"] = enriched["daily_return"].rolling(20).std()
-            enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
+            if "Volume" in enriched.columns:
+                enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
             enriched_data[sym] = enriched
 
         # Pre-compute prices dict — avoids per-iteration pandas Series creation
@@ -560,6 +566,8 @@ class Backtester:
         bench_returns = None
         if bench_data is not None and not bench_data.empty:
             bench_close = bench_data["Close"]
+            if bench_close.index.has_duplicates:
+                bench_close = bench_close[~bench_close.index.duplicated(keep='last')]
             bench_returns = bench_close.pct_change().dropna()
 
         metrics = compute_metrics(daily_returns, bench_returns)
@@ -589,7 +597,7 @@ class Backtester:
         # inf weights cause OverflowError in int(round(inf / price)).
         # Filtered symbols fall through to orphan-close logic below.
         target_weights = {k: v for k, v in target_weights.items()
-                          if isinstance(v, (int, float)) and math.isfinite(v)}
+                          if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)}
         total_value = portfolio.total_value(prices)
         if total_value <= 0:
             return
