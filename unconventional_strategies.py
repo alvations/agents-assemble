@@ -412,6 +412,138 @@ class TailRiskHarvest(BasePersona):
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 7. Dividend Aristocrat Momentum
+# ---------------------------------------------------------------------------
+class DividendAristocratMomentum(BasePersona):
+    """Combine Dividend Aristocrats with momentum filtering.
+
+    Thesis: Aristocrats provide quality (25+ years of div growth).
+    Momentum filter selects the ones trending up. This avoids
+    the "value trap" problem of pure dividend investing.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Dividend Aristocrat Momentum",
+            description="Quality dividends + momentum: only buy Aristocrats in uptrends",
+            risk_tolerance=0.3,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "JNJ", "PG", "KO", "PEP", "ABBV", "MRK", "ABT", "CL",
+                "EMR", "ADP", "AFL", "APD", "CVX", "ECL", "GD", "ITW",
+                "KMB", "LOW", "MCD", "NEE", "PPG", "SHW", "SYY", "TGT",
+                "WMT", "XOM",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if any(v is None for v in [sma50, sma200, rsi]):
+                continue
+            # Must be in uptrend (momentum filter)
+            if price < sma200:
+                continue
+            # Score by trend strength
+            score = 0.0
+            if price > sma50 > sma200:
+                score += 2.0
+            elif price > sma50:
+                score += 1.0
+            if 35 < rsi < 65:
+                score += 0.5  # Prefer not overbought
+            # Bonus for being near SMA50 (buy on pullback in uptrend)
+            if sma50 and abs(price - sma50) / sma50 < 0.03:
+                score += 0.5
+            if score > 1.0:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 8. Concentration in Winners
+# ---------------------------------------------------------------------------
+class ConcentrateWinners(BasePersona):
+    """Let winners run, cut losers — extreme concentration.
+
+    Thesis: A few stocks drive most market returns. Instead of
+    diversifying equally, concentrate in the top 3-5 strongest
+    momentum stocks. Higher risk but potentially higher returns.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Concentrate in Winners",
+            description="Extreme concentration: top 3-5 strongest momentum stocks only",
+            risk_tolerance=0.9,
+            max_position_size=0.30,
+            max_positions=5,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA",
+                "AVGO", "LLY", "V", "MA", "UNH", "JPM", "HD",
+                "NFLX", "CRM", "AMD", "PLTR", "CRWD",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            macd = self._get_indicator(data, sym, "macd", date)
+            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            if any(v is None for v in [sma50, sma200, rsi]):
+                continue
+            # Only the strongest momentum
+            score = 0.0
+            if price > sma50 > sma200:
+                score += 3.0
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+            if 50 < rsi < 80:
+                score += 1.0
+            # Momentum magnitude
+            mom = (price - sma200) / sma200 if sma200 > 0 else 0
+            score += mom * 5  # Weight by how far above SMA200
+            if score >= 4:
+                scored.append((sym, score))
+            elif sma200 and price < sma200 * 0.95:
+                weights[sym] = 0.0
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            # Score-weighted allocation (more to strongest)
+            total_score = sum(s for _, s in top)
+            for sym, score in top:
+                w = min((score / total_score) * 0.95, self.config.max_position_size)
+                weights[sym] = w
+        return weights
+
+
 UNCONVENTIONAL_STRATEGIES = {
     "sell_in_may": SellInMayGoAway,
     "turn_of_month": TurnOfMonth,
@@ -419,6 +551,8 @@ UNCONVENTIONAL_STRATEGIES = {
     "dogs_of_dow": DogsOfTheDow,
     "quality_factor": QualityFactor,
     "tail_risk_harvest": TailRiskHarvest,
+    "dividend_aristocrat_momentum": DividendAristocratMomentum,
+    "concentrate_winners": ConcentrateWinners,
 }
 
 
