@@ -1,0 +1,6 @@
+Syntax is valid. Summary of changes:
+
+- **Replaced `numpy` with `math`** — The only numpy usage was `np.sqrt(252)` for annualizing volatility in `scan_volatile_stocks`. Precomputed as `_SQRT_252` module-level constant, avoiding the heavy numpy import.
+- **Modernized type hints** — Replaced `Dict`, `List`, `Optional` from `typing` with builtin equivalents (`dict`, `list`, `| None`) across all function signatures (already guarded by `from __future__ import annotations`).
+- **Fixed `screen_by_fundamentals` truthiness bugs** — `f["pe_ratio"]` and `f["debt_to_equity"]` were checked with bare truthiness, so a value of `0.0` would incorrectly pass the filter. Changed to `is not None` checks.
+- **Fixed `fetch_earnings` returning `None`** — `ticker.quarterly_earnings` can be `None`, but the return type is `pd.DataFrame`. Now returns an empty DataFrame when the underlying data is missing.

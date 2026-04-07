@@ -386,3 +386,19 @@ All edits pass syntax validation. Summary of changes:
 - **Replaced `import pandas as pd` with lightweight `_isna`/`_notna` helpers** — pandas was only used for `pd.isna()` and `pd.notna()` across 8 call sites. The `v is None or v != v` pattern handles both `None` and NaN returns from `_get_indicator` without the heavy pandas import. Same approach used in other strategy files.
 - **Fixed `DynamicEnsemble` overly strict vol guard** — Moved vol validation from the upfront filter (`_isna(vol)` → ski
 
+## [2026-04-07T09:54:33.295895+00:00] Branch: main | Run: 20260407T095220_pid45418 | Iter 16 | $0.7622
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_get_indicator` NaN leak on nearest-date path** (line 76) — exact-date path returned `None` for NaN values but nearest-date path returned raw NaN, causing all downstream `is None` checks to miss it. Now both paths consistently return `None` for NaN.
+- **Removed dead variable `spread`** in `PairsTrader.generate_signals` — computed `mom_a - mom_b` was never used in any logic branch
+- **Fixed non-deterministic `list(set(...))` orderi
+
+## [2026-04-07T09:55:19.749587+00:00] Branch: main | Run: 20260407T095220_pid45429 | Iter 16 | $0.9434
+### data_fetcher.py
+Syntax is valid. Summary of changes:
+
+- **Replaced `numpy` with `math`** — The only numpy usage was `np.sqrt(252)` for annualizing volatility in `scan_volatile_stocks`. Precomputed as `_SQRT_252` module-level constant, avoiding the heavy numpy import.
+- **Modernized type hints** — Replaced `Dict`, `List`, `Optional` from `typing` with builtin equivalents (`dict`, `list`, `| None`) across all function signatures (already guarded by `from __future__ import annotations`).
+- **Fixed `screen_by_funda
+

@@ -15,14 +15,11 @@ import os
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Optional
 
-import math
-
+import numpy as np
 import pandas as pd
 import requests
-
-_SQRT_252 = math.sqrt(252)
 
 # ---------------------------------------------------------------------------
 # Cache setup
@@ -72,7 +69,7 @@ API_KEYS = {
 }
 
 
-def get_api_key(name: str) -> str | None:
+def get_api_key(name: str) -> Optional[str]:
     """Get API key from environment."""
     return os.environ.get(name)
 
@@ -122,7 +119,7 @@ def _cache_set(key: str, df: pd.DataFrame) -> None:
 def fetch_ohlcv(
     symbol: str,
     start: str = "2020-01-01",
-    end: str | None = None,
+    end: Optional[str] = None,
     interval: str = "1d",
     cache: bool = True,
 ) -> pd.DataFrame:
@@ -161,11 +158,11 @@ def fetch_ohlcv(
 
 
 def fetch_multiple_ohlcv(
-    symbols: list[str],
+    symbols: List[str],
     start: str = "2020-01-01",
-    end: str | None = None,
+    end: Optional[str] = None,
     interval: str = "1d",
-) -> dict[str, pd.DataFrame]:
+) -> Dict[str, pd.DataFrame]:
     """Fetch OHLCV for multiple symbols. Falls back to individual downloads on failure."""
     import yfinance as yf
 
@@ -215,7 +212,7 @@ def fetch_multiple_ohlcv(
     return results
 
 
-def fetch_fundamentals(symbol: str) -> dict[str, Any]:
+def fetch_fundamentals(symbol: str) -> Dict[str, Any]:
     """Fetch fundamental data for a stock via yfinance.
 
     Returns dict with: pe_ratio, pb_ratio, dividend_yield, market_cap,
@@ -262,10 +259,7 @@ def fetch_earnings(symbol: str) -> pd.DataFrame:
     import yfinance as yf
 
     ticker = yf.Ticker(symbol)
-    result = ticker.quarterly_earnings
-    if result is None:
-        return pd.DataFrame()
-    return result
+    return ticker.quarterly_earnings
 
 
 def fetch_dividends(symbol: str) -> pd.Series:
@@ -276,7 +270,7 @@ def fetch_dividends(symbol: str) -> pd.Series:
     return ticker.dividends
 
 
-def fetch_options_chain(symbol: str, expiry: str | None = None) -> dict[str, pd.DataFrame]:
+def fetch_options_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, pd.DataFrame]:
     """Fetch options chain (calls and puts)."""
     import yfinance as yf
 
@@ -321,8 +315,8 @@ FRED_SERIES = {
 def fetch_fred_series(
     series_id: str,
     start: str = "2020-01-01",
-    end: str | None = None,
-    api_key: str | None = None,
+    end: Optional[str] = None,
+    api_key: Optional[str] = None,
     cache: bool = True,
 ) -> pd.DataFrame:
     """Fetch a FRED series. Works without API key for basic access.
@@ -372,7 +366,7 @@ def fetch_fred_series(
     return df
 
 
-def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
+def fetch_yield_curve(date: Optional[str] = None) -> Dict[str, float]:
     """Fetch US Treasury yield curve for a given date."""
     maturities = {"DGS1MO": "1M", "DGS3MO": "3M", "DGS6MO": "6M",
                   "DGS1": "1Y", "DGS2": "2Y", "DGS3": "3Y", "DGS5": "5Y",
@@ -451,7 +445,7 @@ def fetch_alpha_vantage(
 def fetch_polygon_bars(
     symbol: str,
     start: str = "2020-01-01",
-    end: str | None = None,
+    end: Optional[str] = None,
     timespan: str = "day",
 ) -> pd.DataFrame:
     """Fetch bars from Polygon.io (requires POLYGON_API_KEY)."""
@@ -480,7 +474,7 @@ def fetch_polygon_bars(
 # ---------------------------------------------------------------------------
 # PREMIUM DATA: Finnhub (sentiment/news)
 # ---------------------------------------------------------------------------
-def fetch_finnhub_sentiment(symbol: str) -> dict[str, Any]:
+def fetch_finnhub_sentiment(symbol: str) -> Dict[str, Any]:
     """Fetch social sentiment from Finnhub (requires FINNHUB_API_KEY)."""
     key = get_api_key("FINNHUB_API_KEY")
     if not key:
@@ -494,8 +488,8 @@ def fetch_finnhub_sentiment(symbol: str) -> dict[str, Any]:
 
 
 def fetch_finnhub_news(
-    symbol: str, from_date: str | None = None, to_date: str | None = None
-) -> list[dict]:
+    symbol: str, from_date: Optional[str] = None, to_date: Optional[str] = None
+) -> List[Dict]:
     """Fetch company news from Finnhub."""
     key = get_api_key("FINNHUB_API_KEY")
     if not key:
@@ -518,7 +512,7 @@ SEC_EDGAR_BASE = "https://efts.sec.gov/LATEST"
 SEC_HEADERS = {"User-Agent": "agents-assemble research@example.com"}
 
 
-def fetch_insider_trades(symbol: str, limit: int = 50) -> list[dict[str, Any]]:
+def fetch_insider_trades(symbol: str, limit: int = 50) -> List[Dict[str, Any]]:
     """Fetch recent insider trades from SEC EDGAR full-text search.
 
     Returns list of dicts with: name, title, date, transaction_type, shares, price
@@ -539,7 +533,7 @@ def fetch_sec_filings(
     symbol: str,
     filing_type: str = "10-K",
     limit: int = 10,
-) -> list[dict[str, Any]]:
+) -> List[Dict[str, Any]]:
     """Fetch SEC filings metadata via EDGAR full-text search."""
     url = f"{SEC_EDGAR_BASE}/search-index"
     params = {
@@ -560,7 +554,7 @@ def fetch_sec_filings(
 # ---------------------------------------------------------------------------
 # FREE DATA: Earnings calendar and analyst estimates (yfinance)
 # ---------------------------------------------------------------------------
-def fetch_earnings_calendar(symbol: str) -> dict[str, Any]:
+def fetch_earnings_calendar(symbol: str) -> Dict[str, Any]:
     """Fetch upcoming and past earnings dates + surprise data."""
     import yfinance as yf
     ticker = yf.Ticker(symbol)
@@ -616,7 +610,7 @@ def fetch_institutional_holders(symbol: str) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # FREE DATA: Sector / market breadth
 # ---------------------------------------------------------------------------
-def fetch_sector_performance(period: str = "1mo") -> dict[str, float]:
+def fetch_sector_performance(period: str = "1mo") -> Dict[str, float]:
     """Fetch sector ETF performance over a period.
 
     Args:
@@ -644,7 +638,7 @@ def fetch_sector_performance(period: str = "1mo") -> dict[str, float]:
     return results
 
 
-def fetch_market_breadth() -> dict[str, Any]:
+def fetch_market_breadth() -> Dict[str, Any]:
     """Fetch market breadth indicators using major ETFs as proxies."""
     import yfinance as yf
     etfs = ["SPY", "QQQ", "IWM", "DIA", "VTI"]
@@ -826,15 +820,15 @@ UNIVERSE = {
 }
 
 
-def get_universe(category: str = "mega_cap") -> list[str]:
+def get_universe(category: str = "mega_cap") -> List[str]:
     """Get a list of tickers for a given category."""
     return list(UNIVERSE.get(category, UNIVERSE["mega_cap"]))
 
 
 def scan_52_week_lows(
-    universe: list[str] | None = None,
+    universe: Optional[List[str]] = None,
     max_results: int = 20,
-) -> list[dict[str, Any]]:
+) -> List[Dict[str, Any]]:
     """Scan for stocks near their 52-week lows (live data).
 
     Returns list of {symbol, price, 52w_low, 52w_high, pct_from_low, pct_from_high}
@@ -878,11 +872,11 @@ def scan_52_week_lows(
 
 
 def scan_volatile_stocks(
-    universe: list[str] | None = None,
+    universe: Optional[List[str]] = None,
     period: str = "3mo",
     min_vol: float = 0.03,
     max_results: int = 20,
-) -> list[dict[str, Any]]:
+) -> List[Dict[str, Any]]:
     """Scan for most volatile stocks (live data).
 
     Returns list sorted by daily volatility (highest first).
@@ -907,7 +901,7 @@ def scan_volatile_stocks(
                 results.append({
                     "symbol": sym,
                     "daily_vol": float(daily_vol),
-                    "annual_vol": float(daily_vol * _SQRT_252),
+                    "annual_vol": float(daily_vol * np.sqrt(252)),
                     "avg_volume": float(hist["Volume"].mean()),
                     "price": float(hist["Close"].iloc[-1]),
                 })
@@ -921,7 +915,7 @@ def scan_volatile_stocks(
 def discover_universe_from_etf(
     etf_symbol: str,
     max_holdings: int = 20,
-) -> list[str]:
+) -> List[str]:
     """Discover stock universe from an ETF's top holdings (live data).
 
     Useful for building universes from sector/theme ETFs.
@@ -938,12 +932,12 @@ def discover_universe_from_etf(
 
 
 def screen_by_fundamentals(
-    symbols: list[str],
-    min_market_cap: float | None = None,
-    max_pe: float | None = None,
-    min_dividend_yield: float | None = None,
-    max_debt_to_equity: float | None = None,
-) -> list[dict[str, Any]]:
+    symbols: List[str],
+    min_market_cap: Optional[float] = None,
+    max_pe: Optional[float] = None,
+    min_dividend_yield: Optional[float] = None,
+    max_debt_to_equity: Optional[float] = None,
+) -> List[Dict[str, Any]]:
     """Screen stocks by fundamental criteria."""
     results = []
     for sym in symbols:
@@ -951,11 +945,11 @@ def screen_by_fundamentals(
             f = fetch_fundamentals(sym)
             if min_market_cap is not None and (f["market_cap"] or 0) < min_market_cap:
                 continue
-            if max_pe is not None and f["pe_ratio"] is not None and f["pe_ratio"] > max_pe:
+            if max_pe is not None and f["pe_ratio"] and f["pe_ratio"] > max_pe:
                 continue
             if min_dividend_yield is not None and (f["dividend_yield"] or 0) < min_dividend_yield:
                 continue
-            if max_debt_to_equity is not None and f["debt_to_equity"] is not None and f["debt_to_equity"] > max_debt_to_equity:
+            if max_debt_to_equity is not None and f["debt_to_equity"] and f["debt_to_equity"] > max_debt_to_equity:
                 continue
             results.append(f)
         except Exception:
@@ -967,11 +961,11 @@ def screen_by_fundamentals(
 # Convenience: multi-asset data bundle
 # ---------------------------------------------------------------------------
 def fetch_asset_bundle(
-    symbols: list[str],
+    symbols: List[str],
     start: str = "2020-01-01",
-    end: str | None = None,
+    end: Optional[str] = None,
     include_fundamentals: bool = False,
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """Fetch a complete data bundle for backtesting.
 
     Returns: {symbol: {"ohlcv": DataFrame, "fundamentals": dict (optional)}}
@@ -979,7 +973,7 @@ def fetch_asset_bundle(
     ohlcv_data = fetch_multiple_ohlcv(symbols, start=start, end=end)
     bundle = {}
     for sym in symbols:
-        entry: dict[str, Any] = {}
+        entry: Dict[str, Any] = {}
         if sym in ohlcv_data:
             entry["ohlcv"] = ohlcv_data[sym]
         if include_fundamentals:

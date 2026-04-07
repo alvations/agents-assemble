@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_get_indicator` NaN leak on nearest-date path** (line 76) — exact-date path returned `None` for NaN values but nearest-date path returned raw NaN, causing all downstream `is None` checks to miss it. Now both paths consistently return `None` for NaN.
+- **Removed dead variable `spread`** in `PairsTrader.generate_signals` — computed `mom_a - mom_b` was never used in any logic branch
+- **Fixed non-deterministic `list(set(...))` ordering** in `PairsTrader.__init__` and `EnsembleStrategist.__init__` — replaced with `dict.fromkeys()` for deterministic deduplication, improving reproducibility across runs (Python's hash randomization makes set ordering vary)
+- **Fixed stale module docstring** — listed 7 personas but file contains 10; added SectorRotation, PairsTrader, EnsembleStrategist
+- **Removed dead typing imports, modernized type hints** — `Any`, `Dict`, `List`, `Optional` are unused at runtime with `from __future__ import annotations`; replaced with builtin equivalents (`list[str] | None`, `dict[str, float]`, `object`)
