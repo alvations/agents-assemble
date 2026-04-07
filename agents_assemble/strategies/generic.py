@@ -5,20 +5,22 @@ All personas return target portfolio weights via a common interface compatible
 with the Backtester.
 
 Personas:
-    1. BuffettValue       — Warren Buffett / Benjamin Graham value investing
-    2. MomentumTrader     — Trend-following momentum (Druckenmiller style)
-    3. MemeStockTrader    — Social sentiment / meme stock (WSB / Reddit style)
-    4. DividendInvestor   — Dividend growth (old-school income investing)
-    5. QuantStrategist    — Statistical arbitrage / mean reversion (Renaissance style)
-    6. FixedIncomeStrat   — Bond / yield curve strategies (PIMCO style)
-    7. GrowthInvestor     — Cathie Wood / ARK style high-growth disruptors
+    1. BuffettValue         — Warren Buffett / Benjamin Graham value investing
+    2. MomentumTrader       — Trend-following momentum (Druckenmiller style)
+    3. MemeStockTrader      — Social sentiment / meme stock (WSB / Reddit style)
+    4. DividendInvestor     — Dividend growth (old-school income investing)
+    5. QuantStrategist      — Statistical arbitrage / mean reversion (Renaissance style)
+    6. FixedIncomeStrat     — Bond / yield curve strategies (PIMCO style)
+    7. GrowthInvestor       — Cathie Wood / ARK style high-growth disruptors
+    8. SectorRotation       — Sector ETF rotation by momentum
+    9. PairsTrader          — Relative value / pairs trading
+   10. EnsembleStrategist   — Multi-strategy consensus
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
@@ -35,7 +37,7 @@ class PersonaConfig:
     max_position_size: float = 0.25   # Max weight per position
     max_positions: int = 10
     rebalance_frequency: str = "monthly"  # daily, weekly, monthly
-    universe: List[str] = field(default_factory=list)
+    universe: list[str] = field(default_factory=list)
 
 
 class BasePersona(ABC):
@@ -46,9 +48,9 @@ class BasePersona(ABC):
 
     @abstractmethod
     def generate_signals(
-        self, date: pd.Timestamp, prices: Dict[str, float],
-        portfolio: Any, data: Dict[str, pd.DataFrame]
-    ) -> Dict[str, float]:
+        self, date: pd.Timestamp, prices: dict[str, float],
+        portfolio: object, data: dict[str, pd.DataFrame]
+    ) -> dict[str, float]:
         """Generate target weights for each symbol.
 
         Returns: {symbol: weight} where weight is 0-1 (fraction of portfolio)
@@ -59,8 +61,8 @@ class BasePersona(ABC):
         """Make persona callable as a strategy function."""
         return self.generate_signals(date, prices, portfolio, data)
 
-    def _get_indicator(self, data: Dict[str, pd.DataFrame], symbol: str,
-                       indicator: str, date: pd.Timestamp) -> Optional[float]:
+    def _get_indicator(self, data: dict[str, pd.DataFrame], symbol: str,
+                       indicator: str, date: pd.Timestamp) -> float | None:
         """Safely get an indicator value for a symbol at a date."""
         if symbol not in data:
             return None
@@ -104,7 +106,7 @@ class BuffettValue(BasePersona):
     - SELL: RSI > 75 (overheated)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Buffett Value",
             description="Deep value investing: buy great companies when they're cheap",
@@ -175,7 +177,7 @@ class MomentumTrader(BasePersona):
     - SELL: MACD < signal AND price < SMA50 (momentum breakdown)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Momentum Trader",
             description="Trend-following: buy strength, cut losers fast",
@@ -254,7 +256,7 @@ class MemeStockTrader(BasePersona):
     - SELL: RSI > 80 OR price drops below SMA20
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Meme Stock Trader",
             description="YOLO: volume spikes, dip buys, short squeezes",
@@ -339,7 +341,7 @@ class DividendInvestor(BasePersona):
     - Rarely SELL: Only if price >30% above SMA200 (take some off table)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Dividend Investor",
             description="Buy and hold dividend aristocrats, compound forever",
@@ -411,7 +413,7 @@ class QuantStrategist(BasePersona):
     - Size inversely proportional to volatility
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Quant Strategist",
             description="Mean-reversion: buy oversold, sell overbought, size by vol",
@@ -488,7 +490,7 @@ class FixedIncomeStrat(BasePersona):
     - Long HYG when RSI recovering and momentum positive (risk-on)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Fixed Income Strategist",
             description="Bond duration/credit strategies via ETFs",
@@ -572,7 +574,7 @@ class GrowthInvestor(BasePersona):
     - SELL: Price breaks below SMA200 (thesis broken)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Growth Investor",
             description="Disruptive innovation: high growth, buy dips in uptrends",
@@ -657,7 +659,7 @@ class SectorRotation(BasePersona):
     - Exit sectors with momentum < 0.97 (below SMA20 by 3%)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Sector Rotation",
             description="Rotate into strongest sector ETFs, fade weakest",
@@ -740,8 +742,8 @@ class PairsTrader(BasePersona):
         ("HD", "LOW"),
     ]
 
-    def __init__(self, universe: Optional[List[str]] = None):
-        all_syms = list(set(s for pair in self.PAIRS for s in pair))
+    def __init__(self, universe: list[str] | None = None):
+        all_syms = list(dict.fromkeys(s for pair in self.PAIRS for s in pair))
         config = PersonaConfig(
             name="Pairs Trader",
             description="Relative value: long laggard vs leader in correlated pairs",
@@ -769,11 +771,6 @@ class PairsTrader(BasePersona):
 
             if any(v is None for v in [rsi_a, rsi_b, sma50_a, sma50_b]):
                 continue
-
-            # Relative momentum: which one is stronger?
-            mom_a = price_a / sma50_a if sma50_a > 0 else 1
-            mom_b = price_b / sma50_b if sma50_b > 0 else 1
-            spread = mom_a - mom_b  # positive = A is stronger
 
             # Mean reversion in the pair
             if rsi_a < 35 and rsi_b > 55:
@@ -816,8 +813,8 @@ class EnsembleStrategist(BasePersona):
     - Weight by number of agreeing strategies
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
-        all_syms = list(set(
+    def __init__(self, universe: list[str] | None = None):
+        all_syms = list(dict.fromkeys(
             sym for cls in [BuffettValue, MomentumTrader, GrowthInvestor, DividendInvestor]
             for sym in cls().config.universe
         ))

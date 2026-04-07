@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Replaced `import pandas as pd` with lightweight `_isna`/`_notna` helpers** — pandas was only used for `pd.isna()` and `pd.notna()` across 8 call sites. The `v is None or v != v` pattern handles both `None` and NaN returns from `_get_indicator` without the heavy pandas import. Same approach used in other strategy files.
+- **Fixed `DynamicEnsemble` overly strict vol guard** — Moved vol validation from the upfront filter (`_isna(vol)` → skip) to the quality signal branch only (`_notna(vol) and vol < 0.02`). Stocks with valid sma50/rsi but missing vol data can now participate via momentum and value sub-strategies instead of being excluded entirely.
+- **Fixed `universe or default` truthiness bug in both classes** — `universe=[]` (explicit empty list) was silently replaced with defaults because empty list is falsy. Changed to `universe if universe is not None else [...]` so only `None` triggers defaults.

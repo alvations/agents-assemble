@@ -379,3 +379,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed KeyError crash in EqualRiskContrib** (line 411): Same missing guard
 - **Fixed NaN vol bug in EqualRiskContrib** (line 418): `vol <= 0` doesn't catch NaN (`NaN <= 0` is `False`), changed to `not (vol > 0)` — same bug class fixed in ZScoreReversion it
 
+## [2026-04-07T09:54:26.613377+00:00] Branch: main | Run: 20260407T094604_pid44256 | Iter 14 | $0.9445
+### hedge_fund_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Replaced `import pandas as pd` with lightweight `_isna`/`_notna` helpers** — pandas was only used for `pd.isna()` and `pd.notna()` across 8 call sites. The `v is None or v != v` pattern handles both `None` and NaN returns from `_get_indicator` without the heavy pandas import. Same approach used in other strategy files.
+- **Fixed `DynamicEnsemble` overly strict vol guard** — Moved vol validation from the upfront filter (`_isna(vol)` → ski
+

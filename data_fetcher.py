@@ -15,11 +15,14 @@ import os
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import numpy as np
+import math
+
 import pandas as pd
 import requests
+
+_SQRT_252 = math.sqrt(252)
 
 # ---------------------------------------------------------------------------
 # Cache setup
@@ -69,7 +72,7 @@ API_KEYS = {
 }
 
 
-def get_api_key(name: str) -> Optional[str]:
+def get_api_key(name: str) -> str | None:
     """Get API key from environment."""
     return os.environ.get(name)
 
@@ -119,7 +122,7 @@ def _cache_set(key: str, df: pd.DataFrame) -> None:
 def fetch_ohlcv(
     symbol: str,
     start: str = "2020-01-01",
-    end: Optional[str] = None,
+    end: str | None = None,
     interval: str = "1d",
     cache: bool = True,
 ) -> pd.DataFrame:
@@ -160,7 +163,7 @@ def fetch_ohlcv(
 def fetch_multiple_ohlcv(
     symbols: List[str],
     start: str = "2020-01-01",
-    end: Optional[str] = None,
+    end: str | None = None,
     interval: str = "1d",
 ) -> Dict[str, pd.DataFrame]:
     """Fetch OHLCV for multiple symbols. Falls back to individual downloads on failure."""
@@ -270,7 +273,7 @@ def fetch_dividends(symbol: str) -> pd.Series:
     return ticker.dividends
 
 
-def fetch_options_chain(symbol: str, expiry: Optional[str] = None) -> Dict[str, pd.DataFrame]:
+def fetch_options_chain(symbol: str, expiry: str | None = None) -> Dict[str, pd.DataFrame]:
     """Fetch options chain (calls and puts)."""
     import yfinance as yf
 
@@ -315,8 +318,8 @@ FRED_SERIES = {
 def fetch_fred_series(
     series_id: str,
     start: str = "2020-01-01",
-    end: Optional[str] = None,
-    api_key: Optional[str] = None,
+    end: str | None = None,
+    api_key: str | None = None,
     cache: bool = True,
 ) -> pd.DataFrame:
     """Fetch a FRED series. Works without API key for basic access.
@@ -366,7 +369,7 @@ def fetch_fred_series(
     return df
 
 
-def fetch_yield_curve(date: Optional[str] = None) -> Dict[str, float]:
+def fetch_yield_curve(date: str | None = None) -> Dict[str, float]:
     """Fetch US Treasury yield curve for a given date."""
     maturities = {"DGS1MO": "1M", "DGS3MO": "3M", "DGS6MO": "6M",
                   "DGS1": "1Y", "DGS2": "2Y", "DGS3": "3Y", "DGS5": "5Y",
@@ -445,7 +448,7 @@ def fetch_alpha_vantage(
 def fetch_polygon_bars(
     symbol: str,
     start: str = "2020-01-01",
-    end: Optional[str] = None,
+    end: str | None = None,
     timespan: str = "day",
 ) -> pd.DataFrame:
     """Fetch bars from Polygon.io (requires POLYGON_API_KEY)."""
@@ -488,7 +491,7 @@ def fetch_finnhub_sentiment(symbol: str) -> Dict[str, Any]:
 
 
 def fetch_finnhub_news(
-    symbol: str, from_date: Optional[str] = None, to_date: Optional[str] = None
+    symbol: str, from_date: str | None = None, to_date: str | None = None
 ) -> List[Dict]:
     """Fetch company news from Finnhub."""
     key = get_api_key("FINNHUB_API_KEY")
@@ -826,7 +829,7 @@ def get_universe(category: str = "mega_cap") -> List[str]:
 
 
 def scan_52_week_lows(
-    universe: Optional[List[str]] = None,
+    universe: list[str] | None = None,
     max_results: int = 20,
 ) -> List[Dict[str, Any]]:
     """Scan for stocks near their 52-week lows (live data).
@@ -872,7 +875,7 @@ def scan_52_week_lows(
 
 
 def scan_volatile_stocks(
-    universe: Optional[List[str]] = None,
+    universe: list[str] | None = None,
     period: str = "3mo",
     min_vol: float = 0.03,
     max_results: int = 20,
@@ -933,10 +936,10 @@ def discover_universe_from_etf(
 
 def screen_by_fundamentals(
     symbols: List[str],
-    min_market_cap: Optional[float] = None,
-    max_pe: Optional[float] = None,
-    min_dividend_yield: Optional[float] = None,
-    max_debt_to_equity: Optional[float] = None,
+    min_market_cap: float | None = None,
+    max_pe: float | None = None,
+    min_dividend_yield: float | None = None,
+    max_debt_to_equity: float | None = None,
 ) -> List[Dict[str, Any]]:
     """Screen stocks by fundamental criteria."""
     results = []
@@ -963,7 +966,7 @@ def screen_by_fundamentals(
 def fetch_asset_bundle(
     symbols: List[str],
     start: str = "2020-01-01",
-    end: Optional[str] = None,
+    end: str | None = None,
     include_fundamentals: bool = False,
 ) -> Dict[str, Any]:
     """Fetch a complete data bundle for backtesting.

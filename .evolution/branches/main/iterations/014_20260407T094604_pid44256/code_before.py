@@ -9,16 +9,9 @@ Strategies:
 
 from __future__ import annotations
 
+import pandas as pd
+
 from personas import BasePersona, PersonaConfig
-
-
-def _isna(v):
-    """Check if value is None or NaN (lightweight alternative to pd.isna)."""
-    return v is None or v != v
-
-
-def _notna(v):
-    return v is not None and v == v
 
 
 class HealthcareAsiaMomentum(BasePersona):
@@ -36,7 +29,7 @@ class HealthcareAsiaMomentum(BasePersona):
             max_position_size=0.12,
             max_positions=12,
             rebalance_frequency="weekly",
-            universe=universe if universe is not None else [
+            universe=universe or [
                 "UNH", "LLY", "ABBV", "MRK", "JNJ", "PFE", "ISRG", "SYK",
                 "REGN", "VRTX", "DXCM", "HIMS",
                 "TM", "SONY", "BABA", "PDD", "INFY", "TSM", "SE",
@@ -58,18 +51,18 @@ class HealthcareAsiaMomentum(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             macd = self._get_indicator(data, sym, "macd", date)
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            if _isna(sma50) or _isna(rsi):
+            if pd.isna(sma50) or pd.isna(rsi):
                 continue
             score = 0.0
-            if _notna(sma200) and price > sma50 > sma200:
+            if pd.notna(sma200) and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
-            if _notna(macd) and _notna(macd_sig) and macd > macd_sig:
+            if pd.notna(macd) and pd.notna(macd_sig) and macd > macd_sig:
                 score += 1.0
             if 40 < rsi < 75:
                 score += 0.5
-            if _notna(sma200) and price < sma200 * 0.90:
+            if pd.notna(sma200) and price < sma200 * 0.90:
                 weights[sym] = 0.0
             elif score >= 2.5:
                 scored.append((sym, score))
@@ -104,7 +97,7 @@ class DynamicEnsemble(BasePersona):
             max_position_size=0.12,
             max_positions=12,
             rebalance_frequency="weekly",
-            universe=universe if universe is not None else all_syms,
+            universe=universe or all_syms,
         )
         super().__init__(config)
 
@@ -124,7 +117,7 @@ class DynamicEnsemble(BasePersona):
             macd = self._get_indicator(data, sym, "macd", date)
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
 
-            if _isna(sma50) or _isna(rsi):
+            if pd.isna(sma50) or pd.isna(rsi) or pd.isna(vol):
                 continue
 
             signals = 0
@@ -132,11 +125,11 @@ class DynamicEnsemble(BasePersona):
 
             # Momentum signal (weight: performance-adaptive)
             mom = 0
-            if _notna(sma200) and price > sma50 > sma200:
+            if pd.notna(sma200) and price > sma50 > sma200:
                 mom = 1
             elif price > sma50:
                 mom = 0.5
-            if _notna(macd) and _notna(macd_sig) and macd > macd_sig:
+            if pd.notna(macd) and pd.notna(macd_sig) and macd > macd_sig:
                 mom += 0.5
             if mom > 0:
                 signals += 1
@@ -144,7 +137,7 @@ class DynamicEnsemble(BasePersona):
 
             # Value signal
             val = 0
-            if _notna(sma200):
+            if pd.notna(sma200):
                 discount = (sma200 - price) / sma200
                 if discount > 0 and rsi < 45:
                     val = 1
@@ -153,7 +146,7 @@ class DynamicEnsemble(BasePersona):
 
             # Quality signal (low vol + above SMA200)
             qual = 0
-            if _notna(vol) and vol < 0.02 and _notna(sma200) and price > sma200:
+            if vol < 0.02 and pd.notna(sma200) and price > sma200:
                 qual = 1
                 signals += 1
             total_weight += qual * 0.3
