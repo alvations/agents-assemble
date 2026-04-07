@@ -20,13 +20,6 @@ import numpy as np
 import pandas as pd
 
 
-def _safe_float(val: Any, default: float = 0.0) -> float:
-    """Coerce a value to float, returning default if non-numeric."""
-    if isinstance(val, (int, float)) and not isinstance(val, bool):
-        return float(val)
-    return default
-
-
 STRATEGY_DIR = Path(__file__).parent / "strategy"
 WINNING_DIR = STRATEGY_DIR / "winning"
 LOSING_DIR = STRATEGY_DIR / "losing"
@@ -49,17 +42,15 @@ def generate_trade_recommendations(
     Returns:
         Dict with strategy assessment, individual trade recs, and risk params.
     """
-    total_ret = _safe_float(metrics.get("total_return"), 0.0)
-    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
-    is_winning = total_ret > 0 and sharpe > 0
+    is_winning = metrics.get("total_return", 0) > 0 and metrics.get("sharpe_ratio", 0) > 0
 
     # Risk parameters based on strategy performance
-    max_dd = abs(_safe_float(metrics.get("max_drawdown"), 0.20))
-    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
+    max_dd = abs(metrics.get("max_drawdown", 0.20))
+    vol = metrics.get("annual_volatility", 0.15)
 
     # Position sizing via Kelly criterion (simplified)
-    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
-    profit_factor = _safe_float(metrics.get("profit_factor"), 1.0)
+    win_rate = metrics.get("win_rate", 0.5)
+    profit_factor = metrics.get("profit_factor", 1.0)
     if profit_factor > 1 and win_rate > 0:
         avg_win_loss_ratio = profit_factor * (1 - win_rate) / win_rate if win_rate < 1 else 1
         kelly_fraction = win_rate - (1 - win_rate) / avg_win_loss_ratio if avg_win_loss_ratio > 0 else 0
@@ -71,7 +62,7 @@ def generate_trade_recommendations(
     stop_loss_pct = min(max_dd * 1.2, 0.25)  # 120% of historical max DD, capped at 25%
 
     # Take-profit based on CAGR and vol
-    cagr = _safe_float(metrics.get("cagr"), 0.10)
+    cagr = metrics.get("cagr", 0.10)
     take_profit_pct = max(cagr * 0.5, 0.05)  # Half of annual return per position
 
     recs = {
@@ -94,10 +85,10 @@ def generate_trade_recommendations(
         },
         "position_recommendations": [],
         "metrics_summary": {
-            "total_return": f"{total_ret:.2%}",
-            "sharpe_ratio": f"{sharpe:.2f}",
-            "max_drawdown": f"{_safe_float(metrics.get('max_drawdown'), 0.0):.2%}",
-            "win_rate": f"{win_rate:.2%}",
+            "total_return": f"{metrics.get('total_return', 0):.2%}",
+            "sharpe_ratio": f"{metrics.get('sharpe_ratio', 0):.2f}",
+            "max_drawdown": f"{metrics.get('max_drawdown', 0):.2%}",
+            "win_rate": f"{metrics.get('win_rate', 0):.2%}",
             "alpha": f"{metrics.get('alpha', 0):.2%}" if isinstance(metrics.get('alpha'), (int, float)) else "N/A",
         },
     }
@@ -114,8 +105,7 @@ def generate_trade_recommendations(
 def _assess_strategy(metrics: Dict[str, float]) -> str:
     """Generate overall strategy assessment."""
     sharpe = metrics.get("sharpe_ratio", 0)
-    alpha_raw = metrics.get("alpha", 0)
-    alpha = alpha_raw if isinstance(alpha_raw, (int, float)) else 0
+    alpha = metrics.get("alpha", 0)
     max_dd = metrics.get("max_drawdown", 0)
     total_ret = metrics.get("total_return", 0)
 
@@ -152,50 +142,20 @@ def _generate_position_rec(
     position_size_pct: float,
 ) -> Dict[str, Any]:
     """Generate recommendation for a single position."""
-    avg_cost = _safe_float(pos_info.get("avg_cost"), 0.0)
-    qty = _safe_float(pos_info.get("qty"), 0.0)
-
-    if qty > 0:
-        action = "BUY"
-    elif qty < 0:
-        action = "SELL"
-    else:
-        action = "FLAT"
-
-    if avg_cost > 0 and qty != 0:
-        if qty > 0:
-            stop_price = avg_cost * (1 - stop_loss_pct)
-            target_price = avg_cost * (1 + take_profit_pct)
-            stop_label = "below"
-            target_label = "above"
-            limit_price = avg_cost * 0.995
-            limit_desc = "0.5% below avg cost"
-        else:
-            stop_price = avg_cost * (1 + stop_loss_pct)
-            target_price = avg_cost * (1 - take_profit_pct)
-            stop_label = "above"
-            target_label = "below"
-            limit_price = avg_cost * 1.005
-            limit_desc = "0.5% above avg cost"
-        entry_info = {
-            "limit_price": f"${limit_price:.2f} ({limit_desc})",
-            "market_price": "Use market order if volatile",
-        }
-        stop_str = f"${stop_price:.2f} ({stop_loss_pct:.1%} {stop_label} entry)"
-        target_str = f"${target_price:.2f} ({take_profit_pct:.1%} {target_label} entry)"
-    else:
-        entry_info = {"limit_price": "N/A (no cost basis)", "market_price": "N/A"}
-        stop_str = "N/A (no cost basis)"
-        target_str = "N/A (no cost basis)"
+    avg_cost = pos_info.get("avg_cost", 0)
+    qty = pos_info.get("qty", 0)
 
     return {
         "symbol": symbol,
-        "action": action,
+        "action": "BUY" if qty > 0 else "SELL",
         "current_position": qty,
-        "avg_cost_basis": f"${avg_cost:.2f}" if avg_cost > 0 else "N/A",
-        "recommended_entry": entry_info,
-        "stop_loss": stop_str,
-        "take_profit": target_str,
+        "avg_cost_basis": f"${avg_cost:.2f}",
+        "recommended_entry": {
+            "limit_price": f"${avg_cost * 0.995:.2f} (0.5% below avg cost)",
+            "market_price": "Use market order if volatile",
+        },
+        "stop_loss": f"${avg_cost * (1 - stop_loss_pct):.2f} ({stop_loss_pct:.1%} below entry)",
+        "take_profit": f"${avg_cost * (1 + take_profit_pct):.2f} ({take_profit_pct:.1%} above entry)",
         "position_size": f"{position_size_pct:.1%} of portfolio",
         "trailing_stop": f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain",
     }
@@ -259,7 +219,7 @@ def save_strategy_recommendation(
             "This strategy lost money. Key issues:",
             f"- Sharpe ratio: {metrics.get('sharpe_ratio', 0):.2f} (target > 0.5)",
             f"- Max drawdown: {metrics.get('max_drawdown', 0):.2%} (target > -20%)",
-            f"- Alpha: {metrics.get('alpha', 0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
+            f"- Alpha: {metrics.get('alpha', 0):.2%} if available (target > 0%)",
             "",
             "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
         ])

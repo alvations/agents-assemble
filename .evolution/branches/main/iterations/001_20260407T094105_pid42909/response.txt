@@ -1,0 +1,7 @@
+All changes pass syntax validation. Summary:
+
+- **Fixed `TypeError` crash in `_assess_strategy`** when `alpha` is non-numeric (e.g., `None` or string) — now safely coerces to 0
+- **Fixed `TypeError` crash in "Lessons Learned" section** — same non-numeric alpha issue in the `:.2%` format string on line 222
+- **Fixed `qty == 0` incorrectly recommending SELL** — now reports "FLAT" for zero-quantity positions
+- **Fixed inverted stop-loss/take-profit for short positions** — shorts now correctly place stop *above* entry and target *below* entry, with limit price offset in the right direction
+- **Added guard for `avg_cost == 0`** — returns "N/A" instead of nonsensical `$0.00` price targets

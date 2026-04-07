@@ -11,7 +11,7 @@ from __future__ import annotations
 import math
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
@@ -73,7 +73,7 @@ def grade_metric(metric: str, value: float) -> str:
     return "F"
 
 
-def compute_composite_score(metrics: dict[str, float]) -> float:
+def compute_composite_score(metrics: Dict[str, float]) -> float:
     """Compute weighted composite score (0-100)."""
     score = 0.0
     for metric, weight in METRICS_WEIGHTS.items():
@@ -88,9 +88,9 @@ def compute_composite_score(metrics: dict[str, float]) -> float:
 # ---------------------------------------------------------------------------
 def diagnose_strategy(
     name: str,
-    metrics: dict[str, float],
-    trade_metrics: dict[str, Any] | None = None,
-) -> dict[str, Any]:
+    metrics: Dict[str, float],
+    trade_metrics: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Diagnose a strategy's strengths and weaknesses.
 
     Returns:
@@ -120,12 +120,12 @@ def diagnose_strategy(
         elif info["grade"] in ("D", "F"):
             weaknesses.append(f"{metric}: {info['value']:.4f} ({info['grade']})")
 
-    # Strategy-specific suggestions (use same defaults as scoring, NaN-safe)
-    sharpe = _safe_float(metrics.get("sharpe_ratio", _METRIC_MISSING_DEFAULTS.get("sharpe_ratio", 0)))
-    max_dd = _safe_float(metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)))
-    win_rate = _safe_float(metrics.get("win_rate", _METRIC_MISSING_DEFAULTS.get("win_rate", 0)))
-    alpha = _safe_float(metrics.get("alpha", _METRIC_MISSING_DEFAULTS.get("alpha", 0)))
-    total_ret = _safe_float(metrics.get("total_return", _METRIC_MISSING_DEFAULTS.get("total_return", 0)))
+    # Strategy-specific suggestions (use same defaults as scoring)
+    sharpe = metrics.get("sharpe_ratio", _METRIC_MISSING_DEFAULTS.get("sharpe_ratio", 0))
+    max_dd = metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0))
+    win_rate = metrics.get("win_rate", _METRIC_MISSING_DEFAULTS.get("win_rate", 0))
+    alpha = metrics.get("alpha", _METRIC_MISSING_DEFAULTS.get("alpha", 0))
+    total_ret = metrics.get("total_return", _METRIC_MISSING_DEFAULTS.get("total_return", 0))
     num_trades = trade_metrics.get("num_trades", 0) if trade_metrics else 0
 
     if max_dd < -0.25:
@@ -173,7 +173,7 @@ def diagnose_strategy(
 # ---------------------------------------------------------------------------
 # Ranking and comparison
 # ---------------------------------------------------------------------------
-def rank_strategies(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def rank_strategies(results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Rank multiple strategy results by composite score."""
     ranked = []
     for r in results:
@@ -208,7 +208,7 @@ def rank_strategies(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return ranked
 
 
-def generate_judge_report(results: list[dict[str, Any]]) -> str:
+def generate_judge_report(results: List[Dict[str, Any]]) -> str:
     """Generate a comprehensive judge report."""
     ranked = rank_strategies(results)
 
@@ -223,15 +223,12 @@ def generate_judge_report(results: list[dict[str, Any]]) -> str:
         "|------|----------|-------|-------|--------|-------|--------|--------|",
     ]
 
-    def _fmt(val: float, fmt: str) -> str:
-        return format(val, fmt) if math.isfinite(val) else "N/A"
-
     for r in ranked:
         lines.append(
             f"| {r['rank']} | {r['name']} | {r['composite_score']:.0f} | "
-            f"{r['overall_grade']} | {_fmt(r['sharpe'], '.2f')} | "
-            f"{_fmt(r['alpha'], '.2%')} | "
-            f"{_fmt(r['max_dd'], '.1%')} | {_fmt(r['total_return'], '.1%')} |"
+            f"{r['overall_grade']} | {r['sharpe']:.2f} | "
+            f"{r['alpha']:.2%} | "
+            f"{r['max_dd']:.1%} | {r['total_return']:.1%} |"
         )
 
     # Detail for each strategy
@@ -277,7 +274,7 @@ def generate_judge_report(results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def save_judge_report(results: list[dict[str, Any]]) -> Path:
+def save_judge_report(results: List[Dict[str, Any]]) -> Path:
     """Generate and save the judge report."""
     report = generate_judge_report(results)
     kb_dir = KNOWLEDGE_DIR / "judge_reports"
@@ -293,15 +290,15 @@ def save_judge_report(results: list[dict[str, Any]]) -> Path:
 # ---------------------------------------------------------------------------
 def suggest_parameter_tuning(
     name: str,
-    metrics: dict[str, float],
-    persona_config: dict[str, Any] | None = None,
-) -> list[dict[str, str]]:
+    metrics: Dict[str, float],
+    persona_config: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, str]]:
     """Suggest specific parameter changes based on performance."""
     suggestions = []
-    sharpe = _safe_float(metrics.get("sharpe_ratio", 0))
-    max_dd = _safe_float(metrics.get("max_drawdown", _METRIC_MISSING_DEFAULTS.get("max_drawdown", 0)))
-    win_rate = _safe_float(metrics.get("win_rate", 0))
-    vol = _safe_float(metrics.get("annual_volatility", 0))
+    sharpe = metrics.get("sharpe_ratio", 0)
+    max_dd = metrics.get("max_drawdown", 0)
+    win_rate = metrics.get("win_rate", 0)
+    vol = metrics.get("annual_volatility", 0)
 
     if max_dd < -0.20:
         suggestions.append({

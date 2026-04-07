@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `suggest_parameter_tuning` missing `_safe_float`/`_METRIC_MISSING_DEFAULTS`**: `max_drawdown` defaulting to `0` meant "no drawdown" which silently skipped the drawdown-reduction suggestions. All four metric values now use `_safe_float()` so non-numeric values don't crash comparisons.
+- **Fixed `diagnose_strategy` suggestion values not NaN-safe**: Wrapped all five metric lookups (lines 124-128) with `_safe_float()` — a `None` or string metric value would have crashed the comparison operators on lines 131-155.
+- **Fixed NaN-ugly report formatting**: Added `_fmt` helper that renders NaN values as `"N/A"` instead of `"nan"` / `"nan%"` in the markdown table.
+- **Modernized type hints**: Replaced `Dict` → `dict`, `List` → `list`, `Optional[X]` → `X | None` across all function signatures (already guarded by `from __future__ import annotations`). Removed unused `Dict`, `List`, `Optional` imports.

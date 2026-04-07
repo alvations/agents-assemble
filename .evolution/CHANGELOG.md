@@ -279,3 +279,19 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `InfrastructureBoom` missing overbought exit** (line 451): Added `rsi > 70 → weight 0.0` guard before the buy condition. This was the only strategy without any RSI exit filter — stocks with RSI 90+ near SMA200 would be bought instead of exited.
 - **Fixed `AgingPopulation` missing overbought exit** (line 639): Same fix — defensive strategy should not buy overbought stocks. Both strategies now match the exit pattern used by the other
 
+## [2026-04-07T09:42:06.118512+00:00] Branch: main | Run: 20260407T094004_pid42740 | Iter 11 | $0.4980
+### judge.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `suggest_parameter_tuning` missing `_safe_float`/`_METRIC_MISSING_DEFAULTS`**: `max_drawdown` defaulting to `0` meant "no drawdown" which silently skipped the drawdown-reduction suggestions. All four metric values now use `_safe_float()` so non-numeric values don't crash comparisons.
+- **Fixed `diagnose_strategy` suggestion values not NaN-safe**: Wrapped all five metric lookups (lines 124-128) with `_safe_float()` — a `None` or str
+
+## [2026-04-07T09:42:15.514939+00:00] Branch: main | Run: 20260407T094105_pid42909 | Iter 1 | $0.2555
+### trade_recommender.py
+All changes pass syntax validation. Summary:
+
+- **Fixed `TypeError` crash in `_assess_strategy`** when `alpha` is non-numeric (e.g., `None` or string) — now safely coerces to 0
+- **Fixed `TypeError` crash in "Lessons Learned" section** — same non-numeric alpha issue in the `:.2%` format string on line 222
+- **Fixed `qty == 0` incorrectly recommending SELL** — now reports "FLAT" for zero-quantity positions
+- **Fixed inverted stop-loss/take-profit for short positions** — shorts now correctly place
+
