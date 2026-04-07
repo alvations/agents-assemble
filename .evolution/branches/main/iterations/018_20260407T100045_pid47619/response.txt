@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed FaberSectorRotation safe haven bypassing universe check** (lines 679-680) — custom universes without TLT/IEF would get phantom allocations. Now checks `self.config.universe` before allocating, matching the pattern fixed in iteration 13 for FactorETFRotation and RiskParityMomentum.
+- **Fixed FaberSectorRotation capped weight excess unallocated** — with 1-2 qualifying sectors, `max_position_size=0.35` cap left 20-55% in cash instead of bonds. Now allocates the remainder to TLT/IEF per Faber's methodology (unallocated capital → bonds).
+- **Fixed 3 `is not None` checks → `not _is_missing()`** (MultiFactorSmartBeta lines 151/155, MomentumCrashHedge line 324) — these were the only sites not using the file's `_is_missing()` helper, which also catches NaN. Consistency fix for defensive NaN safety.
+- **Fixed RiskParityMomentum ignoring `max_positions`** — all other strategies slice to `[:max_positions]`, but this one allocated to every candidate passing the momentum filter. With custom universes larger than the default 5-asset set, this would exceed the configured limit. Now sorts by vol ascending and takes the top N lowest-vol assets (best risk parity contributors).

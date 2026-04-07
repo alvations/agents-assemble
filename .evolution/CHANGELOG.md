@@ -410,3 +410,10 @@ All edits pass syntax validation. Summary of changes:
 - **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 4 classes, `Dict[str, ...]` → `dict[str, ...]` in `detect_recession_regime` signature (already guarded by `from __future__ import annotations`)
 - **Fixed NaN price bu
 
+## [2026-04-07T10:08:41.769369+00:00] Branch: main | Run: 20260407T100045_pid47619 | Iter 18 | $1.0920
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed FaberSectorRotation safe haven bypassing universe check** (lines 679-680) — custom universes without TLT/IEF would get phantom allocations. Now checks `self.config.universe` before allocating, matching the pattern fixed in iteration 13 for FactorETFRotation and RiskParityMomentum.
+- **Fixed FaberSectorRotation capped weight excess unallocated** — with 1-2 qualifying sectors, `max_position_size=0.35` cap left 20-55% in cash instead 
+

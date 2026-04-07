@@ -1,396 +1,723 @@
-"""Recession indicators and recession-proof strategies for agents-assemble.
+"""Research-backed quantitative strategies for agents-assemble.
 
-Recession Detection:
-- Yield curve inversion (10Y-2Y spread, 10Y-3M spread)
-- SMA200 death cross on SPY
-- High yield spreads widening
-- Market breadth deterioration
-- VIX regime
+These are strategies derived from academic finance research and
+quantitative analysis — not from any persona or interview.
 
-Recession-Proof Strategies:
-1. RecessionDetector    — Regime detection, shifts to defensive
-2. TreasurySafe        — Flight to quality during downturns
-3. DefensiveRotation   — Rotate to staples/utilities/healthcare in recessions
-4. GoldBug             — Gold and precious metals as recession hedge
+All MUST be backtested before trusting.
+
+Strategies:
+    1. DualMomentum         — Gary Antonacci: absolute + relative momentum
+    2. MultiFactorSmartBeta — Combine value + momentum + quality factors
+    3. LowVolAnomaly        — Buy lowest-volatility quintile (Frazzini & Pedersen)
+    4. MomentumCrashHedge   — 12-1 momentum with crash protection
+    5. RiskParityMomentum   — Risk parity allocation + momentum overlay
+    6. MeanVarianceOptimal  — Simplified Markowitz-inspired allocation
+    7. GlobalRotation        — International momentum rotation
+    8. FactorETFRotation    — Rotate between factor ETFs by momentum
+    9. FaberSectorRotation  — Faber 12-month sector momentum, top 3
 """
 
 from __future__ import annotations
 
-import pandas as pd
+import math
 
 from personas import BasePersona, PersonaConfig
 
-
-# ---------------------------------------------------------------------------
-# Recession Regime Detection
-# ---------------------------------------------------------------------------
-def detect_recession_regime(
-    date: pd.Timestamp,
-    data: dict[str, pd.DataFrame],
-    prices: dict[str, float],
-) -> dict[str, object]:
-    """Detect if we're in a recession-like regime.
-
-    Uses multiple signals:
-    1. SPY below SMA200 (bear market)
-    2. TLT rising (flight to quality)
-    3. IWM underperforming SPY (small caps weaker = risk-off)
-    4. VIX proxy (high volatility in SPY)
-
-    Returns dict with regime info and confidence score.
-    """
-    regime = {
-        "is_recession": False,
-        "confidence": 0.0,
-        "signals": {},
-    }
-
-    signal_count = 0
-    total_signals = 0
-
-    # Fetch SPY indicators once (used by signals 1, 2, 4, 5)
-    _spy_raw = prices.get("SPY")
-    spy_price = _spy_raw if _spy_raw is not None and not pd.isna(_spy_raw) else None
-    spy_sma50 = _safe_get(data, "SPY", "sma_50", date) if "SPY" in data else None
-    spy_sma200 = _safe_get(data, "SPY", "sma_200", date) if "SPY" in data else None
-    spy_vol = _safe_get(data, "SPY", "vol_20", date) if "SPY" in data else None
-    spy_rsi = _safe_get(data, "SPY", "rsi_14", date) if "SPY" in data else None
-
-    # Signal 1: SPY below SMA200
-    if spy_sma200 is not None and spy_price is not None:
-        total_signals += 1
-        if spy_price < spy_sma200:
-            signal_count += 1
-            regime["signals"]["spy_below_sma200"] = True
-        else:
-            regime["signals"]["spy_below_sma200"] = False
-
-    # Signal 2: SPY SMA50 < SMA200 (death cross)
-    if spy_sma50 is not None and spy_sma200 is not None:
-        total_signals += 1
-        if spy_sma50 < spy_sma200:
-            signal_count += 1
-            regime["signals"]["death_cross"] = True
-        else:
-            regime["signals"]["death_cross"] = False
-
-    # Signal 3: TLT trending up (bonds rally = flight to quality)
-    if "TLT" in data:
-        tlt_sma50 = _safe_get(data, "TLT", "sma_50", date)
-        tlt_sma200 = _safe_get(data, "TLT", "sma_200", date)
-        if tlt_sma50 is not None and tlt_sma200 is not None:
-            total_signals += 1
-            if tlt_sma50 > tlt_sma200:
-                signal_count += 1
-                regime["signals"]["tlt_uptrend"] = True
-            else:
-                regime["signals"]["tlt_uptrend"] = False
-
-    # Signal 4: High volatility
-    if spy_vol is not None:
-        total_signals += 1
-        if spy_vol > 0.018:  # Annualized ~28%
-            signal_count += 1
-            regime["signals"]["high_vol"] = True
-        else:
-            regime["signals"]["high_vol"] = False
-
-    # Signal 5: RSI below 40 on SPY
-    if spy_rsi is not None:
-        total_signals += 1
-        if spy_rsi < 40:
-            signal_count += 1
-            regime["signals"]["spy_oversold"] = True
-        else:
-            regime["signals"]["spy_oversold"] = False
-
-    if total_signals > 0:
-        regime["confidence"] = signal_count / total_signals
-        regime["is_recession"] = regime["confidence"] >= 0.5  # majority of available signals
-
-    return regime
+_SQRT_252 = math.sqrt(252)
 
 
-def _safe_get(data, sym, indicator, date):
-    if sym not in data:
-        return None
-    df = data[sym]
-    if indicator not in df.columns:
-        return None
-    if date in df.index:
-        val = df.loc[date, indicator]
-        if isinstance(val, pd.Series):
-            val = val.iloc[0]
-        return float(val) if not pd.isna(val) else None
-    try:
-        idx = df.index.get_indexer([date], method="nearest")[0]
-        if idx >= 0:
-            nearest_date = df.index[idx]
-            if abs((date - nearest_date).days) > 10:
-                return None  # Data too stale
-            val = df.iloc[idx][indicator]
-            return float(val) if not pd.isna(val) else None
-    except (IndexError, KeyError, TypeError):
-        pass
-    return None
+def _is_missing(v) -> bool:
+    """Check if indicator value is None or NaN (nearest-date path can leak NaN)."""
+    return v is None or v != v
 
 
 # ---------------------------------------------------------------------------
-# 1. Recession Detector — Adaptive regime switching
+# 1. Dual Momentum (Gary Antonacci)
 # ---------------------------------------------------------------------------
-class RecessionDetector(BasePersona):
-    """Adaptive strategy that detects recession regime and switches positioning.
+class DualMomentum(BasePersona):
+    """Gary Antonacci's Dual Momentum strategy.
 
-    Normal regime: 70% stocks (SPY/QQQ), 20% bonds (TLT), 10% gold (GLD)
-    Recession regime: 20% stocks (XLP/XLV), 50% bonds (TLT/IEF), 20% gold (GLD), 10% cash
+    Source: "Dual Momentum Investing" (2014)
+
+    Two filters:
+    1. Relative momentum: pick the stronger of US stocks vs international
+    2. Absolute momentum: only invest if stronger asset > T-bills (SMA proxy)
+
+    If both fail → 100% bonds.
+
+    Implementation:
+    - Compare SPY 12-month return vs EFA (international)
+    - If winner > 0 (absolute momentum): invest in winner
+    - If winner < 0: invest in AGG (bonds)
     """
 
     def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Recession Detector (Adaptive)",
-            description="Regime-switching: risk-on in growth, defensive in recession",
-            risk_tolerance=0.4,
-            max_position_size=0.50,
-            max_positions=6,
-            rebalance_frequency="weekly",
+            name="Dual Momentum (Antonacci)",
+            description="Absolute + relative momentum: stocks vs intl vs bonds",
+            risk_tolerance=0.5,
+            max_position_size=0.90,
+            max_positions=2,
+            rebalance_frequency="monthly",
+            universe=universe or ["SPY", "EFA", "AGG"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        # Calculate 12-month (approx 200-day) momentum for SPY and EFA
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        efa_sma200 = self._get_indicator(data, "EFA", "sma_200", date)
+        spy_price = prices.get("SPY")
+        efa_price = prices.get("EFA")
+
+        if spy_price is None or _is_missing(spy_sma200):
+            return {"AGG": 0.90} if "AGG" in prices else {}
+
+        # Relative momentum: SPY vs EFA
+        spy_mom = (spy_price - spy_sma200) / spy_sma200 if spy_sma200 > 0 else 0
+        efa_mom = (efa_price - efa_sma200) / efa_sma200 if efa_price is not None and not _is_missing(efa_sma200) and efa_sma200 > 0 else -1
+
+        if spy_mom > efa_mom:
+            winner, winner_mom = "SPY", spy_mom
+        else:
+            winner, winner_mom = "EFA", efa_mom
+
+        # Absolute momentum: is winner > 0 (above its SMA200)?
+        if winner_mom > 0:
+            weights = {winner: 0.90, "AGG": 0.0}
+        else:
+            # Both negative → safe haven
+            weights = {"AGG": 0.90, "SPY": 0.0, "EFA": 0.0}
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 2. Multi-Factor Smart Beta
+# ---------------------------------------------------------------------------
+class MultiFactorSmartBeta(BasePersona):
+    """Multi-factor strategy combining value + momentum + quality.
+
+    Source: Fama-French, AQR, Asness et al.
+
+    Score each stock on 3 factors:
+    - Value: price below SMA200 (discount proxy)
+    - Momentum: MACD > signal + price > SMA50
+    - Quality: low volatility + above SMA200
+
+    Composite score → rank → equal-weight top N.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Multi-Factor Smart Beta",
+            description="Value + momentum + quality composite factor ranking",
+            risk_tolerance=0.5,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="monthly",
             universe=universe or [
-                "SPY", "QQQ", "TLT", "IEF", "GLD",
-                "XLP", "XLV", "SHY",
+                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA",
+                "JPM", "V", "MA", "UNH", "JNJ", "PG", "KO",
+                "HD", "MCD", "WMT", "COST", "ABBV", "MRK",
+                "XOM", "CVX", "BAC", "GS",
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
-        regime = detect_recession_regime(date, data, prices)
+        weights = {}
+        scored = []
 
-        if regime["is_recession"]:
-            # Defensive positioning
-            weights = {
-                "XLP": 0.15,  # Consumer staples
-                "XLV": 0.10,  # Healthcare
-                "TLT": 0.30,  # Long bonds
-                "IEF": 0.15,  # Intermediate bonds
-                "GLD": 0.20,  # Gold
-                "SHY": 0.05,  # Short-term treasuries (cash proxy)
-                "SPY": 0.0,   # Exit stocks
-                "QQQ": 0.0,   # Exit tech
-            }
-        else:
-            # Risk-on positioning
-            weights = {
-                "SPY": 0.35,
-                "QQQ": 0.30,
-                "TLT": 0.15,
-                "GLD": 0.10,
-                "IEF": 0.05,
-                "XLP": 0.0,
-                "XLV": 0.0,
-                "SHY": 0.0,
-            }
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            macd = self._get_indicator(data, sym, "macd", date)
+            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
 
-        return {k: v for k, v in weights.items() if k in prices}
+            if any(_is_missing(v) for v in [sma200, rsi, vol]):
+                continue
+
+            # Factor 1: Value (discount to SMA200, higher = more value)
+            value_score = (sma200 - price) / sma200 if sma200 > 0 else 0
+            value_score = max(-0.5, min(0.5, value_score))  # Clip
+
+            # Factor 2: Momentum (trend alignment)
+            mom_score = 0.0
+            if not _is_missing(sma50) and price > sma50:
+                mom_score += 0.25
+            if price > sma200:
+                mom_score += 0.25
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                mom_score += 0.25
+            if 40 < rsi < 70:
+                mom_score += 0.25
+
+            # Factor 3: Quality (inverse vol, above SMA200)
+            quality_score = 0.0
+            if vol > 0:
+                quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
+            if price > sma200:
+                quality_score *= 1.3
+
+            # Composite: equal weight the 3 factors
+            composite = (value_score + 0.5) * 0.33 + mom_score * 0.33 + quality_score * 0.33
+
+            if composite > 0.25:
+                scored.append((sym, composite))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
 
 
 # ---------------------------------------------------------------------------
-# 2. Treasury Safe Haven
+# 3. Low Volatility Anomaly
 # ---------------------------------------------------------------------------
-class TreasurySafe(BasePersona):
-    """Flight to quality strategy during downturns.
+class LowVolAnomaly(BasePersona):
+    """Low volatility anomaly strategy.
 
-    Thesis: When stocks sell off, treasuries rally. Go long duration
-    when recession signals fire, short duration otherwise.
+    Source: Frazzini & Pedersen (2014) "Betting Against Beta"
+
+    Buy the lowest-volatility stocks. Counterintuitively, low-vol stocks
+    have historically outperformed high-vol stocks on a risk-adjusted basis
+    (and often in absolute terms too).
+
+    Implementation:
+    - Rank universe by 20-day realized volatility
+    - Buy the bottom quintile (lowest vol)
+    - Must be above SMA200 (not in downtrend)
     """
 
     def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Treasury Safe Haven",
-            description="Flight to quality: long-duration bonds when recession signals fire",
+            name="Low Volatility Anomaly",
+            description="Buy lowest-vol stocks: anomaly where low risk = higher returns",
             risk_tolerance=0.2,
-            max_position_size=0.40,
-            max_positions=4,
-            rebalance_frequency="weekly",
-            universe=universe or ["TLT", "IEF", "SHY", "TIP", "GLD", "SPY"],
+            max_position_size=0.08,
+            max_positions=15,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
+                "JPM", "V", "MA", "UNH", "JNJ", "PG", "KO", "PEP",
+                "HD", "MCD", "WMT", "COST", "ABBV", "MRK",
+                "XOM", "CVX", "BAC", "GS", "TMO", "ABT",
+                "LLY", "NEE", "DUK", "SO", "BRK-B",
+            ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
-        regime = detect_recession_regime(date, data, prices)
+        weights = {}
+        vol_ranked = []
 
-        if regime["is_recession"]:
-            weights = {
-                "TLT": 0.45,  # Long bonds (biggest winner in recession)
-                "IEF": 0.20,
-                "GLD": 0.20,  # Gold hedge
-                "TIP": 0.10,  # Inflation protection
-                "SHY": 0.0,
-                "SPY": 0.0,
-            }
-        elif regime["confidence"] > 0.3:
-            # Mixed signals — balanced
-            weights = {
-                "IEF": 0.30,
-                "TLT": 0.15,
-                "GLD": 0.15,
-                "SHY": 0.20,
-                "TIP": 0.10,
-                "SPY": 0.0,
-            }
-        else:
-            # All clear — moderate bond allocation
-            weights = {
-                "SHY": 0.40,  # Short duration (rates may rise)
-                "IEF": 0.25,
-                "TLT": 0.10,
-                "GLD": 0.10,
-                "TIP": 0.10,
-                "SPY": 0.0,
-            }
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
 
-        return {k: v for k, v in weights.items() if k in prices}
+            if _is_missing(vol) or vol <= 0:
+                continue
+            # Must be above SMA200 (not broken)
+            if not _is_missing(sma200) and price < sma200 * 0.95:
+                continue
+
+            vol_ranked.append((sym, vol))
+
+        # Sort by vol ascending (lowest vol first)
+        vol_ranked.sort(key=lambda x: x[1])
+
+        # Take bottom quintile
+        n = max(1, len(vol_ranked) // 5)
+        top = vol_ranked[:min(n, self.config.max_positions)]
+
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
 
 
 # ---------------------------------------------------------------------------
-# 3. Defensive Rotation
+# 4. Momentum with Crash Protection
 # ---------------------------------------------------------------------------
-class DefensiveRotation(BasePersona):
-    """Rotate into defensive sectors during recession signals.
+class MomentumCrashHedge(BasePersona):
+    """Momentum strategy with crash protection.
 
-    Thesis: Consumer staples, utilities, and healthcare outperform
-    during recessions because demand is inelastic.
+    Source: Daniel & Moskowitz (2016) "Momentum Crashes"
+
+    Problem: Pure momentum crashes during bear market reversals.
+    Solution: Scale momentum exposure by market volatility.
+    When vol is high → reduce exposure. When vol is low → full exposure.
+
+    Implementation:
+    - Standard 12-1 momentum ranking (price vs SMA200)
+    - Scale position sizes by inverse of realized volatility
+    - When SPY vol > 2x average → cut to 50% exposure
+    - When SPY vol > 3x average → cut to 25% or go to cash
     """
 
     def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Defensive Rotation",
-            description="Rotate to staples/utilities/healthcare when recession signals fire",
-            risk_tolerance=0.3,
-            max_position_size=0.30,
+            name="Momentum Crash-Hedged",
+            description="Momentum with vol-scaling: reduce exposure when volatility spikes",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
             max_positions=10,
             rebalance_frequency="weekly",
             universe=universe or [
-                # Defensive sectors
-                "XLP", "XLU", "XLV",  # Sector ETFs
-                "PG", "KO", "PEP", "CL",  # Consumer staples
-                "JNJ", "MRK", "ABBV", "UNH",  # Healthcare
-                "NEE", "DUK", "SO",  # Utilities
-                # Growth (for when things are good)
-                "SPY", "QQQ", "XLK",
+                "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA",
+                "AVGO", "NFLX", "CRM", "AMD", "PLTR", "CRWD",
+                "SPY",  # Include for vol measurement
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
-        regime = detect_recession_regime(date, data, prices)
         weights = {}
 
-        if regime["is_recession"]:
-            # Full defensive
-            defensive = ["XLP", "XLU", "XLV", "PG", "KO", "JNJ", "MRK", "NEE"]
-            available = [s for s in defensive if s in prices]
-            if available:
-                per_stock = min(0.90 / len(available), self.config.max_position_size)
-                for sym in available:
-                    weights[sym] = per_stock
-            # Exit growth
-            for sym in ["SPY", "QQQ", "XLK"]:
-                weights[sym] = 0.0
+        # Measure market volatility regime
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+        if _is_missing(spy_vol):
+            vol_scale = 1.0
         else:
-            # Risk-on with some defensive hedge
-            weights["SPY"] = 0.30
-            weights["QQQ"] = 0.25
-            weights["XLK"] = 0.15
-            weights["XLP"] = 0.10
-            weights["XLV"] = 0.10
-            weights["XLU"] = 0.05
+            annualized_vol = spy_vol * _SQRT_252
+            if annualized_vol > 0.40:      # >40% = crisis
+                vol_scale = 0.25
+            elif annualized_vol > 0.25:    # >25% = high vol
+                vol_scale = 0.50
+            elif annualized_vol > 0.18:    # >18% = elevated
+                vol_scale = 0.75
+            else:
+                vol_scale = 1.0
 
-        return {k: v for k, v in weights.items() if k in prices}
+        scored = []
+        for sym in self.config.universe:
+            if sym == "SPY" or sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            macd = self._get_indicator(data, sym, "macd", date)
+            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+
+            if any(_is_missing(v) for v in [sma50, sma200, rsi]):
+                continue
+
+            # Momentum score
+            score = 0.0
+            if price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                score += 1.0
+            if 45 < rsi < 75:
+                score += 0.5
+
+            if score >= 2.5:
+                scored.append((sym, score))
+            elif score < 1:
+                weights[sym] = 0.0
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min((0.90 * vol_scale) / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
 
 
 # ---------------------------------------------------------------------------
-# 4. Gold Bug
+# 5. Risk Parity with Momentum Overlay
 # ---------------------------------------------------------------------------
-class GoldBug(BasePersona):
-    """Gold and precious metals strategy for recession/inflation hedge.
+class RiskParityMomentum(BasePersona):
+    """Risk parity allocation with momentum tilt.
 
-    Thesis: Gold outperforms during recessions, currency debasement,
-    and inflation. Mining stocks provide leveraged exposure.
+    Combines Bridgewater-style risk parity with trend following:
+    - Base: risk parity across asset classes (stocks, bonds, gold, commodities)
+    - Overlay: tilt toward assets with positive momentum, away from negative
+
+    Implementation:
+    - Inverse-vol weighting (risk parity base)
+    - Momentum filter: only include assets above SMA50
+    - Assets below SMA50 get zero weight (trend filter)
     """
 
     def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
-            name="Gold Bug (Precious Metals)",
-            description="Gold/silver/miners as recession and inflation hedge",
-            risk_tolerance=0.5,
-            max_position_size=0.25,
-            max_positions=6,
-            rebalance_frequency="weekly",
+            name="Risk Parity + Momentum",
+            description="Risk parity allocation with momentum tilt across asset classes",
+            risk_tolerance=0.4,
+            max_position_size=0.40,
+            max_positions=5,
+            rebalance_frequency="monthly",
             universe=universe or [
-                "GLD", "SLV",  # Physical gold/silver ETFs
-                "GDX", "GDXJ",  # Gold miners
-                "NEM", "GOLD", "AEM",  # Individual miners
-                "IAU",  # Alternative gold ETF
-                "SPY", "TLT",  # Required for recession regime detection
+                "SPY",   # US stocks
+                "EFA",   # International stocks
+                "TLT",   # Long bonds
+                "GLD",   # Gold
+                "XLE",   # Commodities proxy
             ],
         )
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
-        regime = detect_recession_regime(date, data, prices)
+        candidates = []
 
-        # Always hold some gold
-        base_gold = 0.20
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
 
-        if regime["is_recession"]:
-            # Max gold allocation
-            weights["GLD"] = 0.35
-            weights["SLV"] = 0.15
-            weights["GDX"] = 0.20
-            weights["NEM"] = 0.10
-            weights["IAU"] = 0.10
+            if _is_missing(vol) or vol <= 0:
+                continue
+
+            # Momentum filter: only include if above SMA50
+            if not _is_missing(sma50) and price > sma50:
+                candidates.append((sym, vol))
+            # else: excluded (negative momentum)
+
+        if not candidates:
+            # Everything trending down → safe haven, zero out all equities
+            fallback = {sym: 0.0 for sym in self.config.universe if sym in prices}
+            # Only allocate to safe havens if they're in universe AND have price data
+            if "TLT" in self.config.universe and "TLT" in prices:
+                fallback["TLT"] = 0.50
+            if "GLD" in self.config.universe and "GLD" in prices:
+                fallback["GLD"] = 0.30
+            return fallback
+
+        # Respect max_positions: keep lowest-vol assets (best risk parity contributors)
+        if len(candidates) > self.config.max_positions:
+            candidates.sort(key=lambda x: x[1])  # ascending vol
+            candidates = candidates[:self.config.max_positions]
+
+        # Risk parity: inverse-vol weighting
+        total_inv_vol = sum(1 / v for _, v in candidates)
+        for sym, vol in candidates:
+            inv_vol = 1 / vol
+            w = (inv_vol / total_inv_vol) * 0.90
+            weights[sym] = min(w, self.config.max_position_size)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 6. Mean-Variance Simplified (Markowitz-inspired)
+# ---------------------------------------------------------------------------
+class MeanVarianceOptimal(BasePersona):
+    """Simplified Markowitz mean-variance optimization.
+
+    Source: Markowitz (1952) "Portfolio Selection"
+
+    Instead of full covariance matrix optimization, we use a simplified
+    return/risk ranking:
+    - Expected return proxy: SMA50 momentum
+    - Risk proxy: 20-day realized vol
+    - Score = return / risk (Sharpe-like ratio per stock)
+    - Weight proportional to score
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Mean-Variance Simplified",
+            description="Markowitz-inspired: rank by return/risk ratio, weight proportionally",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
+                "JPM", "V", "UNH", "JNJ", "PG", "KO",
+                "HD", "MCD", "WMT", "ABBV", "MRK", "XOM",
+                "TLT", "GLD",  # Include bonds/gold for diversification
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+
+            if any(_is_missing(v) for v in [sma50, vol]) or vol <= 0:
+                continue
+
+            # Expected return proxy: momentum (price / SMA50 - 1)
+            exp_return = (price - sma50) / sma50 if sma50 > 0 else 0
+
+            # Only consider assets with positive expected return
+            if exp_return <= 0:
+                continue
+
+            # Must be above SMA200 (structural uptrend)
+            if not _is_missing(sma200) and price < sma200:
+                continue
+
+            # Sharpe-like score
+            sharpe_proxy = exp_return / vol
+            scored.append((sym, sharpe_proxy))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+
+        if top:
+            total_score = sum(s for _, s in top)
+            for sym, score in top:
+                w = min((score / total_score) * 0.90, self.config.max_position_size)
+                weights[sym] = w
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 7. Global Rotation (international momentum)
+# ---------------------------------------------------------------------------
+class GlobalRotation(BasePersona):
+    """Global rotation: momentum across regional ETFs + individual ADRs.
+
+    Rotate capital into the strongest-performing regions and individual
+    international names. Uses same momentum framework but across a
+    geographically diversified universe.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Global Rotation",
+            description="Rotate into strongest regions: US, Europe, Asia, EM, LatAm",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Regional ETFs
+                "SPY", "EFA", "EEM", "VWO", "EWJ", "EWZ", "INDA", "EWY",
+                # Top intl ADRs
+                "TM", "SONY", "BABA", "PDD", "INFY", "SE",
+                "MELI", "NU", "SAP", "ASML", "NVO",
+                "BHP", "VALE", "GOLD",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+
+            if any(_is_missing(v) for v in [sma50, sma200, rsi]):
+                continue
+
+            # Momentum score (same as proven momentum framework)
+            score = 0.0
+            if price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+            if 40 < rsi < 75:
+                score += 0.5
+
+            # Vol-adjusted (prefer lower vol for same momentum)
+            if not _is_missing(vol) and vol > 0:
+                score *= min(1.5, 0.02 / vol)
+
+            if score > 1.5:
+                scored.append((sym, score))
+            elif price < sma200 * 0.95:
+                weights[sym] = 0.0
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 8. Factor ETF Rotation
+# ---------------------------------------------------------------------------
+class FactorETFRotation(BasePersona):
+    """Rotate between factor ETFs based on momentum.
+
+    Instead of picking individual stocks, rotate between factor ETFs:
+    momentum (MTUM), quality (QUAL), value (VLUE), low vol (SPLV),
+    size (IWM), multi-factor (LRGF). Pick the top 3 by momentum.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Factor ETF Rotation",
+            description="Rotate between factor ETFs (momentum, quality, value, low vol) based on trend",
+            risk_tolerance=0.4,
+            max_position_size=0.35,
+            max_positions=3,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "MTUM",  # Momentum
+                "QUAL",  # Quality
+                "VLUE",  # Value
+                "SPLV",  # Low Volatility
+                "IWM",   # Small Cap (Size)
+                "SPY",   # Market (baseline)
+                "TLT",   # Bonds (safe haven)
+                "GLD",   # Gold (hedge)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if _is_missing(sma50) or _is_missing(sma200):
+                continue
+            # Momentum score
+            mom = (price - sma200) / sma200 if sma200 > 0 else 0
+            if price > sma50:
+                mom += 0.1
+            scored.append((sym, mom))
+
+        # Filter positive momentum first, THEN take top N
+        positive = [(s, m) for s, m in scored if m > 0]
+        positive.sort(key=lambda x: x[1], reverse=True)
+        top = positive[:self.config.max_positions]
+        weights = {}
+        if top:
+            per_etf = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_etf
         else:
-            # Check gold trend
-            gld_sma50 = _safe_get(data, "GLD", "sma_50", date)
-            gld_sma200 = _safe_get(data, "GLD", "sma_200", date)
-            gld_price = prices.get("GLD")
-
-            if gld_sma50 is not None and gld_sma200 is not None and gld_price is not None:
-                if gld_sma50 > gld_sma200:
-                    # Gold uptrend — increase allocation
-                    weights["GLD"] = 0.30
-                    weights["GDX"] = 0.20
-                    weights["SLV"] = 0.15
-                    weights["NEM"] = 0.10
-                else:
-                    # Gold downtrend — minimal
-                    weights["GLD"] = 0.15
-                    weights["IAU"] = 0.10
-            else:
-                weights["GLD"] = base_gold
-
-        return {k: v for k, v in weights.items() if k in prices}
+            # All negative momentum → safe haven (only if in universe and prices)
+            if "TLT" in self.config.universe and "TLT" in prices:
+                weights["TLT"] = 0.50
+            if "GLD" in self.config.universe and "GLD" in prices:
+                weights["GLD"] = 0.30
+        return weights
 
 
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
-RECESSION_STRATEGIES = {
-    "recession_detector": RecessionDetector,
-    "treasury_safe": TreasurySafe,
-    "defensive_rotation": DefensiveRotation,
-    "gold_bug": GoldBug,
+# ---------------------------------------------------------------------------
+# 9. Faber Sector Rotation (proven methodology)
+# ---------------------------------------------------------------------------
+class FaberSectorRotation(BasePersona):
+    """Faber sector rotation: 12-month momentum, top 3 sectors, absolute momentum filter.
+
+    Source: Faber (2007). $10K→$135K (2000-2024) vs $62K S&P.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Faber Sector Rotation",
+            description="Proven 12-month sector momentum: top 3 + absolute momentum filter",
+            risk_tolerance=0.5,
+            max_position_size=0.35,
+            max_positions=3,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "XLK", "XLF", "XLE", "XLV", "XLI", "XLP",
+                "XLU", "XLRE", "XLC", "XLB", "XLY",
+                "TLT", "IEF",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        scored = []
+        for sym in self.config.universe:
+            if sym in ("TLT", "IEF") or sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if _is_missing(sma200) or sma200 <= 0:
+                continue
+            momentum = (price - sma200) / sma200
+            if momentum > 0:
+                scored.append((sym, momentum))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top3 = scored[:3]
+        weights = {}
+        if top3:
+            per_sector = min(0.90 / len(top3), self.config.max_position_size)
+            total_alloc = per_sector * len(top3)
+            for sym, _ in top3:
+                weights[sym] = per_sector
+            # Allocate capped remainder to safe havens (Faber: unallocated → bonds)
+            remainder = 0.90 - total_alloc
+            if remainder > 0.05:
+                if "TLT" in self.config.universe:
+                    weights["TLT"] = remainder * 0.6
+                if "IEF" in self.config.universe:
+                    weights["IEF"] = remainder * 0.4
+        else:
+            if "TLT" in self.config.universe:
+                weights["TLT"] = 0.50
+            if "IEF" in self.config.universe:
+                weights["IEF"] = 0.40
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+RESEARCH_STRATEGIES = {
+    "dual_momentum": DualMomentum,
+    "multi_factor_smart_beta": MultiFactorSmartBeta,
+    "low_vol_anomaly": LowVolAnomaly,
+    "momentum_crash_hedge": MomentumCrashHedge,
+    "risk_parity_momentum": RiskParityMomentum,
+    "mean_variance_optimal": MeanVarianceOptimal,
+    "global_rotation": GlobalRotation,
+    "factor_etf_rotation": FactorETFRotation,
+    "faber_sector_rotation": FaberSectorRotation,
 }
 
 
-def get_recession_strategy(name: str, **kwargs) -> BasePersona:
-    cls = RECESSION_STRATEGIES.get(name)
+def get_research_strategy(name: str, **kwargs) -> BasePersona:
+    cls = RESEARCH_STRATEGIES.get(name)
     if cls is None:
-        raise ValueError(f"Unknown strategy: {name}. Available: {list(RECESSION_STRATEGIES.keys())}")
+        raise ValueError(f"Unknown: {name}. Available: {list(RESEARCH_STRATEGIES.keys())}")
     return cls(**kwargs)
 
 
 if __name__ == "__main__":
-    print("=== Recession Strategies ===\n")
-    for key, cls in RECESSION_STRATEGIES.items():
+    print("=== Research-Backed Strategies ===\n")
+    for key, cls in RESEARCH_STRATEGIES.items():
         inst = cls()
-        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")
+        print(f"  {key:30s} | {inst.config.name:35s} | {inst.config.description}")
