@@ -398,14 +398,25 @@ class Backtester:
         self._external_data = data
 
     def _load_data(self) -> tuple[dict[str, pd.DataFrame], pd.DataFrame | None]:
-        """Load price data for all symbols + benchmark."""
+        """Load price data for all symbols + benchmark.
+
+        Pre-loads 1 year before self.start so that indicators like SMA200
+        are warm even on short-horizon backtests (1 week, 1 month, etc.).
+        Performance is only measured from self.start to self.end.
+        """
         from agents_assemble.data.fetcher import fetch_ohlcv, fetch_multiple_ohlcv
 
         if self._external_data:
             all_data = self._external_data
         else:
+            # Pre-load 1 year before start for indicator warmup
+            from datetime import datetime, timedelta
+            try:
+                warmup_start = (datetime.strptime(self.start, "%Y-%m-%d") - timedelta(days=365)).strftime("%Y-%m-%d")
+            except (ValueError, TypeError):
+                warmup_start = self.start
             all_data = fetch_multiple_ohlcv(
-                self.symbols, start=self.start, end=self.end
+                self.symbols, start=warmup_start, end=self.end
             )
 
         bench_data = None

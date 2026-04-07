@@ -45,6 +45,17 @@ HORIZONS = {
     "10y": ("2015-01-01", "2024-12-31"),
 }
 
+# Short horizons — backtester pre-loads 1 year of data for indicator warmup
+SHORT_HORIZONS = {
+    "1w": ("2024-12-23", "2024-12-31"),
+    "2w": ("2024-12-16", "2024-12-31"),
+    "1m": ("2024-12-01", "2024-12-31"),
+    "3m": ("2024-10-01", "2024-12-31"),
+    "6m": ("2024-07-01", "2024-12-31"),
+}
+
+ALL_HORIZONS = {**SHORT_HORIZONS, **HORIZONS}
+
 # ---------------------------------------------------------------------------
 # All strategy sources
 # ---------------------------------------------------------------------------
@@ -201,7 +212,7 @@ def save_multi_horizon_report(df: pd.DataFrame) -> Path:
 
     successes = df[df["total_return"].notna()]
 
-    for horizon in HORIZONS:
+    for horizon in ALL_HORIZONS:
         h_data = successes[successes["horizon"] == horizon].sort_values("sharpe", ascending=False)
         if h_data.empty:
             continue
@@ -246,12 +257,19 @@ def main():
     parser = argparse.ArgumentParser(description="Multi-horizon backtest runner")
     parser.add_argument("--persona", "-p", help="Run only this strategy")
     parser.add_argument("--category", "-c", help="Run only this category (generic/famous/theme/recession/unconventional/research/math)")
-    parser.add_argument("--horizon", help="Run only this horizon (1y/3y/5y/10y)")
+    parser.add_argument("--horizon", help="Run only this horizon (1w/2w/1m/3m/6m/1y/3y/5y/10y)")
+    parser.add_argument("--short", action="store_true", help="Include short horizons (1w/2w/1m/3m/6m)")
+    parser.add_argument("--all-horizons", action="store_true", help="Run ALL horizons (short + long)")
     parser.add_argument("--quiet", "-q", action="store_true")
     args = parser.parse_args()
 
     strategies = _get_all_strategies()
-    horizons = HORIZONS
+    if args.all_horizons:
+        horizons = ALL_HORIZONS
+    elif args.short:
+        horizons = SHORT_HORIZONS
+    else:
+        horizons = HORIZONS
 
     if args.persona:
         strategies = [s for s in strategies if s["key"] == args.persona]
@@ -262,9 +280,9 @@ def main():
         if not strategies:
             parser.error(f"Unknown category: {args.category}")
     if args.horizon:
-        if args.horizon not in HORIZONS:
-            parser.error(f"Unknown horizon: {args.horizon!r}. Choose from: {', '.join(HORIZONS)}")
-        horizons = {args.horizon: HORIZONS[args.horizon]}
+        if args.horizon not in ALL_HORIZONS:
+            parser.error(f"Unknown horizon: {args.horizon!r}. Choose from: {', '.join(ALL_HORIZONS)}")
+        horizons = {args.horizon: ALL_HORIZONS[args.horizon]}
 
     print(f"Running {len(strategies)} strategies x {len(horizons)} horizons = {len(strategies) * len(horizons)} backtests")
 

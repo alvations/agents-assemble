@@ -62,11 +62,9 @@ class AIRevolution(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
 
             if any(v is None for v in [sma50, sma200, rsi]):
                 continue
@@ -95,6 +93,8 @@ class AIRevolution(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -162,6 +162,8 @@ class CleanEnergy(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -223,6 +225,8 @@ class DefenseAerospace(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -294,6 +298,8 @@ class BiotechBreakout(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -354,6 +360,8 @@ class ChinaTechRebound(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -414,6 +422,8 @@ class LatAmGrowth(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -477,6 +487,8 @@ class InfrastructureBoom(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -539,6 +551,8 @@ class SmallCapValue(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -577,11 +591,9 @@ class CryptoEcosystem(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(data, sym, ["sma_20", "sma_50", "rsi_14", "Volume", "volume_sma_20"], date)
+            sma20, sma50, rsi = inds["sma_20"], inds["sma_50"], inds["rsi_14"]
+            volume, vol_avg = inds["Volume"], inds["volume_sma_20"]
             if any(v is None for v in [sma20, rsi]):
                 continue
 
@@ -589,7 +601,7 @@ class CryptoEcosystem(BasePersona):
 
             # Crypto is momentum-driven — ride breakouts
             if price > sma20 and rsi < 75 and vol_ratio > 1.2:
-                score = 2.0 + vol_ratio
+                score = 2.0 + min(vol_ratio, 5.0)
                 if sma50 is not None and price > sma50:
                     score += 1.0
                 scored.append((sym, score))
@@ -609,6 +621,8 @@ class CryptoEcosystem(BasePersona):
             if 0 < total_w < 0.90:
                 for sym, _ in top:
                     weights[sym] = min(weights[sym] * 0.90 / total_w, self.config.max_position_size)
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -673,6 +687,8 @@ class AgingPopulation(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -733,6 +749,8 @@ class GLP1Obesity(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -768,11 +786,9 @@ class RoboticsAutonomous(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
             if any(v is None for v in [sma50, rsi]):
                 continue
             if sma200 is not None and price < sma200 * 0.85:
@@ -796,6 +812,8 @@ class RoboticsAutonomous(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
         return weights
 
 
