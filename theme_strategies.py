@@ -657,6 +657,126 @@ class AgingPopulation(BasePersona):
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 12. GLP-1 / Obesity Revolution
+# ---------------------------------------------------------------------------
+class GLP1Obesity(BasePersona):
+    """GLP-1 / weight loss drug megatrend.
+
+    2026: $73-87B market, LLY past $1T. Oral pills coming.
+    30M Americans on GLP-1 by 2030.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="GLP-1 / Obesity Revolution",
+            description="Weight loss drug megatrend: $73-87B market, LLY/NVO leaders",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "LLY", "NVO", "AMGN", "VKTX",
+                "PFE", "ABBV", "JNJ", "MRK",
+                "HIMS", "PLNT",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+            score = 0.0
+            if sma200 and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+            if 35 < rsi < 75:
+                score += 0.5
+            if score >= 2.0:
+                scored.append((sym, score))
+            elif sma200 and price < sma200 * 0.90:
+                weights[sym] = 0.0
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 13. Robotics & Autonomous Vehicles
+# ---------------------------------------------------------------------------
+class RoboticsAutonomous(BasePersona):
+    """Robotics and autonomous vehicles megatrend.
+
+    CES 2026: humanoid robots commercially viable, Level 4 autonomy.
+    Global robotics market > $200B by decade end.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Robotics & Autonomous",
+            description="Humanoid robots + autonomous vehicles: $200B market by 2030",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "ISRG", "NVDA", "INTC", "TER", "CGNX", "BRKS",
+                "GOOGL", "TSLA", "GM",
+                "ABB",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            macd = self._get_indicator(data, sym, "macd", date)
+            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+            score = 0.0
+            if sma200 and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if 40 < rsi < 75:
+                score += 0.5
+            if score >= 2.5:
+                scored.append((sym, score))
+            elif sma200 and price < sma200 * 0.85:
+                weights[sym] = 0.0
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -668,6 +788,8 @@ THEME_STRATEGIES = {
     "small_cap_value": SmallCapValue,
     "crypto_ecosystem": CryptoEcosystem,
     "aging_population": AgingPopulation,
+    "glp1_obesity": GLP1Obesity,
+    "robotics_autonomous": RoboticsAutonomous,
 }
 
 
