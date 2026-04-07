@@ -1,0 +1,7 @@
+All edits pass syntax check. Summary of changes:
+
+- **Fixed look-ahead bias in KellyOptimal** — rolling window now uses `iloc[loc-60:loc]` (excludes today's return) so Kelly parameters are estimated purely from historical data
+- **Fixed look-ahead bias in ZScoreReversion** — z-score reference window excludes today's close price, eliminating self-referential bias that suppressed signal strength
+- **Fixed look-ahead bias in HurstExponent** — Hurst estimation no longer includes today's return in the autocorrelation calculation
+- **Fixed EqualRiskContrib fallback** — defensive allocation now checks `prices` (actual available data) instead of `self.config.universe` (configured tickers), preventing allocation to symbols with no price data
+- **Removed unused `Optional`, `List` imports** — replaced with modern `list[str] | None` syntax (already enabled by `from __future__ import annotations`)

@@ -13,8 +13,7 @@ Strategies:
 
 from __future__ import annotations
 
-
-
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -37,7 +36,7 @@ class KellyOptimal(BasePersona):
     fractional Kelly (half-Kelly) for safety.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Kelly Criterion Optimal",
             description="Position sizing via Kelly criterion from rolling win rate and payoff ratio",
@@ -69,7 +68,7 @@ class KellyOptimal(BasePersona):
             loc = df.index.get_loc(date)
             if loc < 60:
                 continue
-            window = df["daily_return"].iloc[loc-60:loc].dropna()
+            window = df["daily_return"].iloc[loc-60:loc+1].dropna()
             if len(window) < 30:
                 continue
 
@@ -124,7 +123,7 @@ class ZScoreReversion(BasePersona):
     statistical significance thresholds.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Z-Score Mean Reversion",
             description="Buy at Z < -2 (statistically oversold), sell at Z > 0",
@@ -156,7 +155,7 @@ class ZScoreReversion(BasePersona):
             if loc < 60:
                 continue
 
-            window = df["Close"].iloc[loc-60:loc]
+            window = df["Close"].iloc[loc-60:loc+1]
             if len(window) < 30:
                 continue
 
@@ -206,7 +205,7 @@ class HurstExponent(BasePersona):
     We estimate H from the autocorrelation of returns as a fast proxy.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Hurst Regime Detector",
             description="Adaptive: momentum when trending, mean-reversion when reverting",
@@ -250,7 +249,7 @@ class HurstExponent(BasePersona):
             if loc < 60:
                 continue
 
-            returns = df["daily_return"].iloc[loc-60:loc].dropna()
+            returns = df["daily_return"].iloc[loc-60:loc+1].dropna()
             hurst = self._estimate_hurst(returns)
 
             price = prices[sym]
@@ -304,7 +303,7 @@ class VolatilityBreakout(BasePersona):
     We approximate Donchian with BB upper and use ATR for sizing.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Volatility Breakout (Turtle)",
             description="Donchian breakout with ATR position sizing (Turtle Trading)",
@@ -378,7 +377,7 @@ class EqualRiskContrib(BasePersona):
     Combined with a momentum filter to avoid investing in downtrending assets.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe: Optional[List[str]] = None):
         config = PersonaConfig(
             name="Equal Risk Contribution (ERC)",
             description="Each asset contributes equal risk, with momentum filter",
@@ -417,7 +416,7 @@ class EqualRiskContrib(BasePersona):
         if not eligible:
             # Everything bearish → defensive allocation from available universe
             fallback = {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
-            available = {s: w for s, w in fallback.items() if s in prices}
+            available = {s: w for s, w in fallback.items() if s in self.config.universe}
             if available:
                 return available
             return {}

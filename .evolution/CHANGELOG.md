@@ -226,3 +226,11 @@ All edits pass syntax validation. Summary of changes:
 - **Removed unused imports** — `Any`, `Dict`, `List`, `Optional` from `typing`, plus `numpy` (`np`) and `pandas` (`pd`) which were never referenced in the file
 - **Fixed 12 truthiness bugs** across all 10 strategies — `if rsi and ...`, `if sma200 and ...`, `if macd and ...`, `if volume and ...` → explicit `is not None` checks. A 0.0 value (valid indicator reading) would have been incorrectly treated as missing data, skipping signals entirely
 
+## [2026-04-07T09:32:22.044060+00:00] Branch: main | Run: 20260407T092840_pid39575 | Iter 2 | $0.3932
+### math_strategies.py
+All edits pass syntax check. Summary of changes:
+
+- **Fixed look-ahead bias in KellyOptimal** — rolling window now uses `iloc[loc-60:loc]` (excludes today's return) so Kelly parameters are estimated purely from historical data
+- **Fixed look-ahead bias in ZScoreReversion** — z-score reference window excludes today's close price, eliminating self-referential bias that suppressed signal strength
+- **Fixed look-ahead bias in HurstExponent** — Hurst estimation no longer includes today's return in th
+
