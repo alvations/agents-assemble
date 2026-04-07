@@ -175,8 +175,6 @@ class MultiFactorSmartBeta(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -246,8 +244,6 @@ class LowVolAnomaly(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -401,9 +397,9 @@ class RiskParityMomentum(BasePersona):
             fallback = {sym: 0.0 for sym in self.config.universe if sym in prices}
             # Only allocate to safe havens if they're in universe AND have price data
             if "TLT" in self.config.universe and "TLT" in prices:
-                fallback["TLT"] = min(0.50, self.config.max_position_size)
+                fallback["TLT"] = 0.50
             if "GLD" in self.config.universe and "GLD" in prices:
-                fallback["GLD"] = min(0.30, self.config.max_position_size)
+                fallback["GLD"] = 0.30
             return fallback
 
         # Respect max_positions: keep lowest-vol assets (best risk parity contributors)
@@ -526,8 +522,6 @@ class MeanVarianceOptimal(BasePersona):
                     break
                 remaining = new_remaining
 
-        if not weights:
-            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 

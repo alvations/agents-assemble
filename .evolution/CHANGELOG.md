@@ -571,3 +571,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed benchmark/aligned CAGR `ValueError` on total loss** (lines 287-290) — `(1 + bench_total)` and `(1 + port_aligned_total)` could be negative (>100% loss), causing `ValueError` when raised to a fractional power. Added the same `growth > 0` guard that the main CAGR formula already has.
 - **Fixed `compute_metrics` NaN robustness** — Added `dropna()` at entry so NaN values in returns don't silently propagate into all metrics (Sharpe, Sor
 
+## [2026-04-07T14:47:11.364856+00:00] Branch: main | Run: 20260407T142708_pid61031 | Iter 26 | $1.5450
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed MultiFactorSmartBeta stale positions** (line 179) — When no stock passes the composite score threshold of 0.25, now returns explicit 0.0 weights for all universe symbols, so the backtester closes existing positions. Previously returned `{}` which skipped rebalancing, leaving bull-market positions stranded through bear markets.
+- **Fixed LowVolAnomaly stale positions** (line 250) — Same pattern: when all stocks fail the vol/SMA200 f
+

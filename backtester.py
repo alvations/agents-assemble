@@ -565,7 +565,7 @@ class Backtester:
             current_value = (current_pos.quantity * price) if current_pos else 0.0
             diff_value = target_value - current_value
             if diff_value < 0 and abs(diff_value) >= price * 0.5:
-                qty = int(abs(diff_value) / price)
+                qty = int(round(abs(diff_value) / price))
                 if qty > 0:
                     sells.append((sym, qty))
 
@@ -573,7 +573,7 @@ class Backtester:
         for sym in list(portfolio.positions.keys()):
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0 and sym in prices:
+                if pos and pos.quantity > 0 and sym in prices and prices[sym] > 0:
                     sells.append((sym, int(round(pos.quantity))))
 
         for sym, qty in sells:
@@ -594,7 +594,7 @@ class Backtester:
             current_value = (current_pos.quantity * price) if current_pos else 0.0
             diff_value = target_value - current_value
             if diff_value >= price * 0.5:
-                qty = int(diff_value / price)
+                qty = int(round(diff_value / price))
                 if qty > 0:
                     # Covering shorts gets highest priority (same as orphaned short closes)
                     priority = float("inf") if (current_pos and current_pos.quantity < 0) else target_w
@@ -604,7 +604,7 @@ class Backtester:
         for sym in list(portfolio.positions.keys()):
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
-                if pos and pos.quantity < 0 and sym in prices:
+                if pos and pos.quantity < 0 and sym in prices and prices[sym] > 0:
                     buys.append((sym, int(round(abs(pos.quantity))), float("inf")))
 
         # Execute buys with highest-weight positions first

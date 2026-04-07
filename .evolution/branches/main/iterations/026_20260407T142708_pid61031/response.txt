@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed MultiFactorSmartBeta stale positions** (line 179) — When no stock passes the composite score threshold of 0.25, now returns explicit 0.0 weights for all universe symbols, so the backtester closes existing positions. Previously returned `{}` which skipped rebalancing, leaving bull-market positions stranded through bear markets.
+- **Fixed LowVolAnomaly stale positions** (line 250) — Same pattern: when all stocks fail the vol/SMA200 filters, now exits positions instead of silently holding.
+- **Fixed RiskParityMomentum fallback exceeding `max_position_size`** (line 402) — TLT got hardcoded 0.50 allocation but `max_position_size` is 0.40. Now caps both TLT (0.50→0.40) and GLD (0.30, already under cap) by `self.config.max_position_size`.
+- **Fixed MeanVarianceOptimal stale positions** (line 528) — When no stock has positive expected return AND is above SMA200 (e.g., severe bear market), now exits all positions. Previously held stale long positions indefinitely because the backtester skips rebalancing on empty weight dicts.
