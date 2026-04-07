@@ -139,7 +139,7 @@ class MultiFactorSmartBeta(BasePersona):
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
             vol = self._get_indicator(data, sym, "vol_20", date)
 
-            if any(_is_missing(v) for v in [sma200, rsi, vol]):
+            if any(_is_missing(v) for v in [sma200, rsi, vol]) or vol <= 0:
                 continue
 
             # Factor 1: Value (discount to SMA200, higher = more value)
@@ -485,10 +485,27 @@ class MeanVarianceOptimal(BasePersona):
         top = scored[:self.config.max_positions]
 
         if top:
-            total_score = sum(s for _, s in top)
-            for sym, score in top:
-                w = min((score / total_score) * 0.90, self.config.max_position_size)
-                weights[sym] = w
+            cap = self.config.max_position_size
+            budget = 0.90
+            remaining = list(top)
+            while remaining:
+                sub_total = sum(s for _, s in remaining)
+                if sub_total <= 0:
+                    break
+                new_remaining = []
+                for sym, score in remaining:
+                    w = (score / sub_total) * budget
+                    if w >= cap:
+                        weights[sym] = cap
+                        budget -= cap
+                    else:
+                        new_remaining.append((sym, score))
+                if len(new_remaining) == len(remaining):
+                    # No more capping needed — assign remaining budget
+                    for sym, score in new_remaining:
+                        weights[sym] = (score / sub_total) * budget
+                    break
+                remaining = new_remaining
 
         return weights
 
@@ -684,15 +701,19 @@ class FaberSectorRotation(BasePersona):
             # Allocate capped remainder to safe havens (Faber: unallocated → bonds)
             remainder = 0.90 - total_alloc
             if remainder > 0.05:
-                if "TLT" in self.config.universe:
-                    weights["TLT"] = remainder * 0.6
-                if "IEF" in self.config.universe:
-                    weights["IEF"] = remainder * 0.4
+                havens = [s for s in ("TLT", "IEF")
+                          if s in self.config.universe and s in prices]
+                if havens:
+                    per_haven = remainder / len(havens)
+                    for s in havens:
+                        weights[s] = per_haven
         else:
-            if "TLT" in self.config.universe:
-                weights["TLT"] = 0.50
-            if "IEF" in self.config.universe:
-                weights["IEF"] = 0.40
+            havens = [s for s in ("TLT", "IEF")
+                      if s in self.config.universe and s in prices]
+            if havens:
+                per_haven = 0.90 / len(havens)
+                for s in havens:
+                    weights[s] = per_haven
         return {k: v for k, v in weights.items() if k in prices}
 
 

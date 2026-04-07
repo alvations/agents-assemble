@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed MultiFactorSmartBeta missing `vol <= 0` guard** (line 142) — A stock with zero volatility (suspicious data) passed the `_is_missing` check and continued scoring with quality_score=0 instead of being skipped. Every other strategy that uses vol (LowVolAnomaly, RiskParityMomentum, MeanVarianceOptimal) already has this guard.
+- **Fixed MeanVarianceOptimal weight capping causing cash drag** (lines 487-501) — Score-proportional weights capped at `max_position_size` lost the excess to cash. With 2 concentrated stocks capped from 0.27→0.12 each, up to 33% of the portfolio was unallocated. Now uses iterative cap-and-redistribute so the total allocation stays at 0.90.
+- **Fixed FaberSectorRotation safe haven losing allocation when one haven is untradeable** (lines 686-697) — The hardcoded 60/40 TLT/IEF split lost 50-60% of the safe haven budget when one wasn't in `prices`. Now dynamically splits the allocation among available safe havens, keeping the portfolio fully invested per Faber's methodology.

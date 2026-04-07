@@ -21,7 +21,7 @@ Themes:
 
 from __future__ import annotations
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------
@@ -502,6 +502,7 @@ class SmallCapValue(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
             bb_lower = self._get_indicator(data, sym, "bb_lower", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             volume = self._get_indicator(data, sym, "Volume", date)
@@ -590,12 +591,8 @@ class CryptoEcosystem(BasePersona):
         if top:
             total_score = sum(s for _, s in top)
             for sym, score in top:
-                weights[sym] = min((score / total_score) * 0.90, self.config.max_position_size)
-            # Redistribute clipped excess so total allocation reaches 90%
-            total_w = sum(weights[sym] for sym, _ in top)
-            if 0 < total_w < 0.90:
-                for sym, _ in top:
-                    weights[sym] = min(weights[sym] * 0.90 / total_w, self.config.max_position_size)
+                w = min((score / total_score) * 0.90, self.config.max_position_size)
+                weights[sym] = w
         return weights
 
 
@@ -660,7 +657,10 @@ class AgingPopulation(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# 11. GLP-1 / Obesity Revolution
+# Registry
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 12. GLP-1 / Obesity Revolution
 # ---------------------------------------------------------------------------
 class GLP1Obesity(BasePersona):
     """GLP-1 / weight loss drug megatrend.
@@ -720,7 +720,7 @@ class GLP1Obesity(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# 12. Robotics & Autonomous Vehicles
+# 13. Robotics & Autonomous Vehicles
 # ---------------------------------------------------------------------------
 class RoboticsAutonomous(BasePersona):
     """Robotics and autonomous vehicles megatrend.

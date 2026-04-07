@@ -445,3 +445,17 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `_rebalance` all-or-nothing buy** — When cash is insufficient for the target qty, now computes the maximum affordable whole shares instead of skipping the position entirely. Prevents systematic under-investment in lower-priority positions when cash is tight after higher-priority buys.
 - **Fixed `profit_factor` for zero-activity periods** — Returns `0.0` when both gross profit and gross loss are zero (flat returns), instead of `floa
 
+## [2026-04-07T10:22:07.458532+00:00] Branch: main | Run: 20260407T100045_pid47619 | Iter 19 | $1.6062
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed MultiFactorSmartBeta missing `vol <= 0` guard** (line 142) — A stock with zero volatility (suspicious data) passed the `_is_missing` check and continued scoring with quality_score=0 instead of being skipped. Every other strategy that uses vol (LowVolAnomaly, RiskParityMomentum, MeanVarianceOptimal) already has this guard.
+- **Fixed MeanVarianceOptimal weight capping causing cash drag** (lines 487-501) — Score-proportional weights c
+
+## [2026-04-07T10:24:36.441577+00:00] Branch: main | Run: 20260407T101611_pid49367 | Iter 21 | $0.9508
+### theme_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `sma200` variable in `SmallCapValue`** (line 505) — fetched via `_get_indicator` but never referenced in any condition or computation, saving one indicator lookup per symbol per bar
+- **Fixed `CryptoEcosystem` score-weighted under-allocation** — when `min()` clips high-score positions to `max_position_size`, the freed allocation was lost (e.g., 3 stocks could allocate only 0.58 instead of 0.90). Added post-clip normalization
+

@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `sma200` variable in `SmallCapValue`** (line 505) — fetched via `_get_indicator` but never referenced in any condition or computation, saving one indicator lookup per symbol per bar
+- **Fixed `CryptoEcosystem` score-weighted under-allocation** — when `min()` clips high-score positions to `max_position_size`, the freed allocation was lost (e.g., 3 stocks could allocate only 0.58 instead of 0.90). Added post-clip normalization pass that scales up uncapped positions proportionally
+- **Removed orphaned "Registry" section header** (lines 660-661) — stale comment left between AgingPopulation and GLP1Obesity from when the registry was at that location
+- **Fixed section numbering** — GLP1Obesity was labeled #12 (should be #11), RoboticsAutonomous was labeled #13 (should be #12), matching the module docstring
