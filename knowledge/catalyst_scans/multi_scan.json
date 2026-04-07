@@ -1,0 +1,130 @@
+{
+  "NVDA": {
+    "industry": "tech_hardware",
+    "best_strategy": "buy_spike_30d",
+    "win_rate": 0.8,
+    "total_return": 0.9947894914960618,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "14d"
+  },
+  "AMD": {
+    "industry": "tech_hardware",
+    "best_strategy": "buy_spike_30d",
+    "win_rate": 0.7777777777777778,
+    "total_return": 2.075902706768917,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "5d"
+  },
+  "LLY": {
+    "industry": "pharma_biotech",
+    "best_strategy": "momentum_20d",
+    "win_rate": 0.6666666666666666,
+    "total_return": 1.3884910674517443,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "30d"
+  },
+  "MRNA": {
+    "industry": "pharma_biotech",
+    "best_strategy": "momentum_14d",
+    "win_rate": 0.5384615384615384,
+    "total_return": 0.23130701390186847,
+    "optimal_sell_up": "20d",
+    "optimal_sell_down": "1d"
+  },
+  "TSLA": {
+    "industry": "automotive",
+    "best_strategy": "momentum_20d",
+    "win_rate": 0.625,
+    "total_return": 2.0084970151298345,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "7d"
+  },
+  "RIVN": {
+    "industry": "automotive",
+    "best_strategy": "buy_dip_1d",
+    "win_rate": 0.6470588235294118,
+    "total_return": 0.42989678643660656,
+    "optimal_sell_up": "20d",
+    "optimal_sell_down": "20d"
+  },
+  "AMZN": {
+    "industry": "retail_seasonal",
+    "best_strategy": "buy_spike_30d",
+    "win_rate": 0.8571428571428571,
+    "total_return": 0.41758886072589085,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "30d"
+  },
+  "WMT": {
+    "industry": "retail_seasonal",
+    "best_strategy": "momentum_20d",
+    "win_rate": 0.6923076923076923,
+    "total_return": 0.5053817007497576,
+    "optimal_sell_up": "20d",
+    "optimal_sell_down": "7d"
+  },
+  "AVGO": {
+    "industry": "tech_hardware",
+    "best_strategy": "momentum_30d",
+    "win_rate": 0.6470588235294118,
+    "total_return": 2.7849034687858203,
+    "optimal_sell_up": "1d",
+    "optimal_sell_down": "14d"
+  },
+  "ASML": {
+    "industry": "semiconductor",
+    "best_strategy": "buy_spike_20d",
+    "win_rate": 0.75,
+    "total_return": 0.9122759268327572,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "30d"
+  },
+  "COIN": {
+    "industry": "general",
+    "best_strategy": "buy_spike_14d",
+    "win_rate": 0.7142857142857143,
+    "total_return": 2.0605576488985693,
+    "optimal_sell_up": "20d",
+    "optimal_sell_down": "30d"
+  },
+  "PLTR": {
+    "industry": "general",
+    "best_strategy": "momentum_30d",
+    "win_rate": 0.6818181818181818,
+    "total_return": 8.732864055642994,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "30d"
+  },
+  "CRM": {
+    "industry": "general",
+    "best_strategy": "momentum_30d",
+    "win_rate": 0.5263157894736842,
+    "total_return": 0.27622409627589284,
+    "optimal_sell_up": "1d",
+    "optimal_sell_down": "1d"
+  },
+  "NFLX": {
+    "industry": "media_entertainment",
+    "best_strategy": "momentum_20d",
+    "win_rate": 0.5714285714285714,
+    "total_return": 0.7557652643947272,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "30d"
+  },
+  "BA": {
+    "industry": "general",
+    "best_strategy": "momentum_7d",
+    "win_rate": 0.5806451612903226,
+    "total_return": 0.7202720910286147,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "14d"
+  },
+  "INTC": {
+    "industry": "general",
+    "best_strategy": "momentum_5d",
+    "win_rate": 0.6129032258064516,
+    "total_return": 0.8607205686130934,
+    "optimal_sell_up": "30d",
+    "optimal_sell_down": "14d"
+  }
+}
