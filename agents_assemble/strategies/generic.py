@@ -97,33 +97,7 @@ class BasePersona(ABC):
     def _get_indicator(self, data: dict[str, pd.DataFrame], symbol: str,
                        indicator: str, date: pd.Timestamp) -> float | None:
         """Safely get an indicator value for a symbol at a date."""
-        if symbol not in data:
-            return None
-        df = data[symbol]
-        if indicator not in df.columns:
-            return None
-        if date not in df.index:
-            # Try nearest date
-            try:
-                idx = df.index.get_indexer([date], method="nearest")[0]
-                if idx == -1:
-                    return None
-                nearest_date = df.index[idx]
-                # Reject data more than 10 calendar days from requested date
-                if abs((date - nearest_date).days) > 10:
-                    return None
-                val = df.iloc[idx][indicator]
-                if pd.isna(val):
-                    return None
-                return float(val)
-            except (IndexError, KeyError):
-                return None
-        val = df.loc[date, indicator]
-        if isinstance(val, pd.Series):
-            val = val.iloc[-1]
-        if pd.isna(val):
-            return None
-        return float(val)
+        return self._get_indicators(data, symbol, [indicator], date)[indicator]
 
 
 # ---------------------------------------------------------------------------
@@ -502,22 +476,25 @@ class QuantStrategist(BasePersona):
                 continue
 
             price = prices[sym]
-            bb_upper = self._get_indicator(data, sym, "bb_upper", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["bb_upper", "bb_lower", "rsi_14", "vol_20", "sma_20"],
+                date,
+            )
+            bb_upper = inds["bb_upper"]
+            bb_lower = inds["bb_lower"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+            sma20 = inds["sma_20"]
 
             if any(v is None for v in [bb_upper, bb_lower, rsi, vol, sma20]):
                 continue
 
             # Mean reversion score
             if price < bb_lower and rsi < 35:
-                # Oversold — buy signal
+                # Oversold — buy signal (z_score is already vol-normalized)
                 z_score = (sma20 - price) / (vol * price) if vol > 0 and price > 0 else 0
-                inv_vol = 1.0 / max(vol, 0.005)  # Size inversely to vol
-                score = z_score * inv_vol
-                candidates.append((sym, max(score, 0.1), vol))
+                candidates.append((sym, max(z_score, 0.1), vol))
 
             elif price > bb_upper and rsi > 70:
                 # Overbought — close position
@@ -685,11 +662,16 @@ class GrowthInvestor(BasePersona):
                 continue
 
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
 
             if any(v is None for v in [sma50, sma200, rsi]):
                 continue
