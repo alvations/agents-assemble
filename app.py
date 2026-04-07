@@ -1,7 +1,7 @@
 """agents-assemble Web Dashboard — browser-based trading platform.
 
 Launch: python app.py
-Open: http://localhost:5000
+Open: http://localhost:8888
 
 Features:
 - Strategy leaderboard with sorting/filtering
@@ -457,5 +457,5 @@ def api_trade_plan(strategy):
 
 if __name__ == "__main__":
     print("\\n  ⚡ agents-assemble Trading Terminal")
-    print("  Open: http://localhost:5000\\n")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    print("  Open: http://localhost:8888\\n")
+    app.run(host="0.0.0.0", port=8888, debug=False)
