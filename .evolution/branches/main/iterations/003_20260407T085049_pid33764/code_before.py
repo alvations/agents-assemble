@@ -95,7 +95,7 @@ class PeterLynch(BasePersona):
             if 0 < momentum < 0.30 and rsi < 65:
                 garp_score = momentum / vol_adj  # Return per unit of risk
                 # Bonus if near SMA50 support (buying on pullback)
-                if sma50 > 0 and abs(price - sma50) / sma50 < 0.03:
+                if abs(price - sma50) / sma50 < 0.03:
                     garp_score *= 1.3
                 candidates.append((sym, garp_score))
 
@@ -533,6 +533,7 @@ class CarlIcahn(BasePersona):
 
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
             rsi = self._get_indicator(data, sym, "rsi_14", date)
 
             if any(v is None for v in [sma200, rsi]):
@@ -820,7 +821,7 @@ class JorgePauloLemann(BasePersona):
 
             # Buy great brands on pullback
             if price > sma200 and rsi < 50:
-                proximity = abs(price - sma50) / sma50 if sma50 > 0 else 1.0
+                proximity = abs(price - sma50) / sma50
                 if proximity < 0.05:  # Near SMA50 support
                     score = 2.0 + (50 - rsi) / 50
                     candidates.append((sym, score))
@@ -1064,7 +1065,7 @@ class SupportResistanceCommodity(BasePersona):
             if price < bb_lower and rsi < 30:
                 weights[sym] = 0.0
                 continue
-            if price < sma200 * 0.95:
+            if sma200 and price < sma200 * 0.95:
                 weights[sym] = 0.0
                 continue
 
@@ -1080,7 +1081,7 @@ class SupportResistanceCommodity(BasePersona):
                 scored.append((sym, score))
 
             # Bounce off support — BUY (support test)
-            elif sma50 and sma50 > 0 and abs(price - sma50) / sma50 < 0.02 and rsi < 45:
+            elif sma50 and abs(price - sma50) / sma50 < 0.02 and rsi < 45:
                 score = 1.5
                 if vol_ratio > 1.2:
                     score += 0.5

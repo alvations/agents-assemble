@@ -162,3 +162,12 @@ All edits pass syntax check. Summary of changes:
 - **Removed dead variable `vol`** in `GeorgeSoros.generate_signals` — fetched via `_get_indicator` but never used in any computation or check
 - **Removed
 
+## [2026-04-07T08:58:51.009893+00:00] Branch: main | Run: 20260407T085049_pid33764 | Iter 3 | $0.7566
+### famous_investors.py
+All edits pass syntax check. Summary of changes:
+
+- **Removed dead variable `sma50`** in `CarlIcahn.generate_signals` — fetched via `_get_indicator` but never referenced in the method body
+- **Fixed division-by-zero in `PeterLynch`** — added `sma50 > 0` guard before `abs(price - sma50) / sma50` (line 98)
+- **Fixed division-by-zero in `JorgePauloLemann`** — added `sma50 > 0` guard with fallback to `1.0` (which skips the proximity bonus) when computing `proximity` (line 824)
+- **Fixed division-by-
+
