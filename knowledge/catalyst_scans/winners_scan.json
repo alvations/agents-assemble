@@ -1,0 +1,56 @@
+{
+  "OKLO": {
+    "strategy": "buy_spike_10d",
+    "win_rate": 0.71,
+    "total_return": 3.615,
+    "pf": 4.1
+  },
+  "RDDT": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.71,
+    "total_return": 2.451,
+    "pf": 5.3
+  },
+  "VRT": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.7,
+    "total_return": 1.919,
+    "pf": 3.2
+  },
+  "VST": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.7,
+    "total_return": 1.439,
+    "pf": 3.2
+  },
+  "SE": {
+    "strategy": "buy_spike_10d",
+    "win_rate": 0.78,
+    "total_return": 0.962,
+    "pf": 7.5
+  },
+  "KTOS": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.73,
+    "total_return": 0.708,
+    "pf": 2.0
+  },
+  "CEG": {
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.67,
+    "total_return": 0.663,
+    "pf": 5.5
+  },
+  "DDOG": {
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.67,
+    "total_return": 0.546,
+    "pf": 3.8
+  },
+  "ZS": {
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.7,
+    "total_return": 0.447,
+    "pf": 3.0
+  }
+}
