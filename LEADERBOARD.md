@@ -1,74 +1,91 @@
 # Strategy Leaderboard
 
-**Last Updated:** 2026-04-07 00:30 UTC
-**Backtest Period:** 2022-01-01 to 2024-12-31 (3 years)
-**Initial Capital:** $100,000
-**Benchmark:** SPY (28.66% total return over period)
-**Slippage:** 10 bps per trade | **Commission:** $0 (Robinhood-style)
+**Last Updated:** 2026-04-07 05:30 UTC
+**Horizons:** 1Y (2024), 3Y (2022-2024), 5Y (2020-2024), 10Y (2015-2024)
+**Initial Capital:** $100,000 | **Slippage:** 10 bps | **Commission:** $0
+**Benchmark:** SPY | **Total strategies:** 44+ across 6 categories
 
-## Top 10 Strategies by Sharpe Ratio
+## Cross-Horizon Consistency Ranking (THE definitive ranking)
 
-| Rank | Strategy | Type | Return | CAGR | Sharpe | Sortino | Max DD | Alpha | Win Rate | Trades | Result File |
-|------|----------|------|--------|------|--------|---------|--------|-------|----------|--------|-------------|
-| 1 | AI Revolution | Theme | 183.6% | ~41% | 1.41 | — | -22.0% | — | — | — | [results/ai_revolution_2022_2024_*.json](results/) |
-| 2 | Momentum Tech Leaders | Generic | 99.0% | 23.4% | 1.20 | 1.65 | -16.6% | +17.1% | 37.4% | 700 | [results/momentum_tech_leaders_*.json](results/) |
-| 3 | Small Cap Deep Value | Theme | 56.1% | ~16% | 1.10 | — | -4.6% | — | — | — | [results/small_cap_deep_value_*.json](results/) |
-| 4 | Prince Alwaleed (Crisis) | Famous | 39.0% | ~12% | 0.90 | — | -9.5% | +2.9% | — | — | [results/alwaleed_crisis_buying_*.json](results/) |
-| 5 | Masayoshi Son (Vision) | Famous | 81.2% | ~22% | 0.82 | — | -18.8% | +13.3% | — | — | [results/masayoshi_son_vision_*.json](results/) |
-| 6 | Buffett Value | Generic | 25.6% | 8.0% | 0.77 | 0.95 | -6.0% | -0.9% | 29.0% | 68 | [results/buffett_value_beats_spy_*.json](results/) |
-| 7 | Defense & Aerospace | Theme | 92.9% | ~25% | 0.64 | — | -46.1% | — | — | — | [results/defense_geopolitics_*.json](results/) |
-| 8 | Defensive Rotation | Recession | 60.7% | ~17% | 0.65 | — | -18.5% | — | — | — | [results/defensive_rotation_recession_*.json](results/) |
-| 9 | Carl Icahn (Activist) | Famous | 31.1% | ~9% | 0.65 | — | -5.6% | +0.7% | — | — | [results/carl_icahn_activist_*.json](results/) |
-| 10 | Growth Disruption | Generic | 49.4% | 14.4% | 0.62 | 0.88 | -17.6% | +5.6% | 33.3% | 410 | [results/growth_disruption_*.json](results/) |
+Sorted by average Sharpe ratio across all 4 horizons. This is the most reliable way to evaluate a strategy — a high Sharpe on one period could be luck.
 
-## Losing Strategies (avoid repeating)
+| Rank | Strategy | Category | Avg Sharpe | 1Y | 3Y | 5Y | 10Y | 10Y Return | Consistent? |
+|------|----------|----------|-----------|------|------|------|------|-----------|-------------|
+| 1 | **Momentum** | Generic | **1.08** | 1.49 | 1.36 | 0.60 | 0.86 | 570% | YES |
+| 2 | **Momentum Crash-Hedged** | Research | **1.05** | 1.18 | 1.26 | 0.72 | 1.05 | 743% | **MOST CONSISTENT** |
+| 3 | **AI Revolution** | Theme | **0.94** | 0.55 | 1.41 | 0.85 | 0.95 | 783% | YES |
+| 4 | **Masayoshi Son** | Famous | **0.87** | 1.19 | 0.77 | 0.62 | 0.90 | 1068% | YES |
+| 5 | **Defensive Rotation** | Recession | 0.59 | 0.88 | 0.33 | 0.60 | 0.57 | 212% | YES |
+| 6 | Mean-Variance | Research | 0.53 | 0.12 | 0.40 | 0.88 | 0.71 | 206% | MIXED |
+| 7 | Global Rotation | Research | 0.51 | -0.27 | 1.00 | 0.61 | 0.71 | 257% | MIXED |
+| 8 | Small Cap Value | Theme | 0.50 | 1.25 | 1.10 | -0.12 | -0.25 | -3% | NO (recent only) |
+| 9 | Dual Momentum | Research | 0.34 | 0.14 | 0.47 | 0.55 | 0.21 | 80% | MIXED |
+| 10 | Multi-Factor Smart Beta | Research | 0.32 | -0.68 | 0.54 | 0.74 | 0.70 | 253% | MIXED |
 
-| Rank | Strategy | Type | Return | Sharpe | Max DD | Why It Failed |
-|------|----------|------|--------|--------|--------|---------------|
-| 28 | Howard Marks Contrarian | Famous | -1.8% | -1.85 | -6.2% | Too selective, market kept trending up |
-| 29 | Treasury Safe Haven | Recession | -11.0% | -0.92 | -22.4% | 2022 rate hikes crushed bonds |
-| 30 | Quant Mean Reversion | Generic | -1.3% | -0.83 | -11.0% | Mean reversion failed in trending market |
-| 31 | S/R Commodity | Famous | -11.8% | -0.80 | -23.8% | Commodities whipsawed, no clear trend |
-| 32 | Meme Stock | Generic | -13.3% | -0.04 | -43.6% | Post-bubble destruction, 2022+ was brutal |
+## Highest Absolute Returns (10Y)
 
-## Unconventional Strategies (NEW)
+| Strategy | 10Y Return | 10Y Sharpe | 10Y Max DD |
+|----------|-----------|-----------|-----------|
+| Masayoshi Son | 1068% | 0.90 | -53.8% |
+| AI Revolution | 783% | 0.95 | -30.2% |
+| Momentum Crash-Hedged | 743% | 1.05 | -25.1% |
+| Momentum | 570% | 0.86 | -35.3% |
+| Global Rotation | 257% | 0.71 | -26.1% |
+| Multi-Factor Smart Beta | 253% | 0.70 | -24.2% |
+| Quality Factor | 230% | 0.68 | -25.8% |
 
-| Rank | Strategy | Type | Return | Sharpe | Max DD | Notes |
-|------|----------|------|--------|--------|--------|-------|
-| 1 | Quality Factor | Unconventional | 31.9% | 0.70 | -8.9% | Low vol + uptrend = quality |
-| 2 | Dogs of the Dow | Unconventional | 33.1% | 0.54 | -8.3% | Contrarian: buy worst performers |
-| 3 | Tail Risk Harvest | Unconventional | 9.2% | -0.14 | -5.1% | Buy after >3% crashes, lowest DD |
-| 4 | Turn of Month | Unconventional | 7.4% | -0.11 | -11.5% | Calendar effect too weak |
-| 5 | VIX Mean Reversion | Unconventional | 5.0% | -0.11 | -22.2% | 2022 rate hikes broke it |
-| 6 | Sell in May | Unconventional | 2.2% | -0.16 | -24.2% | Missed 2023 summer rally |
+## Best Risk-Adjusted (Lowest Max Drawdown)
 
-## Strategy Categories
+| Strategy | 10Y Return | 10Y Max DD | 10Y Sharpe |
+|----------|-----------|-----------|-----------|
+| Mean-Variance | 206% | **-15.6%** | 0.71 |
+| Low Vol Anomaly | 52% | -12.7% | 0.07 |
+| Momentum Crash-Hedged | 743% | -25.1% | 1.05 |
+| Multi-Factor Smart Beta | 253% | -24.2% | 0.70 |
+| Quality Factor | 230% | -25.8% | 0.68 |
 
-### Best by Category
-- **Best Overall Return:** AI Revolution (183.6%)
-- **Best Risk-Adjusted:** Small Cap Deep Value (1.10 Sharpe, -4.6% DD)
-- **Best Famous Investor:** Masayoshi Son (81.2%, 0.82 Sharpe)
-- **Best Recession Hedge:** Defensive Rotation (60.7%, 0.65 Sharpe)
-- **Lowest Drawdown:** Small Cap Deep Value (-4.6%)
-- **Highest Alpha vs SPY:** Momentum (+17.1% alpha)
-- **Best Unconventional:** Quality Factor (0.70 Sharpe, -8.9% DD)
+## Losing Strategies (avoid)
 
-### Recommended Portfolio Blend
-| Component | Strategy | Weight | Role |
-|-----------|----------|--------|------|
-| Growth Engine | AI Revolution | 40% | Capture tech megatrend |
-| Value Anchor | Small Cap Value | 30% | Low-vol alpha capture |
-| Recession Hedge | Defensive Rotation | 30% | Downside protection |
+| Strategy | Avg Sharpe | Why It Failed |
+|----------|-----------|---------------|
+| Carl Icahn | -0.46 | Deep value needs patience > 10Y, 2022 crushed financials |
+| Prince Alwaleed | -0.27 | Too selective, crisis buying rare in bull markets |
+| Dogs of Dow | -0.00 | Contrarian works 3Y+ but terrible short-term |
+| Low Vol Anomaly | 0.07 | Works in theory but missed tech rally entirely |
+| Small Cap Value | 0.50 (1Y/3Y only) | Great recent, terrible 5Y/10Y (COVID crash destroyed it) |
+
+## Recommended Deployable Portfolio
+
+| Component | Strategy | Weight | Role | Avg Sharpe |
+|-----------|----------|--------|------|-----------|
+| Core | Momentum Crash-Hedged | 40% | Consistent alpha, vol-scaled | 1.05 |
+| Growth | AI Revolution | 30% | Capture tech megatrend | 0.94 |
+| Hedge | Defensive Rotation | 20% | Recession protection | 0.59 |
+| Diversifier | Global Rotation | 10% | International exposure | 0.51 |
 
 ## Methodology
+
 - All backtests use yfinance daily OHLCV data
-- Technical indicators: SMA20/50/200, MACD, RSI14, Bollinger Bands, ATR14
-- Strategies are callable: `strategy(date, prices, portfolio, data) -> {symbol: weight}`
-- Rebalancing varies by strategy (daily/weekly/monthly)
-- Results saved in `results/` as JSON, trade recs in `strategy/winning/` and `strategy/losing/`
+- 44+ strategies across 6 categories: generic, famous investors, themes, recession, unconventional, research
+- Universe: 500+ tickers across 40+ categories (US, Europe, Japan, China, India, LatAm, Africa, Middle East, SE Asia)
+- Indicators: SMA20/50/200, MACD, RSI14, Bollinger Bands, ATR14, vol_20
+- Self-evolved 20+ iterations across all modules (~$15 total API cost)
 
 ## How to Reproduce
+
 ```bash
 cd agents-assemble
-python run_hypotheses.py --start 2022-01-01 --end 2024-12-31
+# Single strategy, all horizons
+python run_multi_horizon.py --persona momentum_crash_hedge
+
+# All strategies in a category
+python run_multi_horizon.py --category research
+
+# Everything
+python run_multi_horizon.py
 ```
+
+## Results Files
+
+All raw results are in `results/` as JSON. Multi-horizon reports in `knowledge/multi_horizon/`.
+Trade recommendations (entry/exit/stop-loss) in `strategy/winning/` and `strategy/losing/`.
