@@ -15,11 +15,9 @@ Features:
 
 from __future__ import annotations
 
-import io
 import json
 import base64
 import sys
-from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, render_template_string, request, jsonify
@@ -111,7 +109,15 @@ button.danger { background: #ff4444; }
 <div id="section-dashboard">
 <div class="grid">
     <div class="panel full">
-        <h2>📊 Strategy Leaderboard — 3Y (2022-2024) | Return + Sharpe + Max DD</h2>
+        <h2>📊 Strategy Leaderboard | Return + Sharpe + Max DD</h2>
+        <div class="input-group">
+            <select id="horizon-select" onchange="loadLeaderboard()">
+                <option value="3y" selected>3Y (2022-2024)</option>
+                <option value="1y">1Y (2024)</option>
+                <option value="5y">5Y (2020-2024)</option>
+            </select>
+            <span id="leaderboard-status" style="color:#888;font-size:11px;padding-top:6px"></span>
+        </div>
         <div id="leaderboard-table" class="loading">Loading strategies...</div>
     </div>
     <div class="panel">
@@ -204,6 +210,11 @@ button.danger { background: #ff4444; }
 <div id="status">⚡ agents-assemble | 91 strategies | 580 tickers</div>
 
 <script>
+function esc(s) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(s));
+    return d.innerHTML;
+}
 function showSection(name) {
     document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none');
     document.getElementById('section-' + name).style.display = 'block';
@@ -246,11 +257,18 @@ function sortLeaderboard(col) {
     renderLeaderboard();
 }
 
-// Load leaderboard on start
-fetch('/api/leaderboard').then(r => r.json()).then(data => {
-    leaderboardData = data;
-    renderLeaderboard();
-});
+function loadLeaderboard() {
+    const horizon = document.getElementById('horizon-select').value;
+    document.getElementById('leaderboard-status').textContent = 'Loading ' + horizon + '...';
+    document.getElementById('leaderboard-table').innerHTML = '<p class="loading">Loading strategies for ' + horizon + '...</p>';
+    fetch('/api/leaderboard?horizon=' + horizon).then(r => r.json()).then(data => {
+        leaderboardData = data;
+        document.getElementById('leaderboard-status').textContent = data.length + ' strategies loaded';
+        renderLeaderboard();
+    });
+}
+// Load on start
+loadLeaderboard();
 
 // Market overview
 fetch('/api/market').then(r => r.json()).then(data => {
@@ -268,7 +286,7 @@ function scanTicker() {
     const sym = document.getElementById('scan-ticker').value.toUpperCase();
     document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + sym + '...</p>';
     fetch('/api/scan/' + sym).then(r => r.json()).then(data => {
-        let html = '<h3>' + sym + ' — ' + data.industry + '</h3>';
+        let html = '<h3>' + sym + ' — ' + esc(data.industry || '') + '</h3>';
         if (data.best) {
             html += '<p><span class="tag tag-green">' + data.best.strategy + '</span> '
                 + 'Win: ' + (data.best.win_rate*100).toFixed(0) + '% | '
@@ -287,7 +305,7 @@ function runCatalyst() {
     const sym = document.getElementById('catalyst-ticker').value.toUpperCase();
     document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + sym + '... (this takes ~30s)</p>';
     fetch('/api/catalyst/' + sym).then(r => r.json()).then(data => {
-        let html = '<h3>' + sym + ' — ' + (data.industry || 'general') + '</h3>';
+        let html = '<h3>' + sym + ' — ' + esc(data.industry || 'general') + '</h3>';
         // Patterns
         if (data.historical_patterns && data.historical_patterns.total_events) {
             const p = data.historical_patterns;
@@ -313,7 +331,7 @@ function runCatalyst() {
             html += '<h3>Forward Predictions</h3>';
             data.predictions.forEach(p => {
                 html += '<p><span class="tag tag-' + (p.confidence === 'high' ? 'green' : p.confidence === 'medium' ? 'yellow' : 'red') + '">'
-                    + p.confidence.toUpperCase() + '</span> ' + p.recommended_action + '</p>';
+                    + esc(p.confidence.toUpperCase()) + '</span> ' + esc(p.recommended_action) + '</p>';
             });
         }
         // News
@@ -321,9 +339,9 @@ function runCatalyst() {
             html += '<h3>Latest News</h3>';
             data.news.slice(0, 8).forEach(n => {
                 if (n.title && n.title.length > 5) {
-                    html += '<p style="font-size:11px;margin:3px 0"><span class="tag tag-yellow">' + (n.catalyst_type || 'news') + '</span> '
-                        + '<span style="color:#888">' + (n.date || '') + '</span> '
-                        + (n.url ? '<a href="' + n.url + '" target="_blank">' + n.title.substring(0, 80) + '</a>' : n.title.substring(0, 80))
+                    html += '<p style="font-size:11px;margin:3px 0"><span class="tag tag-yellow">' + esc(n.catalyst_type || 'news') + '</span> '
+                        + '<span style="color:#888">' + esc(n.date || '') + '</span> '
+                        + (n.url ? '<a href="' + encodeURI(n.url) + '" target="_blank">' + esc(n.title.substring(0, 80)) + '</a>' : esc(n.title.substring(0, 80)))
                         + '</p>';
                 }
             });
@@ -415,34 +433,63 @@ document.querySelector('[onclick*="strategies"]').addEventListener('click', () =
 def index():
     return render_template_string(HTML)
 
+_leaderboard_cache = {}  # {horizon: results}
+
 @app.route("/api/leaderboard")
 def api_leaderboard():
-    """Read existing backtest results from results/ directory — no re-running."""
-    results_dir = Path(__file__).parent / "results"
+    """Return leaderboard. Uses cache, falls back to results/ files for 3y."""
+    horizon = request.args.get("horizon", "3y")
+
+    if horizon in _leaderboard_cache:
+        return jsonify(_leaderboard_cache[horizon])
+
+    # For 3y, read from existing results/ files (instant)
+    if horizon == "3y":
+        results_dir = Path(__file__).parent / "results"
+        results = []
+        for f in sorted(results_dir.glob("*.json"), key=lambda p: p.stat().st_mtime):
+            try:
+                data = json.loads(f.read_text())
+                metrics = data.get("metrics", data)
+                name = f.stem.rsplit("_2026", 1)[0]
+                ret = metrics.get("total_return", 0)
+                sharpe = metrics.get("sharpe_ratio", 0)
+                max_dd = metrics.get("max_drawdown", 0)
+                if isinstance(ret, (int, float)):
+                    results.append({
+                        "name": name, "source": "backtest",
+                        "return": round(ret, 4),
+                        "sharpe": round(sharpe, 2) if isinstance(sharpe, (int, float)) else 0,
+                        "max_dd": round(max_dd, 4) if isinstance(max_dd, (int, float)) else 0,
+                    })
+            except Exception:
+                pass
+        seen = {}
+        for r in results:
+            seen[r["name"]] = r
+        results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)[:30]
+        _leaderboard_cache[horizon] = results
+        return jsonify(results)
+
+    # For other horizons, run backtests (slower but cached after first load)
+    from run_multi_horizon import run_single, _get_all_strategies, SHORT_HORIZONS, HORIZONS, ALL_HORIZONS
+    h_map = ALL_HORIZONS
+    if horizon not in h_map:
+        return jsonify([])
+    start, end = h_map[horizon]
     results = []
-    for f in results_dir.glob("*.json"):
-        try:
-            data = json.loads(f.read_text())
-            metrics = data.get("metrics", data)
-            name = f.stem.rsplit("_2026", 1)[0]
-            ret = metrics.get("total_return", 0)
-            sharpe = metrics.get("sharpe_ratio", 0)
-            max_dd = metrics.get("max_drawdown", 0)
-            if isinstance(ret, (int, float)):
-                results.append({
-                    "name": name,
-                    "source": "backtest",
-                    "return": round(ret, 4),
-                    "sharpe": round(sharpe, 2) if isinstance(sharpe, (int, float)) else 0,
-                    "max_dd": round(max_dd, 4) if isinstance(max_dd, (int, float)) else 0,
-                })
-        except Exception:
-            pass
-    # Deduplicate by name (keep latest)
-    seen = {}
-    for r in results:
-        seen[r["name"]] = r
-    results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)
+    for s in _get_all_strategies():
+        r = run_single(s, horizon, start, end, verbose=False)
+        if r["status"] == "success":
+            m = r["metrics"]
+            results.append({
+                "name": s["key"], "source": s["source"],
+                "return": round(m.get("total_return", 0), 4),
+                "sharpe": round(m.get("sharpe_ratio", 0), 2),
+                "max_dd": round(m.get("max_drawdown", 0), 4),
+            })
+    results.sort(key=lambda x: x["return"], reverse=True)
+    _leaderboard_cache[horizon] = results[:30]
     return jsonify(results[:30])
 
 @app.route("/api/strategies")
@@ -490,7 +537,14 @@ def api_scan(symbol):
     from catalyst_analyzer import CatalystAnalyzer
     a = CatalystAnalyzer(symbol.upper())
     patterns = a.analyze_historical_patterns()
-    bts = a.backtest_event_strategy()
+    # Quick mode: 3 strategies at 10d (fast)
+    df = a._get_price_data()
+    bts = {}
+    if len(df) >= 50:
+        for strat in ['buy_spike', 'buy_dip', 'momentum']:
+            r = a._run_single_backtest(df, strat, 10)
+            if r.total_trades > 0:
+                bts[f'{strat}_10d'] = r
     best = max(bts.values(), key=lambda b: b.total_return) if bts else None
     return jsonify({
         "symbol": symbol.upper(),
@@ -512,6 +566,8 @@ def api_chart(symbol):
     start = request.args.get("start", "2024-01-01")
     t = Terminal()
     path = t.equity_chart(symbol.upper(), start=start)
+    if not path or not Path(path).is_file():
+        return jsonify({"error": f"Chart generation failed for {symbol}"}), 500
     with open(path, "rb") as f:
         img_b64 = base64.b64encode(f.read()).decode()
     return jsonify({"image": img_b64})
@@ -525,7 +581,6 @@ def api_trade_plan(strategy):
     from data_fetcher import fetch_multiple_ohlcv
     from backtester import _compute_rsi, _compute_bollinger, _compute_atr
     import pandas as pd
-    import numpy as np
 
     symbols = persona.config.universe[:15]
     all_data = fetch_multiple_ohlcv(symbols, start="2024-01-01")
@@ -559,7 +614,7 @@ def api_trade_plan(strategy):
 
     orders = []
     for sym, w in sorted(weights.items(), key=lambda x: -x[1]):
-        if w > 0 and sym in prices:
+        if w > 0 and sym in prices and prices[sym] > 0:
             qty = int(100000 * min(w, 0.20) / prices[sym])
             if qty > 0:
                 orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})

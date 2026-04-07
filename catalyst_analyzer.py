@@ -220,7 +220,9 @@ class CatalystAnalyzer:
                 df.index = df.index.tz_localize(None)
             df["daily_return"] = df["Close"].pct_change()
             df["vol_avg_20"] = df["Volume"].rolling(20).mean()
-            df["vol_ratio"] = df["Volume"] / df["vol_avg_20"]
+            vol_ratio = df["Volume"] / df["vol_avg_20"]
+            vol_ratio.replace([float("inf"), float("-inf")], float("nan"), inplace=True)
+            df["vol_ratio"] = vol_ratio
             df["sma_50"] = df["Close"].rolling(50).mean()
             df["sma_200"] = df["Close"].rolling(200).mean()
             self._price_data = df
@@ -280,9 +282,9 @@ class CatalystAnalyzer:
         seen = set()
         unique = []
         for item in items:
-            key = item.title.lower().strip()
-            if key not in seen:
-                seen.add(key)
+            dedup_key = item.title.lower().strip()
+            if dedup_key not in seen:
+                seen.add(dedup_key)
                 unique.append(item)
 
         self._news_cache = unique
@@ -306,9 +308,12 @@ class CatalystAnalyzer:
         vr = df["vol_ratio"]
 
         max_horizon = max(SELL_HORIZONS)
+        last_event_i = -max_horizon  # Track last event to avoid overlapping windows
         for i in range(25, len(df) - max_horizon):
             if pd.isna(vr.iloc[i]) or pd.isna(ret.iloc[i]):
                 continue
+            if i - last_event_i < max_horizon:
+                continue  # Skip events whose forward windows overlap prior event
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
                 entry_price = close.iloc[i]
                 if pd.isna(entry_price) or entry_price == 0:
@@ -330,6 +335,7 @@ class CatalystAnalyzer:
                     direction="up" if ret.iloc[i] > 0 else "down",
                     post_returns=post,
                 ))
+                last_event_i = i
 
         up = [e for e in events if e.direction == "up"]
         down = [e for e in events if e.direction == "down"]
@@ -411,6 +417,8 @@ class CatalystAnalyzer:
                 if i - position[1] >= holding_days:
                     trades.append(price / position[0] - 1)
                     position = None
+                else:
+                    continue  # Still holding — skip entry check
 
             if position is None and price > 0:
                 if strategy == "buy_spike" and r > 0.03 and v > 2.0:
@@ -440,7 +448,7 @@ class CatalystAnalyzer:
             total_return=math.prod(1 + t for t in trades) - 1,
             best_trade=float(max(trades)),
             worst_trade=float(min(trades)),
-            profit_factor=abs(sum(winners) / sum(losers)) if losers else 0.0 if not winners else 999.0,
+            profit_factor=abs(sum(winners) / sum(losers)) if losers else 0.0 if not winners else float("inf"),
         )
 
     # ----- 4. Forward-looking predictions -----
