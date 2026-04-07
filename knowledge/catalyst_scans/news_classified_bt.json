@@ -1,0 +1,594 @@
+{
+  "NVDA": {
+    "symbol": "NVDA",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.64,
+        "ret": 0.254,
+        "trades": 14
+      },
+      "10d": {
+        "win": 0.83,
+        "ret": 1.221,
+        "trades": 12
+      },
+      "20d": {
+        "win": 0.83,
+        "ret": 1.708,
+        "trades": 12
+      }
+    }
+  },
+  "TSLA": {
+    "symbol": "TSLA",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.38,
+        "ret": 0.269,
+        "trades": 13
+      },
+      "10d": {
+        "win": 0.75,
+        "ret": 0.584,
+        "trades": 12
+      },
+      "20d": {
+        "win": 0.67,
+        "ret": 0.919,
+        "trades": 9
+      }
+    }
+  },
+  "BA": {
+    "symbol": "BA",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.54,
+        "ret": -0.032,
+        "trades": 24
+      },
+      "10d": {
+        "win": 0.55,
+        "ret": 0.103,
+        "trades": 20
+      },
+      "20d": {
+        "win": 0.44,
+        "ret": -0.158,
+        "trades": 18
+      }
+    }
+  },
+  "LLY": {
+    "symbol": "LLY",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.65,
+        "ret": 0.324,
+        "trades": 20
+      },
+      "10d": {
+        "win": 0.61,
+        "ret": 0.436,
+        "trades": 18
+      },
+      "20d": {
+        "win": 0.62,
+        "ret": 0.659,
+        "trades": 16
+      }
+    }
+  },
+  "SMCI": {
+    "symbol": "SMCI",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.59,
+        "ret": 6.878,
+        "trades": 32
+      },
+      "10d": {
+        "win": 0.5,
+        "ret": 3.939,
+        "trades": 24
+      },
+      "20d": {
+        "win": 0.61,
+        "ret": 1.143,
+        "trades": 18
+      }
+    }
+  },
+  "OKLO": {
+    "symbol": "OKLO",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.55,
+        "ret": 1.022,
+        "trades": 31
+      },
+      "10d": {
+        "win": 0.6,
+        "ret": 1.532,
+        "trades": 25
+      },
+      "20d": {
+        "win": 0.41,
+        "ret": 2.004,
+        "trades": 17
+      }
+    }
+  },
+  "HOOD": {
+    "symbol": "HOOD",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.62,
+        "ret": 1.494,
+        "trades": 26
+      },
+      "10d": {
+        "win": 0.67,
+        "ret": 1.619,
+        "trades": 21
+      },
+      "20d": {
+        "win": 0.65,
+        "ret": 4.166,
+        "trades": 17
+      }
+    }
+  },
+  "KOS": {
+    "symbol": "KOS",
+    "news_classified": [
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      },
+      {
+        "title": "",
+        "type": "general",
+        "sentiment": "neutral",
+        "recommended_strategy": "momentum"
+      }
+    ],
+    "dominant_strategy": "momentum",
+    "strategy_votes": {
+      "momentum": 8
+    },
+    "backtest": {
+      "5d": {
+        "win": 0.44,
+        "ret": -0.146,
+        "trades": 27
+      },
+      "10d": {
+        "win": 0.52,
+        "ret": 0.059,
+        "trades": 21
+      },
+      "20d": {
+        "win": 0.35,
+        "ret": -0.141,
+        "trades": 17
+      }
+    }
+  }
+}
