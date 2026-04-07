@@ -30,9 +30,6 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-
-import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -52,7 +49,7 @@ CHARTS_DIR.mkdir(exist_ok=True)
 class Terminal:
     """Mini Bloomberg Terminal for agents-assemble."""
 
-    def __init__(self, output_dir: Optional[str] = None):
+    def __init__(self, output_dir: str | None = None):
         self.output_dir = Path(output_dir or str(CHARTS_DIR))
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -61,6 +58,7 @@ class Terminal:
     def equity_chart(
         self, symbol: str, start: str = "2024-01-01", end: Optional[str] = None,
         show_volume: bool = True, show_rsi: bool = True, show_macd: bool = True,
+        end: str | None = None,
     ) -> Path:
         """Bloomberg GP-style equity chart with indicators."""
         plt, mdates = _get_plt()

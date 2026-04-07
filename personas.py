@@ -169,6 +169,10 @@ class BuffettValue(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, score in top:
                 weights[sym] = per_stock
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -252,6 +256,10 @@ class MomentumTrader(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -354,6 +362,10 @@ class MemeStockTrader(BasePersona):
                     remaining[sym] += excess * (remaining[sym] / under_total)
             for sym, w in remaining.items():
                 weights[sym] = min(w, cap)
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -430,6 +442,10 @@ class DividendInvestor(BasePersona):
             per_stock = min(budget / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -529,6 +545,10 @@ class QuantStrategist(BasePersona):
                     remaining[sym] += excess * (remaining[sym] / under_total)
             for sym, w in remaining.items():
                 weights[sym] = min(w, cap)
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -757,9 +777,12 @@ class SectorRotation(BasePersona):
                 continue
 
             price = prices[sym]
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(
+                data, sym, ["sma_20", "sma_50", "rsi_14"], date,
+            )
+            sma20 = inds["sma_20"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
 
             if sma20 is None or sma50 is None:
                 continue
