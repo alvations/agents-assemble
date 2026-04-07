@@ -56,9 +56,8 @@ class Terminal:
     # ----- 1. Equity Chart (GP command) -----
 
     def equity_chart(
-        self, symbol: str, start: str = "2024-01-01", end: Optional[str] = None,
+        self, symbol: str, start: str = "2024-01-01", end: str | None = None,
         show_volume: bool = True, show_rsi: bool = True, show_macd: bool = True,
-        end: str | None = None,
     ) -> Path:
         """Bloomberg GP-style equity chart with indicators."""
         plt, mdates = _get_plt()
@@ -120,7 +119,7 @@ class Terminal:
             delta = close.diff()
             gain = delta.where(delta > 0, 0).rolling(14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-            rs = gain / loss.replace(0, np.nan)
+            rs = gain / loss.replace(0, float('nan'))
             rsi = 100 - (100 / (1 + rs))
             ax.set_facecolor("#1a1a2e")
             ax.plot(rsi.index, rsi, color="#ffaa00", linewidth=1)
@@ -162,7 +161,7 @@ class Terminal:
     # ----- 2. Strategy Equity Curve Comparison -----
 
     def strategy_comparison(
-        self, strategies: List[str], start: str = "2022-01-01", end: str = "2024-12-31",
+        self, strategies: list[str], start: str = "2022-01-01", end: str = "2024-12-31",
     ) -> Path:
         """Compare equity curves of multiple strategies."""
         plt, mdates = _get_plt()
@@ -227,8 +226,14 @@ class Terminal:
         from run_multi_horizon import run_single, _get_all_strategies
 
         all_strats = _get_all_strategies()
-        horizons = {"3m": ("2024-10-01", "2024-12-31"), "6m": ("2024-07-01", "2024-12-31"),
-                     "1y": ("2024-01-01", "2024-12-31"), "3y": ("2022-01-01", "2024-12-31")}
+        now = datetime.now()
+        end_date = now.strftime("%Y-%m-%d")
+        horizons = {
+            "3m": (f"{now.year}-{max(1, now.month - 3):02d}-{now.day:02d}", end_date),
+            "6m": (f"{now.year - (1 if now.month <= 6 else 0)}-{(now.month - 6 - 1) % 12 + 1:02d}-{now.day:02d}", end_date),
+            "1y": (f"{now.year - 1}-{now.month:02d}-{now.day:02d}", end_date),
+            "3y": (f"{now.year - 3}-{now.month:02d}-{now.day:02d}", end_date),
+        }
 
         # Collect data for top strategies
         data = {}
@@ -369,15 +374,16 @@ class Terminal:
         events = patterns.get("events", [])
         for e in events:
             date = pd.Timestamp(e["date"])
-            if date in df.index or True:
-                color = "#00ff88" if e["direction"] == "up" else "#ff4444"
-                try:
-                    idx = df.index.get_indexer([date], method="nearest")[0]
-                    price = df["Close"].iloc[idx]
-                    marker = "^" if e["direction"] == "up" else "v"
-                    ax1.scatter(date, price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
-                except (IndexError, KeyError):
-                    pass
+            color = "#00ff88" if e["direction"] == "up" else "#ff4444"
+            try:
+                idx = df.index.get_indexer([date], method="nearest")[0]
+                if idx < 0:
+                    continue
+                price = df["Close"].iloc[idx]
+                marker = "^" if e["direction"] == "up" else "v"
+                ax1.scatter(date, price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
+            except (IndexError, KeyError):
+                pass
 
         ax1.set_ylabel("Price ($)", color="white", fontsize=9)
         ax1.set_title(f"  {symbol} — Catalyst Event Timeline", color="#00ff88",
@@ -425,10 +431,11 @@ class Terminal:
             "RealEst": "XLRE", "Comms": "XLC", "Matls": "XLB", "DiscCon": "XLY",
         }
 
+        ytd_start = f"{datetime.now().year}-01-01"
         rets = {}
         for name, etf in sectors.items():
             try:
-                df = fetch_ohlcv(etf, start="2024-01-01", cache=True)
+                df = fetch_ohlcv(etf, start=ytd_start, cache=True)
                 if len(df) > 5:
                     rets[name] = (df["Close"].iloc[-1] / df["Close"].iloc[0] - 1) * 100
             except Exception:
@@ -467,7 +474,7 @@ class Terminal:
 
     # ----- 7. Full Dashboard -----
 
-    def generate_dashboard(self, symbol: str = "NVDA") -> List[Path]:
+    def generate_dashboard(self, symbol: str = "NVDA") -> list[Path]:
         """Generate full Bloomberg-style dashboard for a symbol."""
         paths = []
         print(f"Generating dashboard for {symbol}...")

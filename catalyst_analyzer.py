@@ -25,13 +25,11 @@ Usage:
 from __future__ import annotations
 
 import json
-import os
+import math
 from dataclasses import dataclass, field as dataclass_field
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 
 import sys
@@ -113,7 +111,7 @@ class NewsItem:
     source: str
     catalyst_type: str
     url: str = ""
-    sentiment: Optional[float] = None
+    sentiment: float | None = None
 
     def to_dict(self):
         return {k: v for k, v in self.__dict__.items() if v is not None}
@@ -410,7 +408,7 @@ class CatalystAnalyzer:
             total_return=float(np.prod([1 + t for t in trades]) - 1),
             best_trade=float(max(trades)),
             worst_trade=float(min(trades)),
-            profit_factor=abs(sum(winners) / sum(losers)) if losers else float("inf"),
+            profit_factor=abs(sum(winners) / sum(losers)) if losers else 0.0 if not winners else 999.0,
         )
 
     # ----- 4. Forward-looking predictions -----
@@ -427,7 +425,9 @@ class CatalystAnalyzer:
         best_bt = None
         best_key = None
         for key, bt in backtests.items():
-            if best_bt is None or (bt.total_return > best_bt.total_return and bt.win_rate > 0.5):
+            if bt.win_rate <= 0.5:
+                continue
+            if best_bt is None or bt.total_return > best_bt.total_return:
                 best_bt = bt
                 best_key = key
 
@@ -437,7 +437,7 @@ class CatalystAnalyzer:
                 catalyst_type="game_launch",
                 description=f"Next major game/DLC release for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('avg_20d', 0):.1%} in 20d"
+                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
                                    if "after_up" in patterns else "No clear pattern",
                 recommended_action="BUY 3-6 months before announced release, SELL within days of launch",
                 confidence="medium",
@@ -450,7 +450,7 @@ class CatalystAnalyzer:
                 catalyst_type="fda_catalyst",
                 description=f"Next FDA date / clinical readout for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After DOWN events: avg +{patterns.get('after_down', {}).get('avg_10d', 0):.1%} in 10d (bounce)"
+                historical_pattern=f"After DOWN events: avg +{patterns.get('after_down', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d (bounce)"
                                    if "after_down" in patterns else "Binary outcomes",
                 recommended_action="BUY dips before known FDA dates, small position size (binary risk)",
                 confidence="low",
@@ -463,7 +463,7 @@ class CatalystAnalyzer:
                 catalyst_type="product_launch",
                 description=f"Next product announcement / launch event for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('avg_10d', 0):.1%} in 10d"
+                historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d"
                                    if "after_up" in patterns else "Momentum continuation",
                 recommended_action="BUY on positive spike + volume, ride momentum 10-20 days",
                 confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
@@ -476,7 +476,7 @@ class CatalystAnalyzer:
                 catalyst_type="delivery_numbers",
                 description=f"Next quarterly delivery report for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After DOWN events: bounce +{patterns.get('after_down', {}).get('avg_5d', 0):.1%} in 5d"
+                historical_pattern=f"After DOWN events: bounce +{patterns.get('after_down', {}).get('5d', {}).get('avg_return', 0):.1%} in 5d"
                                    if "after_down" in patterns else "Buy dip on delivery miss",
                 recommended_action="BUY dips around delivery number releases",
                 confidence="medium",
