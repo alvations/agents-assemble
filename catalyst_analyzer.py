@@ -287,6 +287,7 @@ class CatalystAnalyzer:
                 seen.add(dedup_key)
                 unique.append(item)
 
+        unique = unique[:max_items]
         self._news_cache = unique
         return unique
 
@@ -428,10 +429,8 @@ class CatalystAnalyzer:
                 elif strategy == "momentum" and r > 0.02 and v > 1.5:
                     position = (price, i)
 
-        # Close any remaining open position at last available price
-        if position is not None:
-            last_price = close.dropna().iloc[-1] if not close.dropna().empty else position[0]
-            trades.append(last_price / position[0] - 1)
+        # Drop incomplete position — it hasn't held for holding_days
+        # so including it would bias avg_return and win_rate
 
         if not trades:
             return BacktestResult(strategy, holding_days, 0, 0, 0, 0, 0, 0, 0)
@@ -554,7 +553,7 @@ class CatalystAnalyzer:
         backtests = self.backtest_event_strategy()
         predictions = self.predict_next_catalyst(patterns=patterns, backtests=backtests)
 
-        return {
+        return self._sanitize_for_json({
             "symbol": self.symbol,
             "industry": self.industry,
             "industry_info": INDUSTRY_CATALYSTS.get(self.industry, {}),
@@ -563,7 +562,7 @@ class CatalystAnalyzer:
             "backtests": {k: v.to_dict() for k, v in backtests.items()},
             "predictions": [p.to_dict() for p in predictions],
             "generated_at": datetime.now().isoformat(),
-        }
+        })
 
     def print_report(self):
         """Print human-readable report."""
@@ -708,7 +707,6 @@ def scan_all_industries() -> dict[str, dict]:
 # CLI
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    import sys
     symbol = sys.argv[1] if len(sys.argv) > 1 else "NTDOY"
     analyzer = CatalystAnalyzer(symbol)
     analyzer.print_report()
