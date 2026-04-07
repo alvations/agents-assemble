@@ -1,0 +1,20 @@
+{
+  "CART": {
+    "strategy": "momentum_30d",
+    "win_rate": 0.7777777777777778,
+    "total_return": 1.1320930875804156,
+    "trades": 9
+  },
+  "FENG": {
+    "strategy": "buy_dip_20d",
+    "win_rate": 0.6153846153846154,
+    "total_return": 2.2337559156092115,
+    "trades": 13
+  },
+  "BSBR": {
+    "strategy": "momentum_10d",
+    "win_rate": 0.5333333333333333,
+    "total_return": 0.21500335616019361,
+    "trades": 15
+  }
+}
