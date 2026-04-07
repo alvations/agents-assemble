@@ -1122,6 +1122,294 @@ class SupportResistanceCommodity(BasePersona):
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 14. Bill Ackman — Pershing Square (2025: +34%)
+# ---------------------------------------------------------------------------
+class BillAckman(BasePersona):
+    """Bill Ackman / Pershing Square concentrated compounder strategy.
+
+    Source: Pershing Square 13F Q4 2025. Returned 34% in 2025.
+
+    Key principles:
+    - Ultra-concentrated: 11 positions
+    - High-quality compounders at reasonable prices
+    - ~40% in AI mega caps (AMZN, GOOGL, META)
+    - Long-duration holdings, low turnover
+    - Activist when needed, but mostly passive in recent years
+
+    Actual holdings (Q4 2025): UBER 20%, BN 19%, AMZN 14%, GOOGL 12%, META 11%
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Bill Ackman (Pershing Square)",
+            description="Ultra-concentrated compounders: 11 positions, 40% AI, 34% return 2025",
+            risk_tolerance=0.6,
+            max_position_size=0.20,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            # Actual Pershing Square holdings + similar quality compounders
+            universe=universe or [
+                "UBER", "BN", "AMZN", "GOOGL", "META",  # Top 5 actual
+                "HLT", "NFLX", "BRK-B", "V", "MA",  # Quality compounders
+                "MSFT", "AAPL", "CRM",  # Adjacent picks
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            if any(v is None for v in [sma200, rsi]):
+                continue
+            # Quality compounder: above SMA200, not overbought, low vol
+            if price < sma200 * 0.90:
+                continue  # Broken thesis
+            score = 0.0
+            if sma50 and price > sma50 > sma200:
+                score += 2.0
+            elif price > sma200:
+                score += 1.0
+            if vol and vol < 0.02:
+                score += 1.0  # Prefer low vol (quality)
+            if 30 < rsi < 65:
+                score += 0.5  # Buy on pullback, not at highs
+            if score >= 2.0:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 15. Stanley Druckenmiller — Duquesne Family Office
+# ---------------------------------------------------------------------------
+class StanleyDruckenmiller(BasePersona):
+    """Stanley Druckenmiller / Duquesne macro + growth strategy.
+
+    Source: Duquesne Family Office 13F Q4 2025. 62 holdings, 43% turnover.
+
+    Key principles:
+    - Macro-driven with high conviction growth bets
+    - Willing to make big concentrated bets when conviction is high
+    - High turnover (43%) — aggressively repositions
+    - Q4 2025 top: NTRA 16%, XLF (financials), INSM, RSP, TEVA
+    - Increased GOOGL by 277%, added SE (+244%)
+
+    Famous for: "Put all your eggs in one basket, then watch the basket"
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Stanley Druckenmiller (Duquesne)",
+            description="Macro + high-conviction growth: aggressive repositioning, concentrated bets",
+            risk_tolerance=0.7,
+            max_position_size=0.18,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            # Mix of actual Q4 2025 holdings + growth picks
+            universe=universe or [
+                "NTRA", "INSM", "TEVA", "SE",  # Actual top holdings
+                "GOOGL", "AMZN", "META", "MSFT",  # Big tech
+                "XLF",  # Financials ETF (actual holding)
+                "PLTR", "CRWD", "SNOW",  # Growth tech
+                "LLY", "UNH",  # Healthcare
+                "RSP",  # Equal-weight S&P (actual holding)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            macd = self._get_indicator(data, sym, "macd", date)
+            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+            # Druckenmiller: aggressive momentum with macro awareness
+            score = 0.0
+            if sma200 and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+            if 40 < rsi < 80:
+                score += 0.5
+            if score >= 3:
+                scored.append((sym, score))
+            elif sma200 and price < sma200:
+                weights[sym] = 0.0  # Cut losers aggressively
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            # Score-weighted (concentrate in strongest)
+            total_score = sum(s for _, s in top)
+            for sym, score in top:
+                w = min((score / total_score) * 0.90, self.config.max_position_size)
+                weights[sym] = w
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 16. Cathie Wood — ARK Invest (ARKK +35%, ARKQ +50% in 2025)
+# ---------------------------------------------------------------------------
+class CathieWood(BasePersona):
+    """Cathie Wood / ARK Invest disruptive innovation strategy.
+
+    Source: ARK Invest 13F 2025. ARKK +35%, ARKQ +50% in 2025.
+
+    Key principles:
+    - 5-year time horizon on disruptive innovation
+    - AI, genomics, robotics, blockchain, fintech
+    - High conviction: top 10 = 50%+ of portfolio
+    - Buys dips aggressively, sells winners into strength
+    - 2026 shift: heavy bets on gene editing (NTLA, CRSP)
+
+    Top holdings (Dec 2025): TSLA, ROKU, PLTR, RBLX, COIN
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Cathie Wood (ARK Invest)",
+            description="Disruptive innovation: AI + genomics + robotics + crypto, 5-year horizon",
+            risk_tolerance=0.9,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            # Actual ARK top holdings + thematic picks
+            universe=universe or [
+                "TSLA", "ROKU", "PLTR", "RBLX", "COIN",  # Top 5 actual
+                "DDOG", "PATH", "CRSP", "NTLA",  # AI + genomics
+                "SQ", "SHOP", "HOOD",  # Fintech
+                "TEM", "RXRX",  # AI healthcare
+                "ARKK", "ARKQ",  # ARK ETFs themselves
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if any(v is None for v in [sma50, rsi]):
+                continue
+            # ARK style: buy dips in uptrend, hold through volatility
+            if sma200 and price < sma200 * 0.80:
+                weights[sym] = 0.0  # Only exit on full thesis break
+                continue
+            score = 0.0
+            if price > sma200 and rsi < 50:
+                score += 2.5  # Buy the dip in uptrend (ARK specialty)
+            elif price > sma50:
+                score += 1.5
+            if rsi < 35:
+                score += 1.5  # Extra aggressive on deep dips
+            elif rsi > 75:
+                score -= 0.5  # Slight trim signal
+            if score >= 2.0:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 17. BlackRock 2026 Portfolio — Institutional consensus
+# ---------------------------------------------------------------------------
+class BlackRock2026(BasePersona):
+    """BlackRock 2026 outlook strategy.
+
+    Source: BlackRock Investment Institute 2026 Outlook.
+
+    Key themes:
+    - AI stocks grew earnings 30%/yr vs 3% for non-AI (2023-2025)
+    - Cash-flow generative assets over speculative
+    - US + EM stocks favored over Europe
+    - Bonds for income, alternatives for diversification
+    - "Accept air pockets, rely on income and time"
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="BlackRock 2026 Outlook",
+            description="Institutional consensus: AI leaders + cash-flow assets + EM",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # AI leaders (grew earnings 30%/yr)
+                "MSFT", "NVDA", "GOOGL", "AMZN", "META",
+                # Cash-flow generators
+                "AAPL", "BRK-B", "JPM", "V", "UNH",
+                # EM exposure
+                "EEM", "INDA", "EWZ",
+                # Bonds + alternatives
+                "TLT", "GLD",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            if sma200 is None:
+                continue
+            # Institutional: quality + reasonable entry
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount > -0.10:
+                score = max(discount + 0.10, 0.01) + 0.3
+                if vol and vol < 0.02:
+                    score += 0.3  # Quality bonus
+                if rsi and rsi < 45:
+                    score += 0.2
+                candidates.append((sym, score))
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
 FAMOUS_INVESTORS = {
     "peter_lynch": PeterLynch,
     "ray_dalio": RayDalio,
@@ -1136,6 +1424,10 @@ FAMOUS_INVESTORS = {
     "prince_alwaleed": PrinceAlwaleed,
     "howard_marks": HowardMarks,
     "support_resistance": SupportResistanceCommodity,
+    "bill_ackman": BillAckman,
+    "stanley_druckenmiller": StanleyDruckenmiller,
+    "cathie_wood": CathieWood,
+    "blackrock_2026": BlackRock2026,
 }
 
 
