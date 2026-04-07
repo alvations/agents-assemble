@@ -97,7 +97,7 @@ def _cache_path(key: str) -> Path:
     return CACHE_DIR / f"{safe}.parquet"
 
 
-def _cache_get(key: str, max_age_hours: float = 12) -> Optional[pd.DataFrame]:
+def _cache_get(key: str, max_age_hours: float = 12) -> pd.DataFrame | None:
     path = _cache_path(key)
     if path.exists():
         age = time.time() - path.stat().st_mtime
@@ -364,8 +364,8 @@ def fetch_fred_series(
             df.columns = ["value"]
             df["value"] = pd.to_numeric(df["value"], errors="coerce")
             df = df.dropna()
-        except Exception:
-            raise ValueError(f"Could not fetch FRED series {series_id}. Set FRED_API_KEY for reliable access.")
+        except Exception as e:
+            raise ValueError(f"Could not fetch FRED series {series_id}. Set FRED_API_KEY for reliable access.") from e
 
     if cache:
         _cache_set(cache_key, df)
@@ -394,7 +394,10 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
                     nearest = df.index[pos]
                     if abs((nearest - idx).days) > 10:
                         continue
-                    curve[label] = float(df.loc[nearest, "value"])
+                    val = df.loc[nearest, "value"]
+                    if pd.isna(val):
+                        continue
+                    curve[label] = float(val)
                 else:
                     curve[label] = float(df.iloc[-1]["value"])
         except Exception:
