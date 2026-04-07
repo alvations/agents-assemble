@@ -83,8 +83,9 @@ class DualMomentum(BasePersona):
             winner, winner_mom = "EFA", efa_mom
 
         # Absolute momentum: is winner > 0 (above its SMA200)?
+        loser = "EFA" if winner == "SPY" else "SPY"
         if winner_mom > 0:
-            weights = {winner: 0.90, "AGG": 0.0}
+            weights = {winner: 0.90, loser: 0.0, "AGG": 0.0}
         else:
             # Both negative → safe haven
             weights = {"AGG": 0.90, "SPY": 0.0, "EFA": 0.0}
@@ -172,9 +173,26 @@ class MultiFactorSmartBeta(BasePersona):
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
         if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_stock
+            cap = self.config.max_position_size
+            budget = 0.90
+            remaining = list(top)
+            while remaining:
+                per_stock = budget / len(remaining)
+                if per_stock <= cap:
+                    for sym, _ in remaining:
+                        weights[sym] = per_stock
+                    break
+                # Cap exceeds — assign cap and redistribute
+                new_remaining = []
+                for sym, score in remaining:
+                    if budget / len(remaining) >= cap:
+                        weights[sym] = cap
+                        budget -= cap
+                    else:
+                        new_remaining.append((sym, score))
+                if not new_remaining or budget <= 0:
+                    break
+                remaining = new_remaining
         if not weights:
             return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
@@ -331,7 +349,7 @@ class MomentumCrashHedge(BasePersona):
 
             if score >= 2.5:
                 scored.append((sym, score))
-            elif score < 1:
+            else:
                 weights[sym] = 0.0
 
         scored.sort(key=lambda x: x[1], reverse=True)
@@ -340,6 +358,8 @@ class MomentumCrashHedge(BasePersona):
             per_stock = min((0.90 * vol_scale) / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        if not weights:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices and sym != "SPY"}
         return weights
 
 
@@ -592,7 +612,7 @@ class GlobalRotation(BasePersona):
 
             if score > 1.5:
                 scored.append((sym, score))
-            elif price < sma200 * 0.95:
+            else:
                 weights[sym] = 0.0
 
         scored.sort(key=lambda x: x[1], reverse=True)
@@ -601,6 +621,8 @@ class GlobalRotation(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        if not weights:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -668,6 +690,8 @@ class FactorETFRotation(BasePersona):
                 weights["TLT"] = min(0.50, cap)
             if "GLD" in self.config.universe and "GLD" in prices:
                 weights["GLD"] = min(0.30, cap)
+        if not weights:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -738,7 +762,10 @@ class FaberSectorRotation(BasePersona):
                                 self.config.max_position_size)
                 for s in havens:
                     weights[s] = per_haven
-        return {k: v for k, v in weights.items() if k in prices}
+        result = {k: v for k, v in weights.items() if k in prices}
+        if not result:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
+        return result
 
 
 RESEARCH_STRATEGIES = {

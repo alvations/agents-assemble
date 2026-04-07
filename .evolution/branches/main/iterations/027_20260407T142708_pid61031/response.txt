@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `MomentumCrashHedge` stale positions** (line 345) — When all stocks score 1.0-2.5 (moderate momentum), `weights` was empty (`{}`) causing the backtester to skip rebalancing. Now returns explicit 0.0 for all universe symbols (excluding SPY which is vol-measurement-only), same fix pattern as iteration 26.
+- **Fixed `GlobalRotation` stale positions** (line 607) — When all stocks have moderate scores (0-1.5) but aren't in downtrend, `weights` was empty. Now returns explicit zeros.
+- **Fixed `FactorETFRotation` stale positions** (line 675) — When no ETFs have positive momentum AND safe haven symbols (TLT/GLD) are missing from universe/prices, `weights` was empty. Now returns explicit zeros.
+- **Fixed `FaberSectorRotation` stale positions** (line 749) — When no sectors have positive 12-month momentum AND bond safe havens (TLT/IEF) are missing, `weights` was empty. Now returns explicit zeros.

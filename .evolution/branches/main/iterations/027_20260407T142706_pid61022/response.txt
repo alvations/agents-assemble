@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed benchmark comparison silently skipped when benchmark is in trading universe** (line 400) — When `benchmark="SPY"` and SPY is in `symbols`, `bench_data` stayed `None`, losing alpha, beta, and information ratio metrics. Now checks `all_data` first for the benchmark symbol before attempting a separate fetch.
+- **Pre-computed prices lookup dict** (lines 493-498) — Replaced per-iteration `close_prices.loc[date]` (which creates a pandas Series + dict conversion on every bar) with a one-time `to_dict('index')` bulk conversion. Simulation loop now does a simple dict lookup per iteration.
+- **Fixed `compute_trade_metrics` inconsistent return keys** (line 321) — Empty trades now returns all 7 keys with zero values, matching the non-empty case. Previously returned only `{"num_trades": 0}`, forcing all callers to use `.get()` with defaults.

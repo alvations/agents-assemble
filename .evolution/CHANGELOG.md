@@ -585,3 +585,24 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `QuantStrategist` single-pass redistribution losing budget** (lines 495-511) — The old code split entries into capped/uncapped and did one round of redistribution, but if the redistribution pushed uncapped entries over cap, the `min()` clip silently discarded the excess. Replaced with the iterative while-loop pattern (already used by MemeStockTrader and SectorRotation) that keeps redistributing until no entries exceed cap.
 - **Fixe
 
+## [2026-04-07T14:56:18.378218+00:00] Branch: main | Run: 20260407T142706_pid61022 | Iter 27 | $1.4377
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed benchmark comparison silently skipped when benchmark is in trading universe** (line 400) — When `benchmark="SPY"` and SPY is in `symbols`, `bench_data` stayed `None`, losing alpha, beta, and information ratio metrics. Now checks `all_data` first for the benchmark symbol before attempting a separate fetch.
+- **Pre-computed prices lookup dict** (lines 493-498) — Replaced per-iteration `close_prices.loc[date]` (which creates a pandas 
+
+## [2026-04-07T14:58:23.963019+00:00] Branch: main | Run: 20260407T142708_pid61031 | Iter 27 | $1.4490
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `MomentumCrashHedge` stale positions** (line 345) — When all stocks score 1.0-2.5 (moderate momentum), `weights` was empty (`{}`) causing the backtester to skip rebalancing. Now returns explicit 0.0 for all universe symbols (excluding SPY which is vol-measurement-only), same fix pattern as iteration 26.
+- **Fixed `GlobalRotation` stale positions** (line 607) — When all stocks have moderate scores (0-1.5) but aren't in downtrend, `w
+
+## [2026-04-07T15:02:02.462678+00:00] Branch: main | Run: 20260407T142709_pid61050 | Iter 27 | $1.4835
+### personas.py
+All edits pass syntax validation. Summary of changes:
+
+- **Added `_get_indicators` batch method to `BasePersona`** (line 64) — performs a single index lookup per (symbol, date) pair and extracts multiple indicator values, avoiding N redundant index lookups when a strategy needs 3-5 indicators per symbol
+- **Updated `MomentumTrader` to use batch lookup** (line 243) — 5 individual `_get_indicator` calls → 1 `_get_indicators` call, reducing per-symbol overhead by ~4 function calls + 4 index lookups
+

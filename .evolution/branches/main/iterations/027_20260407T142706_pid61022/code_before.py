@@ -259,13 +259,9 @@ def compute_metrics(
     gross_loss = abs(returns[returns < 0].sum())
     profit_factor = gross_profit / gross_loss if gross_loss > 0 else (float("inf") if gross_profit > 0 else 0.0)
 
-    # Skewness and kurtosis (NaN when variance is zero, e.g. constant returns)
+    # Skewness and kurtosis
     skew = returns.skew() if len(returns) >= 3 else 0.0
-    if not math.isfinite(skew):
-        skew = 0.0
     kurt = returns.kurtosis() if len(returns) >= 4 else 0.0
-    if not math.isfinite(kurt):
-        kurt = 0.0
 
     metrics = {
         "total_return": total_return,
@@ -319,15 +315,7 @@ def compute_metrics(
 def compute_trade_metrics(trades: list[Trade]) -> dict[str, Any]:
     """Compute trade-level metrics."""
     if not trades:
-        return {
-            "num_trades": 0,
-            "num_buys": 0,
-            "num_sells": 0,
-            "total_commission": 0.0,
-            "total_slippage": 0.0,
-            "total_transaction_costs": 0.0,
-            "avg_trade_size": 0.0,
-        }
+        return {"num_trades": 0}
 
     total_commission = sum(t.commission for t in trades)
     total_slippage = sum(t.slippage for t in trades)
@@ -409,14 +397,11 @@ class Backtester:
             )
 
         bench_data = None
-        if self.benchmark:
-            if self.benchmark in all_data:
-                bench_data = all_data[self.benchmark]
-            elif self.benchmark not in self.symbols:
-                try:
-                    bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
-                except Exception:
-                    pass
+        if self.benchmark and self.benchmark not in self.symbols:
+            try:
+                bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
+            except Exception:
+                pass
 
         return all_data, bench_data
 
@@ -500,20 +485,15 @@ class Backtester:
             enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
             enriched_data[sym] = enriched
 
-        # Pre-compute prices dict — avoids per-iteration pandas Series creation
-        _raw_prices = close_prices.to_dict('index')
-        prices_lookup = {
-            dt: {sym: v for sym, v in row.items() if pd.notna(v)}
-            for dt, row in _raw_prices.items()
-        }
-
         # Run simulation
         equity_values = []
         equity_dates = []
         strategy_errors = 0
 
         for idx, date in enumerate(common_dates):
-            prices = prices_lookup.get(date, {})
+            # Get prices from pre-computed forward-filled matrix
+            row = close_prices.loc[date]
+            prices = {sym: float(v) for sym, v in row.items() if not pd.isna(v)}
 
             if not self._should_rebalance(date, common_dates, idx) or not prices:
                 snap = portfolio.snapshot(date, prices)
@@ -585,7 +565,7 @@ class Backtester:
             current_value = (current_pos.quantity * price) if current_pos else 0.0
             diff_value = target_value - current_value
             if diff_value < 0 and abs(diff_value) >= price * 0.5:
-                qty = int(round(abs(diff_value) / price))
+                qty = int(abs(diff_value) / price)
                 if qty > 0:
                     sells.append((sym, qty))
 
@@ -593,7 +573,7 @@ class Backtester:
         for sym in list(portfolio.positions.keys()):
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0 and sym in prices and prices[sym] > 0:
+                if pos and pos.quantity > 0 and sym in prices:
                     sells.append((sym, int(round(pos.quantity))))
 
         for sym, qty in sells:
@@ -614,7 +594,7 @@ class Backtester:
             current_value = (current_pos.quantity * price) if current_pos else 0.0
             diff_value = target_value - current_value
             if diff_value >= price * 0.5:
-                qty = int(round(diff_value / price))
+                qty = int(diff_value / price)
                 if qty > 0:
                     # Covering shorts gets highest priority (same as orphaned short closes)
                     priority = float("inf") if (current_pos and current_pos.quantity < 0) else target_w
@@ -624,7 +604,7 @@ class Backtester:
         for sym in list(portfolio.positions.keys()):
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
-                if pos and pos.quantity < 0 and sym in prices and prices[sym] > 0:
+                if pos and pos.quantity < 0 and sym in prices:
                     buys.append((sym, int(round(abs(pos.quantity))), float("inf")))
 
         # Execute buys with highest-weight positions first

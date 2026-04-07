@@ -1,0 +1,142 @@
+# Trading Execution Guide
+
+> **IMPORTANT DISCLAIMER**
+>
+> The information, strategies, signals, and trade recommendations provided by agents-assemble are for **educational and research purposes only** and do not constitute financial advice, investment advice, trading advice, or any other form of professional advice. Nothing contained herein should be construed as a recommendation, solicitation, or offer to buy or sell any securities, financial instruments, or other assets.
+>
+> **Past performance is not indicative of future results.** Backtested results are hypothetical, do not reflect actual trading, and may not account for all market conditions, liquidity constraints, or transaction costs. There is no guarantee that any strategy will achieve similar results in live trading.
+>
+> **Trading involves substantial risk of loss.** You may lose some or all of your invested capital. You should only trade with money you can afford to lose. Before making any investment decisions, consult with a qualified financial advisor who understands your individual financial situation.
+>
+> The authors and contributors of this software bear no responsibility or liability for any losses, damages, or other consequences resulting from the use of this software or the strategies it contains.
+>
+> By using this software, you acknowledge that you have read and understood this disclaimer and that you assume full responsibility for your own trading decisions.
+
+## Overview
+
+agents-assemble can translate backtested strategy signals into actual trade orders on **Public.com** via their official API. The flow is:
+
+```
+Strategy JSON (from backtest) → PublicTrader → Public.com API → Real trades
+```
+
+## Setup
+
+### 1. Get API Key
+
+1. Go to [public.com/settings/security/api](https://public.com/settings/security/api)
+2. Create a secret key
+3. Set it as an environment variable:
+
+```bash
+export PUBLIC_API_SECRET="your-secret-key-here"
+```
+
+### 2. Install SDK
+
+```bash
+# Option A: Install from PyPI
+pip install public-api-sdk
+
+# Option B: Use local copy (if available at ../publicdotcom-py)
+# The trader auto-detects the local SDK
+```
+
+### 3. Generate a Trade Plan (Dry Run)
+
+Always start with a dry run to see what trades would be placed:
+
+```bash
+cd agents-assemble
+python public_trader.py momentum_crash_hedge
+```
+
+This will:
+1. Fetch latest market data for the strategy's universe
+2. Generate target portfolio weights using the strategy's signals
+3. Print what orders would be placed (without executing)
+
+### 4. Execute Live Trades
+
+```python
+from public_trader import PublicTrader
+
+# CAUTION: This places REAL orders with REAL money
+trader = PublicTrader(dry_run=False)
+results = trader.execute_strategy("momentum_crash_hedge")
+```
+
+## How It Works
+
+### Strategy → Orders Translation
+
+1. **Load strategy**: Any of the 66 strategies can be used
+2. **Fetch latest data**: Gets current prices from yfinance
+3. **Generate signals**: Strategy produces `{symbol: weight}` dict
+4. **Calculate positions**: `target_qty = (portfolio_value * weight) / price`
+5. **Diff with current**: Compares target vs actual portfolio on Public.com
+6. **Place orders**: BUY/SELL the difference via Public.com API
+
+### Order Types
+
+| Type | When Used |
+|------|-----------|
+| MARKET | Default for all orders |
+| LIMIT | Can be specified for more price control |
+| STOP | For stop-loss orders |
+| STOP_LIMIT | Combined stop + limit |
+
+### Safety Features
+
+- **Dry run by default**: `PublicTrader(dry_run=True)` — always starts in dry run
+- **Max position cap**: Default 20% per position, configurable
+- **Preflight validation**: Public.com API validates orders before execution
+- **Async execution**: Orders are placed asynchronously, status must be checked
+- **UUID deduplication**: Each order gets a unique ID to prevent duplicates
+
+## Using Strategy JSON Files
+
+The `strategy/winning/` directory contains JSON files with trade recommendations:
+
+```python
+import json
+from pathlib import Path
+
+# Load a winning strategy's recommendations
+with open("strategy/winning/momentum_20260407_103622.json") as f:
+    recs = json.load(f)
+
+# The JSON contains:
+# - risk_parameters: stop_loss, take_profit, position_size
+# - position_recommendations: per-symbol entry/exit prices
+# - execution_guidance: order type, timing, scaling advice
+
+print(recs["overall_assessment"])
+for rec in recs["position_recommendations"]:
+    print(f"  {rec['symbol']}: {rec['action']} | Stop: {rec['stop_loss']}")
+```
+
+## Recommended Strategies for Live Trading
+
+Based on multi-horizon backtesting (see LEADERBOARD.md):
+
+| Strategy | Avg Sharpe | Risk | Recommended For |
+|----------|-----------|------|-----------------|
+| Momentum Crash-Hedged | 1.05 | Medium | Core holding |
+| Quality Factor | 0.70 | Low | Conservative |
+| Defensive Rotation | 0.59 | Low | Recession hedge |
+| Kelly Optimal | 0.67 | Medium | Long-term |
+
+**Start small.** Use 10-25% of intended allocation for the first month to validate live performance matches backtested expectations.
+
+## API Endpoints Used
+
+| Action | Method | Endpoint |
+|--------|--------|----------|
+| Auth | POST | `/userapiauthservice/personal/access-tokens` |
+| Account | GET | `/userapigateway/trading/account` |
+| Portfolio | GET | `/userapigateway/trading/{id}/portfolio/v2` |
+| Quotes | POST | `/userapigateway/marketdata/{id}/quotes` |
+| Place Order | POST | `/userapigateway/trading/{id}/order` |
+| Order Status | GET | `/userapigateway/trading/{id}/order/{orderId}` |
+| Cancel | DELETE | `/userapigateway/trading/{id}/order/{orderId}` |

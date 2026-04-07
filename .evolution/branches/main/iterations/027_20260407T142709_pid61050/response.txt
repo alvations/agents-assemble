@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Added `_get_indicators` batch method to `BasePersona`** (line 64) — performs a single index lookup per (symbol, date) pair and extracts multiple indicator values, avoiding N redundant index lookups when a strategy needs 3-5 indicators per symbol
+- **Updated `MomentumTrader` to use batch lookup** (line 243) — 5 individual `_get_indicator` calls → 1 `_get_indicators` call, reducing per-symbol overhead by ~4 function calls + 4 index lookups per bar
+- **Fixed `EnsembleStrategist` buying on split consensus** (line 1005) — added `signal_count > exit_count` guard so 2 buy + 2 exit signals no longer triggers a buy; the consensus philosophy requires buy signals to outnumber exits
+- **Fixed `DividendInvestor` total exposure overflow** (line 455) — trimmed stocks (0.05 each, from stocks >30% above SMA200) were added on top of the 0.90 candidate budget; in a bull market with 8 candidates + 6 trims, total exposure hit 1.20. Now deducts trim allocations from the candidate budget

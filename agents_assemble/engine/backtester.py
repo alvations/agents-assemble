@@ -319,7 +319,15 @@ def compute_metrics(
 def compute_trade_metrics(trades: list[Trade]) -> dict[str, Any]:
     """Compute trade-level metrics."""
     if not trades:
-        return {"num_trades": 0}
+        return {
+            "num_trades": 0,
+            "num_buys": 0,
+            "num_sells": 0,
+            "total_commission": 0.0,
+            "total_slippage": 0.0,
+            "total_transaction_costs": 0.0,
+            "avg_trade_size": 0.0,
+        }
 
     total_commission = sum(t.commission for t in trades)
     total_slippage = sum(t.slippage for t in trades)
@@ -401,11 +409,14 @@ class Backtester:
             )
 
         bench_data = None
-        if self.benchmark and self.benchmark not in self.symbols:
-            try:
-                bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
-            except Exception:
-                pass
+        if self.benchmark:
+            if self.benchmark in all_data:
+                bench_data = all_data[self.benchmark]
+            elif self.benchmark not in self.symbols:
+                try:
+                    bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
+                except Exception:
+                    pass
 
         return all_data, bench_data
 
@@ -489,15 +500,20 @@ class Backtester:
             enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
             enriched_data[sym] = enriched
 
+        # Pre-compute prices dict — avoids per-iteration pandas Series creation
+        _raw_prices = close_prices.to_dict('index')
+        prices_lookup = {
+            dt: {sym: v for sym, v in row.items() if pd.notna(v)}
+            for dt, row in _raw_prices.items()
+        }
+
         # Run simulation
         equity_values = []
         equity_dates = []
         strategy_errors = 0
 
         for idx, date in enumerate(common_dates):
-            # Get prices from pre-computed forward-filled matrix
-            row = close_prices.loc[date]
-            prices = {sym: float(v) for sym, v in row.items() if not pd.isna(v)}
+            prices = prices_lookup.get(date, {})
 
             if not self._should_rebalance(date, common_dates, idx) or not prices:
                 snap = portfolio.snapshot(date, prices)

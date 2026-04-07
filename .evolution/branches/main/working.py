@@ -61,6 +61,39 @@ class BasePersona(ABC):
         """Make persona callable as a strategy function."""
         return self.generate_signals(date, prices, portfolio, data)
 
+    def _get_indicators(self, data: dict[str, pd.DataFrame], symbol: str,
+                        indicators: list[str], date: pd.Timestamp) -> dict[str, float | None]:
+        """Get multiple indicator values in one index lookup."""
+        none_result = {ind: None for ind in indicators}
+        if symbol not in data:
+            return none_result
+        df = data[symbol]
+        if date in df.index:
+            row = df.loc[date]
+            if isinstance(row, pd.DataFrame):
+                row = row.iloc[-1]
+        else:
+            try:
+                idx = df.index.get_indexer([date], method="nearest")[0]
+                if idx == -1:
+                    return none_result
+                nearest_date = df.index[idx]
+                if abs((date - nearest_date).days) > 10:
+                    return none_result
+                row = df.iloc[idx]
+            except (IndexError, KeyError):
+                return none_result
+        result = {}
+        for ind in indicators:
+            if ind not in df.columns:
+                result[ind] = None
+                continue
+            val = row[ind]
+            if isinstance(val, pd.Series):
+                val = val.iloc[-1]
+            result[ind] = None if pd.isna(val) else float(val)
+        return result
+
     def _get_indicator(self, data: dict[str, pd.DataFrame], symbol: str,
                        indicator: str, date: pd.Timestamp) -> float | None:
         """Safely get an indicator value for a symbol at a date."""
@@ -207,11 +240,16 @@ class MomentumTrader(BasePersona):
                 continue
 
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "macd", "macd_signal", "rsi_14"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            rsi = inds["rsi_14"]
 
             if any(v is None for v in [sma50, sma200, macd, macd_sig, rsi]):
                 continue
@@ -412,7 +450,10 @@ class DividendInvestor(BasePersona):
         candidates.sort(key=lambda x: x[1], reverse=True)
         top = candidates[:self.config.max_positions]
         if top:
-            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            # Budget accounts for trim allocations so total doesn't exceed 0.95
+            trim_total = sum(v for v in weights.values() if v > 0)
+            budget = max(0.90 - trim_total, 0.10)
+            per_stock = min(budget / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
 
@@ -658,6 +699,11 @@ class GrowthInvestor(BasePersona):
                 weights[sym] = 0.0
                 continue
 
+            # Overbought — take profits
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
             score = 0.0
 
             # Buy the dip in uptrend
@@ -734,6 +780,11 @@ class SectorRotation(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
 
             if sma20 is None or sma50 is None:
+                continue
+
+            # Overbought — exit overheated sectors
+            if rsi is not None and rsi > 75:
+                weights[sym] = 0.0
                 continue
 
             # Momentum score: how far above SMA20
@@ -837,15 +888,24 @@ class PairsTrader(BasePersona):
             if rsi_a is None or rsi_b is None:
                 continue
 
-            # Mean reversion in the pair
+            # Exit overbought symbols
+            if rsi_a > 80:
+                weights[sym_a] = 0.0
+            if rsi_b > 80:
+                weights[sym_b] = 0.0
+            if rsi_a > 80 or rsi_b > 80:
+                continue
+
+            # Mean reversion in the pair — use max() so later pairs don't
+            # silently downgrade allocations from earlier pairs
             if rsi_a < 35 and rsi_b > 55:
                 # A oversold relative to B — overweight A
-                weights[sym_a] = self.config.max_position_size
-                weights[sym_b] = self.config.max_position_size * 0.5
+                weights[sym_a] = max(weights.get(sym_a, 0), self.config.max_position_size)
+                weights[sym_b] = max(weights.get(sym_b, 0), self.config.max_position_size * 0.5)
             elif rsi_b < 35 and rsi_a > 55:
                 # B oversold relative to A — overweight B
-                weights[sym_b] = self.config.max_position_size
-                weights[sym_a] = self.config.max_position_size * 0.5
+                weights[sym_b] = max(weights.get(sym_b, 0), self.config.max_position_size)
+                weights[sym_a] = max(weights.get(sym_a, 0), self.config.max_position_size * 0.5)
             else:
                 # Neutral — equal weight both
                 weights[sym_a] = weights.get(sym_a, 0) + 0.06
@@ -943,7 +1003,7 @@ class EnsembleStrategist(BasePersona):
         weights = {}
         n_ran = len(all_signals)
         for sym, info in combined.items():
-            if info["signal_count"] >= 2:
+            if info["signal_count"] >= 2 and info["signal_count"] > info["exit_count"]:
                 # Scale weight by consensus strength among strategies that actually ran
                 consensus_factor = info["signal_count"] / n_ran
                 w = min(info["total_weight"] * consensus_factor,
