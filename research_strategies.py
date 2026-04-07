@@ -158,9 +158,8 @@ class MultiFactorSmartBeta(BasePersona):
                 mom_score += 0.25
 
             # Factor 3: Quality (inverse vol, above SMA200)
-            quality_score = 0.0
-            if vol > 0:
-                quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
+            # vol > 0 guaranteed by filter on line 142
+            quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
             if price > sma200:
                 quality_score *= 1.3
 

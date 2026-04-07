@@ -459,3 +459,10 @@ All edits pass syntax validation. Summary of changes:
 - **Removed dead `sma200` variable in `SmallCapValue`** (line 505) — fetched via `_get_indicator` but never referenced in any condition or computation, saving one indicator lookup per symbol per bar
 - **Fixed `CryptoEcosystem` score-weighted under-allocation** — when `min()` clips high-score positions to `max_position_size`, the freed allocation was lost (e.g., 3 stocks could allocate only 0.58 instead of 0.90). Added post-clip normalization
 
+## [2026-04-07T10:28:33.816469+00:00] Branch: main | Run: 20260407T100044_pid47596 | Iter 20 | $1.3129
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed external data ignoring `start`/`end` date range** — When `data` is passed directly to `Backtester`, `self.start` and `self.end` were silently ignored, causing the simulation to run over the entire data range. Now filters `close_prices` to the requested window while preserving full indicator lookback history in `enriched_data`.
+- **Fixed weekly rebalance fragile weekday comparison** — `date.weekday() < prev.weekday()` fails when tra
+

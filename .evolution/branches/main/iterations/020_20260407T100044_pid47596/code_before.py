@@ -252,8 +252,8 @@ def compute_metrics(
     profit_factor = gross_profit / gross_loss if gross_loss > 0 else (float("inf") if gross_profit > 0 else 0.0)
 
     # Skewness and kurtosis
-    skew = returns.skew() if len(returns) >= 3 else 0.0
-    kurt = returns.kurtosis() if len(returns) >= 4 else 0.0
+    skew = returns.skew()
+    kurt = returns.kurtosis()
 
     metrics = {
         "total_return": total_return,
@@ -397,7 +397,7 @@ class Backtester:
         if self.rebalance_frequency == "weekly":
             if idx == 0:
                 return True
-            return date.isocalendar()[:2] != dates[idx - 1].isocalendar()[:2]
+            return date.weekday() < dates[idx - 1].weekday()  # New week
         if self.rebalance_frequency == "monthly":
             if idx == 0:
                 return True
@@ -437,14 +437,6 @@ class Backtester:
         # Build close prices matrix — union index with forward-fill for partial data
         close_prices = pd.DataFrame({sym: df["Close"] for sym, df in all_data.items()})
         close_prices = close_prices.sort_index().ffill()
-
-        # Filter to requested date range (critical for external data which
-        # bypasses fetch_multiple_ohlcv's own start/end filtering)
-        if self.start:
-            close_prices = close_prices.loc[close_prices.index >= pd.Timestamp(self.start)]
-        if self.end:
-            close_prices = close_prices.loc[close_prices.index <= pd.Timestamp(self.end)]
-
         common_dates = list(close_prices.index)
 
         if not common_dates:
@@ -556,7 +548,7 @@ class Backtester:
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0 and sym in prices:
-                    sells.append((sym, int(round(pos.quantity))))
+                    sells.append((sym, int(pos.quantity)))
 
         for sym, qty in sells:
             portfolio.execute_trade(date, sym, Side.SELL, qty, prices[sym])
@@ -585,7 +577,7 @@ class Backtester:
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity < 0 and sym in prices:
-                    buys.append((sym, int(round(abs(pos.quantity))), float("inf")))
+                    buys.append((sym, int(abs(pos.quantity)), float("inf")))
 
         # Execute buys with highest-weight positions first
         buys.sort(key=lambda x: x[2], reverse=True)

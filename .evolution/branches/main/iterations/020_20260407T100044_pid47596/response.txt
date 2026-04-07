@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed external data ignoring `start`/`end` date range** — When `data` is passed directly to `Backtester`, `self.start` and `self.end` were silently ignored, causing the simulation to run over the entire data range. Now filters `close_prices` to the requested window while preserving full indicator lookback history in `enriched_data`.
+- **Fixed weekly rebalance fragile weekday comparison** — `date.weekday() < prev.weekday()` fails when trading skips an entire week (e.g., all Mon–Thu are market holidays). Replaced with ISO week number comparison `date.isocalendar()[:2] != prev.isocalendar()[:2]` which is correct by construction for all calendar edge cases.
+- **Fixed NaN skew/kurtosis for short backtests** — `pd.Series.skew()` requires ≥3 values and `.kurtosis()` requires ≥4; shorter series produce NaN that silently poisons downstream metric comparisons and JSON serialization. Now returns 0.0 when insufficient data.
+- **Fixed floating-point dust in position close-outs** — `int(pos.quantity)` truncates toward zero, so `int(99.9999999999)` = 99 would leave a ghost 1-share position. Added `round()` before `int()` for both long close-outs and short cover-outs.
