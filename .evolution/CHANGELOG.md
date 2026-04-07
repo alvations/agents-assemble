@@ -402,3 +402,11 @@ Syntax is valid. Summary of changes:
 - **Modernized type hints** — Replaced `Dict`, `List`, `Optional` from `typing` with builtin equivalents (`dict`, `list`, `| None`) across all function signatures (already guarded by `from __future__ import annotations`).
 - **Fixed `screen_by_funda
 
+## [2026-04-07T10:03:58.150262+00:00] Branch: main | Run: 20260407T095840_pid47310 | Iter 18 | $0.8323
+### recession_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file; only `pandas` is needed (for `pd.isna` in `_safe_get` and the NaN guard)
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 4 classes, `Dict[str, ...]` → `dict[str, ...]` in `detect_recession_regime` signature (already guarded by `from __future__ import annotations`)
+- **Fixed NaN price bu
+

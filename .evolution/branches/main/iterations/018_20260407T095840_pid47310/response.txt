@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file; only `pandas` is needed (for `pd.isna` in `_safe_get` and the NaN guard)
+- **Removed unused `typing` imports, modernized type hints** — Replaced `Optional[List[str]]` with `list[str] | None` across all 4 classes, `Dict[str, ...]` → `dict[str, ...]` in `detect_recession_regime` signature (already guarded by `from __future__ import annotations`)
+- **Fixed NaN price bug in `detect_recession_regime`** — `prices.get("SPY")` can return NaN (e.g., forward-fill gap), which passes `is not None` but makes `spy_price < spy_sma200` silently False, incorrectly counting as "SPY above SMA200" and biasing all 4 strategies away from recession detection
+- **Fixed `DefensiveRotation` `max_position_size` inconsistency** — Was 0.20 but risk-on mode allocated SPY at 0.30 and QQQ at 0.25; since the backtester doesn't enforce this cap, the weights went through uncapped but the config was misleading. Raised to 0.30 to match actual allocations (defensive mode already uses `min(..., max_position_size)` so is unaffected)
