@@ -817,6 +817,13 @@ UNIVERSE = {
     "recent_ipos": ["ARM", "VRT", "RDDT", "BIRK", "CART"],
     # Data center infrastructure (AI capex beneficiaries)
     "data_centers": ["VRT", "EQIX", "DLR", "AMT", "DELL", "HPE", "SMCI"],
+    # Semiconductor comprehensive (2026: $1T global market, +25% YoY)
+    "semiconductor": [
+        "NVDA", "AMD", "AVGO", "ASML", "TSM", "INTC", "QCOM", "TXN",
+        "MRVL", "MU", "ADI", "NXPI", "ARM", "ON", "LRCX", "AMAT",
+        "KLAC", "SNPS", "CDNS", "MCHP", "SWKS", "QRVO",
+        "SMH", "SOXX",  # Semiconductor ETFs
+    ],
     # LatAm expanded (from research)
     "latam_expanded": ["COPA", "ARCO", "TV", "LOMA", "CRESY"],
     # Dividend Aristocrats (25+ years consecutive increases, S&P 500)
