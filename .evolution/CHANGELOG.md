@@ -466,3 +466,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed external data ignoring `start`/`end` date range** — When `data` is passed directly to `Backtester`, `self.start` and `self.end` were silently ignored, causing the simulation to run over the entire data range. Now filters `close_prices` to the requested window while preserving full indicator lookback history in `enriched_data`.
 - **Fixed weekly rebalance fragile weekday comparison** — `date.weekday() < prev.weekday()` fails when tra
 
+## [2026-04-07T10:29:38.095836+00:00] Branch: main | Run: 20260407T100045_pid47619 | Iter 20 | $1.0740
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `vol > 0` guard in `MultiFactorSmartBeta`** (line 162) — always true since line 142 already filters `vol <= 0`, the conditional was dead code wrapping the quality score computation
+- **Fixed `RiskParityMomentum` weight capping discarding unallocated capital** — simple `min(w, cap)` capping lost 30%+ of budget when one asset dominated via inverse-vol weighting (e.g., 2 candidates with vol 0.005 vs 0.02 → 0.58 allocated instea
+

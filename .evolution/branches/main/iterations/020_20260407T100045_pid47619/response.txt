@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `vol > 0` guard in `MultiFactorSmartBeta`** (line 162) — always true since line 142 already filters `vol <= 0`, the conditional was dead code wrapping the quality score computation
+- **Fixed `RiskParityMomentum` weight capping discarding unallocated capital** — simple `min(w, cap)` capping lost 30%+ of budget when one asset dominated via inverse-vol weighting (e.g., 2 candidates with vol 0.005 vs 0.02 → 0.58 allocated instead of 0.90). Now uses iterative capping (same pattern as `MeanVarianceOptimal`) to redistribute excess to remaining assets
+- **Fixed `FaberSectorRotation` safe haven allocation exceeding `max_position_size`** — with only 1 haven available, `per_haven` was 0.90 (2.5x the 0.35 cap); both the remainder path and all-negative path now cap at `max_position_size`. Also added missing `list[str] | None` type hint on `universe` parameter for consistency with the other 8 strategy classes

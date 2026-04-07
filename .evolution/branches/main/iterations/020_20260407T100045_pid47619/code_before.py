@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import math
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 _SQRT_252 = math.sqrt(252)
 
@@ -158,8 +158,9 @@ class MultiFactorSmartBeta(BasePersona):
                 mom_score += 0.25
 
             # Factor 3: Quality (inverse vol, above SMA200)
-            # vol > 0 guaranteed by filter on line 142
-            quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
+            quality_score = 0.0
+            if vol > 0:
+                quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
             if price > sma200:
                 quality_score *= 1.3
 
@@ -407,28 +408,12 @@ class RiskParityMomentum(BasePersona):
             candidates.sort(key=lambda x: x[1])  # ascending vol
             candidates = candidates[:self.config.max_positions]
 
-        # Risk parity: inverse-vol weighting with iterative capping
-        cap = self.config.max_position_size
-        budget = 0.90
-        remaining = [(sym, 1.0 / vol) for sym, vol in candidates]
-        while remaining:
-            total_inv_vol = sum(iv for _, iv in remaining)
-            if total_inv_vol <= 0:
-                break
-            new_remaining = []
-            for sym, iv in remaining:
-                w = (iv / total_inv_vol) * budget
-                if w >= cap:
-                    weights[sym] = cap
-                    budget -= cap
-                else:
-                    new_remaining.append((sym, iv))
-            if len(new_remaining) == len(remaining):
-                # No more capping needed — assign remaining budget
-                for sym, iv in new_remaining:
-                    weights[sym] = (iv / total_inv_vol) * budget
-                break
-            remaining = new_remaining
+        # Risk parity: inverse-vol weighting
+        total_inv_vol = sum(1 / v for _, v in candidates)
+        for sym, vol in candidates:
+            inv_vol = 1 / vol
+            w = (inv_vol / total_inv_vol) * 0.90
+            weights[sym] = min(w, self.config.max_position_size)
 
         return weights
 
@@ -676,7 +661,7 @@ class FaberSectorRotation(BasePersona):
     Source: Faber (2007). $10K→$135K (2000-2024) vs $62K S&P.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe=None):
         config = PersonaConfig(
             name="Faber Sector Rotation",
             description="Proven 12-month sector momentum: top 3 + absolute momentum filter",
@@ -719,16 +704,14 @@ class FaberSectorRotation(BasePersona):
                 havens = [s for s in ("TLT", "IEF")
                           if s in self.config.universe and s in prices]
                 if havens:
-                    per_haven = min(remainder / len(havens),
-                                    self.config.max_position_size)
+                    per_haven = remainder / len(havens)
                     for s in havens:
                         weights[s] = per_haven
         else:
             havens = [s for s in ("TLT", "IEF")
                       if s in self.config.universe and s in prices]
             if havens:
-                per_haven = min(0.90 / len(havens),
-                                self.config.max_position_size)
+                per_haven = 0.90 / len(havens)
                 for s in havens:
                     weights[s] = per_haven
         return {k: v for k, v in weights.items() if k in prices}
