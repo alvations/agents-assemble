@@ -13,14 +13,13 @@ Strategies:
     5. RiskParityMomentum   — Risk parity allocation + momentum overlay
     6. MeanVarianceOptimal  — Simplified Markowitz-inspired allocation
     7. GlobalRotation        — International momentum rotation
-    8. FactorETFRotation    — Rotate between factor ETFs by momentum
 """
 
 from __future__ import annotations
 
 import math
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 _SQRT_252 = math.sqrt(252)
 
@@ -389,10 +388,10 @@ class RiskParityMomentum(BasePersona):
         if not candidates:
             # Everything trending down → safe haven, zero out all equities
             fallback = {sym: 0.0 for sym in self.config.universe if sym in prices}
-            # Only allocate to safe havens if they're in universe AND have price data
-            if "TLT" in self.config.universe and "TLT" in prices:
+            # Only allocate to safe havens if they have price data
+            if "TLT" in prices:
                 fallback["TLT"] = 0.50
-            if "GLD" in self.config.universe and "GLD" in prices:
+            if "GLD" in prices:
                 fallback["GLD"] = 0.30
             return fallback
 
@@ -565,7 +564,7 @@ class FactorETFRotation(BasePersona):
     size (IWM), multi-factor (LRGF). Pick the top 3 by momentum.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe=None):
         config = PersonaConfig(
             name="Factor ETF Rotation",
             description="Rotate between factor ETFs (momentum, quality, value, low vol) based on trend",
@@ -602,20 +601,18 @@ class FactorETFRotation(BasePersona):
                 mom += 0.1
             scored.append((sym, mom))
 
-        # Filter positive momentum first, THEN take top N
-        positive = [(s, m) for s, m in scored if m > 0]
-        positive.sort(key=lambda x: x[1], reverse=True)
-        top = positive[:self.config.max_positions]
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
         weights = {}
         if top:
-            per_etf = min(0.90 / len(top), self.config.max_position_size)
-            for sym, _ in top:
-                weights[sym] = per_etf
-        else:
-            # All negative momentum → safe haven (only if in prices)
-            if "TLT" in prices:
+            # Only invest in factors with positive momentum
+            positive = [(s, m) for s, m in top if m > 0]
+            if positive:
+                per_etf = min(0.90 / len(positive), self.config.max_position_size)
+                for sym, _ in positive:
+                    weights[sym] = per_etf
+            else:
                 weights["TLT"] = 0.50
-            if "GLD" in prices:
                 weights["GLD"] = 0.30
         return weights
 
@@ -623,57 +620,6 @@ class FactorETFRotation(BasePersona):
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
-# 9. Faber Sector Rotation (proven methodology)
-# ---------------------------------------------------------------------------
-class FaberSectorRotation(BasePersona):
-    """Faber sector rotation: 12-month momentum, top 3 sectors, absolute momentum filter.
-
-    Source: Faber (2007). $10K→$135K (2000-2024) vs $62K S&P.
-    """
-
-    def __init__(self, universe=None):
-        config = PersonaConfig(
-            name="Faber Sector Rotation",
-            description="Proven 12-month sector momentum: top 3 + absolute momentum filter",
-            risk_tolerance=0.5,
-            max_position_size=0.35,
-            max_positions=3,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "XLK", "XLF", "XLE", "XLV", "XLI", "XLP",
-                "XLU", "XLRE", "XLC", "XLB", "XLY",
-                "TLT", "IEF",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        scored = []
-        for sym in self.config.universe:
-            if sym in ("TLT", "IEF") or sym not in prices:
-                continue
-            price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma200 is None or sma200 <= 0:
-                continue
-            momentum = (price - sma200) / sma200
-            if momentum > 0:
-                scored.append((sym, momentum))
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top3 = scored[:3]
-        weights = {}
-        if top3:
-            per_sector = 0.90 / len(top3)
-            for sym, _ in top3:
-                weights[sym] = min(per_sector, self.config.max_position_size)
-        else:
-            weights["TLT"] = 0.50
-            weights["IEF"] = 0.40
-        return {k: v for k, v in weights.items() if k in prices}
-
-
 RESEARCH_STRATEGIES = {
     "dual_momentum": DualMomentum,
     "multi_factor_smart_beta": MultiFactorSmartBeta,
@@ -683,7 +629,6 @@ RESEARCH_STRATEGIES = {
     "mean_variance_optimal": MeanVarianceOptimal,
     "global_rotation": GlobalRotation,
     "factor_etf_rotation": FactorETFRotation,
-    "faber_sector_rotation": FaberSectorRotation,
 }
 
 

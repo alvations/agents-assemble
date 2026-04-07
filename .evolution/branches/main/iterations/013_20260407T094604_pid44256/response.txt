@@ -1,0 +1,5 @@
+Syntax is valid. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file
+- **Fixed exit/buy priority in `HealthcareAsiaMomentum`** — The exit condition (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` branch after `score >= 2.5`, so a stock deeply below SMA200 could still be bought if it scored high enough (e.g., price > sma50 with MACD cross + RSI bonus = 3.0). Now the exit check runs first, and the buy branch is `elif`, so stocks 10%+ below SMA200 are always exited.
+- **Fixed MACD NaN handling** — Changed `macd is not None` to `pd.notna(macd)` in both strategies for consistency with the rest of the file's NaN handling. `_get_indicator` can return `NaN` (via nearest-date staleness path), and `NaN is not None` is `True`, which would pass the guard and attempt a NaN comparison.

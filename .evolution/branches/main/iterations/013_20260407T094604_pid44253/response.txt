@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `FactorETFRotation` top-N ordering bug** — positive momentum filter now runs *before* the top-N slice, so a negative-momentum item in slot 3 no longer blocks a positive item in slot 4
+- **Fixed `FactorETFRotation` safe haven not checking `prices`** — TLT/GLD allocation now verifies the symbols exist in `prices`, matching the pattern established in iteration 3
+- **Fixed `RiskParityMomentum` fallback allocating outside universe** — safe haven now checks `self.config.universe` before allocating to TLT/GLD, so custom universes without those symbols won't get phantom allocations
+- **Fixed stale module docstring** — listed 7 strategies but 8 exist; added `FactorETFRotation`. Also added missing type hint on its `__init__` parameter

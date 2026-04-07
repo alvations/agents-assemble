@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import math
 
-from agents_assemble.strategies.generic import BasePersona, PersonaConfig
+from personas import BasePersona, PersonaConfig
 
 _SQRT_252 = math.sqrt(252)
 
@@ -623,57 +623,6 @@ class FactorETFRotation(BasePersona):
 # ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
-# 9. Faber Sector Rotation (proven methodology)
-# ---------------------------------------------------------------------------
-class FaberSectorRotation(BasePersona):
-    """Faber sector rotation: 12-month momentum, top 3 sectors, absolute momentum filter.
-
-    Source: Faber (2007). $10K→$135K (2000-2024) vs $62K S&P.
-    """
-
-    def __init__(self, universe=None):
-        config = PersonaConfig(
-            name="Faber Sector Rotation",
-            description="Proven 12-month sector momentum: top 3 + absolute momentum filter",
-            risk_tolerance=0.5,
-            max_position_size=0.35,
-            max_positions=3,
-            rebalance_frequency="monthly",
-            universe=universe or [
-                "XLK", "XLF", "XLE", "XLV", "XLI", "XLP",
-                "XLU", "XLRE", "XLC", "XLB", "XLY",
-                "TLT", "IEF",
-            ],
-        )
-        super().__init__(config)
-
-    def generate_signals(self, date, prices, portfolio, data):
-        scored = []
-        for sym in self.config.universe:
-            if sym in ("TLT", "IEF") or sym not in prices:
-                continue
-            price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma200 is None or sma200 <= 0:
-                continue
-            momentum = (price - sma200) / sma200
-            if momentum > 0:
-                scored.append((sym, momentum))
-
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top3 = scored[:3]
-        weights = {}
-        if top3:
-            per_sector = 0.90 / len(top3)
-            for sym, _ in top3:
-                weights[sym] = min(per_sector, self.config.max_position_size)
-        else:
-            weights["TLT"] = 0.50
-            weights["IEF"] = 0.40
-        return {k: v for k, v in weights.items() if k in prices}
-
-
 RESEARCH_STRATEGIES = {
     "dual_momentum": DualMomentum,
     "multi_factor_smart_beta": MultiFactorSmartBeta,
@@ -683,7 +632,6 @@ RESEARCH_STRATEGIES = {
     "mean_variance_optimal": MeanVarianceOptimal,
     "global_rotation": GlobalRotation,
     "factor_etf_rotation": FactorETFRotation,
-    "faber_sector_rotation": FaberSectorRotation,
 }
 
 

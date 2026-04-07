@@ -40,3 +40,13 @@ Record of strategies that failed so we don't repeat them.
 - famous_investors.py and theme_strategies.py failed 3+3 = 6 evolution
   iterations ($3+ wasted) before discovering the PYTHONPATH fix
 - **Fix:** PYTHONPATH=/path/to/agents-assemble python3 ../self_evolve.py file.py
+
+## Faber Sector Rotation (2026-04-07)
+- **Strategy:** 12-month momentum ranking of sector ETFs, top 3, bonds if none positive
+- **Result:** 0.09 avg Sharpe across 1Y/3Y/5Y/10Y. 3Y was -0.30 Sharpe.
+- **Why it failed in 2022-2024:** In 2022 bear market, all sectors fell AND bonds
+  fell (rate hikes). The bond fallback that normally saves the strategy instead
+  compounded losses. The strategy works in secular bull markets but not in
+  environments where both stocks and bonds decline simultaneously.
+- **Lesson:** Bond fallback strategies need a third option (gold, cash, or
+  short-duration treasuries) for rising-rate environments.

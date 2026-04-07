@@ -318,3 +318,18 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `HowardMarks` vol truthiness bug (line 989)**: `vol if vol else 0.02` → `vol if vol is not None else 0.02` — vol of 0.0 (lowest risk) was penalized with 0.02 fallback instead of getting the highest quality score
 - **Fixed `JimSimons` Bollinger band tr
 
+## [2026-04-07T09:47:37.414555+00:00] Branch: main | Run: 20260407T094604_pid44253 | Iter 13 | $0.3870
+### research_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `FactorETFRotation` top-N ordering bug** — positive momentum filter now runs *before* the top-N slice, so a negative-momentum item in slot 3 no longer blocks a positive item in slot 4
+- **Fixed `FactorETFRotation` safe haven not checking `prices`** — TLT/GLD allocation now verifies the symbols exist in `prices`, matching the pattern established in iteration 3
+- **Fixed `RiskParityMomentum` fallback allocating outside universe** — s
+
+## [2026-04-07T09:48:11.911952+00:00] Branch: main | Run: 20260407T094604_pid44256 | Iter 13 | $0.3648
+### hedge_fund_strategies.py
+Syntax is valid. Summary of changes:
+
+- **Removed unused `numpy` import** — `np` is never referenced in this file
+- **Fixed exit/buy priority in `HealthcareAsiaMomentum`** — The exit condition (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` branch after `score >= 2.5`, so a stock deeply below SMA200 could still be bought if it scored high enough (e.g., price > sma50 with MACD cross + RSI bonus = 3.0). Now the exit check runs first, and the buy branch is `elif`, so stocks 10%+ below SMA20
+

@@ -9,6 +9,7 @@ Strategies:
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from personas import BasePersona, PersonaConfig
@@ -58,14 +59,14 @@ class HealthcareAsiaMomentum(BasePersona):
                 score += 3.0
             elif price > sma50:
                 score += 1.5
-            if pd.notna(macd) and pd.notna(macd_sig) and macd > macd_sig:
+            if macd is not None and macd_sig is not None and macd > macd_sig:
                 score += 1.0
             if 40 < rsi < 75:
                 score += 0.5
-            if pd.notna(sma200) and price < sma200 * 0.90:
-                weights[sym] = 0.0
-            elif score >= 2.5:
+            if score >= 2.5:
                 scored.append((sym, score))
+            elif pd.notna(sma200) and price < sma200 * 0.90:
+                weights[sym] = 0.0
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
         if top:
@@ -129,7 +130,7 @@ class DynamicEnsemble(BasePersona):
                 mom = 1
             elif price > sma50:
                 mom = 0.5
-            if pd.notna(macd) and pd.notna(macd_sig) and macd > macd_sig:
+            if macd is not None and macd_sig is not None and macd > macd_sig:
                 mom += 0.5
             if mom > 0:
                 signals += 1
