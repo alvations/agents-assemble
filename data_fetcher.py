@@ -867,6 +867,31 @@ UNIVERSE = {
         "KLAC", "SNPS", "CDNS", "MCHP", "SWKS", "QRVO",
         "SMH", "SOXX",  # Semiconductor ETFs
     ],
+    # Small cap value (from research — AVUV 13.23% annualized since 2019)
+    "small_cap_value_etf": ["AVUV", "DFSV", "VBR", "IWC", "FDM"],
+    "small_cap_picks": ["GRC", "UCTT", "WTTR", "EVLV", "WWW"],
+    # Mid cap picks (S&P 400 EPS growth +19.6% for 2026)
+    "mid_cap_picks": ["CRSP", "IRDM", "ERAS", "AXTI"],
+    "mid_cap_active_etf": ["SMAP", "HWSM", "NBSM", "SPMD"],
+    # Contrarian / fallen angels (2026 rebound candidates)
+    "contrarian_2026": ["FMC", "CZR", "CLX", "CMCSA", "AAP", "HRL", "UPS",
+                         "BA", "INTC", "PFE", "ENPH", "LUV"],
+    # Activist targets (Elliott, Trian, Starboard campaigns)
+    "activist_targets": ["NCLH", "WEN", "TRIP", "TXN", "LUV"],
+    # Nuclear SMR (OKLO +700% in 12 months)
+    "nuclear_smr": ["OKLO", "LEU", "BWXT", "SMR", "NNE"],
+    # Defense niche (beyond LMT/NOC)
+    "defense_niche": ["KTOS", "KRMN", "BWXT"],
+    # Gold streaming (leveraged gold exposure, lower risk than miners)
+    "gold_streaming": ["WPM", "RGLD", "EQX", "FNV"],
+    # Midstream energy (pipeline income plays)
+    "midstream_energy": ["HESM", "WES", "MPLX", "ET", "EPD"],
+    # Agriculture / food security
+    "agriculture": ["ADM", "CF", "MOS", "NTR", "DE", "CTVA", "FMC",
+                     "DBA", "WEAT", "CORN", "MOO"],
+    # Gaming / entertainment
+    "gaming_entertainment": ["NTDOY", "EA", "TTWO", "RBLX", "U", "DKNG",
+                              "DIS", "NFLX", "WBD", "PARA", "CMCSA"],
     # LatAm expanded (from research)
     "latam_expanded": ["COPA", "ARCO", "TV", "LOMA", "CRESY"],
     # Dividend Aristocrats (25+ years consecutive increases, S&P 500)
