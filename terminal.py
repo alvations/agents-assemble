@@ -26,7 +26,6 @@ Usage:
 
 from __future__ import annotations
 
-import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -222,7 +221,9 @@ class Terminal:
             ax1.set_facecolor("#1a1a2e")
             bars = ax1.bar(names, returns, color=colors, alpha=0.8, edgecolor="#333")
             for bar, sharpe in zip(bars, sharpes):
-                ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
+                height = bar.get_height()
+                offset = 1 if height >= 0 else -3
+                ax1.text(bar.get_x() + bar.get_width()/2, height + offset,
                          f"S:{sharpe:.2f}", ha="center", color="white", fontsize=8)
             ax1.set_ylabel("Total Return (%)", color="white")
             ax1.set_title(f"Strategy Comparison | {start} → {end}", color="#00ff88",
@@ -264,9 +265,9 @@ class Terminal:
             "3y": ((now - pd.DateOffset(years=3)).strftime("%Y-%m-%d"), end_date),
         }
 
-        # Collect data for top strategies
+        # Collect data for all strategies, then take top N
         data = {}
-        for strat_info in all_strats[:top_n * 2]:
+        for strat_info in all_strats:
             name = strat_info["key"]
             row = {}
             for h_name, (start, end) in horizons.items():
@@ -348,45 +349,49 @@ class Terminal:
             return _empty_chart(path, f"No strategy data for {horizon}")
 
         fig, ax = plt.subplots(figsize=(14, 9))
-        fig.patch.set_facecolor("#1a1a2e")
-        ax.set_facecolor("#1a1a2e")
+        try:
+            fig.patch.set_facecolor("#1a1a2e")
+            ax.set_facecolor("#1a1a2e")
 
-        source_colors = {
-            "generic": "#00ff88", "famous": "#ffaa00", "theme": "#ff4488",
-            "research": "#4488ff", "unconventional": "#aa44ff", "math": "#ff8844",
-            "recession": "#888888", "hedge_fund": "#44ffaa", "news_event": "#ff44aa",
-            "political": "#44aaff", "portfolio": "#aaff44", "crisis": "#ff8888",
-        }
+            source_colors = {
+                "generic": "#00ff88", "famous": "#ffaa00", "theme": "#ff4488",
+                "research": "#4488ff", "unconventional": "#aa44ff", "math": "#ff8844",
+                "recession": "#888888", "hedge_fund": "#44ffaa", "news_event": "#ff44aa",
+                "political": "#44aaff", "portfolio": "#aaff44", "crisis": "#ff8888",
+            }
 
-        for p in points:
-            color = source_colors.get(p["source"], "#ffffff")
-            size = max(20, min(200, abs(p["sharpe"]) * 80))
-            ax.scatter(p["vol"], p["return"], c=color, s=size, alpha=0.7,
-                       edgecolors="white", linewidths=0.5)
-            if abs(p["return"]) > 80 or p["sharpe"] > 1.0:
-                ax.annotate(p["name"], (p["vol"], p["return"]),
-                            color="white", fontsize=6, alpha=0.8,
-                            xytext=(5, 5), textcoords="offset points")
+            for p in points:
+                color = source_colors.get(p["source"], "#ffffff")
+                size = max(20, min(200, abs(p["sharpe"]) * 80))
+                ax.scatter(p["vol"], p["return"], c=color, s=size, alpha=0.7,
+                           edgecolors="white", linewidths=0.5)
+                if abs(p["return"]) > 80 or p["sharpe"] > 1.0:
+                    ax.annotate(p["name"], (p["vol"], p["return"]),
+                                color="white", fontsize=6, alpha=0.8,
+                                xytext=(5, 5), textcoords="offset points")
 
-        ax.axhline(0, color="white", linewidth=0.3, alpha=0.3)
-        ax.set_xlabel("Annual Volatility (%)", color="white", fontsize=10)
-        ax.set_ylabel(f"Total Return (%) — {horizon}", color="white", fontsize=10)
-        ax.set_title(f"Risk/Return Scatter | {horizon} | Size = |Sharpe|",
-                     color="#00ff88", fontsize=12, fontweight="bold")
-        ax.tick_params(colors="white")
-        ax.grid(True, alpha=0.15, color="white")
+            ax.axhline(0, color="white", linewidth=0.3, alpha=0.3)
+            ax.set_xlabel("Annual Volatility (%)", color="white", fontsize=10)
+            ax.set_ylabel(f"Total Return (%) — {horizon}", color="white", fontsize=10)
+            ax.set_title(f"Risk/Return Scatter | {horizon} | Size = |Sharpe|",
+                         color="#00ff88", fontsize=12, fontweight="bold")
+            ax.tick_params(colors="white")
+            ax.grid(True, alpha=0.15, color="white")
 
-        # Legend for sources
-        for src, color in list(source_colors.items())[:6]:
-            ax.scatter([], [], c=color, label=src, s=40)
-        ax.legend(loc="upper left", fontsize=7, facecolor="#1a1a2e",
-                  edgecolor="#333", labelcolor="white")
+            # Legend for sources actually present in data
+            seen_sources = {p["source"] for p in points}
+            for src in seen_sources:
+                color = source_colors.get(src, "#ffffff")
+                ax.scatter([], [], c=color, label=src, s=40)
+            ax.legend(loc="upper left", fontsize=7, facecolor="#1a1a2e",
+                      edgecolor="#333", labelcolor="white")
 
-        plt.tight_layout()
-        path = self.output_dir / f"risk_return_{horizon}.png"
-        fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
-        plt.close(fig)
-        return path
+            plt.tight_layout()
+            path = self.output_dir / f"risk_return_{horizon}.png"
+            fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
+            return path
+        finally:
+            plt.close(fig)
 
     # ----- 5. Catalyst Event Timeline -----
 
@@ -399,60 +404,66 @@ class Terminal:
         patterns = analyzer.analyze_historical_patterns()
         df = analyzer._get_price_data()
 
+        if len(df) < 2:
+            path = self.output_dir / f"{symbol}_catalyst_timeline.png"
+            return _empty_chart(path, f"Insufficient data for {symbol}")
+
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 7),
                                         gridspec_kw={"height_ratios": [3, 1]})
-        fig.patch.set_facecolor("#1a1a2e")
+        try:
+            fig.patch.set_facecolor("#1a1a2e")
 
-        # Price with event markers
-        ax1.set_facecolor("#1a1a2e")
-        ax1.plot(df.index, df["Close"], color="#00ff88", linewidth=1)
+            # Price with event markers
+            ax1.set_facecolor("#1a1a2e")
+            ax1.plot(df.index, df["Close"], color="#00ff88", linewidth=1)
 
-        events = patterns.get("events", [])
-        for e in events:
-            date = pd.Timestamp(e["date"])
-            color = "#00ff88" if e["direction"] == "up" else "#ff4444"
-            try:
-                idx = df.index.get_indexer([date], method="nearest")[0]
-                if idx < 0:
-                    continue
-                price = df["Close"].iloc[idx]
-                marker = "^" if e["direction"] == "up" else "v"
-                ax1.scatter(date, price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
-            except (IndexError, KeyError):
-                pass
+            events = patterns.get("events", [])
+            for e in events:
+                date = pd.Timestamp(e["date"])
+                color = "#00ff88" if e["direction"] == "up" else "#ff4444"
+                try:
+                    idx = df.index.get_indexer([date], method="nearest")[0]
+                    if idx < 0:
+                        continue
+                    price = df["Close"].iloc[idx]
+                    marker = "^" if e["direction"] == "up" else "v"
+                    ax1.scatter(date, price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
+                except (IndexError, KeyError):
+                    pass
 
-        ax1.set_ylabel("Price ($)", color="white", fontsize=9)
-        ax1.set_title(f"  {symbol} — Catalyst Event Timeline", color="#00ff88",
-                      fontsize=12, fontweight="bold", loc="left")
-        ax1.tick_params(colors="white", labelsize=8)
-        ax1.grid(True, alpha=0.15, color="white")
+            ax1.set_ylabel("Price ($)", color="white", fontsize=9)
+            ax1.set_title(f"  {symbol} — Catalyst Event Timeline", color="#00ff88",
+                          fontsize=12, fontweight="bold", loc="left")
+            ax1.tick_params(colors="white", labelsize=8)
+            ax1.grid(True, alpha=0.15, color="white")
 
-        # Sell-horizon returns for up events
-        ax2.set_facecolor("#1a1a2e")
-        if "after_up" in patterns:
-            horizons_data = patterns["after_up"]
-            h_names = sorted(horizons_data.keys(), key=lambda x: int(x.replace("d", "")))
-            avg_rets = [horizons_data[h]["avg_return"] * 100 for h in h_names]
-            win_rates = [horizons_data[h].get("win_rate", 0) * 100 for h in h_names]
-            colors = ["#00ff88" if r > 0 else "#ff4444" for r in avg_rets]
-            x = range(len(h_names))
-            ax2.bar(x, avg_rets, color=colors, alpha=0.7)
-            ax2.set_xticks(x)
-            ax2.set_xticklabels(h_names, color="white", fontsize=8)
-            for i, (r, w) in enumerate(zip(avg_rets, win_rates)):
-                ax2.text(i, r + 0.2, f"{w:.0f}%w", ha="center", color="white", fontsize=7)
-            ax2.set_ylabel("Avg Return (%)", color="white", fontsize=9)
-            ax2.set_title("  Post-Event Returns by Sell Horizon (UP events)",
-                          color="#ffaa00", fontsize=10, loc="left")
-        ax2.tick_params(colors="white", labelsize=8)
-        ax2.axhline(0, color="white", linewidth=0.3, alpha=0.3)
-        ax2.grid(True, axis="y", alpha=0.15, color="white")
+            # Sell-horizon returns for up events
+            ax2.set_facecolor("#1a1a2e")
+            if "after_up" in patterns:
+                horizons_data = patterns["after_up"]
+                h_names = sorted(horizons_data.keys(), key=lambda x: int(x.replace("d", "")))
+                avg_rets = [horizons_data[h]["avg_return"] * 100 for h in h_names]
+                win_rates = [horizons_data[h].get("win_rate", 0) * 100 for h in h_names]
+                colors = ["#00ff88" if r > 0 else "#ff4444" for r in avg_rets]
+                x = range(len(h_names))
+                ax2.bar(x, avg_rets, color=colors, alpha=0.7)
+                ax2.set_xticks(x)
+                ax2.set_xticklabels(h_names, color="white", fontsize=8)
+                for i, (r, w) in enumerate(zip(avg_rets, win_rates)):
+                    ax2.text(i, r + 0.2, f"{w:.0f}%w", ha="center", color="white", fontsize=7)
+                ax2.set_ylabel("Avg Return (%)", color="white", fontsize=9)
+                ax2.set_title("  Post-Event Returns by Sell Horizon (UP events)",
+                              color="#ffaa00", fontsize=10, loc="left")
+            ax2.tick_params(colors="white", labelsize=8)
+            ax2.axhline(0, color="white", linewidth=0.3, alpha=0.3)
+            ax2.grid(True, axis="y", alpha=0.15, color="white")
 
-        plt.tight_layout()
-        path = self.output_dir / f"{symbol}_catalyst_timeline.png"
-        fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
-        plt.close(fig)
-        return path
+            plt.tight_layout()
+            path = self.output_dir / f"{symbol}_catalyst_timeline.png"
+            fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
+            return path
+        finally:
+            plt.close(fig)
 
     # ----- 6. Sector Performance -----
 
@@ -487,27 +498,29 @@ class Terminal:
         colors = ["#00ff88" if v > 0 else "#ff4444" for v in values]
 
         fig, ax = plt.subplots(figsize=(12, 6))
-        fig.patch.set_facecolor("#1a1a2e")
-        ax.set_facecolor("#1a1a2e")
+        try:
+            fig.patch.set_facecolor("#1a1a2e")
+            ax.set_facecolor("#1a1a2e")
 
-        bars = ax.barh(names, values, color=colors, alpha=0.8, edgecolor="#333")
-        for bar, val in zip(bars, values):
-            ax.text(val + (1 if val > 0 else -1), bar.get_y() + bar.get_height()/2,
-                    f"{val:+.1f}%", va="center", color="white", fontsize=9)
+            bars = ax.barh(names, values, color=colors, alpha=0.8, edgecolor="#333")
+            for bar, val in zip(bars, values):
+                ax.text(val + (1 if val > 0 else -1), bar.get_y() + bar.get_height()/2,
+                        f"{val:+.1f}%", va="center", color="white", fontsize=9)
 
-        ax.axvline(0, color="white", linewidth=0.5, alpha=0.3)
-        ax.set_xlabel("YTD Return (%)", color="white")
-        ax.set_title("Sector Performance (YTD)", color="#00ff88",
-                     fontsize=12, fontweight="bold")
-        ax.tick_params(colors="white")
-        ax.grid(True, axis="x", alpha=0.15, color="white")
-        ax.invert_yaxis()
+            ax.axvline(0, color="white", linewidth=0.5, alpha=0.3)
+            ax.set_xlabel("YTD Return (%)", color="white")
+            ax.set_title("Sector Performance (YTD)", color="#00ff88",
+                         fontsize=12, fontweight="bold")
+            ax.tick_params(colors="white")
+            ax.grid(True, axis="x", alpha=0.15, color="white")
+            ax.invert_yaxis()
 
-        plt.tight_layout()
-        path = self.output_dir / "sector_performance.png"
-        fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
-        plt.close(fig)
-        return path
+            plt.tight_layout()
+            path = self.output_dir / "sector_performance.png"
+            fig.savefig(path, dpi=150, facecolor="#1a1a2e", bbox_inches="tight")
+            return path
+        finally:
+            plt.close(fig)
 
     # ----- 7. Full Dashboard -----
 
@@ -516,22 +529,22 @@ class Terminal:
         paths = []
         print(f"Generating dashboard for {symbol}...")
 
-        print("  [1/5] Equity chart...")
-        paths.append(self.equity_chart(symbol))
+        steps = [
+            ("1/5", "Equity chart", lambda: self.equity_chart(symbol)),
+            ("2/5", "Catalyst timeline", lambda: self.catalyst_timeline(symbol)),
+            ("3/5", "Sector performance", lambda: self.sector_performance()),
+            ("4/5", "Strategy comparison", lambda: self.strategy_comparison(
+                ["concentrate_winners", "momentum", "momentum_crash_hedge",
+                 "ai_revolution", "nancy_pelosi"])),
+            ("5/5", "Risk/return scatter", lambda: self.risk_return_scatter("3y")),
+        ]
 
-        print("  [2/5] Catalyst timeline...")
-        paths.append(self.catalyst_timeline(symbol))
-
-        print("  [3/5] Sector performance...")
-        paths.append(self.sector_performance())
-
-        print("  [4/5] Strategy comparison...")
-        top5 = ["concentrate_winners", "momentum", "momentum_crash_hedge",
-                "ai_revolution", "nancy_pelosi"]
-        paths.append(self.strategy_comparison(top5))
-
-        print("  [5/5] Risk/return scatter...")
-        paths.append(self.risk_return_scatter("3y"))
+        for step_id, label, fn in steps:
+            print(f"  [{step_id}] {label}...")
+            try:
+                paths.append(fn())
+            except Exception as e:
+                print(f"    FAILED: {e}")
 
         print(f"\n  Dashboard saved to: {self.output_dir}/")
         for p in paths:

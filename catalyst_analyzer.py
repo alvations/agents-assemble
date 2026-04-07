@@ -117,7 +117,7 @@ class NewsItem:
         return {k: v for k, v in self.__dict__.items() if v is not None}
 
 
-SELL_HORIZONS = [1, 2, 3, 5, 7, 14, 20, 30]  # Days after event to measure
+SELL_HORIZONS = [1, 2, 3, 5, 7, 10, 14, 20, 30]  # Days after event to measure
 
 
 @dataclass
@@ -233,9 +233,10 @@ class CatalystAnalyzer:
             ticker = yf.Ticker(self.symbol)
             for n in (ticker.news or [])[:max_items]:
                 title = n.get("title", "")
+                ts = n.get("providerPublishTime", 0)
                 items.append(NewsItem(
                     title=title,
-                    date=datetime.fromtimestamp(n.get("providerPublishTime", 0)).strftime("%Y-%m-%d"),
+                    date=datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts > 946684800 else "",
                     source=n.get("publisher", "yfinance"),
                     catalyst_type=self._classify(title),
                     url=n.get("link", ""),
@@ -256,9 +257,10 @@ class CatalystAnalyzer:
                 if resp.status_code == 200:
                     for n in resp.json()[:max_items]:
                         title = n.get("headline", "")
+                        fh_ts = n.get("datetime", 0)
                         items.append(NewsItem(
                             title=title,
-                            date=datetime.fromtimestamp(n.get("datetime", 0)).strftime("%Y-%m-%d"),
+                            date=datetime.fromtimestamp(fh_ts).strftime("%Y-%m-%d") if fh_ts > 946684800 else "",
                             source=n.get("source", "finnhub"),
                             catalyst_type=self._classify(title),
                             url=n.get("url", ""),
@@ -389,9 +391,6 @@ class CatalystAnalyzer:
                 elif strategy == "momentum" and r > 0.02 and v > 1.5:
                     position = (price, i)
 
-        if position is not None:
-            trades.append(close.iloc[-1] / position[0] - 1)
-
         if not trades:
             return BacktestResult(strategy, holding_days, 0, 0, 0, 0, 0, 0, 0)
 
@@ -412,10 +411,12 @@ class CatalystAnalyzer:
 
     # ----- 4. Forward-looking predictions -----
 
-    def predict_next_catalyst(self) -> list[CatalystPrediction]:
+    def predict_next_catalyst(self, patterns: dict | None = None, backtests: dict | None = None) -> list[CatalystPrediction]:
         """Generate forward-looking predictions based on historical patterns."""
-        patterns = self.analyze_historical_patterns()
-        backtests = self.backtest_event_strategy()
+        if patterns is None:
+            patterns = self.analyze_historical_patterns()
+        if backtests is None:
+            backtests = self.backtest_event_strategy()
         industry_info = INDUSTRY_CATALYSTS.get(self.industry, {})
 
         predictions = []
@@ -509,7 +510,7 @@ class CatalystAnalyzer:
         news = self.get_news()
         patterns = self.analyze_historical_patterns()
         backtests = self.backtest_event_strategy()
-        predictions = self.predict_next_catalyst()
+        predictions = self.predict_next_catalyst(patterns=patterns, backtests=backtests)
 
         return {
             "symbol": self.symbol,
