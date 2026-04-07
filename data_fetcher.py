@@ -844,6 +844,19 @@ UNIVERSE = {
     ],
     # Recent IPOs with momentum
     "recent_ipos": ["ARM", "VRT", "RDDT", "BIRK", "CART"],
+    # Short squeeze candidates (high short interest, March 2026)
+    "short_squeeze": [
+        "HTZ", "GRPN", "HIMS", "AI", "SOUN", "LCID", "RXRX",
+        "BYND", "ENVX", "NVAX", "MARA", "BBAI", "VKTX", "PLUG", "RUN",
+    ],
+    # 2026 YTD winners (energy crisis + geopolitical)
+    "etf_2026_winners": ["BWET", "XOP", "XES", "WGMI", "BKCH", "ITA"],
+    # Uranium expanded (nuclear renaissance, 2B lb deficit)
+    "uranium_expanded": ["URA", "URNM", "CCJ", "UUUU", "DNN", "NXE", "LEU"],
+    # Oil services (Iran crisis beneficiaries)
+    "oil_services": ["OXY", "DVN", "HAL", "SLB", "BKR"],
+    # Precious metals expanded
+    "precious_metals": ["GLD", "SLV", "GDX", "GDXJ", "NEM", "GOLD", "AEM", "PAAS", "WPM"],
     # Data center infrastructure (AI capex beneficiaries)
     "data_centers": ["VRT", "EQIX", "DLR", "AMT", "DELL", "HPE", "SMCI"],
     # Semiconductor comprehensive (2026: $1T global market, +25% YoY)

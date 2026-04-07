@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed benchmark/aligned CAGR `ValueError` on total loss** (lines 287-290) — `(1 + bench_total)` and `(1 + port_aligned_total)` could be negative (>100% loss), causing `ValueError` when raised to a fractional power. Added the same `growth > 0` guard that the main CAGR formula already has.
+- **Fixed `compute_metrics` NaN robustness** — Added `dropna()` at entry so NaN values in returns don't silently propagate into all metrics (Sharpe, Sortino, drawdown, etc.). Also cached `excess_std` to avoid computing `excess.std()` twice.
+- **Added strategy error tracking** — Strategy exceptions were silently swallowed (`except Exception: pass`), making strategy bugs invisible. Now counts errors and includes `"strategy_errors"` in the results dict.
+- **Validated `rebalance_frequency`** — Invalid values like `"biweekly"` silently fell through `_should_rebalance` to `return True` (daily behavior). Now raises `ValueError` at construction time.

@@ -209,6 +209,11 @@ def compute_metrics(
     if returns.empty or len(returns) < 2:
         return {"error": "Insufficient data"}
 
+    # Drop interior NaN to prevent silent metric corruption
+    returns = returns.dropna()
+    if len(returns) < 2:
+        return {"error": "Insufficient data after removing NaN"}
+
     # Basic return stats
     total_return = (1 + returns).prod() - 1
     n_years = len(returns) / periods_per_year
@@ -226,7 +231,8 @@ def compute_metrics(
     # Sharpe ratio
     daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
     excess = returns - daily_rf
-    sharpe = excess.mean() / excess.std() * sqrt_periods if excess.std() > 0 else 0
+    excess_std = excess.std()
+    sharpe = excess.mean() / excess_std * sqrt_periods if excess_std > 0 else 0
 
     # Sortino ratio (downside deviation only)
     downside_diff = (returns - daily_rf).clip(upper=0)
@@ -282,9 +288,11 @@ def compute_metrics(
         if len(aligned) > 10:
             aligned_n_years = len(aligned) / periods_per_year
             bench_total = (1 + aligned["bench"]).prod() - 1
-            bench_cagr = (1 + bench_total) ** (1 / max(aligned_n_years, 0.01)) - 1
+            bench_growth = 1 + bench_total
+            bench_cagr = bench_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if bench_growth > 0 else -1.0
             port_aligned_total = (1 + aligned["port"]).prod() - 1
-            port_aligned_cagr = (1 + port_aligned_total) ** (1 / max(aligned_n_years, 0.01)) - 1
+            port_growth = 1 + port_aligned_total
+            port_aligned_cagr = port_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if port_growth > 0 else -1.0
             metrics["benchmark_total_return"] = bench_total
             metrics["benchmark_cagr"] = bench_cagr
             metrics["alpha"] = port_aligned_cagr - bench_cagr
@@ -369,6 +377,11 @@ class Backtester:
         self.commission = commission
         self.slippage_pct = slippage_pct
         self.benchmark = benchmark
+        if rebalance_frequency not in ("daily", "weekly", "monthly"):
+            raise ValueError(
+                f"rebalance_frequency must be 'daily', 'weekly', or 'monthly', "
+                f"got {rebalance_frequency!r}"
+            )
         self.rebalance_frequency = rebalance_frequency
         self._external_data = data
 
@@ -475,6 +488,7 @@ class Backtester:
         # Run simulation
         equity_values = []
         equity_dates = []
+        strategy_errors = 0
 
         for idx, date in enumerate(common_dates):
             # Get prices from pre-computed forward-filled matrix
@@ -492,6 +506,7 @@ class Backtester:
                 target_weights = self.strategy(date, prices, portfolio, enriched_data)
             except Exception:
                 target_weights = {}
+                strategy_errors += 1
 
             if target_weights:
                 self._rebalance(portfolio, target_weights, prices, date)
@@ -528,6 +543,7 @@ class Backtester:
                 sym: {"qty": pos.quantity, "avg_cost": pos.avg_cost, "realized_pnl": pos.realized_pnl}
                 for sym, pos in portfolio.positions.items() if pos.quantity != 0
             },
+            "strategy_errors": strategy_errors,
         }
 
     def _rebalance(self, portfolio: Portfolio, target_weights: dict[str, float],

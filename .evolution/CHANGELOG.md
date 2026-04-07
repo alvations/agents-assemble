@@ -564,3 +564,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `QuantStrategist` ZeroDivisionError when `price = 0`** (line 476) — `vol * price` produces 0 even when `vol > 0` if `price` is 0 (delisted stock), causing a crash. Added `price > 0` guard.
 - **Fixed `PairsTrader` ignoring `max_position_size` per symbol** — The neutral path hardcoded 0.06 weight without capping at `max_position_size`. A custom `max_position_size < 0.06` was silently violated. Now caps all weights at `max_position_si
 
+## [2026-04-07T14:44:28.946843+00:00] Branch: main | Run: 20260407T142706_pid61022 | Iter 26 | $1.1731
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed benchmark/aligned CAGR `ValueError` on total loss** (lines 287-290) — `(1 + bench_total)` and `(1 + port_aligned_total)` could be negative (>100% loss), causing `ValueError` when raised to a fractional power. Added the same `growth > 0` guard that the main CAGR formula already has.
+- **Fixed `compute_metrics` NaN robustness** — Added `dropna()` at entry so NaN values in returns don't silently propagate into all metrics (Sharpe, Sor
+
