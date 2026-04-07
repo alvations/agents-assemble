@@ -144,8 +144,8 @@ class Terminal:
                 delta = close.diff()
                 gain = delta.where(delta > 0, 0).rolling(14).mean()
                 loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-                rs = gain / loss.replace(0, float('nan'))
-                rsi = 100 - (100 / (1 + rs))
+                rs = gain / loss  # pandas: gain>0/0→inf (RSI=100), 0/0→NaN
+                rsi = (100 - (100 / (1 + rs))).ffill()
                 ax.set_facecolor("#1a1a2e")
                 ax.plot(rsi.index, rsi, color="#ffaa00", linewidth=1)
                 ax.axhline(70, color="#ff4444", linewidth=0.5, linestyle="--", alpha=0.5)
@@ -233,9 +233,9 @@ class Terminal:
             fig.patch.set_facecolor("#1a1a2e")
 
             names = list(results.keys())
-            returns = [results[n].get("total_return", 0) * 100 for n in names]
-            sharpes = [results[n].get("sharpe_ratio", 0) for n in names]
-            max_dds = [results[n].get("max_drawdown", 0) * 100 for n in names]
+            returns = [(results[n].get("total_return") or 0) * 100 for n in names]
+            sharpes = [(results[n].get("sharpe_ratio") or 0) for n in names]
+            max_dds = [(results[n].get("max_drawdown") or 0) * 100 for n in names]
 
             colors = ["#00ff88" if r > 0 else "#ff4444" for r in returns]
 
@@ -247,7 +247,8 @@ class Terminal:
                 ax1.text(bar.get_x() + bar.get_width()/2, height + offset,
                          f"S:{sharpe:.2f}", ha="center", color="white", fontsize=8)
             ax1.set_ylabel("Total Return (%)", color="white")
-            ax1.set_title(f"Strategy Comparison | {start} → {end}", color="#00ff88",
+            end_display = end or datetime.now().strftime("%Y-%m-%d")
+            ax1.set_title(f"Strategy Comparison | {start} → {end_display}", color="#00ff88",
                           fontsize=12, fontweight="bold")
             ax1.tick_params(colors="white", labelsize=8)
             ax1.axhline(0, color="white", linewidth=0.5, alpha=0.3)
@@ -368,8 +369,8 @@ class Terminal:
                     "source": strat_info["source"],
                     "return": ret * 100,
                     "vol": vol * 100,
-                    "sharpe": m.get("sharpe_ratio", 0),
-                    "max_dd": m.get("max_drawdown", 0) * 100,
+                    "sharpe": m.get("sharpe_ratio") or 0,
+                    "max_dd": (m.get("max_drawdown") or 0) * 100,
                 })
 
         if not points:
@@ -564,17 +565,17 @@ class Terminal:
         print(f"Generating dashboard for {symbol}...")
 
         steps = [
-            ("1/5", "Equity chart", lambda: self.equity_chart(symbol)),
-            ("2/5", "Catalyst timeline", lambda: self.catalyst_timeline(symbol)),
-            ("3/5", "Sector performance", lambda: self.sector_performance()),
-            ("4/5", "Strategy comparison", lambda: self.strategy_comparison(
+            ("Equity chart", lambda: self.equity_chart(symbol)),
+            ("Catalyst timeline", lambda: self.catalyst_timeline(symbol)),
+            ("Sector performance", lambda: self.sector_performance()),
+            ("Strategy comparison", lambda: self.strategy_comparison(
                 ["concentrate_winners", "momentum", "momentum_crash_hedge",
                  "ai_revolution", "nancy_pelosi"])),
-            ("5/5", "Risk/return scatter", lambda: self.risk_return_scatter("3y")),
+            ("Risk/return scatter", lambda: self.risk_return_scatter("3y")),
         ]
 
         total = len(steps)
-        for i, (_step_id, label, fn) in enumerate(steps, 1):
+        for i, (label, fn) in enumerate(steps, 1):
             print(f"  [{i}/{total}] {label}...")
             try:
                 paths.append(fn())

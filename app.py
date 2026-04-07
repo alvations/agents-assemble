@@ -211,19 +211,45 @@ function showSection(name) {
     event.target.classList.add('active');
 }
 
-// Load leaderboard on start
-fetch('/api/leaderboard').then(r => r.json()).then(data => {
-    let html = '<table><tr><th>#</th><th>Strategy</th><th>Category</th><th>3Y Return</th><th>3Y Sharpe</th><th>3Y Max DD</th></tr>';
-    data.forEach((s, i) => {
+// Sortable table helper
+let leaderboardData = [];
+let sortCol = 'return'; let sortAsc = false;
+
+function renderLeaderboard() {
+    const sorted = [...leaderboardData].sort((a, b) => {
+        const va = a[sortCol] || 0, vb = b[sortCol] || 0;
+        return sortAsc ? va - vb : vb - va;
+    });
+    const arrow = sortAsc ? '▲' : '▼';
+    const cols = [
+        {key:'return', label:'3Y Return'}, {key:'sharpe', label:'Sharpe'}, {key:'max_dd', label:'Max DD'}
+    ];
+    let html = '<table><tr><th>#</th><th>Strategy</th><th>Category</th>';
+    cols.forEach(c => {
+        const active = sortCol === c.key ? ' style="color:#00ff88;cursor:pointer"' : ' style="cursor:pointer"';
+        html += '<th' + active + ' onclick="sortLeaderboard(\'' + c.key + '\')">' + c.label + (sortCol === c.key ? ' ' + arrow : '') + '</th>';
+    });
+    html += '</tr>';
+    sorted.forEach((s, i) => {
         const retClass = s.return > 0 ? 'positive' : 'negative';
         html += '<tr><td>' + (i+1) + '</td><td><b>' + s.name + '</b></td>'
             + '<td><span class="tag tag-blue">' + s.source + '</span></td>'
             + '<td class="' + retClass + '">' + (s.return*100).toFixed(1) + '%</td>'
-            + '<td>' + s.sharpe.toFixed(2) + '</td>'
+            + '<td>' + (s.sharpe||0).toFixed(2) + '</td>'
             + '<td class="negative">' + (s.max_dd*100).toFixed(1) + '%</td></tr>';
     });
     html += '</table>';
     document.getElementById('leaderboard-table').innerHTML = html;
+}
+function sortLeaderboard(col) {
+    if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = false; }
+    renderLeaderboard();
+}
+
+// Load leaderboard on start
+fetch('/api/leaderboard').then(r => r.json()).then(data => {
+    leaderboardData = data;
+    renderLeaderboard();
 });
 
 // Market overview
@@ -290,6 +316,18 @@ function runCatalyst() {
                     + p.confidence.toUpperCase() + '</span> ' + p.recommended_action + '</p>';
             });
         }
+        // News
+        if (data.news && data.news.length > 0) {
+            html += '<h3>Latest News</h3>';
+            data.news.slice(0, 8).forEach(n => {
+                if (n.title && n.title.length > 5) {
+                    html += '<p style="font-size:11px;margin:3px 0"><span class="tag tag-yellow">' + (n.catalyst_type || 'news') + '</span> '
+                        + '<span style="color:#888">' + (n.date || '') + '</span> '
+                        + (n.url ? '<a href="' + n.url + '" target="_blank">' + n.title.substring(0, 80) + '</a>' : n.title.substring(0, 80))
+                        + '</p>';
+                }
+            });
+        }
         document.getElementById('catalyst-results').innerHTML = html;
     });
 }
@@ -309,18 +347,37 @@ function generateTradePlan() {
     const strat = document.getElementById('trade-strategy').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading">Generating trade plan for ' + strat + '...</p>';
     fetch('/api/trade-plan/' + strat).then(r => r.json()).then(data => {
-        let html = '<h3>Trade Plan: ' + strat + ' (DRY RUN)</h3>';
-        if (data.orders) {
-            html += '<table><tr><th>Action</th><th>Symbol</th><th>Qty</th><th>~Price</th><th>~Value</th></tr>';
+        let html = '<h3>Trade Plan: ' + data.strategy + ' (DRY RUN)</h3>';
+        html += '<p style="color:#888;font-size:11px">Portfolio: $100,000 | Slippage: 10bps | Positions: ' + (data.orders||[]).length + '</p>';
+        if (data.orders && data.orders.length > 0) {
+            html += '<table><tr><th>Action</th><th>Symbol</th><th>Qty</th><th>Entry Price</th><th>Limit (0.5% below)</th><th>Stop Loss (15%)</th><th>Take Profit (10%)</th><th>Alloc</th></tr>';
+            let totalAlloc = 0;
             data.orders.forEach(o => {
-                html += '<tr><td><span class="tag tag-' + (o.side === 'BUY' ? 'green' : 'red') + '">' + o.side + '</span></td>'
-                    + '<td>' + o.symbol + '</td><td>' + o.quantity + '</td>'
+                const limit = (o.price * 0.995).toFixed(2);
+                const stopLoss = (o.price * 0.85).toFixed(2);
+                const takeProfit = (o.price * 1.10).toFixed(2);
+                const alloc = ((o.quantity * o.price / 100000) * 100).toFixed(1);
+                totalAlloc += parseFloat(alloc);
+                html += '<tr>'
+                    + '<td><span class="tag tag-' + (o.side === 'BUY' ? 'green' : 'red') + '">' + o.side + '</span></td>'
+                    + '<td><b>' + o.symbol + '</b></td>'
+                    + '<td>' + o.quantity + '</td>'
                     + '<td>$' + o.price.toFixed(2) + '</td>'
-                    + '<td>$' + (o.quantity * o.price).toFixed(0) + '</td></tr>';
+                    + '<td class="positive">$' + limit + '</td>'
+                    + '<td class="negative">$' + stopLoss + '</td>'
+                    + '<td class="positive">$' + takeProfit + '</td>'
+                    + '<td>' + alloc + '%</td></tr>';
             });
+            html += '<tr style="border-top:2px solid #333"><td colspan="7"><b>Total Allocation</b></td><td><b>' + totalAlloc.toFixed(1) + '%</b></td></tr>';
             html += '</table>';
+            html += '<p style="margin-top:10px"><span class="tag tag-yellow">Trailing Stop</span> 12% trailing stop after 5% gain on each position</p>';
+            html += '<p><span class="tag tag-blue">Order Type</span> LIMIT orders at 0.5% below current price. Scale in over 3 tranches.</p>';
+        } else {
+            html += '<p class="negative">No positions generated — strategy may not have signals today.</p>';
         }
         document.getElementById('trade-results').innerHTML = html;
+    }).catch(e => {
+        document.getElementById('trade-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
     });
 }
 
