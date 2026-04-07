@@ -298,7 +298,7 @@ class DavidTepper(BasePersona):
                 "BABA", "PDD", "JD",  # China (actual top holdings)
                 "WHR", "F", "GM",  # Cyclicals (actual trades)
                 "AMZN", "GOOGL", "META",  # Tech (trimmed but held)
-                "VISTRA", "TSM",  # Winners (Vistra, TSMC)
+                "VST", "TSM",  # Winners (Vistra, TSMC)
                 "XLF", "XLI",  # Sector ETFs
             ],
         )

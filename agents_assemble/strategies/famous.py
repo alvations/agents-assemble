@@ -284,15 +284,24 @@ class GeorgeSoros(BasePersona):
 
         if top:
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                weights[sym] = (score / total_score) * 0.95
-            # Post-clip normalization: redistribute freed allocation
-            clipped = {s: min(w, self.config.max_position_size) for s, w in weights.items() if w > 0}
-            clip_total = sum(clipped.values())
-            if clip_total > 0 and clip_total < 0.90:
-                scale = 0.95 / clip_total
-                clipped = {s: min(w * scale, self.config.max_position_size) for s, w in clipped.items()}
-            weights.update(clipped)
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.95 for sym, score in top}
+            # Iterative cap redistribution: keep redistributing until no entry exceeds cap
+            while True:
+                over = {s: w for s, w in raw.items() if w > cap}
+                if not over:
+                    break
+                under = {s: w for s, w in raw.items() if w <= cap}
+                freed = sum(w - cap for w in over.values())
+                for s in over:
+                    raw[s] = cap
+                if under:
+                    under_total = sum(under.values())
+                    for s in under:
+                        raw[s] += freed * (under[s] / under_total)
+                else:
+                    break
+            weights.update(raw)
 
         return weights
 
@@ -1106,15 +1115,24 @@ class SupportResistanceCommodity(BasePersona):
         top = scored[:self.config.max_positions]
         if top:
             total_score = sum(s for _, s in top)
-            for sym, score in top:
-                weights[sym] = (score / total_score) * 0.90
-            # Post-clip normalization: redistribute freed allocation
-            clipped = {s: min(w, self.config.max_position_size) for s, w in weights.items() if w > 0}
-            clip_total = sum(clipped.values())
-            if clip_total > 0 and clip_total < 0.85:
-                scale = 0.90 / clip_total
-                clipped = {s: min(w * scale, self.config.max_position_size) for s, w in clipped.items()}
-            weights.update(clipped)
+            cap = self.config.max_position_size
+            raw = {sym: (score / total_score) * 0.90 for sym, score in top}
+            # Iterative cap redistribution
+            while True:
+                over = {s: w for s, w in raw.items() if w > cap}
+                if not over:
+                    break
+                under = {s: w for s, w in raw.items() if w <= cap}
+                freed = sum(w - cap for w in over.values())
+                for s in over:
+                    raw[s] = cap
+                if under:
+                    under_total = sum(under.values())
+                    for s in under:
+                        raw[s] += freed * (under[s] / under_total)
+                else:
+                    break
+            weights.update(raw)
 
         return weights
 
@@ -1174,11 +1192,11 @@ class BillAckman(BasePersona):
             if price < sma200 * 0.90:
                 continue  # Broken thesis
             score = 0.0
-            if sma50 and price > sma50 > sma200:
+            if sma50 is not None and price > sma50 > sma200:
                 score += 2.0
             elif price > sma200:
                 score += 1.0
-            if vol and vol < 0.02:
+            if vol is not None and vol < 0.02:
                 score += 1.0  # Prefer low vol (quality)
             if 30 < rsi < 65:
                 score += 0.5  # Buy on pullback, not at highs
@@ -1247,7 +1265,7 @@ class StanleyDruckenmiller(BasePersona):
                 continue
             # Druckenmiller: aggressive momentum with macro awareness
             score = 0.0
-            if sma200 and price > sma50 > sma200:
+            if sma200 is not None and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
@@ -1257,7 +1275,7 @@ class StanleyDruckenmiller(BasePersona):
                 score += 0.5
             if score >= 3:
                 scored.append((sym, score))
-            elif sma200 and price < sma200:
+            elif sma200 is not None and price < sma200:
                 weights[sym] = 0.0  # Cut losers aggressively
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
@@ -1396,8 +1414,66 @@ class BlackRock2026(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
-                if vol and vol < 0.02:
+                if vol is not None and vol < 0.02:
                     score += 0.3  # Quality bonus
+                if rsi is not None and rsi < 45:
+                    score += 0.2
+                candidates.append((sym, score))
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 18. Berkshire Hathaway 13F Holdings
+# ---------------------------------------------------------------------------
+class BerkshireHoldings(BasePersona):
+    """Berkshire Hathaway actual 13F holdings strategy.
+
+    Source: BRK 13F Q4 2025. 42 holdings, $274B portfolio.
+    Top 5: AAPL, AXP, BAC, KO, CVX. New: GOOGL. Increased: CB (Chubb).
+    Reduced: AAPL (-15%), BAC (-6%).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Berkshire Hathaway 13F",
+            description="Actual BRK holdings: AAPL, AXP, BAC, KO, CVX, GOOGL, CB, $274B",
+            risk_tolerance=0.3,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AAPL", "AXP", "BAC", "KO", "CVX",  # Top 5 actual
+                "OXY", "KHC", "MCO", "CB", "GOOGL",  # Key holdings
+                "V", "MA", "JNJ", "PG",  # Adjacent blue chips
+                "BRK-B",  # Berkshire itself
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            if sma200 is None:
+                continue
+            # Buffett: buy and hold quality at fair value
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount > -0.05:
+                score = max(discount + 0.05, 0.01) + 0.4
+                if vol and vol < 0.015:
+                    score += 0.3
                 if rsi and rsi < 45:
                     score += 0.2
                 candidates.append((sym, score))
@@ -1405,6 +1481,138 @@ class BlackRock2026(BasePersona):
         top = candidates[:self.config.max_positions]
         if top:
             per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 19. Japanese Sogo Shosha (Buffett's Japan Bet)
+# ---------------------------------------------------------------------------
+class JapaneseSogoShosha(BasePersona):
+    """Buffett's Japanese trading company bet + Asian conglomerate value.
+
+    Source: Buffett invested $6B+ in 5 Japanese sogo shosha (2020+).
+    Companies: Itochu, Marubeni, Mitsubishi Corp, Mitsui, Sumitomo.
+    Plus Asian conglomerates: CK Hutchison, Jardine Matheson.
+
+    Strategy: Buy diversified Asian conglomerates trading at discount.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Japanese Sogo Shosha (Buffett Japan)",
+            description="Buffett's Japan bet: trading companies + Asian conglomerate value",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            # Japanese sogo shosha ADRs + Asian conglomerates
+            universe=universe or [
+                "ITOCY", "MARUY", "MSBHF", "MITSY", "SSUMY",  # 5 sogo shosha
+                "TM", "SONY", "MUFG",  # Japanese blue chips
+                "CKHUY", "JMHLY",  # HK conglomerates
+                "EWJ", "DXJ",  # Japan ETFs
+                "SE", "GRAB",  # SE Asia growth
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            if sma200 is None:
+                continue
+            # Value: buy near or below SMA200
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount > -0.10:
+                score = max(discount + 0.10, 0.01) + 0.3
+                if rsi and rsi < 45:
+                    score += 0.2
+                candidates.append((sym, score))
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 20. Graham Net-Net Deep Value
+# ---------------------------------------------------------------------------
+class BenjaminGraham(BasePersona):
+    """Benjamin Graham net-net / deep value strategy.
+
+    Source: "The Intelligent Investor" (1949), "Security Analysis" (1934).
+    Graham: buy stocks trading below net current asset value.
+    Modern proxy: deeply oversold stocks with strong reversion signals.
+
+    Criteria (price-based proxy):
+    - Price well below SMA200 (deep discount)
+    - RSI < 25 (extreme oversold)
+    - Volume spike (capitulation selling)
+    - Must recover: buy when RSI turns up from < 20
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Benjamin Graham (Deep Value)",
+            description="Father of value investing: buy extreme oversold with capitulation volume",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            # Broad blue-chip universe for deep value screening
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "AMZN", "META",
+                "JPM", "BAC", "GS", "C", "WFC",
+                "JNJ", "PFE", "MRK", "ABBV",
+                "XOM", "CVX", "DIS", "INTC", "IBM",
+                "PG", "KO", "PEP", "WMT", "HD",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            volume = self._get_indicator(data, sym, "Volume", date)
+            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            if any(v is None for v in [sma200, rsi]):
+                continue
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            # Graham: extreme deep value
+            if discount > 0.15 and rsi < 30:
+                vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
+                score = discount * 8
+                if vol_ratio > 2:
+                    score *= 1.5  # Capitulation bonus
+                if rsi < 20:
+                    score += 1.0  # Extreme oversold bonus
+                candidates.append((sym, score))
+            # Take profits on recovery
+            elif rsi and rsi > 65 and discount < -0.10:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
         return weights
@@ -1428,6 +1636,9 @@ FAMOUS_INVESTORS = {
     "stanley_druckenmiller": StanleyDruckenmiller,
     "cathie_wood": CathieWood,
     "blackrock_2026": BlackRock2026,
+    "berkshire_holdings": BerkshireHoldings,
+    "japanese_sogo_shosha": JapaneseSogoShosha,
+    "benjamin_graham": BenjaminGraham,
 }
 
 
