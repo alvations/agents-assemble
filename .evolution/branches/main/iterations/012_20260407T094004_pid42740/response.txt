@@ -1,0 +1,6 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `diagnose_strategy` format crash on non-numeric values**: Wrapped stored grade values through `_safe_float()` so `{info['value']:.4f}` at lines 119/121 won't raise `TypeError` when metrics contain `None` or strings
+- **Fixed `diagnose_strategy` false suggestions from fabricated defaults**: Removed `_METRIC_MISSING_DEFAULTS` fallbacks from the suggestion logic — missing metrics now become NaN (via `_safe_float(None)`), which correctly fails all comparison gates instead of triggering misleading suggestions like "Max drawdown -100.0% is too severe"
+- **Fixed `num_trades` TypeError on None**: Wrapped through `_safe_float()` so `trade_metrics={"num_trades": None}` produces NaN instead of crashing on `None > 500`
+- **Fixed `suggest_parameter_tuning` false suggestions for missing metrics**: Same pattern — removed hardcoded `0` defaults so missing `win_rate` doesn't falsely trigger "Low win rate" suggestions when no trades were executed

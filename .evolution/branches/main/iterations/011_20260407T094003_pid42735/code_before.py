@@ -16,13 +16,7 @@ Personas:
     4. MichaelBurry   — Deep value contrarian, distressed assets, short overbought
     5. JimSimons      — Pure quant: mean-reversion + momentum factor combination
     6. CarlIcahn      — Activist value: undervalued large caps with catalysts
-    7. MasayoshiSon   — Vision Fund: high-conviction tech platform bets
-    8. LiKaShing      — Infrastructure/utility value, steady cash flows
-    9. NassefSawiris  — Emerging market industrials, materials, global value
-   10. JorgePauloLemann — 3G Capital: consumer brand dominance
-   11. PrinceAlwaleed — Global blue-chip contrarian, crisis buying
-   12. HowardMarks    — Oaktree: second-level thinking, buy quality in panic
-   13. SupportResistanceCommodity — Breakout trading on commodity ETFs
+    7. WarrenBuffett   — (Enhanced) Moat-based, owner earnings, margin of safety
 """
 
 from __future__ import annotations
@@ -458,7 +452,7 @@ class JimSimons(BasePersona):
                 trend_signal += 0.5
 
             # Factor 4: Bollinger band position
-            if bb_upper is not None and bb_lower is not None and bb_upper != bb_lower:
+            if bb_upper and bb_lower and bb_upper != bb_lower:
                 bb_pos = (price - bb_lower) / (bb_upper - bb_lower)
                 bb_signal = 1 - 2 * bb_pos  # -1 at upper, +1 at lower
             else:
@@ -696,7 +690,7 @@ class LiKaShing(BasePersona):
             # Buy steady assets on discount
             if discount >= 0:  # At or below SMA200
                 score = max(discount, 0.01)
-                if rsi is not None and rsi < 40:
+                if rsi and rsi < 40:
                     score += 0.1
                 candidates.append((sym, score + 0.3))  # Base ensures we hold
 
@@ -992,7 +986,7 @@ class HowardMarks(BasePersona):
             # Second-level thinking: buy when others panic
             if fear_mode and discount > 0.05 and rsi < 40:
                 # Prefer low-vol names (quality) that are temporarily oversold
-                vol_penalty = vol if vol is not None else 0.02
+                vol_penalty = vol if vol else 0.02
                 quality_score = (1 / max(vol_penalty, 0.005)) * discount
                 candidates.append((sym, quality_score))
             elif not fear_mode and discount > 0.15 and rsi < 30:
@@ -1086,14 +1080,14 @@ class SupportResistanceCommodity(BasePersona):
                 scored.append((sym, score))
 
             # Bounce off support — BUY (support test)
-            elif sma50 is not None and sma50 > 0 and abs(price - sma50) / sma50 < 0.02 and rsi < 45:
+            elif sma50 and sma50 > 0 and abs(price - sma50) / sma50 < 0.02 and rsi < 45:
                 score = 1.5
                 if vol_ratio > 1.2:
                     score += 0.5
                 scored.append((sym, score))
 
             # Trending above both MAs — HOLD/accumulate
-            elif sma50 is not None and price > sma50 > sma200 and rsi < 70:
+            elif sma50 and sma200 and price > sma50 > sma200 and rsi < 70:
                 scored.append((sym, 1.0))
 
         scored.sort(key=lambda x: x[1], reverse=True)

@@ -303,3 +303,18 @@ All changes pass syntax validation. Summary:
 - **Applied `_safe_float` to all metric reads** across `generate_trade_recommendations`, `_assess_strategy`, `_timing_guidance`, `_generate_position_rec`, and the "Lessons Learned" markdown section — same class of bug as the iteration 1 alpha fix, now systematically addressed
 - **
 
+## [2026-04-07T09:44:49.852708+00:00] Branch: main | Run: 20260407T094004_pid42740 | Iter 12 | $0.4945
+### judge.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `diagnose_strategy` format crash on non-numeric values**: Wrapped stored grade values through `_safe_float()` so `{info['value']:.4f}` at lines 119/121 won't raise `TypeError` when metrics contain `None` or strings
+- **Fixed `diagnose_strategy` false suggestions from fabricated defaults**: Removed `_METRIC_MISSING_DEFAULTS` fallbacks from the suggestion logic — missing metrics now become NaN (via `_safe_float(None)`), which correct
+
+## [2026-04-07T09:44:56.841686+00:00] Branch: main | Run: 20260407T094003_pid42735 | Iter 11 | $0.8770
+### famous_investors.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `LiKaShing` RSI truthiness bug (line 693)**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 (deeply oversold) was skipping the oversold bonus
+- **Fixed `HowardMarks` vol truthiness bug (line 989)**: `vol if vol else 0.02` → `vol if vol is not None else 0.02` — vol of 0.0 (lowest risk) was penalized with 0.02 fallback instead of getting the highest quality score
+- **Fixed `JimSimons` Bollinger band tr
+

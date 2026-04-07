@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `LiKaShing` RSI truthiness bug (line 693)**: `if rsi and rsi < 40` → `if rsi is not None and rsi < 40` — RSI of exactly 0.0 (deeply oversold) was skipping the oversold bonus
+- **Fixed `HowardMarks` vol truthiness bug (line 989)**: `vol if vol else 0.02` → `vol if vol is not None else 0.02` — vol of 0.0 (lowest risk) was penalized with 0.02 fallback instead of getting the highest quality score
+- **Fixed `JimSimons` Bollinger band truthiness bug (line 455)**: `if bb_upper and bb_lower` → explicit `is not None` checks — a bb value of 0.0 would skip the entire BB factor
+- **Fixed module docstring**: Listed 7 personas including "WarrenBuffett" (not in this file); updated to accurately list all 13 actual strategies
+- **Fixed `SupportResistanceCommodity` sma50 truthiness guards (lines 1083, 1090)**: Replaced `sma50 and` with `sma50 is not None` — `sma200` was already None-checked at line 1060 so its redundant guard was also removed
