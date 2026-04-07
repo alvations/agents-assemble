@@ -15,8 +15,6 @@ Themes:
     8. SmallCapValue     — Small cap deep value (IWM universe)
     9. CryptoEcosystem   — Crypto-adjacent public companies
     10. AgingPopulation  — Healthcare, senior living, pharma for aging demographics
-    11. GLP1Obesity      — GLP-1 / weight loss drug megatrend
-    12. RoboticsAutonomous — Humanoid robots + autonomous vehicles
 """
 
 from __future__ import annotations
@@ -669,7 +667,7 @@ class GLP1Obesity(BasePersona):
     30M Americans on GLP-1 by 2030.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe=None):
         config = PersonaConfig(
             name="GLP-1 / Obesity Revolution",
             description="Weight loss drug megatrend: $73-87B market, LLY/NVO leaders",
@@ -697,12 +695,8 @@ class GLP1Obesity(BasePersona):
             rsi = self._get_indicator(data, sym, "rsi_14", date)
             if any(v is None for v in [sma50, rsi]):
                 continue
-            if sma200 is not None and price < sma200 * 0.90:
-                weights[sym] = 0.0
-                continue
-
             score = 0.0
-            if sma200 is not None and price > sma50 > sma200:
+            if sma200 and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
@@ -710,6 +704,8 @@ class GLP1Obesity(BasePersona):
                 score += 0.5
             if score >= 2.0:
                 scored.append((sym, score))
+            elif sma200 and price < sma200 * 0.90:
+                weights[sym] = 0.0
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
         if top:
@@ -729,7 +725,7 @@ class RoboticsAutonomous(BasePersona):
     Global robotics market > $200B by decade end.
     """
 
-    def __init__(self, universe: list[str] | None = None):
+    def __init__(self, universe=None):
         config = PersonaConfig(
             name="Robotics & Autonomous",
             description="Humanoid robots + autonomous vehicles: $200B market by 2030",
@@ -759,12 +755,8 @@ class RoboticsAutonomous(BasePersona):
             macd_sig = self._get_indicator(data, sym, "macd_signal", date)
             if any(v is None for v in [sma50, rsi]):
                 continue
-            if sma200 is not None and price < sma200 * 0.85:
-                weights[sym] = 0.0
-                continue
-
             score = 0.0
-            if sma200 is not None and price > sma50 > sma200:
+            if sma200 and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
@@ -774,6 +766,8 @@ class RoboticsAutonomous(BasePersona):
                 score += 0.5
             if score >= 2.5:
                 scored.append((sym, score))
+            elif sma200 and price < sma200 * 0.85:
+                weights[sym] = 0.0
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
         if top:

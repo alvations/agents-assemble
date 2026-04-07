@@ -431,3 +431,10 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `save_results` producing invalid JSON** — `calmar_ratio` (`float("inf")` when no drawdown) and `profit_factor` (`float("inf")` when no losing days) were output as `Infinity` tokens by `json.dumps`, which is not valid JSON. Added `_sanitize_for_json` to recursively replace inf/nan with `null`.
 - **Replaced `numpy` with `math`/pandas equivalents** — `np.sqrt` → `math.sqrt`, `np.minimum(x, 0)` → `.clip(upper=0)`, `np.mean` → `sum()/le
 
+## [2026-04-07T10:17:43.312638+00:00] Branch: main | Run: 20260407T101611_pid49367 | Iter 20 | $0.5107
+### theme_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `GLP1Obesity` exit/buy priority bug** — The thesis-broken exit (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` after the score check, so a stock with `score >= 2.0` that was 10%+ below SMA200 (e.g., sma200=100, sma50=85, price=86) would be bought instead of exited. Moved exit check before scoring with `continue`.
+- **Fixed `RoboticsAutonomous` same exit/buy priority bug** — Same pattern with the `price < sma200 * 0.85` exit
+

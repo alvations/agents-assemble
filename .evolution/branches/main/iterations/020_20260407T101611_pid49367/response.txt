@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `GLP1Obesity` exit/buy priority bug** — The thesis-broken exit (`price < sma200 * 0.90 → weight 0.0`) was in an `elif` after the score check, so a stock with `score >= 2.0` that was 10%+ below SMA200 (e.g., sma200=100, sma50=85, price=86) would be bought instead of exited. Moved exit check before scoring with `continue`.
+- **Fixed `RoboticsAutonomous` same exit/buy priority bug** — Same pattern with the `price < sma200 * 0.85` exit being unreachable when score qualified. Now checks first.
+- **Fixed 4 truthiness bugs on `sma200`** — `if sma200 and ...` → `if sma200 is not None and ...` in both `GLP1Obesity` (lines 699, 707) and `RoboticsAutonomous` (lines 759, 769). An SMA200 of 0.0 would skip both trend-alignment scoring and the exit check.
+- **Added type hints to newer strategies** — `universe=None` → `universe: list[str] | None = None` on `GLP1Obesity` and `RoboticsAutonomous` to match the first 10 strategies.
+- **Updated module docstring** — Listed only 10 strategies but 12 exist; added GLP1Obesity and RoboticsAutonomous.
