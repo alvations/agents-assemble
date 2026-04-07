@@ -271,7 +271,7 @@ class BiotechBreakout(BasePersona):
             if 35 < rsi < 70:
                 score += 0.5
             # Prefer lower-vol names (less binary risk)
-            if vol is not None and vol < 0.03:
+            if vol and vol < 0.03:
                 score += 0.5
 
             if score > 1.5:
@@ -511,7 +511,7 @@ class SmallCapValue(BasePersona):
             if rsi < 30 and vol_ratio > 1.5:
                 score = (30 - rsi) / 30 * 3 + vol_ratio
                 scored.append((sym, score))
-            elif bb_lower is not None and price < bb_lower and rsi < 35:
+            elif bb_lower and price < bb_lower and rsi < 35:
                 score = 2.0
                 scored.append((sym, score))
             elif rsi > 80:
@@ -574,7 +574,7 @@ class CryptoEcosystem(BasePersona):
             # Crypto is momentum-driven — ride breakouts
             if price > sma20 and rsi < 75 and vol_ratio > 1.2:
                 score = 2.0 + vol_ratio
-                if sma50 is not None and price > sma50:
+                if sma50 and price > sma50:
                     score += 1.0
                 scored.append((sym, score))
             elif rsi > 85:

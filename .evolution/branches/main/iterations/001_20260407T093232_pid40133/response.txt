@@ -1,0 +1,6 @@
+Syntax is valid. Here's what I changed:
+
+- **Fixed filter bug in `DynamicEnsemble`**: Changed `total_weight > 0.3` to `total_weight >= 0.3` — pure value or pure quality stocks (each contributing exactly 0.3) were excluded by the strict inequality
+- **Fixed incomplete `signals` counter**: Value and quality signals now increment `signals`, so stocks with any triggered signal pass the filter (previously only momentum did)
+- **Fixed non-deterministic ordering**: Removed `list(set(...))` wrapper in `DynamicEnsemble.__init__` — the list had no duplicates, so `set()` only randomized iteration order across runs
+- **Removed unused imports**: `Dict`, `List`, `Optional` from `typing` were never referenced

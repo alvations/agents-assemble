@@ -5,23 +5,18 @@ creative and contrarian approaches.
 
 Strategies:
     1. SellInMayGoAway    — Seasonal "sell in May" calendar effect
-    2. MondayEffect       — Buy Friday close, sell Monday open (inverted)
-    3. TurnOfMonth        — End-of-month/start-of-month buying window
-    4. VIXMeanReversion   — Buy stocks when VIX spikes (fear = opportunity)
-    5. PostEarningsDrift   — Buy after positive earnings surprise momentum
-    6. InsiderFollower     — Follow insider buying signals
-    7. DogOfTheDow        — Buy worst performers yearly (contrarian)
-    8. HighShortInterest  — Short squeeze candidates via high SI + momentum
-    9. QualityFactor      — Low vol + high profitability + low leverage
-    10. TailRiskHarvest   — Sell premium (proxy: buy after sharp drops)
+    2. TurnOfMonth        — End-of-month/start-of-month buying window
+    3. VIXMeanReversion   — Buy stocks when VIX spikes (fear = opportunity)
+    4. DogsOfTheDow       — Buy worst performers yearly (contrarian)
+    5. QualityFactor      — Low vol + high profitability + low leverage
+    6. TailRiskHarvest    — Sell premium (proxy: buy after sharp drops)
 """
 
 from __future__ import annotations
 
 from typing import List, Optional
 
-import numpy as np
-import pandas as pd
+_SQRT_252 = 252 ** 0.5
 
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
@@ -164,10 +159,11 @@ class VIXMeanReversion(BasePersona):
         spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
 
         if spy_vol is None:
-            return {"SPY": 0.30, "QQQ": 0.20, "TLT": 0.20, "GLD": 0.10}
+            fallback = {"SPY": 0.30, "QQQ": 0.20, "TLT": 0.20, "GLD": 0.10}
+            return {k: v for k, v in fallback.items() if k in prices}
 
         # Estimate VIX from realized vol (rough: annualized * 100)
-        implied_vix = spy_vol * np.sqrt(252) * 100
+        implied_vix = spy_vol * _SQRT_252 * 100
 
         if implied_vix > 30:
             # High fear — BUY aggressively (VIX will mean-revert)

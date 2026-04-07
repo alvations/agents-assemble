@@ -234,3 +234,18 @@ All edits pass syntax check. Summary of changes:
 - **Fixed look-ahead bias in ZScoreReversion** — z-score reference window excludes today's close price, eliminating self-referential bias that suppressed signal strength
 - **Fixed look-ahead bias in HurstExponent** — Hurst estimation no longer includes today's return in th
 
+## [2026-04-07T09:33:23.124323+00:00] Branch: main | Run: 20260407T092841_pid39593 | Iter 8 | $0.5358
+### theme_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed truthiness bug on `vol`** (BiotechBreakout line 274): `if vol and vol < 0.03` → `if vol is not None and vol < 0.03` — a volatility of exactly `0.0` would have been treated as missing data, skipping the low-vol bonus that is the core risk-reduction signal for this biotech strategy.
+- **Fixed truthiness bug on `bb_lower`** (SmallCapValue line 514): `elif bb_lower and price < bb_lower` → `elif bb_lower is not None and price < bb_lower
+
+## [2026-04-07T09:33:28.738239+00:00] Branch: main | Run: 20260407T093232_pid40133 | Iter 1 | $0.2266
+### hedge_fund_strategies.py
+Syntax is valid. Here's what I changed:
+
+- **Fixed filter bug in `DynamicEnsemble`**: Changed `total_weight > 0.3` to `total_weight >= 0.3` — pure value or pure quality stocks (each contributing exactly 0.3) were excluded by the strict inequality
+- **Fixed incomplete `signals` counter**: Value and quality signals now increment `signals`, so stocks with any triggered signal pass the filter (previously only momentum did)
+- **Fixed non-deterministic ordering**: Removed `list(set(...))` wrapper in `
+

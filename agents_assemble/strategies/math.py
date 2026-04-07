@@ -13,7 +13,8 @@ Strategies:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+
+
 
 import numpy as np
 import pandas as pd
@@ -36,7 +37,7 @@ class KellyOptimal(BasePersona):
     fractional Kelly (half-Kelly) for safety.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Kelly Criterion Optimal",
             description="Position sizing via Kelly criterion from rolling win rate and payoff ratio",
@@ -68,7 +69,7 @@ class KellyOptimal(BasePersona):
             loc = df.index.get_loc(date)
             if loc < 60:
                 continue
-            window = df["daily_return"].iloc[max(0, loc-60):loc+1].dropna()
+            window = df["daily_return"].iloc[loc-60:loc].dropna()
             if len(window) < 30:
                 continue
 
@@ -123,7 +124,7 @@ class ZScoreReversion(BasePersona):
     statistical significance thresholds.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Z-Score Mean Reversion",
             description="Buy at Z < -2 (statistically oversold), sell at Z > 0",
@@ -155,13 +156,13 @@ class ZScoreReversion(BasePersona):
             if loc < 60:
                 continue
 
-            window = df["Close"].iloc[max(0, loc-60):loc+1]
+            window = df["Close"].iloc[loc-60:loc]
             if len(window) < 30:
                 continue
 
             mean = window.mean()
             std = window.std()
-            if std <= 0:
+            if not (std > 0):
                 continue
 
             price = prices[sym]
@@ -205,7 +206,7 @@ class HurstExponent(BasePersona):
     We estimate H from the autocorrelation of returns as a fast proxy.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Hurst Regime Detector",
             description="Adaptive: momentum when trending, mean-reversion when reverting",
@@ -249,7 +250,7 @@ class HurstExponent(BasePersona):
             if loc < 60:
                 continue
 
-            returns = df["daily_return"].iloc[max(0, loc-60):loc+1].dropna()
+            returns = df["daily_return"].iloc[loc-60:loc].dropna()
             hurst = self._estimate_hurst(returns)
 
             price = prices[sym]
@@ -303,7 +304,7 @@ class VolatilityBreakout(BasePersona):
     We approximate Donchian with BB upper and use ATR for sizing.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Volatility Breakout (Turtle)",
             description="Donchian breakout with ATR position sizing (Turtle Trading)",
@@ -352,14 +353,11 @@ class VolatilityBreakout(BasePersona):
         top = scored[:self.config.max_positions]
 
         if top:
-            # ATR-based position sizing
             risk_per_position = 0.02  # 2% of portfolio per position
-            total_value = 100_000  # Approximate
             for sym, score, atr in top:
                 if atr > 0:
-                    # Position size = (risk_budget) / ATR
-                    shares_by_risk = (total_value * risk_per_position) / atr
-                    w = min((shares_by_risk * prices[sym]) / total_value,
+                    # w = risk_budget * price / ATR (total_value cancels out)
+                    w = min(risk_per_position * prices[sym] / atr,
                             self.config.max_position_size)
                     weights[sym] = w
 
@@ -380,7 +378,7 @@ class EqualRiskContrib(BasePersona):
     Combined with a momentum filter to avoid investing in downtrending assets.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Equal Risk Contribution (ERC)",
             description="Each asset contributes equal risk, with momentum filter",
@@ -417,8 +415,12 @@ class EqualRiskContrib(BasePersona):
                 eligible.append((sym, vol))
 
         if not eligible:
-            # Everything bearish → bonds only
-            return {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
+            # Everything bearish → defensive allocation from available universe
+            fallback = {"TLT": 0.50, "IEF": 0.30, "GLD": 0.10}
+            available = {s: w for s, w in fallback.items() if s in prices}
+            if available:
+                return available
+            return {}
 
         # ERC: weight inversely proportional to vol
         total_inv_vol = sum(1 / v for _, v in eligible)

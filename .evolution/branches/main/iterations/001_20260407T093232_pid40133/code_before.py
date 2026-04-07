@@ -10,6 +10,8 @@ Strategies:
 
 from __future__ import annotations
 
+from typing import Dict, List, Optional
+
 import numpy as np
 import pandas as pd
 
@@ -86,12 +88,12 @@ class DynamicEnsemble(BasePersona):
     """
 
     def __init__(self, universe=None):
-        all_syms = [
+        all_syms = list(set([
             "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA",
             "JPM", "V", "MA", "UNH", "JNJ", "PG", "KO",
             "HD", "MCD", "WMT", "ABBV", "MRK", "XOM",
             "TLT", "GLD", "SPY", "QQQ",
-        ]
+        ]))
         config = PersonaConfig(
             name="Dynamic Ensemble",
             description="Multi-strategy ensemble weighted by rolling Sharpe ratio",
@@ -143,17 +145,15 @@ class DynamicEnsemble(BasePersona):
                 discount = (sma200 - price) / sma200
                 if discount > 0 and rsi < 45:
                     val = 1
-                    signals += 1
             total_weight += val * 0.3
 
             # Quality signal (low vol + above SMA200)
             qual = 0
             if vol < 0.02 and sma200 and price > sma200:
                 qual = 1
-                signals += 1
             total_weight += qual * 0.3
 
-            if signals > 0 or total_weight >= 0.3:
+            if signals > 0 or total_weight > 0.3:
                 scored[sym] = total_weight
 
         # Rank and select top N

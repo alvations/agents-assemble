@@ -1,0 +1,5 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed truthiness bug on `vol`** (BiotechBreakout line 274): `if vol and vol < 0.03` → `if vol is not None and vol < 0.03` — a volatility of exactly `0.0` would have been treated as missing data, skipping the low-vol bonus that is the core risk-reduction signal for this biotech strategy.
+- **Fixed truthiness bug on `bb_lower`** (SmallCapValue line 514): `elif bb_lower and price < bb_lower` → `elif bb_lower is not None and price < bb_lower` — a Bollinger Band lower value of `0.0` would have been treated as missing, skipping the below-band buy signal.
+- **Fixed truthiness bug on `sma50`** (CryptoEcosystem line 577): `if sma50 and price > sma50` → `if sma50 is not None and price > sma50` — a SMA50 of `0.0` would have skipped the momentum confirmation that adds +1.0 to the buy score.
