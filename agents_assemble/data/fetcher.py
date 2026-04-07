@@ -772,6 +772,16 @@ UNIVERSE = {
     # Penny stocks / speculative (very high risk, available on most platforms)
     "speculative": ["ASTS", "LUNR", "RKLB", "JOBY", "LILM", "EVTL",
                      "MVST", "LAZR", "LIDR", "OUST"],
+    # Sector themes (missing categories)
+    "fintech_payments": ["SQ", "PYPL", "AFRM", "UPST", "SOFI", "COIN", "HOOD", "NU", "STNE"],
+    "cybersecurity": ["CRWD", "PANW", "ZS", "FTNT", "S", "CYBR", "RPD", "TENB"],
+    "gaming_esports": ["EA", "TTWO", "RBLX", "U", "DKNG", "PENN"],
+    "water_agriculture": ["AWK", "WTRG", "ADM", "CF", "MOS", "NTR", "DE", "CTVA"],
+    "nuclear_energy": ["CCJ", "LEU", "NNE", "OKLO", "SMR"],
+    "quantum_computing": ["IONQ", "RGTI", "QUBT"],
+    "cannabis": ["TLRY", "CGC", "ACB", "MO", "STZ"],
+    "space": ["RKLB", "ASTS", "LUNR", "BA", "LMT", "NOC"],
+    "ev_full": ["TSLA", "RIVN", "LCID", "NIO", "XPEV", "LI", "GM", "F", "TM", "HMC"],
     # Global diversified — comprehensive (top picks from each region)
     "global_diversified": [
         # US mega cap
