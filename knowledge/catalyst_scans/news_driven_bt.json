@@ -1,0 +1,602 @@
+{
+  "SMCI": {
+    "symbol": "SMCI",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.4864864864864865,
+        "ret": 3.0148713569241643,
+        "trades": 37
+      },
+      "5d": {
+        "win": 0.59375,
+        "ret": 6.8777395687835545,
+        "trades": 32
+      },
+      "7d": {
+        "win": 0.5517241379310345,
+        "ret": 3.188064266473389,
+        "trades": 29
+      },
+      "10d": {
+        "win": 0.5,
+        "ret": 3.9387803218554662,
+        "trades": 24
+      },
+      "14d": {
+        "win": 0.5,
+        "ret": 3.040983224855685,
+        "trades": 22
+      },
+      "20d": {
+        "win": 0.6111111111111112,
+        "ret": 1.1434109858674022,
+        "trades": 18
+      }
+    },
+    "best": {
+      "hold": "5d",
+      "win": 0.59375,
+      "ret": 6.8777395687835545,
+      "trades": 32
+    }
+  },
+  "NVDA": {
+    "symbol": "NVDA",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.5714285714285714,
+        "ret": -0.017135487926489668,
+        "trades": 14
+      },
+      "5d": {
+        "win": 0.6428571428571429,
+        "ret": 0.25416676412286376,
+        "trades": 14
+      },
+      "7d": {
+        "win": 0.6428571428571429,
+        "ret": 0.47414927475504176,
+        "trades": 14
+      },
+      "10d": {
+        "win": 0.8333333333333334,
+        "ret": 1.220984645412095,
+        "trades": 12
+      },
+      "14d": {
+        "win": 0.8333333333333334,
+        "ret": 1.8671047539391976,
+        "trades": 12
+      },
+      "20d": {
+        "win": 0.8333333333333334,
+        "ret": 1.7083793405910659,
+        "trades": 12
+      }
+    },
+    "best": {
+      "hold": "14d",
+      "win": 0.8333333333333334,
+      "ret": 1.8671047539391976,
+      "trades": 12
+    }
+  },
+  "TSLA": {
+    "symbol": "TSLA",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.5333333333333333,
+        "ret": 0.1861645835677288,
+        "trades": 15
+      },
+      "5d": {
+        "win": 0.38461538461538464,
+        "ret": 0.2692306264737159,
+        "trades": 13
+      },
+      "7d": {
+        "win": 0.5,
+        "ret": 0.05250698457356129,
+        "trades": 12
+      },
+      "10d": {
+        "win": 0.75,
+        "ret": 0.58364787814624,
+        "trades": 12
+      },
+      "14d": {
+        "win": 0.6363636363636364,
+        "ret": 0.6311825949611394,
+        "trades": 11
+      },
+      "20d": {
+        "win": 0.6666666666666666,
+        "ret": 0.9189306872700762,
+        "trades": 9
+      }
+    },
+    "best": {
+      "hold": "20d",
+      "win": 0.6666666666666666,
+      "ret": 0.9189306872700762,
+      "trades": 9
+    }
+  },
+  "AAPL": {
+    "symbol": "AAPL",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.8181818181818182,
+        "ret": 0.32608268686951325,
+        "trades": 11
+      },
+      "5d": {
+        "win": 0.7272727272727273,
+        "ret": 0.31352442544091286,
+        "trades": 11
+      },
+      "7d": {
+        "win": 0.8,
+        "ret": 0.1972044704727105,
+        "trades": 10
+      },
+      "10d": {
+        "win": 0.7,
+        "ret": 0.31223184285375827,
+        "trades": 10
+      },
+      "14d": {
+        "win": 0.9,
+        "ret": 0.5972421807388384,
+        "trades": 10
+      },
+      "20d": {
+        "win": 0.7,
+        "ret": 0.49950036216466454,
+        "trades": 10
+      }
+    },
+    "best": {
+      "hold": "14d",
+      "win": 0.9,
+      "ret": 0.5972421807388384,
+      "trades": 10
+    }
+  },
+  "MSTR": {
+    "symbol": "MSTR",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.4444444444444444,
+        "ret": 0.09581041194508799,
+        "trades": 36
+      },
+      "5d": {
+        "win": 0.5161290322580645,
+        "ret": 1.27062057638634,
+        "trades": 31
+      },
+      "7d": {
+        "win": 0.6153846153846154,
+        "ret": 2.7365829338214738,
+        "trades": 26
+      },
+      "10d": {
+        "win": 0.7083333333333334,
+        "ret": 4.032630894394834,
+        "trades": 24
+      },
+      "14d": {
+        "win": 0.5909090909090909,
+        "ret": 4.262916531320574,
+        "trades": 22
+      },
+      "20d": {
+        "win": 0.47368421052631576,
+        "ret": 1.9488537670253865,
+        "trades": 19
+      }
+    },
+    "best": {
+      "hold": "14d",
+      "win": 0.5909090909090909,
+      "ret": 4.262916531320574,
+      "trades": 22
+    }
+  },
+  "BA": {
+    "symbol": "BA",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.5925925925925926,
+        "ret": 0.040722695390245756,
+        "trades": 27
+      },
+      "5d": {
+        "win": 0.5416666666666666,
+        "ret": -0.03239269726735139,
+        "trades": 24
+      },
+      "7d": {
+        "win": 0.5652173913043478,
+        "ret": 0.1837377532438207,
+        "trades": 23
+      },
+      "10d": {
+        "win": 0.55,
+        "ret": 0.10299648549110074,
+        "trades": 20
+      },
+      "14d": {
+        "win": 0.42105263157894735,
+        "ret": -0.22004922990158537,
+        "trades": 19
+      },
+      "20d": {
+        "win": 0.4444444444444444,
+        "ret": -0.15775035257045422,
+        "trades": 18
+      }
+    },
+    "best": {
+      "hold": "7d",
+      "win": 0.5652173913043478,
+      "ret": 0.1837377532438207,
+      "trades": 23
+    }
+  },
+  "INTC": {
+    "symbol": "INTC",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.5,
+        "ret": 0.0073797938424724485,
+        "trades": 30
+      },
+      "5d": {
+        "win": 0.6666666666666666,
+        "ret": 0.9206470742417443,
+        "trades": 24
+      },
+      "7d": {
+        "win": 0.6666666666666666,
+        "ret": 0.6514211264208085,
+        "trades": 21
+      },
+      "10d": {
+        "win": 0.55,
+        "ret": 0.6983900680574981,
+        "trades": 20
+      },
+      "14d": {
+        "win": 0.55,
+        "ret": 0.3539351502681134,
+        "trades": 20
+      },
+      "20d": {
+        "win": 0.5294117647058824,
+        "ret": 0.3461309590534116,
+        "trades": 17
+      }
+    },
+    "best": {
+      "hold": "5d",
+      "win": 0.6666666666666666,
+      "ret": 0.9206470742417443,
+      "trades": 24
+    }
+  },
+  "NKE": {
+    "symbol": "NKE",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.4117647058823529,
+        "ret": -0.1065807263117009,
+        "trades": 17
+      },
+      "5d": {
+        "win": 0.5384615384615384,
+        "ret": 0.20977339034992393,
+        "trades": 13
+      },
+      "7d": {
+        "win": 0.46153846153846156,
+        "ret": -0.011498701335354578,
+        "trades": 13
+      },
+      "10d": {
+        "win": 0.5384615384615384,
+        "ret": 0.09279486559696126,
+        "trades": 13
+      },
+      "14d": {
+        "win": 0.4166666666666667,
+        "ret": -0.0024715911100894328,
+        "trades": 12
+      },
+      "20d": {
+        "win": 0.5833333333333334,
+        "ret": 0.07291903520254794,
+        "trades": 12
+      }
+    },
+    "best": {
+      "hold": "5d",
+      "win": 0.5384615384615384,
+      "ret": 0.20977339034992393,
+      "trades": 13
+    }
+  },
+  "DIS": {
+    "symbol": "DIS",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.4166666666666667,
+        "ret": -0.1511502772562282,
+        "trades": 12
+      },
+      "5d": {
+        "win": 0.45454545454545453,
+        "ret": -0.13096144040595703,
+        "trades": 11
+      },
+      "7d": {
+        "win": 0.36363636363636365,
+        "ret": -0.13804703021148212,
+        "trades": 11
+      },
+      "10d": {
+        "win": 0.4,
+        "ret": -0.11560584340677604,
+        "trades": 10
+      },
+      "14d": {
+        "win": 0.6,
+        "ret": -0.024158336196884678,
+        "trades": 10
+      },
+      "20d": {
+        "win": 0.5,
+        "ret": 0.0466363603801927,
+        "trades": 10
+      }
+    },
+    "best": {
+      "hold": "20d",
+      "win": 0.5,
+      "ret": 0.0466363603801927,
+      "trades": 10
+    }
+  },
+  "META": {
+    "symbol": "META",
+    "news_count": 10,
+    "sentiment": "neutral",
+    "positive": 0,
+    "negative": 0,
+    "strategy_chosen": "momentum",
+    "headlines": [
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      },
+      {
+        "title": "",
+        "sentiment": "neutral"
+      }
+    ],
+    "backtest": {
+      "3d": {
+        "win": 0.6,
+        "ret": 0.057073038564511736,
+        "trades": 10
+      },
+      "5d": {
+        "win": 0.5555555555555556,
+        "ret": 0.032395056180701154,
+        "trades": 9
+      },
+      "7d": {
+        "win": 0.5,
+        "ret": 0.07981849381677963,
+        "trades": 8
+      },
+      "10d": {
+        "win": 0.5,
+        "ret": 0.03652780883614293,
+        "trades": 8
+      },
+      "14d": {
+        "win": 0.625,
+        "ret": 0.013129933798578186,
+        "trades": 8
+      },
+      "20d": {
+        "win": 0.42857142857142855,
+        "ret": -0.02416403978118331,
+        "trades": 7
+      }
+    },
+    "best": {
+      "hold": "7d",
+      "win": 0.5,
+      "ret": 0.07981849381677963,
+      "trades": 8
+    }
+  }
+}

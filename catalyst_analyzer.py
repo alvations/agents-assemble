@@ -460,7 +460,6 @@ class CatalystAnalyzer:
             patterns = self.analyze_historical_patterns()
         if backtests is None:
             backtests = self.backtest_event_strategy()
-        industry_info = INDUSTRY_CATALYSTS.get(self.industry, {})
 
         predictions = []
 
@@ -468,7 +467,7 @@ class CatalystAnalyzer:
         best_bt = None
         best_key = None
         for key, bt in backtests.items():
-            if bt.win_rate <= 0.5:
+            if bt.total_trades < 3 or bt.win_rate <= 0.5:
                 continue
             if best_bt is None or bt.total_return > best_bt.total_return:
                 best_bt = bt
