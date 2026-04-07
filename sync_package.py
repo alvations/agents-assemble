@@ -6,13 +6,11 @@ run this script to copy them into the package with corrected imports.
 Usage: python sync_package.py
 """
 
-import re
-import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).parent
 
-# Map flat files to package locations
+# Map ALL flat files to package locations (single source of truth)
 FILE_MAP = {
     "data_fetcher.py": "agents_assemble/data/fetcher.py",
     "backtester.py": "agents_assemble/engine/backtester.py",
@@ -22,6 +20,10 @@ FILE_MAP = {
     "famous_investors.py": "agents_assemble/strategies/famous.py",
     "theme_strategies.py": "agents_assemble/strategies/themes.py",
     "recession_strategies.py": "agents_assemble/strategies/recession.py",
+    "unconventional_strategies.py": "agents_assemble/strategies/unconventional.py",
+    "research_strategies.py": "agents_assemble/strategies/research.py",
+    "math_strategies.py": "agents_assemble/strategies/math.py",
+    "hedge_fund_strategies.py": "agents_assemble/strategies/hedge_fund.py",
 }
 
 # Import rewrites: flat import -> package import
@@ -34,8 +36,15 @@ IMPORT_REWRITES = {
     "from famous_investors import": "from agents_assemble.strategies.famous import",
     "from theme_strategies import": "from agents_assemble.strategies.themes import",
     "from recession_strategies import": "from agents_assemble.strategies.recession import",
-    "import personas": "import agents_assemble.strategies.generic as personas",
-    "import data_fetcher": "import agents_assemble.data.fetcher as data_fetcher",
+    "from unconventional_strategies import": "from agents_assemble.strategies.unconventional import",
+    "from research_strategies import": "from agents_assemble.strategies.research import",
+    "from math_strategies import": "from agents_assemble.strategies.math import",
+    "from hedge_fund_strategies import": "from agents_assemble.strategies.hedge_fund import",
+}
+
+# Path rewrites: fix STRATEGY_DIR to point to root strategy/ not package-relative
+PATH_REWRITES = {
+    'Path(__file__).parent / "strategy"': 'Path(__file__).resolve().parent.parent.parent / "strategy"',
 }
 
 
@@ -52,6 +61,10 @@ def sync():
 
         # Rewrite imports for package context
         for old, new in IMPORT_REWRITES.items():
+            content = content.replace(old, new)
+
+        # Rewrite paths for package context
+        for old, new in PATH_REWRITES.items():
             content = content.replace(old, new)
 
         dst.parent.mkdir(parents=True, exist_ok=True)

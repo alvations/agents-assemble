@@ -30,7 +30,7 @@ def _safe_float(val: Any, default: float = 0.0) -> float:
     return default
 
 
-STRATEGY_DIR = Path(__file__).parent / "strategy"
+STRATEGY_DIR = Path(__file__).resolve().parent.parent.parent / "strategy"
 WINNING_DIR = STRATEGY_DIR / "winning"
 LOSING_DIR = STRATEGY_DIR / "losing"
 

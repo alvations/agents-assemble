@@ -161,7 +161,7 @@ class MultiFactorSmartBeta(BasePersona):
             # vol > 0 guaranteed by filter on line 142
             quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
             if price > sma200:
-                quality_score *= 1.3
+                quality_score = min(1.0, quality_score * 1.3)
 
             # Composite: equal weight the 3 factors
             composite = (value_score + 0.5) * 0.33 + mom_score * 0.33 + quality_score * 0.33
@@ -175,6 +175,8 @@ class MultiFactorSmartBeta(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        if not weights:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -244,6 +246,8 @@ class LowVolAnomaly(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        if not weights:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -397,9 +401,9 @@ class RiskParityMomentum(BasePersona):
             fallback = {sym: 0.0 for sym in self.config.universe if sym in prices}
             # Only allocate to safe havens if they're in universe AND have price data
             if "TLT" in self.config.universe and "TLT" in prices:
-                fallback["TLT"] = 0.50
+                fallback["TLT"] = min(0.50, self.config.max_position_size)
             if "GLD" in self.config.universe and "GLD" in prices:
-                fallback["GLD"] = 0.30
+                fallback["GLD"] = min(0.30, self.config.max_position_size)
             return fallback
 
         # Respect max_positions: keep lowest-vol assets (best risk parity contributors)
@@ -522,6 +526,8 @@ class MeanVarianceOptimal(BasePersona):
                     break
                 remaining = new_remaining
 
+        if not weights:
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
         return weights
 
 
@@ -657,10 +663,11 @@ class FactorETFRotation(BasePersona):
                 weights[sym] = per_etf
         else:
             # All negative momentum → safe haven (only if in universe and prices)
+            cap = self.config.max_position_size
             if "TLT" in self.config.universe and "TLT" in prices:
-                weights["TLT"] = 0.50
+                weights["TLT"] = min(0.50, cap)
             if "GLD" in self.config.universe and "GLD" in prices:
-                weights["GLD"] = 0.30
+                weights["GLD"] = min(0.30, cap)
         return weights
 
 
@@ -706,12 +713,12 @@ class FaberSectorRotation(BasePersona):
                 scored.append((sym, momentum))
 
         scored.sort(key=lambda x: x[1], reverse=True)
-        top3 = scored[:3]
+        top = scored[:self.config.max_positions]
         weights = {}
-        if top3:
-            per_sector = min(0.90 / len(top3), self.config.max_position_size)
-            total_alloc = per_sector * len(top3)
-            for sym, _ in top3:
+        if top:
+            per_sector = min(0.90 / len(top), self.config.max_position_size)
+            total_alloc = per_sector * len(top)
+            for sym, _ in top:
                 weights[sym] = per_sector
             # Allocate capped remainder to safe havens (Faber: unallocated → bonds)
             remainder = 0.90 - total_alloc

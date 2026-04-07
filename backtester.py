@@ -259,9 +259,13 @@ def compute_metrics(
     gross_loss = abs(returns[returns < 0].sum())
     profit_factor = gross_profit / gross_loss if gross_loss > 0 else (float("inf") if gross_profit > 0 else 0.0)
 
-    # Skewness and kurtosis
+    # Skewness and kurtosis (NaN when variance is zero, e.g. constant returns)
     skew = returns.skew() if len(returns) >= 3 else 0.0
+    if not math.isfinite(skew):
+        skew = 0.0
     kurt = returns.kurtosis() if len(returns) >= 4 else 0.0
+    if not math.isfinite(kurt):
+        kurt = 0.0
 
     metrics = {
         "total_return": total_return,
