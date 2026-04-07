@@ -15,6 +15,8 @@ Themes:
     8. SmallCapValue     — Small cap deep value (IWM universe)
     9. CryptoEcosystem   — Crypto-adjacent public companies
     10. AgingPopulation  — Healthcare, senior living, pharma for aging demographics
+    11. GLP1Obesity      — GLP-1 / weight loss drug megatrend
+    12. RoboticsAutonomous — Humanoid robots + autonomous vehicles
 """
 
 from __future__ import annotations
@@ -667,7 +669,7 @@ class GLP1Obesity(BasePersona):
     30M Americans on GLP-1 by 2030.
     """
 
-    def __init__(self, universe=None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="GLP-1 / Obesity Revolution",
             description="Weight loss drug megatrend: $73-87B market, LLY/NVO leaders",
