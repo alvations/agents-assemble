@@ -1,0 +1,20 @@
+{
+  "RDY": {
+    "strategy": "momentum_5d",
+    "win_rate": 0.8888888888888888,
+    "total_return": 0.19888682554572967,
+    "trades": 9
+  },
+  "MSBHF": {
+    "strategy": "momentum_20d",
+    "win_rate": 0.5454545454545454,
+    "total_return": 0.9180918651527825,
+    "trades": 11
+  },
+  "ZLAB": {
+    "strategy": "buy_dip_7d",
+    "win_rate": 0.6923076923076923,
+    "total_return": 0.8336072877722078,
+    "trades": 13
+  }
+}
