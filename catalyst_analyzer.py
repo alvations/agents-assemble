@@ -306,13 +306,8 @@ class CatalystAnalyzer:
         vr = df["vol_ratio"]
 
         max_horizon = max(SELL_HORIZONS)
-        last_event_i = -999  # cooldown to prevent counting consecutive spike days as independent events
         for i in range(25, len(df) - max_horizon):
             if pd.isna(vr.iloc[i]) or pd.isna(ret.iloc[i]):
-                continue
-            if not math.isfinite(vr.iloc[i]):
-                continue
-            if i - last_event_i < 5:
                 continue
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
                 entry_price = close.iloc[i]
@@ -425,9 +420,10 @@ class CatalystAnalyzer:
                 elif strategy == "momentum" and r > 0.02 and v > 1.5:
                     position = (price, i)
 
-        # Drop incomplete final trade — its holding period differs from
-        # the strategy's, biasing backtest metrics (e.g. buy_spike_1d could
-        # include a 200-day forced close)
+        # Close any remaining open position at last available price
+        if position is not None:
+            last_price = close.dropna().iloc[-1] if not close.dropna().empty else position[0]
+            trades.append(last_price / position[0] - 1)
 
         if not trades:
             return BacktestResult(strategy, holding_days, 0, 0, 0, 0, 0, 0, 0)
