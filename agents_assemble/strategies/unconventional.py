@@ -14,7 +14,6 @@ Strategies:
 
 from __future__ import annotations
 
-from typing import List, Optional
 
 _SQRT_252 = 252 ** 0.5
 
@@ -36,7 +35,7 @@ class SellInMayGoAway(BasePersona):
     - Simple but historically robust across many markets
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Sell in May (Halloween Effect)",
             description="Seasonal: stocks Nov-Apr, bonds May-Oct",
@@ -89,7 +88,7 @@ class TurnOfMonth(BasePersona):
     - Move to SHY/cash for the rest of the month
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Turn of Month Effect",
             description="Buy last 3 + first 3 days of month, cash otherwise",
@@ -137,7 +136,7 @@ class VIXMeanReversion(BasePersona):
     - When vol is extremely low → reduce (complacency risk)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="VIX Mean Reversion (Buy Fear)",
             description="Buy aggressively when volatility spikes, reduce when complacent",
@@ -210,7 +209,7 @@ class DogsOfTheDow(BasePersona):
     from blue-chip universe at each rebalance, equal weight.
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Dogs of the Dow (Contrarian)",
             description="Buy worst-performing blue chips yearly, contrarian equal-weight",
@@ -272,7 +271,7 @@ class QualityFactor(BasePersona):
     - Moderate momentum (not hot, not cold)
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Quality Factor (Low Vol + Trend)",
             description="Buy low-vol stocks in uptrends — quality minus junk",
@@ -315,7 +314,7 @@ class QualityFactor(BasePersona):
 
             # Score: inverse of volatility * trend alignment
             trend_bonus = 1.0
-            if sma50 and price > sma50:
+            if sma50 is not None and price > sma50:
                 trend_bonus = 1.3
 
             quality_score = (1 / max(vol, 0.005)) * trend_bonus
@@ -345,7 +344,7 @@ class TailRiskHarvest(BasePersona):
     - Hold for ~20 trading days, then re-evaluate
     """
 
-    def __init__(self, universe: Optional[List[str]] = None):
+    def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Tail Risk Harvest (Buy Crashes)",
             description="Buy quality names after sharp single-day drops, capture mean-reversion",
@@ -379,7 +378,7 @@ class TailRiskHarvest(BasePersona):
                 continue
 
             # Exit recovered positions (RSI > 60 = recovered from crash)
-            if rsi and rsi > 65 and sma200 and price > sma200:
+            if rsi is not None and rsi > 65 and sma200 is not None and price > sma200:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0:
                     weights[sym] = 0.0
@@ -387,8 +386,8 @@ class TailRiskHarvest(BasePersona):
 
             # Crash buy signal: sharp drop + above SMA200 (still quality)
             if daily_ret < -0.03:  # > 3% drop
-                vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
-                if sma200 and price > sma200 * 0.90:
+                vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+                if sma200 is not None and price > sma200 * 0.90:
                     # Quality + crash = buy
                     score = abs(daily_ret) * 10
                     if vol_ratio > 2:

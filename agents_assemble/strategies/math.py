@@ -16,7 +16,6 @@ from __future__ import annotations
 
 
 
-import numpy as np
 import pandas as pd
 
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
@@ -93,7 +92,7 @@ class KellyOptimal(BasePersona):
             # Only invest if Kelly > 0 and momentum is positive
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             price = prices[sym]
-            if half_kelly > 0.01 and sma50 and price > sma50:
+            if half_kelly > 0.01 and sma50 is not None and price > sma50:
                 candidates.append((sym, half_kelly))
 
         # Normalize weights with redistribution from capped positions
@@ -183,7 +182,7 @@ class ZScoreReversion(BasePersona):
                 score = abs(z_score) - 2.0
                 sma200 = self._get_indicator(data, sym, "sma_200", date)
                 # Only if not in structural downtrend
-                if sma200 and price > sma200 * 0.85:
+                if sma200 is not None and price > sma200 * 0.85:
                     candidates.append((sym, score))
 
             # Exit: Z > 0 (reverted to mean)
@@ -275,12 +274,12 @@ class HurstExponent(BasePersona):
                 # Trending regime → use momentum
                 if price > sma50 and rsi < 75:
                     score = hurst * 2
-                    if sma200 and sma50 > sma200:
+                    if sma200 is not None and sma50 > sma200:
                         score += 1
                     mom_candidates.append((sym, score))
             elif hurst < 0.45:
                 # Mean-reverting regime → buy oversold
-                if rsi < 30 and bb_lower and price < bb_lower:
+                if rsi < 30 and bb_lower is not None and price < bb_lower:
                     score = (0.5 - hurst) * 5
                     mr_candidates.append((sym, score))
             # 0.45-0.55 → random walk, stay out
@@ -347,7 +346,7 @@ class VolatilityBreakout(BasePersona):
                 continue
 
             # Breakout: price above BB upper (Donchian proxy)
-            if price > bb_upper and rsi and rsi < 80:
+            if price > bb_upper and rsi is not None and rsi < 80:
                 # ATR-scaled scoring (lower ATR = stronger breakout signal)
                 if atr > 0:
                     atr_pct = atr / price
@@ -420,7 +419,7 @@ class EqualRiskContrib(BasePersona):
                 continue
 
             # Momentum filter: only include assets above SMA50
-            if sma50 and price > sma50:
+            if sma50 is not None and price > sma50:
                 eligible.append((sym, vol))
 
         if not eligible:

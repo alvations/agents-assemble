@@ -14,16 +14,19 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-import numpy as np
+import math
+
 import pandas as pd
 
 
 def _safe_float(val: Any, default: float = 0.0) -> float:
     """Coerce a value to float, returning default if non-numeric."""
     if isinstance(val, (int, float)) and not isinstance(val, bool):
-        return float(val)
+        f = float(val)
+        if math.isfinite(f):
+            return f
     return default
 
 
@@ -39,11 +42,11 @@ def _ensure_dirs():
 
 def generate_trade_recommendations(
     name: str,
-    metrics: Dict[str, float],
-    final_positions: Dict[str, Any],
-    equity_curve: Optional[pd.Series] = None,
-    persona_config: Optional[Dict] = None,
-) -> Dict[str, Any]:
+    metrics: dict[str, float],
+    final_positions: dict[str, Any],
+    equity_curve: pd.Series | None = None,
+    persona_config: dict | None = None,
+) -> dict[str, Any]:
     """Generate actionable trade recommendations from a strategy.
 
     Returns:
@@ -111,7 +114,7 @@ def generate_trade_recommendations(
     return recs
 
 
-def _assess_strategy(metrics: Dict[str, float]) -> str:
+def _assess_strategy(metrics: dict[str, float]) -> str:
     """Generate overall strategy assessment."""
     sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
     alpha = _safe_float(metrics.get("alpha"), 0.0)
@@ -130,7 +133,7 @@ def _assess_strategy(metrics: Dict[str, float]) -> str:
         return "NEUTRAL — Mixed signals. Paper trade before committing capital."
 
 
-def _timing_guidance(metrics: Dict[str, float]) -> str:
+def _timing_guidance(metrics: dict[str, float]) -> str:
     """Generate timing guidance based on strategy characteristics."""
     vol = _safe_float(metrics.get("annual_volatility"), 0.15)
     win_rate = _safe_float(metrics.get("win_rate"), 0.5)
@@ -145,11 +148,11 @@ def _timing_guidance(metrics: Dict[str, float]) -> str:
 
 def _generate_position_rec(
     symbol: str,
-    pos_info: Dict[str, Any],
+    pos_info: dict[str, Any],
     stop_loss_pct: float,
     take_profit_pct: float,
     position_size_pct: float,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Generate recommendation for a single position."""
     avg_cost = _safe_float(pos_info.get("avg_cost"), 0.0)
     qty = _safe_float(pos_info.get("qty"), 0.0)
@@ -202,8 +205,8 @@ def _generate_position_rec(
 
 def save_strategy_recommendation(
     name: str,
-    results: Dict[str, Any],
-    persona_config: Optional[Dict] = None,
+    results: dict[str, Any],
+    persona_config: dict | None = None,
 ) -> Path:
     """Save strategy recommendation to winning/ or losing/ directory."""
     _ensure_dirs()
@@ -273,7 +276,7 @@ def save_strategy_recommendation(
     return md_path
 
 
-def save_all_recommendations(all_results: List[Dict[str, Any]]) -> Dict[str, Path]:
+def save_all_recommendations(all_results: list[dict[str, Any]]) -> dict[str, Path]:
     """Save recommendations for all strategy results."""
     _ensure_dirs()
     paths = {}
