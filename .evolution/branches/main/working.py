@@ -1,307 +1,436 @@
-"""Trade recommendation generator for agents-assemble.
+"""Unconventional and less obvious trading strategies for agents-assemble.
 
-Generates actionable trade recommendations from backtest results:
-- Entry price and limit price
-- Stop-loss and take-profit targets
-- Position sizing
-- Timing guidance
-- Saves winning strategies to strategy/winning/
-- Saves losing strategies to strategy/losing/
+These go beyond the standard momentum/value playbook into more
+creative and contrarian approaches.
+
+Strategies:
+    1. SellInMayGoAway    — Seasonal "sell in May" calendar effect
+    2. TurnOfMonth        — End-of-month/start-of-month buying window
+    3. VIXMeanReversion   — Buy stocks when VIX spikes (fear = opportunity)
+    4. DogsOfTheDow       — Buy worst performers yearly (contrarian)
+    5. QualityFactor      — Low vol + high profitability + low leverage
+    6. TailRiskHarvest    — Sell premium (proxy: buy after sharp drops)
 """
 
 from __future__ import annotations
 
-import json
-from datetime import datetime
-from pathlib import Path
-from typing import Any
 
-import math
-
-import pandas as pd
+_SQRT_252 = 252 ** 0.5
 
 
-def _safe_float(val: Any, default: float = 0.0) -> float:
-    """Coerce a value to float, returning default if non-numeric."""
-    if isinstance(val, (int, float)) and not isinstance(val, bool):
-        f = float(val)
-        if math.isfinite(f):
-            return f
-    return default
+def _is_missing(v):
+    """Check if value is None or NaN."""
+    return v is None or v != v
 
 
-STRATEGY_DIR = Path(__file__).parent / "strategy"
-WINNING_DIR = STRATEGY_DIR / "winning"
-LOSING_DIR = STRATEGY_DIR / "losing"
+from personas import BasePersona, PersonaConfig
 
 
-def _ensure_dirs():
-    WINNING_DIR.mkdir(parents=True, exist_ok=True)
-    LOSING_DIR.mkdir(parents=True, exist_ok=True)
+# ---------------------------------------------------------------------------
+# 1. Sell in May and Go Away (Halloween Effect)
+# ---------------------------------------------------------------------------
+class SellInMayGoAway(BasePersona):
+    """Seasonal calendar strategy: "Sell in May and go away."
 
+    Historical evidence: Nov-Apr returns >> May-Oct returns.
+    Source: Bouman & Jacobsen (2002) "The Halloween Indicator"
 
-def generate_trade_recommendations(
-    name: str,
-    metrics: dict[str, float],
-    final_positions: dict[str, Any],
-    equity_curve: pd.Series | None = None,
-    persona_config: dict | None = None,
-) -> dict[str, Any]:
-    """Generate actionable trade recommendations from a strategy.
-
-    Returns:
-        Dict with strategy assessment, individual trade recs, and risk params.
+    Implementation:
+    - Nov 1 to Apr 30: 100% in SPY/QQQ
+    - May 1 to Oct 31: Move to bonds (TLT/IEF) or cash (SHY)
+    - Simple but historically robust across many markets
     """
-    total_ret = _safe_float(metrics.get("total_return"), 0.0)
-    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
-    is_winning = total_ret > 0 and sharpe > 0
 
-    # Risk parameters based on strategy performance
-    max_dd = abs(_safe_float(metrics.get("max_drawdown"), 0.20))
-    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Sell in May (Halloween Effect)",
+            description="Seasonal: stocks Nov-Apr, bonds May-Oct",
+            risk_tolerance=0.4,
+            max_position_size=0.50,
+            max_positions=4,
+            rebalance_frequency="monthly",
+            universe=universe or ["SPY", "QQQ", "TLT", "IEF", "SHY"],
+        )
+        super().__init__(config)
 
-    # Position sizing via Kelly criterion (simplified)
-    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
-    profit_factor = _safe_float(metrics.get("profit_factor"), 1.0)
-    if profit_factor > 1 and win_rate > 0:
-        avg_win_loss_ratio = profit_factor * (1 - win_rate) / win_rate if win_rate < 1 else 1
-        kelly_fraction = win_rate - (1 - win_rate) / avg_win_loss_ratio if avg_win_loss_ratio > 0 else 0
-        kelly_fraction = max(0, min(kelly_fraction, 0.25))  # Cap at 25%
-    else:
-        kelly_fraction = 0.05  # Minimum
+    def generate_signals(self, date, prices, portfolio, data):
+        month = date.month
 
-    # Stop-loss based on historical drawdown (floored at 2% to avoid noise-triggered exits)
-    stop_loss_pct = max(min(max_dd * 1.2, 0.25), 0.02)
-
-    # Take-profit based on CAGR and vol
-    cagr = _safe_float(metrics.get("cagr"), 0.10)
-    take_profit_pct = max(cagr * 0.5, 0.05)  # Half of annual return per position
-
-    recs = {
-        "strategy_name": name,
-        "is_winning": is_winning,
-        "generated_at": datetime.now().isoformat(),
-        "overall_assessment": _assess_strategy(metrics),
-        "risk_parameters": {
-            "max_portfolio_allocation": f"{kelly_fraction:.1%}",
-            "stop_loss": f"{stop_loss_pct:.1%}",
-            "take_profit_target": f"{take_profit_pct:.1%}",
-            "max_drawdown_tolerance": f"{max_dd:.1%}",
-            "rebalance_frequency": persona_config.get("rebalance_frequency", "weekly") if persona_config else "weekly",
-        },
-        "execution_guidance": {
-            "order_type": "limit" if vol < 0.20 else "market",
-            "limit_offset": "0.5% below current price for buys" if vol < 0.20 else "use market orders in volatile names",
-            "timing": _timing_guidance(metrics),
-            "scaling": "Enter in 3 tranches over 1-2 weeks to average in",
-        },
-        "position_recommendations": [],
-        "metrics_summary": {
-            "total_return": f"{total_ret:.2%}",
-            "sharpe_ratio": f"{sharpe:.2f}",
-            "max_drawdown": f"{_safe_float(metrics.get('max_drawdown'), 0.0):.2%}",
-            "win_rate": f"{win_rate:.2%}",
-            "alpha": f"{metrics.get('alpha', 0):.2%}" if isinstance(metrics.get('alpha'), (int, float)) else "N/A",
-        },
-    }
-
-    # Generate individual position recommendations
-    if final_positions:
-        for sym, pos_info in final_positions.items():
-            rec = _generate_position_rec(sym, pos_info, stop_loss_pct, take_profit_pct, kelly_fraction)
-            recs["position_recommendations"].append(rec)
-
-    return recs
-
-
-def _assess_strategy(metrics: dict[str, float]) -> str:
-    """Generate overall strategy assessment."""
-    sharpe = _safe_float(metrics.get("sharpe_ratio"), 0.0)
-    alpha = _safe_float(metrics.get("alpha"), 0.0)
-    max_dd = _safe_float(metrics.get("max_drawdown"), 0.0)
-    total_ret = _safe_float(metrics.get("total_return"), 0.0)
-
-    if sharpe > 1.0 and alpha > 0.05:
-        return "STRONG BUY — Excellent risk-adjusted returns with significant alpha. Deploy with confidence."
-    elif sharpe > 0.5 and total_ret > 0.20:
-        return "BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes."
-    elif sharpe > 0 and total_ret > 0:
-        return "HOLD — Positive but underwhelming returns. Use as diversifier, not primary strategy."
-    elif sharpe < 0 and total_ret < 0:
-        return "AVOID — Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign."
-    else:
-        return "NEUTRAL — Mixed signals. Paper trade before committing capital."
-
-
-def _timing_guidance(metrics: dict[str, float]) -> str:
-    """Generate timing guidance based on strategy characteristics."""
-    vol = _safe_float(metrics.get("annual_volatility"), 0.15)
-    win_rate = _safe_float(metrics.get("win_rate"), 0.5)
-
-    if vol > 0.25:
-        return "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency."
-    elif win_rate < 0.40:
-        return "Strategy has low win rate — enter only on strong setup days. Be patient."
-    else:
-        return "Enter on any weekly rebalance day. No specific timing edge detected."
-
-
-def _generate_position_rec(
-    symbol: str,
-    pos_info: dict[str, Any],
-    stop_loss_pct: float,
-    take_profit_pct: float,
-    position_size_pct: float,
-) -> dict[str, Any]:
-    """Generate recommendation for a single position."""
-    avg_cost = _safe_float(pos_info.get("avg_cost"), 0.0)
-    qty = _safe_float(pos_info.get("qty"), 0.0)
-
-    if qty > 0:
-        action = "BUY"
-    elif qty < 0:
-        action = "SELL"
-    else:
-        action = "FLAT"
-
-    if avg_cost > 0 and qty != 0:
-        if qty > 0:
-            stop_price = avg_cost * (1 - stop_loss_pct)
-            target_price = avg_cost * (1 + take_profit_pct)
-            stop_label = "below"
-            target_label = "above"
-            limit_price = avg_cost * 0.995
-            limit_desc = "0.5% below avg cost"
+        if month >= 11 or month <= 4:
+            # "Winter" = stocks
+            raw = {
+                "SPY": 0.50,
+                "QQQ": 0.40,
+                "TLT": 0.0,
+                "IEF": 0.0,
+                "SHY": 0.0,
+            }
         else:
-            stop_price = avg_cost * (1 + stop_loss_pct)
-            target_price = avg_cost * (1 - take_profit_pct)
-            stop_label = "above"
-            target_label = "below"
-            limit_price = avg_cost * 1.005
-            limit_desc = "0.5% above avg cost"
-        entry_info = {
-            "limit_price": f"${limit_price:.2f} ({limit_desc})",
-            "market_price": "Use market order if volatile",
-        }
-        stop_str = f"${stop_price:.2f} ({stop_loss_pct:.1%} {stop_label} entry)"
-        target_str = f"${target_price:.2f} ({take_profit_pct:.1%} {target_label} entry)"
-    else:
-        entry_info = {"limit_price": "N/A (no cost basis)", "market_price": "N/A"}
-        stop_str = "N/A (no cost basis)"
-        target_str = "N/A (no cost basis)"
-
-    return {
-        "symbol": symbol,
-        "action": action,
-        "current_position": qty,
-        "avg_cost_basis": f"${avg_cost:.2f}" if avg_cost > 0 else "N/A",
-        "recommended_entry": entry_info,
-        "stop_loss": stop_str,
-        "take_profit": target_str,
-        "position_size": f"{position_size_pct:.1%} of portfolio",
-        "trailing_stop": f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain",
-    }
+            # "Summer" = bonds/cash
+            raw = {
+                "SPY": 0.0,
+                "QQQ": 0.0,
+                "TLT": 0.30,
+                "IEF": 0.30,
+                "SHY": 0.30,
+            }
+        return {k: v for k, v in raw.items() if k in prices}
 
 
-def save_strategy_recommendation(
-    name: str,
-    results: dict[str, Any],
-    persona_config: dict | None = None,
-) -> Path:
-    """Save strategy recommendation to winning/ or losing/ directory."""
-    _ensure_dirs()
+# ---------------------------------------------------------------------------
+# 2. Turn of Month Effect
+# ---------------------------------------------------------------------------
+class TurnOfMonth(BasePersona):
+    """Turn-of-month buying window.
 
-    metrics = results.get("metrics", {})
-    final_positions = results.get("final_positions", {})
-    equity_curve = results.get("equity_curve")
+    Research shows the last 3 trading days + first 3 trading days of
+    each month account for most of the monthly return due to cash flows
+    (pension funds, paychecks, portfolio rebalancing).
 
-    recs = generate_trade_recommendations(
-        name, metrics, final_positions, equity_curve, persona_config
-    )
+    Source: Ariel (1987), Lakonishok & Smidt (1988)
 
-    # Determine winning or losing
-    is_winning = recs["is_winning"]
-    target_dir = WINNING_DIR if is_winning else LOSING_DIR
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    Implementation:
+    - Buy SPY/QQQ on day 26+ of month and hold through day 3 of next month
+    - Move to SHY/cash for the rest of the month
+    """
 
-    # Save as markdown for readability
-    md_lines = [
-        f"# {'WINNING' if is_winning else 'LOSING'} Strategy: {name}",
-        f"**Generated:** {recs['generated_at']}",
-        f"**Assessment:** {recs['overall_assessment']}",
-        "",
-        "## Performance Summary",
-    ]
-    for k, v in recs["metrics_summary"].items():
-        md_lines.append(f"- **{k}:** {v}")
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Turn of Month Effect",
+            description="Buy last 3 + first 3 days of month, cash otherwise",
+            risk_tolerance=0.3,
+            max_position_size=0.50,
+            max_positions=3,
+            rebalance_frequency="daily",
+            universe=universe or ["SPY", "QQQ", "SHY"],
+        )
+        super().__init__(config)
 
-    md_lines.extend(["", "## Risk Parameters"])
-    for k, v in recs["risk_parameters"].items():
-        md_lines.append(f"- **{k}:** {v}")
+    def generate_signals(self, date, prices, portfolio, data):
+        day = date.day
 
-    md_lines.extend(["", "## Execution Guidance"])
-    for k, v in recs["execution_guidance"].items():
-        md_lines.append(f"- **{k}:** {v}")
-
-    if recs["position_recommendations"]:
-        md_lines.extend(["", "## Position Recommendations", ""])
-        for rec in recs["position_recommendations"]:
-            md_lines.append(f"### {rec['symbol']} — {rec['action']}")
-            md_lines.append(f"- Entry limit: {rec['recommended_entry']['limit_price']}")
-            md_lines.append(f"- Stop-loss: {rec['stop_loss']}")
-            md_lines.append(f"- Take-profit: {rec['take_profit']}")
-            md_lines.append(f"- Position size: {rec['position_size']}")
-            md_lines.append(f"- Trailing stop: {rec['trailing_stop']}")
-            md_lines.append("")
-
-    if not is_winning:
-        md_lines.extend([
-            "## Lessons Learned",
-            "",
-            "This strategy lost money. Key issues:",
-            f"- Sharpe ratio: {_safe_float(metrics.get('sharpe_ratio'), 0.0):.2f} (target > 0.5)",
-            f"- Max drawdown: {_safe_float(metrics.get('max_drawdown'), 0.0):.2%} (target > -20%)",
-            f"- Alpha: {_safe_float(metrics.get('alpha'), 0.0):.2%} (target > 0%)" if isinstance(metrics.get('alpha'), (int, float)) else "- Alpha: N/A (target > 0%)",
-            "",
-            "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
-        ])
-
-    md_path = target_dir / f"{name}_{timestamp}.md"
-    md_path.write_text("\n".join(md_lines))
-
-    # Also save raw JSON
-    json_path = target_dir / f"{name}_{timestamp}.json"
-    json_path.write_text(json.dumps(recs, indent=2, default=str))
-
-    return md_path
+        if day >= 26 or day <= 3:
+            # Turn of month window — be in stocks
+            raw = {
+                "SPY": 0.50,
+                "QQQ": 0.40,
+                "SHY": 0.0,
+            }
+        else:
+            # Mid-month — park in short-term treasuries
+            raw = {
+                "SPY": 0.0,
+                "QQQ": 0.0,
+                "SHY": 0.90,
+            }
+        return {k: v for k, v in raw.items() if k in prices}
 
 
-def save_all_recommendations(all_results: list[dict[str, Any]]) -> dict[str, Path]:
-    """Save recommendations for all strategy results."""
-    _ensure_dirs()
-    paths = {}
-    for r in all_results:
-        if r.get("status") != "success":
-            continue
-        name = r["name"]
-        path = save_strategy_recommendation(name, r)
-        paths[name] = path
-    return paths
+# ---------------------------------------------------------------------------
+# 3. VIX Mean Reversion (Buy the Fear)
+# ---------------------------------------------------------------------------
+class VIXMeanReversion(BasePersona):
+    """Buy stocks when VIX spikes (fear = opportunity).
+
+    Research: VIX mean-reverts. Spikes above 30 are historically
+    followed by strong equity returns (Whaley 2000).
+
+    Implementation (using SPY volatility as VIX proxy since we don't
+    have VIX directly):
+    - When realized vol spikes > 2x 60-day average → aggressively buy
+    - When vol is low → normal allocation
+    - When vol is extremely low → reduce (complacency risk)
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="VIX Mean Reversion (Buy Fear)",
+            description="Buy aggressively when volatility spikes, reduce when complacent",
+            risk_tolerance=0.6,
+            max_position_size=0.35,
+            max_positions=5,
+            rebalance_frequency="daily",
+            universe=universe or [
+                "SPY", "QQQ", "IWM",  # Broad market
+                "TLT", "GLD",  # Safe havens
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+
+        if _is_missing(spy_vol):
+            fallback = {"SPY": 0.30, "QQQ": 0.20, "TLT": 0.20, "GLD": 0.10}
+            return {k: v for k, v in fallback.items() if k in prices}
+
+        # Estimate VIX from realized vol (rough: annualized * 100)
+        implied_vix = spy_vol * _SQRT_252 * 100
+
+        if implied_vix > 30:
+            # High fear — BUY aggressively (VIX will mean-revert)
+            weights["SPY"] = 0.40
+            weights["QQQ"] = 0.30
+            weights["IWM"] = 0.20
+            weights["TLT"] = 0.0
+            weights["GLD"] = 0.0
+        elif implied_vix > 20:
+            # Moderate fear — balanced
+            weights["SPY"] = 0.30
+            weights["QQQ"] = 0.20
+            weights["TLT"] = 0.15
+            weights["GLD"] = 0.10
+            weights["IWM"] = 0.10
+        elif implied_vix < 12:
+            # Very low vol — complacency, reduce and hedge
+            weights["SPY"] = 0.15
+            weights["QQQ"] = 0.10
+            weights["TLT"] = 0.25
+            weights["GLD"] = 0.20
+            weights["IWM"] = 0.0
+        else:
+            # Normal vol
+            weights["SPY"] = 0.25
+            weights["QQQ"] = 0.20
+            weights["TLT"] = 0.15
+            weights["GLD"] = 0.10
+            weights["IWM"] = 0.10
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 4. Dogs of the Dow (Contrarian Yearly)
+# ---------------------------------------------------------------------------
+class DogsOfTheDow(BasePersona):
+    """Dogs of the Dow contrarian strategy.
+
+    Source: Michael O'Higgins, "Beating the Dow" (1991)
+
+    Buy the 10 highest-yielding Dow stocks at start of year.
+    Proxy: buy the worst-performing stocks (highest discount to SMA200)
+    from blue-chip universe at each rebalance, equal weight.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Dogs of the Dow (Contrarian)",
+            description="Buy worst-performing blue chips yearly, contrarian equal-weight",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            # Dow 30 components (approximate)
+            universe=universe or [
+                "AAPL", "MSFT", "AMZN", "UNH", "GS", "HD", "MCD",
+                "V", "CRM", "DIS", "NKE", "BA", "CAT", "JPM",
+                "IBM", "JNJ", "KO", "PG", "WMT", "MRK",
+                "MMM", "CVX", "DOW", "INTC", "VZ", "WBA",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        discount_scores = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if _is_missing(sma200) or sma200 <= 0:
+                continue
+
+            discount = (sma200 - price) / sma200
+            discount_scores.append((sym, discount))
+
+        # Sort by discount (highest = furthest below SMA200 = "dogs")
+        discount_scores.sort(key=lambda x: x[1], reverse=True)
+
+        # Take the 10 "worst" performers (highest discount = most beaten down)
+        dogs = discount_scores[:self.config.max_positions]
+
+        if dogs:
+            per_stock = min(0.90 / len(dogs), self.config.max_position_size)
+            for sym, _ in dogs:
+                weights[sym] = per_stock
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 5. Quality Factor (Buffett + Quant Hybrid)
+# ---------------------------------------------------------------------------
+class QualityFactor(BasePersona):
+    """Quality factor: low volatility + strong trend = quality.
+
+    Source: AQR "Quality Minus Junk" (Asness, Frazzini, Pedersen 2019)
+
+    Buy stocks that are:
+    - Low volatility (stable earnings proxy)
+    - Above SMA200 (quality doesn't break down)
+    - Not overbought (RSI < 70)
+    - Moderate momentum (not hot, not cold)
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Quality Factor (Low Vol + Trend)",
+            description="Buy low-vol stocks in uptrends — quality minus junk",
+            risk_tolerance=0.3,
+            max_position_size=0.10,
+            max_positions=15,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "JNJ", "PG", "KO", "PEP",
+                "V", "MA", "UNH", "HD", "MCD", "COST", "ABT",
+                "LLY", "TMO", "ACN", "AVGO", "TXN", "LIN",
+                "BRK-B", "WMT", "NEE", "DUK",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol = self._get_indicator(data, sym, "vol_20", date)
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+
+            if any(_is_missing(v) for v in [sma200, rsi, vol]):
+                continue
+
+            # Quality filters
+            if price < sma200:
+                continue  # Must be above long-term trend
+            if rsi > 70:
+                continue  # Not overbought
+            if vol > 0.025:
+                continue  # Not too volatile (daily vol < 2.5%)
+
+            # Score: inverse of volatility * trend alignment
+            trend_bonus = 1.0
+            if sma50 is not None and price > sma50:
+                trend_bonus = 1.3
+
+            quality_score = (1 / max(vol, 0.005)) * trend_bonus
+            scored.append((sym, quality_score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 6. Tail Risk Harvest (Buy After Sharp Drops)
+# ---------------------------------------------------------------------------
+class TailRiskHarvest(BasePersona):
+    """Buy after sharp single-day drops in quality names.
+
+    Research: Large single-day drops in blue chips tend to
+    mean-revert over 5-20 trading days (overreaction effect).
+
+    Implementation:
+    - Track daily returns
+    - Buy when a quality stock drops > 3% in a day with high volume
+    - Hold for ~20 trading days, then re-evaluate
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Tail Risk Harvest (Buy Crashes)",
+            description="Buy quality names after sharp single-day drops, capture mean-reversion",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="daily",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META",
+                "JPM", "V", "MA", "UNH", "JNJ", "PG",
+                "HD", "MCD", "KO", "WMT",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        crash_buys = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            daily_ret = self._get_indicator(data, sym, "daily_return", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            volume = self._get_indicator(data, sym, "Volume", date)
+            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+
+            if _is_missing(daily_ret):
+                continue
+
+            # Exit recovered positions (RSI > 60 = recovered from crash)
+            if rsi is not None and rsi > 65 and sma200 is not None and price > sma200:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                    continue  # Don't consider for crash buy
+
+            # Crash buy signal: sharp drop + above SMA200 (still quality)
+            if daily_ret < -0.03:  # > 3% drop
+                vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+                if sma200 is not None and price > sma200 * 0.90:
+                    # Quality + crash = buy
+                    score = abs(daily_ret) * 10
+                    if vol_ratio > 2:
+                        score *= 1.5  # Panic selling = better opportunity
+                    crash_buys.append((sym, score))
+
+        crash_buys.sort(key=lambda x: x[1], reverse=True)
+        top = crash_buys[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Registry
+# ---------------------------------------------------------------------------
+UNCONVENTIONAL_STRATEGIES = {
+    "sell_in_may": SellInMayGoAway,
+    "turn_of_month": TurnOfMonth,
+    "vix_mean_reversion": VIXMeanReversion,
+    "dogs_of_dow": DogsOfTheDow,
+    "quality_factor": QualityFactor,
+    "tail_risk_harvest": TailRiskHarvest,
+}
+
+
+def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
+    cls = UNCONVENTIONAL_STRATEGIES.get(name)
+    if cls is None:
+        raise ValueError(f"Unknown: {name}. Available: {list(UNCONVENTIONAL_STRATEGIES.keys())}")
+    return cls(**kwargs)
 
 
 if __name__ == "__main__":
-    # Test with sample data
-    sample_results = {
-        "metrics": {
-            "total_return": 0.99, "sharpe_ratio": 1.20, "max_drawdown": -0.166,
-            "win_rate": 0.37, "profit_factor": 1.31, "alpha": 0.171,
-            "cagr": 0.234, "annual_volatility": 0.167,
-        },
-        "final_positions": {
-            "NVDA": {"qty": 50, "avg_cost": 120.5},
-            "META": {"qty": 30, "avg_cost": 350.2},
-        },
-    }
-    path = save_strategy_recommendation("momentum_test", sample_results)
-    print(f"Saved to: {path}")
-    print(path.read_text())
+    print("=== Unconventional Strategies ===\n")
+    for key, cls in UNCONVENTIONAL_STRATEGIES.items():
+        inst = cls()
+        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")

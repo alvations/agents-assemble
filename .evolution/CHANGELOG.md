@@ -356,3 +356,11 @@ All edits pass syntax validation. Summary of changes:
 - **Removed unused `numpy` import**: Replaced with `math` (needed for the `isfinite` check); `numpy` was never referenced in this file
 - **Modernized type h
 
+## [2026-04-07T09:51:55.138752+00:00] Branch: main | Run: 20260407T094829_pid44702 | Iter 15 | $0.4744
+### unconventional_strategies.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `spy_rsi` variable** in `VIXMeanReversion` (line 158) — fetched via `_get_indicator` but never referenced in any logic branch
+- **Added `_is_missing(v)` helper** — catches both `None` and `NaN` using the `v != v` idiom, since `_get_indicator`'s nearest-date code path (line 76 of `personas.py`) can return NaN without checking
+- **Fixed NaN bug in `QualityFactor`** — `any(v is None for v in ...)` → `any(_is_missing(v) for v in
+

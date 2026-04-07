@@ -70,8 +70,8 @@ def generate_trade_recommendations(
     else:
         kelly_fraction = 0.05  # Minimum
 
-    # Stop-loss based on historical drawdown
-    stop_loss_pct = min(max_dd * 1.2, 0.25)  # 120% of historical max DD, capped at 25%
+    # Stop-loss based on historical drawdown (floored at 2% to avoid noise-triggered exits)
+    stop_loss_pct = max(min(max_dd * 1.2, 0.25), 0.02)
 
     # Take-profit based on CAGR and vol
     cagr = _safe_float(metrics.get("cagr"), 0.10)

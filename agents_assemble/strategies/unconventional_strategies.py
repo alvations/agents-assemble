@@ -23,7 +23,7 @@ def _is_missing(v):
     return v is None or v != v
 
 
-from personas import BasePersona, PersonaConfig
+from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,7 @@
+All edits pass syntax validation. Summary of changes:
+
+- **Removed dead `spy_rsi` variable** in `VIXMeanReversion` (line 158) — fetched via `_get_indicator` but never referenced in any logic branch
+- **Added `_is_missing(v)` helper** — catches both `None` and `NaN` using the `v != v` idiom, since `_get_indicator`'s nearest-date code path (line 76 of `personas.py`) can return NaN without checking
+- **Fixed NaN bug in `QualityFactor`** — `any(v is None for v in ...)` → `any(_is_missing(v) for v in ...)`. NaN vol would pass all filters (`NaN > 0.025` is False), then produce `1/max(NaN, 0.005)` = NaN score, poisoning the sort order
+- **Fixed NaN bug in `DogsOfTheDow`** — `sma200 is None` → `_is_missing(sma200)`. NaN sma200 passes `<= 0` guard (False for NaN), then `(NaN - price) / NaN` = NaN discount, poisoning the sort
+- **Fixed NaN bug in `TailRiskHarvest`** — `daily_ret is None` → `_is_missing(daily_ret)`. Explicit early exit for NaN instead of relying on `NaN < -0.03` being False
