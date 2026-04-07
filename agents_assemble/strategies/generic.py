@@ -143,8 +143,9 @@ class BuffettValue(BasePersona):
                 continue
 
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
 
             if sma200 is None or rsi is None:
                 continue
@@ -306,10 +307,15 @@ class MemeStockTrader(BasePersona):
                 continue
 
             price = prices[sym]
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["rsi_14", "sma_20", "Volume", "volume_sma_20"],
+                date,
+            )
+            rsi = inds["rsi_14"]
+            sma20 = inds["sma_20"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
 
             if any(v is None for v in [rsi, sma20, volume, vol_avg]):
                 continue
@@ -413,8 +419,9 @@ class DividendInvestor(BasePersona):
                 continue
 
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
 
             if sma200 is None:
                 continue
@@ -589,15 +596,21 @@ class FixedIncomeStrat(BasePersona):
         tradeable = set(prices.keys())
 
         # Assess TLT trend (long-term bonds)
-        tlt_sma50 = self._get_indicator(data, "TLT", "sma_50", date)
-        tlt_sma200 = self._get_indicator(data, "TLT", "sma_200", date)
+        tlt_inds = self._get_indicators(
+            data, "TLT", ["sma_50", "sma_200", "rsi_14"], date,
+        )
+        tlt_sma50 = tlt_inds["sma_50"]
+        tlt_sma200 = tlt_inds["sma_200"]
         tlt_price = prices.get("TLT")
-        tlt_rsi = self._get_indicator(data, "TLT", "rsi_14", date)
+        tlt_rsi = tlt_inds["rsi_14"]
 
         # Assess HYG (high yield = risk appetite)
-        hyg_macd = self._get_indicator(data, "HYG", "macd", date)
-        hyg_sig = self._get_indicator(data, "HYG", "macd_signal", date)
-        hyg_rsi = self._get_indicator(data, "HYG", "rsi_14", date)
+        hyg_inds = self._get_indicators(
+            data, "HYG", ["macd", "macd_signal", "rsi_14"], date,
+        )
+        hyg_macd = hyg_inds["macd"]
+        hyg_sig = hyg_inds["macd_signal"]
+        hyg_rsi = hyg_inds["rsi_14"]
 
         # Duration allocation
         if tlt_sma50 is not None and tlt_sma200 is not None and tlt_price is not None:
@@ -635,8 +648,12 @@ class FixedIncomeStrat(BasePersona):
         # Only return weights for symbols in our universe that are actually tradeable
         universe = set(self.config.universe)
         cap = self.config.max_position_size
-        return {sym: min(w, cap) for sym, w in weights.items()
-                if sym in tradeable and sym in universe}
+        result = {sym: min(w, cap) for sym, w in weights.items()
+                  if sym in tradeable and sym in universe}
+        # Emit 0.0 for universe symbols not allocated so stale positions get closed
+        if not result:
+            return {sym: 0.0 for sym in universe if sym in tradeable}
+        return result
 
 
 # ---------------------------------------------------------------------------
@@ -998,7 +1015,7 @@ class EnsembleStrategist(BasePersona):
                 pass
 
         if not all_signals:
-            return {}
+            return {sym: 0.0 for sym in self.config.universe if sym in prices}
 
         # Aggregate: weighted average of signals
         combined = {}
