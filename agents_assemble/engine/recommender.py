@@ -126,7 +126,7 @@ def _assess_strategy(metrics: dict[str, float]) -> str:
         return "BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes."
     elif sharpe > 0 and total_ret > 0:
         return "HOLD — Positive but underwhelming returns. Use as diversifier, not primary strategy."
-    elif sharpe < 0 and total_ret < 0:
+    elif sharpe <= 0 and total_ret < 0:
         return "AVOID — Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign."
     else:
         return "NEUTRAL — Mixed signals. Paper trade before committing capital."
@@ -189,6 +189,13 @@ def _generate_position_rec(
         stop_str = "N/A (no cost basis)"
         target_str = "N/A (no cost basis)"
 
+    if qty > 0:
+        trailing_desc = f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain"
+    elif qty < 0:
+        trailing_desc = f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} decline"
+    else:
+        trailing_desc = "N/A — no position"
+
     return {
         "symbol": symbol,
         "action": action,
@@ -197,8 +204,8 @@ def _generate_position_rec(
         "recommended_entry": entry_info,
         "stop_loss": stop_str,
         "take_profit": target_str,
-        "position_size": f"{position_size_pct:.1%} of portfolio",
-        "trailing_stop": f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain",
+        "position_size": f"{position_size_pct:.1%} of portfolio" if qty != 0 else "0.0% — position closed",
+        "trailing_stop": trailing_desc,
     }
 
 
@@ -265,7 +272,10 @@ def save_strategy_recommendation(
             "**DO NOT REPEAT** these patterns without fundamental strategy changes.",
         ])
 
-    safe_name = name.replace("/", "_").replace("\\", "_").replace("..", "_")
+    safe_name = name
+    for ch in ('/', '\\', ':', '*', '?', '"', '<', '>', '|'):
+        safe_name = safe_name.replace(ch, '_')
+    safe_name = safe_name.replace("..", "_").lstrip(".")
     md_path = target_dir / f"{safe_name}_{timestamp}.md"
     md_path.write_text("\n".join(md_lines))
 

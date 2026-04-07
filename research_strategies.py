@@ -544,7 +544,7 @@ class GlobalRotation(BasePersona):
                 score += 0.5
 
             # Vol-adjusted (prefer lower vol for same momentum)
-            if vol is not None and vol > 0:
+            if not _is_missing(vol) and vol > 0:
                 score *= min(1.5, 0.02 / vol)
 
             if score > 1.5:
@@ -601,7 +601,7 @@ class FactorETFRotation(BasePersona):
             price = prices[sym]
             sma50 = self._get_indicator(data, sym, "sma_50", date)
             sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma50 is None or sma200 is None:
+            if _is_missing(sma50) or _is_missing(sma200):
                 continue
             # Momentum score
             mom = (price - sma200) / sma200 if sma200 > 0 else 0
@@ -619,10 +619,10 @@ class FactorETFRotation(BasePersona):
             for sym, _ in top:
                 weights[sym] = per_etf
         else:
-            # All negative momentum → safe haven (only if in prices)
-            if "TLT" in prices:
+            # All negative momentum → safe haven (only if in universe and prices)
+            if "TLT" in self.config.universe and "TLT" in prices:
                 weights["TLT"] = 0.50
-            if "GLD" in prices:
+            if "GLD" in self.config.universe and "GLD" in prices:
                 weights["GLD"] = 0.30
         return weights
 
@@ -662,7 +662,7 @@ class FaberSectorRotation(BasePersona):
                 continue
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
-            if sma200 is None or sma200 <= 0:
+            if _is_missing(sma200) or sma200 <= 0:
                 continue
             momentum = (price - sma200) / sma200
             if momentum > 0:

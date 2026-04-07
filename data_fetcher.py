@@ -788,6 +788,23 @@ UNIVERSE = {
     "cannabis": ["TLRY", "CGC", "ACB", "MO", "STZ"],
     "space": ["RKLB", "ASTS", "LUNR", "BA", "LMT", "NOC"],
     "ev_full": ["TSLA", "RIVN", "LCID", "NIO", "XPEV", "LI", "GM", "F", "TM", "HMC"],
+    # 2026 Emerging Themes
+    "robotics_autonomous": [
+        "ISRG", "INTC", "NVDA", "TER", "CGNX", "BRKS", "IRBT",
+        "BOTZ", "ROBO",  # Robotics ETFs
+        "GOOGL", "TSLA", "GM", "F",  # Autonomous vehicles
+        "ABB", "FANUY",  # Industrial automation
+    ],
+    "glp1_obesity": [
+        "LLY", "NVO", "AMGN", "VKTX",  # GLP-1 leaders
+        "PFE", "ABBV", "JNJ", "MRK",  # Big pharma with pipelines
+        "HIMS", "PLNT", "PTON",  # Beneficiaries (telehealth, fitness)
+    ],
+    "space_economy": [
+        "RKLB", "ASTS", "LUNR", "BA", "LMT", "NOC",
+        "PLTR", "IRDM", "VSAT",
+        "ARKX",  # Space ETF
+    ],
     # Dividend Aristocrats (25+ years consecutive increases, S&P 500)
     "dividend_aristocrats": [
         "JNJ", "PG", "KO", "PEP", "ABBV", "MRK", "MMM", "ABT", "CL", "EMR",

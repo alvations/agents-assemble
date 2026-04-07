@@ -908,7 +908,7 @@ def get_persona(name: str, **kwargs) -> BasePersona:
     return cls(**kwargs)
 
 
-def list_personas() -> List[Dict[str, Any]]:
+def list_personas() -> list[dict[str, object]]:
     """List all available personas."""
     result = []
     for key, cls in ALL_PERSONAS.items():
