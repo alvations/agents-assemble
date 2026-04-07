@@ -216,7 +216,7 @@ def compute_metrics(
 
     # Basic return stats
     total_return = (1 + returns).prod() - 1
-    n_years = len(returns) / periods_per_year
+    n_years = (returns.index[-1] - returns.index[0]).days / 365.25
     growth = 1 + total_return
     if growth > 0:
         cagr = growth ** (1 / max(n_years, 0.01)) - 1
@@ -290,7 +290,7 @@ def compute_metrics(
     if benchmark_returns is not None and not benchmark_returns.empty:
         aligned = pd.DataFrame({"port": returns, "bench": benchmark_returns}).dropna()
         if len(aligned) > 10:
-            aligned_n_years = len(aligned) / periods_per_year
+            aligned_n_years = (aligned.index[-1] - aligned.index[0]).days / 365.25
             bench_total = (1 + aligned["bench"]).prod() - 1
             bench_growth = 1 + bench_total
             bench_cagr = bench_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if bench_growth > 0 else -1.0
@@ -581,6 +581,8 @@ class Backtester:
                    prices: dict[str, float], date: pd.Timestamp) -> None:
         """Rebalance portfolio to target weights."""
         total_value = portfolio.total_value(prices)
+        if total_value <= 0:
+            return
 
         # Phase 1: Collect and execute all sells (reductions, closes, short initiations)
         sells: list[tuple[str, int]] = []
@@ -639,7 +641,7 @@ class Backtester:
                     buys.append((sym, int(round(abs(pos.quantity))), float("inf")))
 
         # Execute buys with highest-weight positions first
-        buys.sort(key=lambda x: x[2], reverse=True)
+        buys.sort(key=lambda x: (-x[2], x[0]))
         for sym, qty, _ in buys:
             price = prices[sym]
             cost_per_share = price * (1 + portfolio.slippage_pct)
