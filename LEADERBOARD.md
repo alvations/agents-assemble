@@ -3,7 +3,7 @@
 **Last Updated:** 2026-04-07 10:35 UTC
 **Horizons Tested:** 1Y (2024), 3Y (2022-2024), 5Y (2020-2024), 10Y (2015-2024)
 **Initial Capital:** $100,000 | **Slippage:** 10 bps | **Commission:** $0
-**Benchmark:** SPY | **Total Strategies:** 63 | **Total Tickers:** 510
+**Benchmark:** SPY | **Total Strategies:** 66 | **Total Tickers:** 537
 
 ## NEW #1: Concentrate Winners (1.11 avg Sharpe!)
 

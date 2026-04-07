@@ -32,9 +32,9 @@ python test_strategies.py
 | 4 | AI Revolution | 0.94 | 183.6% | 783.3% |
 | 5 | Masayoshi Son | 0.87 | 90.8% | 1068.3% |
 
-See [LEADERBOARD.md](LEADERBOARD.md) for full rankings of all 63 strategies.
+See [LEADERBOARD.md](LEADERBOARD.md) for full rankings of all 66 strategies.
 
-## 63 Strategies Across 8 Categories
+## 66 Strategies Across 9 Categories
 
 | Category | Count | Best Performer |
 |----------|-------|---------------|
@@ -43,9 +43,10 @@ See [LEADERBOARD.md](LEADERBOARD.md) for full rankings of all 63 strategies.
 | Themes | 12 | AI Revolution (0.94) |
 | Recession | 4 | Defensive Rotation (0.59) |
 | Unconventional | 8 | Concentrate Winners (1.11) |
-| Research | 10 | Momentum Crash-Hedged (1.05) |
+| Research | 9 | Momentum Crash-Hedged (1.05) |
 | Math | 5 | Kelly Optimal (0.67) |
 | Hedge Fund | 2 | Healthcare+Asia (0.81) |
+| News/Event | 3 | Earnings Surprise Drift (lowest DD: -3.6% 5Y) |
 
 ## Universe: 510 Tickers, 71 Categories
 
