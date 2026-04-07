@@ -1,0 +1,17 @@
+{
+  "NGG": {
+    "strategy": "buy_spike_30d",
+    "win_rate": 0.6666666666666666,
+    "total_return": 0.228942928913207
+  },
+  "EMR": {
+    "strategy": "momentum_5d",
+    "win_rate": 0.8333333333333334,
+    "total_return": 0.3327026351113993
+  },
+  "BILI": {
+    "strategy": "buy_dip_30d",
+    "win_rate": 0.7,
+    "total_return": 2.8175491123831953
+  }
+}
