@@ -91,7 +91,8 @@ class PeterLynch(BasePersona):
                 continue
 
             if price < sma200 * 0.85:
-                continue  # Avoid broken stocks
+                weights[sym] = 0.0  # Exit broken stocks
+                continue
 
             # Score: return-to-volatility ratio (proxy for PEG concept)
             momentum = (price - sma200) / sma200 if sma200 > 0 else 0
@@ -444,14 +445,20 @@ class JimSimons(BasePersona):
                 continue
 
             price = prices[sym]
-            sma20 = self._get_indicator(data, sym, "sma_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            macd = self._get_indicator(data, sym, "macd", date)
-            macd_sig = self._get_indicator(data, sym, "macd_signal", date)
-            bb_upper = self._get_indicator(data, sym, "bb_upper", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_20", "sma_50", "rsi_14", "macd", "macd_signal",
+                 "bb_upper", "bb_lower", "vol_20"],
+                date,
+            )
+            sma20 = inds["sma_20"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_upper = inds["bb_upper"]
+            bb_lower = inds["bb_lower"]
+            vol = inds["vol_20"]
 
             if any(v is None for v in [sma20, sma50, rsi, macd, macd_sig, vol]):
                 continue
@@ -1069,14 +1076,20 @@ class SupportResistanceCommodity(BasePersona):
                 continue
 
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            bb_upper = self._get_indicator(data, sym, "bb_upper", date)
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            atr = self._get_indicator(data, sym, "atr_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "sma_50", "bb_upper", "bb_lower", "rsi_14",
+                 "atr_14", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            bb_upper = inds["bb_upper"]
+            bb_lower = inds["bb_lower"]
+            rsi = inds["rsi_14"]
+            atr = inds["atr_14"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
 
             if any(v is None for v in [sma200, bb_upper, bb_lower, rsi]):
                 continue
@@ -1190,7 +1203,8 @@ class BillAckman(BasePersona):
                 continue
             # Quality compounder: above SMA200, not overbought, low vol
             if price < sma200 * 0.90:
-                continue  # Broken thesis
+                weights[sym] = 0.0  # Exit broken thesis
+                continue
             score = 0.0
             if sma50 is not None and price > sma50 > sma200:
                 score += 2.0
@@ -1472,9 +1486,9 @@ class BerkshireHoldings(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.05:
                 score = max(discount + 0.05, 0.01) + 0.4
-                if vol and vol < 0.015:
+                if vol is not None and vol < 0.015:
                     score += 0.3
-                if rsi and rsi < 45:
+                if rsi is not None and rsi < 45:
                     score += 0.2
                 candidates.append((sym, score))
         candidates.sort(key=lambda x: x[1], reverse=True)
@@ -1533,7 +1547,7 @@ class JapaneseSogoShosha(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             if discount > -0.10:
                 score = max(discount + 0.10, 0.01) + 0.3
-                if rsi and rsi < 45:
+                if rsi is not None and rsi < 45:
                     score += 0.2
                 candidates.append((sym, score))
         candidates.sort(key=lambda x: x[1], reverse=True)
@@ -1605,7 +1619,7 @@ class BenjaminGraham(BasePersona):
                     score += 1.0  # Extreme oversold bonus
                 candidates.append((sym, score))
             # Take profits on recovery
-            elif rsi and rsi > 65 and discount < -0.10:
+            elif rsi is not None and rsi > 65 and discount < -0.10:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0:
                     weights[sym] = 0.0

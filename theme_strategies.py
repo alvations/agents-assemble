@@ -73,6 +73,9 @@ class AIRevolution(BasePersona):
             if price < sma200 * 0.90:
                 weights[sym] = 0.0
                 continue
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
 
             score = 0.0
             if price > sma50 > sma200:
@@ -134,9 +137,8 @@ class CleanEnergy(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
             if any(v is None for v in [sma50, rsi]):
                 continue
 
@@ -266,10 +268,9 @@ class BiotechBreakout(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol = self._get_indicator(data, sym, "vol_20", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50, sma200 = inds["sma_50"], inds["sma_200"]
+            rsi, vol = inds["rsi_14"], inds["vol_20"]
             if any(v is None for v in [sma50, rsi]):
                 continue
 
@@ -337,9 +338,8 @@ class ChinaTechRebound(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
             if any(v is None for v in [sma50, rsi]):
                 continue
 
@@ -400,9 +400,8 @@ class LatAmGrowth(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
             if any(v is None for v in [sma50, rsi]):
                 continue
 
@@ -527,10 +526,9 @@ class SmallCapValue(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            bb_lower = self._get_indicator(data, sym, "bb_lower", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(data, sym, ["bb_lower", "rsi_14", "Volume", "volume_sma_20"], date)
+            bb_lower, rsi = inds["bb_lower"], inds["rsi_14"]
+            volume, vol_avg = inds["Volume"], inds["volume_sma_20"]
             if rsi is None:
                 continue
 
@@ -614,13 +612,23 @@ class CryptoEcosystem(BasePersona):
         top = scored[:self.config.max_positions]
         if top:
             total_score = sum(s for _, s in top)
+            cap = self.config.max_position_size
             for sym, score in top:
-                weights[sym] = min((score / total_score) * 0.90, self.config.max_position_size)
-            # Redistribute clipped excess so total allocation reaches 90%
-            total_w = sum(weights[sym] for sym, _ in top)
-            if 0 < total_w < 0.90:
-                for sym, _ in top:
-                    weights[sym] = min(weights[sym] * 0.90 / total_w, self.config.max_position_size)
+                weights[sym] = min((score / total_score) * 0.90, cap)
+            # Iteratively redistribute clipped excess until fully allocated
+            for _ in range(10):
+                total_w = sum(weights[sym] for sym, _ in top)
+                if total_w >= 0.899 or total_w <= 0:
+                    break
+                uncapped = [(sym, s) for sym, s in top if weights[sym] < cap - 1e-9]
+                if not uncapped:
+                    break
+                uncapped_w = sum(weights[sym] for sym, _ in uncapped)
+                if uncapped_w <= 0:
+                    break
+                surplus = 0.90 - total_w
+                for sym, _ in uncapped:
+                    weights[sym] = min(weights[sym] + surplus * weights[sym] / uncapped_w, cap)
         for sym in self.config.universe:
             weights.setdefault(sym, 0.0)
         return weights
@@ -733,6 +741,9 @@ class GLP1Obesity(BasePersona):
             if sma200 is not None and price < sma200 * 0.90:
                 weights[sym] = 0.0
                 continue
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
 
             score = 0.0
             if sma200 is not None and price > sma50 > sma200:
@@ -792,6 +803,9 @@ class RoboticsAutonomous(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             if sma200 is not None and price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+            if rsi > 80:
                 weights[sym] = 0.0
                 continue
 
