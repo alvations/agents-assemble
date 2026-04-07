@@ -127,7 +127,7 @@ class EventPattern:
     volume_ratio: float
     direction: str  # "up" or "down"
     # Returns at each sell horizon
-    post_returns: Dict[int, float] = dataclass_field(default_factory=dict)  # {1: 0.02, 2: 0.03, ...}
+    post_returns: dict[int, float] = dataclass_field(default_factory=dict)  # {1: 0.02, 2: 0.03, ...}
 
     # Legacy compat
     @property
@@ -165,7 +165,7 @@ class BacktestResult:
 class CatalystPrediction:
     catalyst_type: str
     description: str
-    expected_date: Optional[str]
+    expected_date: str | None
     historical_pattern: str
     recommended_action: str
     confidence: str  # "high", "medium", "low"
