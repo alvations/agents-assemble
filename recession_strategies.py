@@ -129,6 +129,8 @@ def _safe_get(data, sym, indicator, date):
             if abs((date - nearest_date).days) > 10:
                 return None  # Data too stale
             val = df.iloc[idx][indicator]
+            if isinstance(val, pd.Series):
+                val = val.iloc[0]
             return float(val) if not pd.isna(val) else None
     except (IndexError, KeyError, TypeError):
         pass
@@ -326,8 +328,8 @@ class GoldBug(BasePersona):
             rebalance_frequency="weekly",
             universe=universe or [
                 "GLD", "SLV",  # Physical gold/silver ETFs
-                "GDX", "GDXJ",  # Gold miners
-                "NEM", "GOLD", "AEM",  # Individual miners
+                "GDX",  # Gold miners
+                "NEM",  # Individual miners
                 "IAU",  # Alternative gold ETF
                 "SPY", "TLT",  # Required for recession regime detection
             ],
@@ -352,9 +354,8 @@ class GoldBug(BasePersona):
             # Check gold trend
             gld_sma50 = _safe_get(data, "GLD", "sma_50", date)
             gld_sma200 = _safe_get(data, "GLD", "sma_200", date)
-            gld_price = prices.get("GLD")
 
-            if gld_sma50 is not None and gld_sma200 is not None and gld_price is not None:
+            if gld_sma50 is not None and gld_sma200 is not None:
                 if gld_sma50 > gld_sma200:
                     # Gold uptrend — increase allocation
                     weights["GLD"] = 0.30

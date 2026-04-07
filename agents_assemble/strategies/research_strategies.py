@@ -148,11 +148,11 @@ class MultiFactorSmartBeta(BasePersona):
 
             # Factor 2: Momentum (trend alignment)
             mom_score = 0.0
-            if sma50 is not None and price > sma50:
+            if not _is_missing(sma50) and price > sma50:
                 mom_score += 0.25
             if price > sma200:
                 mom_score += 0.25
-            if macd is not None and macd_sig is not None and macd > macd_sig:
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
                 mom_score += 0.25
             if 40 < rsi < 70:
                 mom_score += 0.25
@@ -321,7 +321,7 @@ class MomentumCrashHedge(BasePersona):
                 score += 3.0
             elif price > sma50:
                 score += 1.5
-            if macd is not None and macd_sig is not None and macd > macd_sig:
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
                 score += 1.0
             if 45 < rsi < 75:
                 score += 0.5
@@ -402,6 +402,11 @@ class RiskParityMomentum(BasePersona):
             if "GLD" in self.config.universe and "GLD" in prices:
                 fallback["GLD"] = 0.30
             return fallback
+
+        # Respect max_positions: keep lowest-vol assets (best risk parity contributors)
+        if len(candidates) > self.config.max_positions:
+            candidates.sort(key=lambda x: x[1])  # ascending vol
+            candidates = candidates[:self.config.max_positions]
 
         # Risk parity: inverse-vol weighting
         total_inv_vol = sum(1 / v for _, v in candidates)
@@ -672,12 +677,22 @@ class FaberSectorRotation(BasePersona):
         top3 = scored[:3]
         weights = {}
         if top3:
-            per_sector = 0.90 / len(top3)
+            per_sector = min(0.90 / len(top3), self.config.max_position_size)
+            total_alloc = per_sector * len(top3)
             for sym, _ in top3:
-                weights[sym] = min(per_sector, self.config.max_position_size)
+                weights[sym] = per_sector
+            # Allocate capped remainder to safe havens (Faber: unallocated → bonds)
+            remainder = 0.90 - total_alloc
+            if remainder > 0.05:
+                if "TLT" in self.config.universe:
+                    weights["TLT"] = remainder * 0.6
+                if "IEF" in self.config.universe:
+                    weights["IEF"] = remainder * 0.4
         else:
-            weights["TLT"] = 0.50
-            weights["IEF"] = 0.40
+            if "TLT" in self.config.universe:
+                weights["TLT"] = 0.50
+            if "IEF" in self.config.universe:
+                weights["IEF"] = 0.40
         return {k: v for k, v in weights.items() if k in prices}
 
 
