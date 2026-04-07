@@ -293,8 +293,7 @@ class CatalystAnalyzer:
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
                 post = {}
                 for h in SELL_HORIZONS:
-                    j = min(i + h, len(df) - 1)
-                    post[h] = float(close.iloc[j] / close.iloc[i] - 1)
+                    post[h] = float(close.iloc[i + h] / close.iloc[i] - 1)
                 events.append(EventPattern(
                     date=str(df.index[i].date()),
                     return_pct=float(ret.iloc[i]),
@@ -578,7 +577,7 @@ class CatalystAnalyzer:
             print(f"\n  Forward-Looking Predictions:")
             for pred in preds:
                 print(f"    [{pred['confidence'].upper()}] {pred['catalyst_type']}: {pred['recommended_action']}")
-                if pred["expected_return"]:
+                if pred["expected_return"] != 0:
                     print(f"         Expected: {pred['expected_return']:+.1%} over {pred['expected_holding_days']}d")
 
     # ----- Helpers -----
