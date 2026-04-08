@@ -72,7 +72,7 @@ class DualMomentum(BasePersona):
 
         if spy_price is None or _is_missing(spy_sma200):
             weights = {sym: 0.0 for sym in self.config.universe if sym in prices}
-            if "AGG" in prices:
+            if "AGG" in weights:
                 weights["AGG"] = 0.90
             return weights
 
@@ -88,11 +88,17 @@ class DualMomentum(BasePersona):
         # Absolute momentum: is winner > 0 (above its SMA200)?
         loser = "EFA" if winner == "SPY" else "SPY"
         if winner_mom > 0:
-            weights = {winner: 0.90, loser: 0.0, "AGG": 0.0}
+            weights = {winner: 0.90, loser: 0.0}
         else:
             # Both negative → safe haven
-            weights = {"AGG": 0.90, "SPY": 0.0, "EFA": 0.0}
-        return {k: v for k, v in weights.items() if k in prices}
+            weights = {}
+            if "AGG" in self.config.universe and "AGG" in prices:
+                weights["AGG"] = 0.90
+        # Close out non-qualifying universe symbols
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
 
 
 # ---------------------------------------------------------------------------
@@ -353,7 +359,7 @@ class MomentumCrashHedge(BasePersona):
                 weights[sym] = per_stock
         # Explicitly close positions in non-qualifying stocks (SPY is vol-only)
         for sym in self.config.universe:
-            if sym in prices and sym != "SPY" and sym not in weights:
+            if sym in prices and sym not in weights:
                 weights[sym] = 0.0
         return weights
 

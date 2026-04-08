@@ -37,32 +37,39 @@ python run_multi_horizon.py --persona concentrate_winners
 # Run all strategies in a category
 python run_multi_horizon.py --category research
 
-# Test suite (63/63 should pass)
-python test_strategies.py
+# Test suite (99/99 should pass)
+python tests/test_strategies.py
 ```
 
-## Top 5 Strategies (Cross-Horizon Consistency)
+## Top 5 Strategies — 3Y (Return + Sharpe + Max DD)
 
-| Rank | Strategy | Avg Sharpe | 3Y Return | 10Y Return |
-|------|----------|-----------|-----------|-----------|
-| **1** | **Concentrate Winners** | **1.11** | 135.6% | 817.5% |
-| 2 | Momentum | 1.08 | 135.0% | 570.0% |
-| 3 | Momentum Crash-Hedged | 1.05 | 117.1% | 743.0% |
-| 4 | AI Revolution | 0.94 | 183.6% | 783.3% |
-| 5 | Masayoshi Son | 0.87 | 90.8% | 1068.3% |
+| Rank | Strategy | 3Y Return | 3Y Sharpe | 3Y Max DD | Trade Rec |
+|------|----------|-----------|-----------|-----------|-----------|
+| 1 | **AI Revolution** | **183.6%** | **1.41** | -22.0% | [View](strategy/winning/) |
+| 2 | **Concentrate Winners** | **135.6%** | **1.28** | -18.0% | [View](strategy/winning/) |
+| 3 | **Momentum** | **135.0%** | **1.36** | -17.9% | [View](strategy/winning/) |
+| 4 | **Momentum Crash-Hedged** | **117.1%** | **1.26** | -20.8% | [View](strategy/winning/) |
+| 5 | **GLP-1 Obesity** | **80.7%** | **0.92** | -12.5% | [View](strategy/winning/) |
 
-See [LEADERBOARD.md](LEADERBOARD.md) for full rankings of all 66 strategies.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 99 strategies with full rankings.
 
-## 66 Strategies Across 9 Categories
+## 99 Strategies Across 13 Categories
 
 | Category | Count | Best Performer |
 |----------|-------|---------------|
-| Generic | 10 | Momentum (1.08 avg Sharpe) |
-| Famous Investors | 13 | Masayoshi Son (0.87) |
-| Themes | 12 | AI Revolution (0.94) |
-| Recession | 4 | Defensive Rotation (0.59) |
-| Unconventional | 8 | Concentrate Winners (1.11) |
-| Research | 9 | Momentum Crash-Hedged (1.05) |
+| Famous Investors | 20 | Ackman (1.22 Sharpe), Druckenmiller, Cathie Wood, BRK, Graham |
+| Themes | 12 | AI Revolution (1.41 Sharpe), GLP-1, Robotics, Defense |
+| Generic | 10 | Momentum (1.36 Sharpe), Concentrate Winners (1.28) |
+| Research | 9 | Momentum Crash-Hedged (1.26 Sharpe) |
+| Unconventional | 8 | Short Seller Dip Buy (+59.5%, 0.89 Sharpe) |
+| Williams/Seasonal | 8 | Energy Seasonal (+39.7%), Williams %R (77% win SPY) |
+| Political/Billionaire | 7 | Nancy Pelosi (1.39 Sharpe), Ken Griffin, Dan Loeb |
+| Portfolio | 6 | Barbell (2.05 Sharpe 1Y), Core-Satellite |
+| Crisis/Commodity | 5 | Geopolitical Crisis, Agriculture, Small Cap Value |
+| Recession | 4 | Defensive Rotation (regime-switching) |
+| News/Event | 3 | Earnings Drift (lowest DD: -3.6% 5Y) |
+| Hedge Fund | 2 | Healthcare+Asia (0.82 Sharpe) |
+| Math | 5 | Kelly Criterion (0.67 avg Sharpe) |
 | Math | 5 | Kelly Optimal (0.67) |
 | Hedge Fund | 2 | Healthcare+Asia (0.81) |
 | News/Event | 3 | Earnings Surprise Drift (lowest DD: -3.6% 5Y) |

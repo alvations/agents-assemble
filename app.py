@@ -20,6 +20,7 @@ import math
 import re
 import base64
 import sys
+import time
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -512,7 +513,9 @@ document.querySelector('[onclick*="strategies"]').addEventListener('click', () =
 def index():
     return render_template_string(HTML)
 
-_leaderboard_cache = {}  # {horizon: results}
+_leaderboard_cache = {}  # {horizon: (timestamp, results)}
+_CACHE_TTL_FILE = 300   # 5 min for file-based (3y)
+_CACHE_TTL_COMPUTED = 1800  # 30 min for backtested horizons
 
 @app.route("/api/leaderboard")
 def api_leaderboard():
@@ -520,7 +523,10 @@ def api_leaderboard():
     horizon = request.args.get("horizon", "3y")
 
     if horizon in _leaderboard_cache:
-        return jsonify(_leaderboard_cache[horizon])
+        cached_at, cached_data = _leaderboard_cache[horizon]
+        ttl = _CACHE_TTL_FILE if horizon == "3y" else _CACHE_TTL_COMPUTED
+        if time.monotonic() - cached_at < ttl:
+            return jsonify(cached_data)
 
     # For 3y, read from existing results/ files (instant)
     if horizon == "3y":
@@ -545,7 +551,7 @@ def api_leaderboard():
         for r in results:
             seen[r["name"]] = r
         results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)[:30]
-        _leaderboard_cache[horizon] = results
+        _leaderboard_cache[horizon] = (time.monotonic(), results)
         return jsonify(results)
 
     # For other horizons, run backtests (slower but cached after first load)
@@ -567,7 +573,7 @@ def api_leaderboard():
             })
     results.sort(key=lambda x: x["return"], reverse=True)
     results = _sanitize_for_json(results[:30])
-    _leaderboard_cache[horizon] = results
+    _leaderboard_cache[horizon] = (time.monotonic(), results)
     return jsonify(results)
 
 @app.route("/api/strategies")
@@ -623,9 +629,12 @@ def api_scan(symbol):
     bts = {}
     if len(df) >= 50:
         for strat in ['buy_spike', 'buy_dip', 'momentum']:
-            r = a._run_single_backtest(df, strat, 10)
-            if r.total_trades > 0:
-                bts[f'{strat}_10d'] = r
+            try:
+                r = a._run_single_backtest(df, strat, 10)
+                if r.total_trades > 0:
+                    bts[f'{strat}_10d'] = r
+            except Exception:
+                pass
     best = max(bts.values(), key=lambda b: b.total_return) if bts else None
     return jsonify(_sanitize_for_json({
         "symbol": symbol.upper(),
@@ -657,8 +666,12 @@ def api_chart(symbol):
 def api_trade_plan(strategy):
     from public_trader import PublicTrader
     trader = PublicTrader(dry_run=True)
-    # Get strategy signals
-    persona = trader._resolve_strategy(strategy)
+    try:
+        persona = trader._resolve_strategy(strategy)
+    except Exception:
+        return jsonify({"error": f"Unknown strategy: {strategy}"}), 400
+    if persona is None:
+        return jsonify({"error": f"Unknown strategy: {strategy}"}), 400
     from data_fetcher import fetch_multiple_ohlcv
     from backtester import _compute_rsi, _compute_bollinger, _compute_atr
     import pandas as pd
@@ -698,11 +711,14 @@ def api_trade_plan(strategy):
         enriched[sym] = df
         prices[sym] = float(close.iloc[-1])
 
+    if not enriched:
+        return jsonify({"error": "No market data available for strategy symbols"}), 500
     from backtester import Portfolio
     portfolio = Portfolio(initial_cash=amount, cash=amount)
-    today = pd.Timestamp.now().normalize()
+    last_dates = [df.index[-1] for df in enriched.values() if len(df) > 0]
+    signal_date = max(last_dates) if last_dates else pd.Timestamp.now().normalize()
     try:
-        weights = persona.generate_signals(today, prices, portfolio, enriched)
+        weights = persona.generate_signals(signal_date, prices, portfolio, enriched)
     except Exception as e:
         return jsonify({"error": f"Strategy signal generation failed: {e}"}), 500
 
