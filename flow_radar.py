@@ -15,7 +15,6 @@ import sys
 from pathlib import Path
 import math
 from datetime import datetime, timedelta
-import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
 from data_fetcher import fetch_ohlcv, UNIVERSE
@@ -64,8 +63,8 @@ class FlowRadar:
                 if len(df) < 60: continue
                 if df.index.tz is not None: df.index = df.index.tz_localize(None)
                 c = df["Close"]
-                macd = c.ewm(span=12).mean() - c.ewm(span=26).mean()
-                sig = macd.ewm(span=9).mean()
+                macd = c.ewm(span=12, adjust=False).mean() - c.ewm(span=26, adjust=False).mean()
+                sig = macd.ewm(span=9, adjust=False).mean()
                 m_cur, m_prev = float(macd.iloc[-1]), float(macd.iloc[-2])
                 s_cur, s_prev = float(sig.iloc[-1]), float(sig.iloc[-2])
                 if not all(math.isfinite(v) for v in (m_cur, m_prev, s_cur, s_prev)):

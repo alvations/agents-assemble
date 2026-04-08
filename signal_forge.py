@@ -13,7 +13,7 @@ Usage:
 from __future__ import annotations
 import sys, json, math, re
 from pathlib import Path
-import numpy as np, pandas as pd
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -21,6 +21,10 @@ from data_fetcher import fetch_ohlcv
 
 class SignalForge:
     """Build and backtest custom signals from natural language."""
+
+    _UNSAFE = re.compile(r'__|import|exec|eval|compile|open|getattr|setattr|delattr|globals|locals|\bos\b|\bsys\b')
+    _SAFE_GLOBALS = {"__builtins__": {}, "abs": abs, "min": min, "max": max, "round": round,
+                     "sum": sum, "len": len, "int": int, "float": float, "bool": bool}
 
     BUILTIN_SIGNALS = {
         "rsi_oversold": {"desc": "Buy when RSI(14) < 20", "buy": lambda d,i: d["rsi"].iloc[i] < 20, "sell": lambda d,i: d["rsi"].iloc[i] > 60},
@@ -54,9 +58,9 @@ Return ONLY a JSON with: {{"name": "signal_name", "buy_condition": "python expre
 Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (macd signal line), bb_upper/bb_lower, vol_ratio (volume/20d avg), ret (daily return)."""
 
             result = client.ask(prompt)
-            match = re.search(r'\{[\s\S]*?\}', result.text)
+            match = re.search(r'\{[\s\S]*\}', result.text)
             if match:
-                parsed = json.loads(match.group())
+                parsed = json.loads(match.group().strip())
                 return {"name": parsed.get("name", "custom"), "desc": description,
                         "buy_expr": parsed.get("buy_condition", ""), "sell_expr": parsed.get("sell_condition", "")}
         except Exception:
@@ -85,12 +89,14 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
         data = pd.DataFrame({
             "close": c, "sma20": c.rolling(20).mean(), "sma50": c.rolling(50).mean(),
             "sma200": c.rolling(200).mean(), "ret": c.pct_change(),
-            "vol_ratio": df["Volume"] / df["Volume"].rolling(20).mean().replace(0, np.nan),
+            "vol_ratio": df["Volume"] / df["Volume"].rolling(20).mean().replace(0, float("nan")),
         })
         delta = c.diff()
         gain = delta.where(delta > 0, 0).rolling(14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-        data["rsi"] = np.where(loss > 0, 100 - (100 / (1 + gain / loss.replace(0, np.nan))), np.where(gain > 0, 100.0, np.nan))
+        rs = gain / loss.replace(0, float("nan"))
+        rsi = 100 - (100 / (1 + rs))
+        data["rsi"] = rsi.where(loss > 0, pd.Series(float("nan"), index=c.index).where(gain <= 0, 100.0))
         ema12, ema26 = c.ewm(span=12).mean(), c.ewm(span=26).mean()
         data["macd"] = ema12 - ema26
         data["signal"] = data["macd"].ewm(span=9).mean()
@@ -109,13 +115,12 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             buy_expr, sell_expr = signal["buy_expr"].strip(), signal["sell_expr"].strip()
             if not buy_expr or not sell_expr:
                 return {"error": "Empty buy or sell expression", "signal": signal.get("name", "custom")}
-            _UNSAFE = re.compile(r'__|import|exec|eval|compile|open|getattr|setattr|delattr|globals|locals|\bos\b|\bsys\b')
             for expr_name, expr in [("buy", buy_expr), ("sell", sell_expr)]:
-                if _UNSAFE.search(expr):
+                if self._UNSAFE.search(expr):
                     return {"error": f"Unsafe pattern in {expr_name} expression", "signal": signal.get("name", "custom")}
-            _safe_globals = {"__builtins__": {}, "abs": abs, "min": min, "max": max, "round": round}
-            buy_fn = lambda d, i, expr=buy_expr: eval(expr, _safe_globals, {k: float(d[k].iloc[i]) for k in d.columns})
-            sell_fn = lambda d, i, expr=sell_expr: eval(expr, _safe_globals, {k: float(d[k].iloc[i]) for k in d.columns})
+            sg = self._SAFE_GLOBALS
+            buy_fn = lambda d, i, expr=buy_expr: eval(expr, sg, {k: float(d[k].iloc[i]) for k in d.columns})
+            sell_fn = lambda d, i, expr=sell_expr: eval(expr, sg, {k: float(d[k].iloc[i]) for k in d.columns})
         else:
             return {"error": "No signal logic"}
 
@@ -141,8 +146,8 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             "signal": signal["name"], "description": signal.get("desc", ""),
             "symbol": symbol, "period": f"{start} → now",
             "trades": len(trades), "win_rate": len(winners)/len(trades),
-            "avg_return": float(np.mean(trades)),
-            "total_return": float(np.prod([1+t for t in trades]) - 1),
+            "avg_return": sum(trades) / len(trades),
+            "total_return": math.prod(1 + t for t in trades) - 1,
             "best": float(max(trades)), "worst": float(min(trades)),
             "profit_factor": abs(sum(winners)/sum(losers)) if losers else None,
             **({"eval_errors": errors} if errors else {}),

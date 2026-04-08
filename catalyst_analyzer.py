@@ -199,6 +199,7 @@ class CatalystAnalyzer:
         self.symbol = symbol.upper()
         self.industry = industry.lower() if industry else self._detect_industry()
         self._price_data = None
+        self._price_data_start = None
         self._news_cache = None
 
     def _detect_industry(self) -> str:
@@ -215,8 +216,7 @@ class CatalystAnalyzer:
         if start is None:
             start = (datetime.now() - timedelta(days=self._DEFAULT_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
         if self._price_data is not None:
-            start_dt = pd.Timestamp(start)
-            if len(self._price_data) == 0 or self._price_data.index[0] > start_dt:
+            if len(self._price_data) == 0 or (self._price_data_start is not None and self._price_data_start > start):
                 self._price_data = None  # Cache doesn't cover requested range
         if self._price_data is None:
             df = fetch_ohlcv(self.symbol, start=start)
@@ -227,6 +227,7 @@ class CatalystAnalyzer:
             vol_ratio = df["Volume"] / df["vol_avg_20"]
             df["vol_ratio"] = vol_ratio.replace([float("inf"), float("-inf")], float("nan"))
             self._price_data = df
+            self._price_data_start = start
         return self._price_data
 
     # ----- 1. News -----
@@ -296,6 +297,7 @@ class CatalystAnalyzer:
                 seen.add(dedup_key)
                 unique.append(item)
 
+        unique.sort(key=lambda x: x.date, reverse=True)
         self._news_cache = unique
         return unique[:max_items]
 
@@ -459,7 +461,8 @@ class CatalystAnalyzer:
         # Close position at last valid price if holding period completed but
         # NaN close prices prevented exit (e.g., delisted stock)
         if position is not None:
-            if last_valid_i - position[1] >= holding_days and last_valid_price is not None:
+            elapsed = (n - 1) - position[1]
+            if elapsed >= holding_days and last_valid_price is not None and last_valid_i > position[1]:
                 trades.append(float(last_valid_price / position[0] - 1))
 
         if not trades:
@@ -515,13 +518,19 @@ class CatalystAnalyzer:
                     industry_bt = bt
         ind_best = industry_bt or best_bt
 
+        # Use optimal horizons from pattern analysis instead of hardcoded ones
+        opt_up_h = patterns.get('optimal_sell_after_up', '20d')
+        opt_down_h = patterns.get('optimal_sell_after_down', '10d')
+        opt_up_ret = patterns.get('after_up', {}).get(opt_up_h, {}).get('avg_return', 0)
+        opt_down_ret = patterns.get('after_down', {}).get(opt_down_h, {}).get('avg_return', 0)
+
         # Industry-specific predictions
         if self.industry == "gaming":
             predictions.append(CatalystPrediction(
                 catalyst_type="game_launch",
                 description=f"Next major game/DLC release for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
+                historical_pattern=f"After UP events: avg +{opt_up_ret:.1%} in {opt_up_h}"
                                    if "after_up" in patterns else "No clear pattern",
                 recommended_action="BUY 3-6 months before announced release, SELL within days of launch",
                 confidence="medium" if ind_best else "low",
@@ -534,7 +543,7 @@ class CatalystAnalyzer:
                 catalyst_type="fda_catalyst",
                 description=f"Next FDA date / clinical readout for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After DOWN events: avg +{patterns.get('after_down', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d (bounce)"
+                historical_pattern=f"After DOWN events: avg +{opt_down_ret:.1%} in {opt_down_h} (bounce)"
                                    if "after_down" in patterns else "Binary outcomes",
                 recommended_action="BUY dips before known FDA dates, small position size (binary risk)",
                 confidence="low",
@@ -547,7 +556,7 @@ class CatalystAnalyzer:
                 catalyst_type="product_launch",
                 description=f"Next product announcement / launch event for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d"
+                historical_pattern=f"After UP spikes: avg +{opt_up_ret:.1%} in {opt_up_h}"
                                    if "after_up" in patterns else "Momentum continuation",
                 recommended_action="BUY on positive spike + volume, ride momentum 10-20 days",
                 confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
@@ -560,7 +569,7 @@ class CatalystAnalyzer:
                 catalyst_type="delivery_numbers",
                 description=f"Next quarterly delivery report for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After DOWN events: bounce +{patterns.get('after_down', {}).get('5d', {}).get('avg_return', 0):.1%} in 5d"
+                historical_pattern=f"After DOWN events: bounce +{opt_down_ret:.1%} in {opt_down_h}"
                                    if "after_down" in patterns else "Buy dip on delivery miss",
                 recommended_action="BUY dips around delivery number releases",
                 confidence="medium" if ind_best else "low",
@@ -573,7 +582,7 @@ class CatalystAnalyzer:
                 catalyst_type="holiday_season",
                 description=f"Next seasonal catalyst (holiday, Prime Day) for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
+                historical_pattern=f"After UP events: avg +{opt_up_ret:.1%} in {opt_up_h}"
                                    if "after_up" in patterns else "Seasonal momentum",
                 recommended_action="BUY before seasonal peaks (holiday, back-to-school), ride momentum 20 days",
                 confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
@@ -586,7 +595,7 @@ class CatalystAnalyzer:
                 catalyst_type="chip_launch",
                 description=f"Next chip launch / design win for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d"
+                historical_pattern=f"After UP spikes: avg +{opt_up_ret:.1%} in {opt_up_h}"
                                    if "after_up" in patterns else "Momentum continuation",
                 recommended_action="BUY on positive spike + volume from chip launch / design win news",
                 confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
@@ -599,7 +608,7 @@ class CatalystAnalyzer:
                 catalyst_type="subscriber_numbers",
                 description=f"Next subscriber / box office report for {self.symbol}",
                 expected_date=None,
-                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
+                historical_pattern=f"After UP events: avg +{opt_up_ret:.1%} in {opt_up_h}"
                                    if "after_up" in patterns else "Earnings-driven",
                 recommended_action="BUY before subscriber number releases or major content launches",
                 confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",

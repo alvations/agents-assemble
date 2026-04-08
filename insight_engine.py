@@ -85,7 +85,16 @@ class InsightEngine:
         # Step 4: Rank by the interpretation's sort key
         sort_key = interpretation.get("sort_by", "rsi_14")
         sort_asc = interpretation.get("sort_ascending", True)
-        results.sort(key=lambda x: x.get(sort_key, 0), reverse=not sort_asc)
+        # Validate sort_key exists in results; fall back to rsi_14
+        if results and sort_key not in results[0]:
+            sort_key = "rsi_14"
+        # NaN-safe sort: NaN values sort to the end
+        def _sort_val(x):
+            v = x.get(sort_key, 0)
+            if not isinstance(v, (int, float)) or v != v:
+                return float("inf") if sort_asc else float("-inf")
+            return v
+        results.sort(key=_sort_val, reverse=not sort_asc)
 
         return {
             "query": query,
@@ -132,7 +141,12 @@ Return ONLY a JSON object (no other text) with these fields:
         try:
             result = claude.ask(prompt)
             text = result.text.strip()
-            # Extract JSON from response
+            # Try direct parse first (Claude often returns pure JSON)
+            try:
+                return json.loads(text)
+            except (json.JSONDecodeError, ValueError):
+                pass
+            # Fall back to regex extraction
             json_match = re.search(r'\{[\s\S]*\}', text)
             if json_match:
                 return json.loads(json_match.group())
@@ -174,9 +188,9 @@ Return ONLY a JSON object (no other text) with these fields:
         if "52 week low" in q or "52w low" in q:
             criteria["near_52w_low"] = True
 
-        if "low vol" in q:
+        if re.search(r"low\s+vol(?!ume)", q):
             criteria["max_annual_vol"] = 0.20
-        if "high vol" in q:
+        if re.search(r"high\s+vol(?!ume)", q):
             criteria["min_annual_vol"] = 0.35
 
         if "macd bullish" in q or "macd positive" in q:
@@ -190,7 +204,7 @@ Return ONLY a JSON object (no other text) with these fields:
         if "volume" in q:
             sort_by = "vol_ratio"
             sort_asc = False
-        elif "vol" in q:
+        elif re.search(r"\bvol(?!ume)\b", q):
             sort_by = "annual_vol"
             sort_asc = "low" in q
 
@@ -298,15 +312,22 @@ Return ONLY a JSON object (no other text) with these fields:
             delta = close.diff()
             gain = delta.where(delta > 0, 0).rolling(14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-            rs = gain / loss.replace(0, float("nan"))
-            rsi = float((100 - (100 / (1 + rs))).iloc[-1])
-            if pd.isna(rsi):
-                rsi = 50
+            last_gain = gain.iloc[-1]
+            last_loss = loss.iloc[-1]
+            if pd.isna(last_gain) or pd.isna(last_loss):
+                rsi = 50.0
+            elif last_loss == 0:
+                rsi = 100.0 if last_gain > 0 else 50.0
+            elif last_gain == 0:
+                rsi = 0.0
+            else:
+                rsi = float(100 - (100 / (1 + last_gain / last_loss)))
 
             ema12 = close.ewm(span=12).mean()
             ema26 = close.ewm(span=26).mean()
-            macd_raw = (ema12 - ema26).iloc[-1]
-            macd_signal_raw = (ema12 - ema26).ewm(span=9).mean().iloc[-1]
+            macd_line = ema12 - ema26
+            macd_raw = macd_line.iloc[-1]
+            macd_signal_raw = macd_line.ewm(span=9).mean().iloc[-1]
             macd = 0.0 if pd.isna(macd_raw) else float(macd_raw)
             macd_signal = 0.0 if pd.isna(macd_signal_raw) else float(macd_signal_raw)
 

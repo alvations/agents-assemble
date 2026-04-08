@@ -149,7 +149,7 @@ class Portfolio:
 
     def get_position(self, symbol: str) -> Position | None:
         pos = self.positions.get(symbol)
-        if pos and pos.quantity != 0:
+        if pos is not None and pos.quantity != 0:
             return pos
         return None
 
@@ -465,11 +465,7 @@ class Backtester:
             all_data = dict(self._external_data)  # Shallow copy — don't mutate caller's dict
         else:
             # Pre-load 1 year before start for indicator warmup
-            from datetime import datetime, timedelta
-            try:
-                warmup_start = (datetime.strptime(self.start, "%Y-%m-%d") - timedelta(days=365)).strftime("%Y-%m-%d")
-            except (ValueError, TypeError):
-                warmup_start = self.start
+            warmup_start = (pd.Timestamp(self.start) - pd.DateOffset(days=365)).strftime("%Y-%m-%d")
             all_data = fetch_multiple_ohlcv(
                 self.symbols, start=warmup_start, end=self.end
             )
@@ -668,7 +664,7 @@ class Backtester:
             return
 
         # Phase 1: Collect and execute all sells (reductions, closes, short initiations)
-        sells: list[tuple[str, int]] = []
+        sells: list[tuple[str, float]] = []
 
         for sym, target_w in target_weights.items():
             if sym not in prices:
@@ -690,17 +686,17 @@ class Backtester:
         for sym in list(portfolio.positions.keys()):
             if sym not in _requested_syms:
                 pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0 and sym in prices and prices[sym] > 0:
-                    qty = int(round(pos.quantity))
-                    if qty > 0:
-                        sells.append((sym, qty))
+                if pos is not None and pos.quantity > 0 and sym in prices and prices[sym] > 0:
+                    sells.append((sym, pos.quantity))
 
         for sym, qty in sells:
             portfolio.execute_trade(date, sym, Side.SELL, qty, prices[sym])
 
         # Phase 2: Recompute total value after sells, then collect buys
         total_value = portfolio.total_value(prices)
-        buys: list[tuple[str, int, float]] = []
+        if total_value <= 0:
+            return
+        buys: list[tuple[str, float, float]] = []
 
         for sym, target_w in target_weights.items():
             if sym not in prices:
@@ -723,13 +719,11 @@ class Backtester:
         for sym in list(portfolio.positions.keys()):
             if sym not in _requested_syms:
                 pos = portfolio.get_position(sym)
-                if pos and pos.quantity < 0 and sym in prices and prices[sym] > 0:
-                    qty = int(round(abs(pos.quantity)))
-                    if qty > 0:
-                        buys.append((sym, qty, float("inf")))
+                if pos is not None and pos.quantity < 0 and sym in prices and prices[sym] > 0:
+                    buys.append((sym, abs(pos.quantity), float("inf")))
 
         # Execute buys with highest-weight positions first
-        buys.sort(key=lambda x: (-x[2], x[0]))
+        buys.sort(key=lambda x: -x[2])
         for sym, qty, _ in buys:
             price = prices[sym]
             cost_per_share = price * (1 + portfolio.slippage_pct)
