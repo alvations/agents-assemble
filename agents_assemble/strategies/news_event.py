@@ -52,16 +52,25 @@ class NewsReactionMomentum(BasePersona):
             if sym not in prices or sym not in data:
                 continue
             price = prices[sym]
-            daily_ret = self._get_indicator(data, sym, "daily_return", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            ind = self._get_indicators(data, sym,
+                ["daily_return", "Volume", "volume_sma_20", "sma_50", "rsi_14"], date)
+            daily_ret = ind["daily_return"]
+            volume = ind["Volume"]
+            vol_avg = ind["volume_sma_20"]
+            sma50 = ind["sma_50"]
+            rsi = ind["rsi_14"]
 
             if daily_ret is None or volume is None or vol_avg is None:
                 continue
 
             vol_ratio = volume / vol_avg if vol_avg > 0 else 1
+
+            # Exit: RSI overbought after news run (checked first — priority over buy)
+            if rsi is not None and rsi > 80:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                continue
 
             # News reaction signal: volume spike + positive move
             if vol_ratio > 2.0 and daily_ret > 0.01:
@@ -70,22 +79,16 @@ class NewsReactionMomentum(BasePersona):
                 if sma50 is not None and price > sma50 * 0.90:
                     scored.append((sym, score))
 
-            # Exit: RSI overbought after news run
-            if rsi is not None and rsi > 80:
-                pos = portfolio.get_position(sym)
-                if pos and pos.quantity > 0:
-                    weights[sym] = 0.0
-
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
+        top_syms = {sym for sym, _ in top}
         if top:
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        else:
-            for sym in self.config.universe:
-                if sym in prices:
-                    weights.setdefault(sym, 0.0)
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights and sym not in top_syms:
+                weights[sym] = 0.0
         return weights
 
 
@@ -124,10 +127,12 @@ class EarningsSurpriseDrift(BasePersona):
             if sym not in prices or sym not in data:
                 continue
             price = prices[sym]
-            daily_ret = self._get_indicator(data, sym, "daily_return", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            ind = self._get_indicators(data, sym,
+                ["daily_return", "Volume", "volume_sma_20", "sma_200"], date)
+            daily_ret = ind["daily_return"]
+            volume = ind["Volume"]
+            vol_avg = ind["volume_sma_20"]
+            sma200 = ind["sma_200"]
 
             if daily_ret is None or volume is None or vol_avg is None:
                 continue
@@ -153,10 +158,10 @@ class EarningsSurpriseDrift(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        else:
-            for sym in self.config.universe:
-                if sym in prices:
-                    weights.setdefault(sym, 0.0)
+        top_syms = {sym for sym, _ in top}
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights and sym not in top_syms:
+                weights[sym] = 0.0
         return weights
 
 
@@ -199,6 +204,7 @@ class CrisisAlpha(BasePersona):
         if spy_rsi is not None and spy_rsi < 25:
             is_crisis = True  # Extremely oversold
 
+        universe_set = set(self.config.universe)
         if is_crisis:
             raw = {
                 "TLT": 0.35,
@@ -216,7 +222,7 @@ class CrisisAlpha(BasePersona):
                 "GLD": 0.10,
                 "SHY": 0.0,
             }
-        return {k: v for k, v in raw.items() if k in prices}
+        return {k: v for k, v in raw.items() if k in prices and k in universe_set}
 
 
 NEWS_EVENT_STRATEGIES = {

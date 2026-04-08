@@ -177,7 +177,7 @@ class CatalystPrediction:
     expected_holding_days: int
 
     def to_dict(self):
-        return self.__dict__
+        return self.__dict__.copy()
 
 
 # ---------------------------------------------------------------------------
@@ -681,28 +681,24 @@ class CatalystAnalyzer:
 
     # ----- Helpers -----
 
+    _CLASSIFY_RULES = (
+        (("launch", "release", "unveil", "debut", "premiere", "switch", "gta"), "product_launch"),
+        (("earnings", "revenue", "profit", "beat", "miss", "eps"), "earnings"),
+        (("acquire", "merger", "buyout", "deal"), "ma"),
+        (("fda", "approval", "trial", "phase"), "regulatory"),
+        (("upgrade", "downgrade", "target", "analyst", "rating"), "analyst"),
+        (("dividend", "buyback", "split"), "capital_return"),
+        (("delivery", "production", "sales figure"), "delivery_numbers"),
+        (("subscriber", "streaming", "user growth", "monthly active"), "subscriber_numbers"),
+        (("guidance", "outlook", "forecast"), "guidance"),
+        (("patent", "intellectual property", "ip ruling"), "patent"),
+    )
+
     def _classify(self, title: str) -> str:
         t = title.lower()
-        if any(w in t for w in ["launch", "release", "unveil", "debut", "premiere", "switch", "gta"]):
-            return "product_launch"
-        if any(w in t for w in ["earnings", "revenue", "profit", "beat", "miss", "eps"]):
-            return "earnings"
-        if any(w in t for w in ["acquire", "merger", "buyout", "deal"]):
-            return "ma"
-        if any(w in t for w in ["fda", "approval", "trial", "phase"]):
-            return "regulatory"
-        if any(w in t for w in ["upgrade", "downgrade", "target", "analyst", "rating"]):
-            return "analyst"
-        if any(w in t for w in ["dividend", "buyback", "split"]):
-            return "capital_return"
-        if any(w in t for w in ["delivery", "production", "sales figure"]):
-            return "delivery_numbers"
-        if any(w in t for w in ["subscriber", "streaming", "user growth", "monthly active"]):
-            return "subscriber_numbers"
-        if any(w in t for w in ["guidance", "outlook", "forecast"]):
-            return "guidance"
-        if any(w in t for w in ["patent", "intellectual property", "ip ruling"]):
-            return "patent"
+        for keywords, category in self._CLASSIFY_RULES:
+            if any(w in t for w in keywords):
+                return category
         return "general"
 
     @staticmethod
@@ -753,7 +749,8 @@ def scan_all_industries() -> dict[str, dict]:
         try:
             analyzer = CatalystAnalyzer(sym, industry)
             backtests = analyzer.backtest_event_strategy()
-            viable = [b for b in backtests.values() if b.total_trades >= 3]
+            viable = [b for b in backtests.values()
+                      if b.total_trades >= 3 and b.win_rate > 0.5 and b.profit_factor >= 1.0]
             best = max(viable, key=lambda b: b.total_return) if viable else None
             results[f"{industry}/{sym}"] = {
                 "best_strategy": best.strategy if best else None,

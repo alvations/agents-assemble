@@ -213,6 +213,8 @@ def save_strategy_recommendation(
     name: str,
     results: dict[str, Any],
     persona_config: dict | None = None,
+    description: str = "",
+    hypothesis: str = "",
 ) -> Path:
     """Save strategy recommendation to winning/ or losing/ directory."""
     _ensure_dirs()
@@ -233,11 +235,17 @@ def save_strategy_recommendation(
     # Save as markdown for readability
     md_lines = [
         f"# {'WINNING' if is_winning else 'LOSING'} Strategy: {name}",
-        f"**Generated:** {recs['generated_at']}",
+    ]
+    if description:
+        md_lines.append(f"\n> **What it does:** {description}")
+    if hypothesis:
+        md_lines.append(f">\n> **Hypothesis:** {hypothesis}")
+    md_lines.extend([
+        f"\n**Generated:** {recs['generated_at']}",
         f"**Assessment:** {recs['overall_assessment']}",
         "",
         "## Performance Summary",
-    ]
+    ])
     for k, v in recs["metrics_summary"].items():
         md_lines.append(f"- **{k}:** {v}")
 

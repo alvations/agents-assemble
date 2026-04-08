@@ -114,6 +114,7 @@ def analyze_event_patterns(
     end: str | None = None,
     volume_threshold: float = 2.0,
     return_threshold: float = 0.03,
+    df: pd.DataFrame | None = None,
 ) -> dict:
     """Analyze historical price/volume patterns that look like news events.
 
@@ -123,7 +124,8 @@ def analyze_event_patterns(
     Returns:
         Dict with event_days, pre_event_drift, post_event_drift, etc.
     """
-    df = fetch_ohlcv(symbol, start=start, end=end)
+    if df is None:
+        df = fetch_ohlcv(symbol, start=start, end=end)
     if df.empty or len(df) < 50:
         return {"error": f"Insufficient data for {symbol}"}
 
@@ -207,6 +209,7 @@ def event_driven_backtest(
     end: str | None = None,
     strategy: str = "buy_spike",  # buy_spike, buy_dip, momentum
     holding_days: int = 10,
+    df: pd.DataFrame | None = None,
 ) -> dict:
     """Backtest an event-driven strategy on a single stock.
 
@@ -217,7 +220,8 @@ def event_driven_backtest(
 
     Returns: performance metrics
     """
-    df = fetch_ohlcv(symbol, start=start, end=end)
+    if df is None:
+        df = fetch_ohlcv(symbol, start=start, end=end)
     if df.empty or len(df) < 50:
         return {"error": f"Insufficient data for {symbol}"}
 
@@ -230,11 +234,18 @@ def event_driven_backtest(
     vol_avg = volume.rolling(20).mean()
     vol_ratio = volume / vol_avg
 
+    # RSI for momentum strategy exit
+    if strategy == "momentum":
+        delta = close.diff()
+        gain = delta.clip(lower=0).rolling(14).mean()
+        loss = (-delta.clip(upper=0)).rolling(14).mean()
+        rsi = 100 - (100 / (1 + gain / loss))
+
     # Track trades
     trades = []
     position = None  # (entry_date, entry_price, entry_idx)
 
-    for i in range(25, len(df)):
+    for i in range(20, len(df)):
         price = close.iloc[i]
         ret = daily_ret.iloc[i] if not pd.isna(daily_ret.iloc[i]) else 0
         vr = vol_ratio.iloc[i] if not pd.isna(vol_ratio.iloc[i]) else 1
@@ -242,7 +253,9 @@ def event_driven_backtest(
         # Check exit
         if position is not None:
             days_held = i - position[2]
-            if days_held >= holding_days:
+            rsi_exit = (strategy == "momentum" and days_held >= 2
+                        and not pd.isna(rsi.iloc[i]) and rsi.iloc[i] > 70)
+            if days_held >= holding_days or rsi_exit:
                 exit_ret = price / position[1] - 1
                 trades.append({
                     "entry": str(df.index[position[2]].date()),
@@ -292,7 +305,7 @@ def event_driven_backtest(
         "worst_trade": min(returns),
         "avg_winner": sum_winners / len(winners) if winners else 0,
         "avg_loser": sum_losers / len(losers) if losers else 0,
-        "profit_factor": abs(sum_winners / sum_losers) if sum_losers else 0.0,
+        "profit_factor": abs(sum_winners / sum_losers) if sum_losers else (None if sum_winners else 0.0),
         "trades": trades[-10:],  # Last 10 trades
     }
 
@@ -323,9 +336,12 @@ def scan_ticker(symbol: str, horizons: list[str] | None = None, start: str = "20
     for n in all_news[:5]:
         print(f"    [{n['type']}] {n['date']} — {n['title'][:70]}")
 
+    # Fetch OHLCV once for all downstream analysis
+    ohlcv = fetch_ohlcv(symbol, start=start)
+
     # 2. Event pattern analysis
     print("\n  Analyzing historical event patterns...")
-    patterns = analyze_event_patterns(symbol, start=start)
+    patterns = analyze_event_patterns(symbol, start=start, df=ohlcv)
     if "total_events" in patterns:
         print(f"  Found {patterns['total_events']} significant events "
               f"({patterns['up_events']} up, {patterns['down_events']} down)")
@@ -343,7 +359,7 @@ def scan_ticker(symbol: str, horizons: list[str] | None = None, start: str = "20
     backtest_results = {}
     for strat in ["buy_spike", "buy_dip", "momentum"]:
         for hold in [5, 10, 20]:
-            result = event_driven_backtest(symbol, start=start, strategy=strat, holding_days=hold)
+            result = event_driven_backtest(symbol, start=start, strategy=strat, holding_days=hold, df=ohlcv)
             key = f"{strat}_{hold}d"
             backtest_results[key] = result
             if result.get("total_trades", 0) > 0:
