@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.7957530951217004,
+    "cagr": 0.21629776237857956,
+    "annual_volatility": 0.21701418851061532,
+    "sharpe_ratio": 0.8309230299867175,
+    "sortino_ratio": 1.3235031468548641,
+    "calmar_ratio": 1.0213742201380958,
+    "max_drawdown": -0.21177131565875518,
+    "max_drawdown_date": "2022-03-14",
+    "win_rate": 0.5026595744680851,
+    "profit_factor": 1.2077045932790513,
+    "num_trading_days": 752,
+    "skewness": 1.0719695678161127,
+    "kurtosis": 8.617454265675091,
+    "best_day": 0.11352117240780646,
+    "worst_day": -0.05405131572650168,
+    "avg_daily_return": 0.0008712137003601088,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.12967318327881538,
+    "beta": 0.8186449389587277,
+    "information_ratio": 0.7810868040419828,
+    "tracking_error": 0.16601635389022082
+  },
+  "trade_metrics": {
+    "num_trades": 278,
+    "num_buys": 135,
+    "num_sells": 143,
+    "total_commission": 0.0,
+    "total_slippage": 3494.8775784940703,
+    "total_transaction_costs": 3494.8775784940703,
+    "avg_trade_size": 12571.502080913928
+  },
+  "final_positions": {
+    "PDD": {
+      "qty": 155.0,
+      "avg_cost": 98.9800033569336,
+      "realized_pnl": 20849.840621948242
+    },
+    "WHR": {
+      "qty": 149.0,
+      "avg_cost": 94.35847473144531,
+      "realized_pnl": -1581.3126525878906
+    },
+    "GM": {
+      "qty": 284.0,
+      "avg_cost": 50.2054443359375,
+      "realized_pnl": -1742.595006942749
+    },
+    "XLF": {
+      "qty": 310.0,
+      "avg_cost": 44.045955657958984,
+      "realized_pnl": 268.8170757293706
+    },
+    "XLI": {
+      "qty": 110.0,
+      "avg_cost": 139.8935089111328,
+      "realized_pnl": 330.3242492675763
+    },
+    "VST": {
+      "qty": 101.0,
+      "avg_cost": 118.5049819946289,
+      "realized_pnl": 9057.88927078247
+    },
+    "TSM": {
+      "qty": 81.0,
+      "avg_cost": 169.58048954716435,
+      "realized_pnl": 6798.719398498534
+    },
+    "AMZN": {
+      "qty": 73.0,
+      "avg_cost": 185.1300048828125,
+      "realized_pnl": 4594.669708251956
+    },
+    "META": {
+      "qty": 26.0,
+      "avg_cost": 564.438232421875,
+      "realized_pnl": 10490.526840209963
+    },
+    "GOOGL": {
+      "qty": 90.0,
+      "avg_cost": 170.31317799886068,
+      "realized_pnl": 2534.496833801271
+    }
+  },
+  "source": "political",
+  "description": "Macro mean-reversion: cyclicals + China, +24% in 2025"
+}

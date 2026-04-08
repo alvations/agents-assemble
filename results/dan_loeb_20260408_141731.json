@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.5110794695485752,
+    "cagr": 0.14806813505951322,
+    "annual_volatility": 0.1415765395765724,
+    "sharpe_ratio": 0.7710088196141974,
+    "sortino_ratio": 1.150172122022396,
+    "calmar_ratio": 0.9613569022034837,
+    "max_drawdown": -0.15401994277061182,
+    "max_drawdown_date": "2023-01-30",
+    "win_rate": 0.5146276595744681,
+    "profit_factor": 1.2110530213030724,
+    "num_trading_days": 752,
+    "skewness": 0.05669914267266912,
+    "kurtosis": 5.367680434703088,
+    "best_day": 0.049197643817904035,
+    "worst_day": -0.052947744449934775,
+    "avg_daily_return": 0.0005888116114579128,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.06144355595974904,
+    "beta": 0.4672436735131376,
+    "information_ratio": 0.4137640313783429,
+    "tracking_error": 0.1484990267401119
+  },
+  "trade_metrics": {
+    "num_trades": 206,
+    "num_buys": 98,
+    "num_sells": 108,
+    "total_commission": 0.0,
+    "total_slippage": 2213.597058898928,
+    "total_transaction_costs": 2213.597058898928,
+    "avg_trade_size": 10745.616790771484
+  },
+  "final_positions": {
+    "TSM": {
+      "qty": 96.0,
+      "avg_cost": 170.55001227060953,
+      "realized_pnl": -1423.1776657104479
+    },
+    "NVDA": {
+      "qty": 132.0,
+      "avg_cost": 117.91194557421136,
+      "realized_pnl": 9414.699111938477
+    },
+    "VST": {
+      "qty": 120.0,
+      "avg_cost": 118.5049819946289,
+      "realized_pnl": 17627.59027862549
+    },
+    "META": {
+      "qty": 31.0,
+      "avg_cost": 565.2623231949344,
+      "realized_pnl": 7475.960113525391
+    },
+    "GOOGL": {
+      "qty": 107.0,
+      "avg_cost": 170.3177005375657,
+      "realized_pnl": 770.5017013549775
+    },
+    "AMZN": {
+      "qty": 87.0,
+      "avg_cost": 186.15988895810884,
+      "realized_pnl": 2891.2410430908203
+    },
+    "PYPL": {
+      "qty": 213.0,
+      "avg_cost": 76.83917999267578,
+      "realized_pnl": 1585.3754081726065
+    }
+  },
+  "source": "political",
+  "description": "Event-driven activist: catalyst plays + quality momentum, +24% in 2025"
+}

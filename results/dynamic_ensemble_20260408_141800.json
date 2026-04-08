@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.17347811217590037,
+    "cagr": 0.054964530894956454,
+    "annual_volatility": 0.1297610640906834,
+    "sharpe_ratio": 0.17574287235239122,
+    "sortino_ratio": 0.24615374845570046,
+    "calmar_ratio": 0.3375285625631363,
+    "max_drawdown": -0.1628440878530838,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5252659574468085,
+    "profit_factor": 1.0860028228140248,
+    "num_trading_days": 752,
+    "skewness": -0.1760365199615472,
+    "kurtosis": 1.906659441981843,
+    "best_day": 0.02994218319293962,
+    "worst_day": -0.036071991925076485,
+    "avg_daily_return": 0.0002461442362944351,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03166004820480772,
+    "beta": 0.6464510570590785,
+    "information_ratio": -0.35710588228482765,
+    "tracking_error": 0.0886573136298989
+  },
+  "trade_metrics": {
+    "num_trades": 2247,
+    "num_buys": 1108,
+    "num_sells": 1139,
+    "total_commission": 0.0,
+    "total_slippage": 8330.67310681535,
+    "total_transaction_costs": 8330.67310681535,
+    "avg_trade_size": 3707.464667029523
+  },
+  "final_positions": {
+    "MSFT": {
+      "qty": 11.0,
+      "avg_cost": 433.06230627972144,
+      "realized_pnl": 2603.7996574070157
+    },
+    "WMT": {
+      "qty": 115.0,
+      "avg_cost": 84.78938700091179,
+      "realized_pnl": 4140.680582375363
+    },
+    "QQQ": {
+      "qty": 20.0,
+      "avg_cost": 511.3770099840666,
+      "realized_pnl": 1601.848244114925
+    },
+    "AAPL": {
+      "qty": 41.0,
+      "avg_cost": 232.12580756990334,
+      "realized_pnl": -181.75027586442994
+    },
+    "META": {
+      "qty": 18.0,
+      "avg_cost": 591.4545911153158,
+      "realized_pnl": 2252.6759872436505
+    },
+    "JPM": {
+      "qty": 44.0,
+      "avg_cost": 235.10148135098544,
+      "realized_pnl": 2028.5283432006863
+    },
+    "JNJ": {
+      "qty": 53.0,
+      "avg_cost": 138.34710693359375,
+      "realized_pnl": -1503.558319091793
+    },
+    "MA": {
+      "qty": 20.0,
+      "avg_cost": 525.6467071533203,
+      "realized_pnl": -710.9190368652393
+    },
+    "GOOGL": {
+      "qty": 31.0,
+      "avg_cost": 193.7343292236328,
+      "realized_pnl": 2242.6060104370094
+    },
+    "AMZN": {
+      "qty": 47.0,
+      "avg_cost": 215.3615128537442,
+      "realized_pnl": 3935.50302124023
+    },
+    "V": {
+      "qty": 33.0,
+      "avg_cost": 313.1068272446141,
+      "realized_pnl": 768.9712066650404
+    },
+    "TSLA": {
+      "qty": 14.0,
+      "avg_cost": 417.4100036621094,
+      "realized_pnl": 2691.440643310547
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Multi-strategy ensemble weighted by rolling Sharpe ratio"
+}

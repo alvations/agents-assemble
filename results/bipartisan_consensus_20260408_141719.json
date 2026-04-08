@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.31873849577259494,
+    "cagr": 0.09695910934642993,
+    "annual_volatility": 0.1153482922068147,
+    "sharpe_ratio": 0.5214946420875293,
+    "sortino_ratio": 0.7398457668924826,
+    "calmar_ratio": 0.8336954080413417,
+    "max_drawdown": -0.11630039989571572,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5438829787234043,
+    "profit_factor": 1.1584308679371005,
+    "num_trading_days": 752,
+    "skewness": -0.08148925874277234,
+    "kurtosis": 1.5451603444877722,
+    "best_day": 0.03022039437180357,
+    "worst_day": -0.0271269097926089,
+    "avg_daily_return": 0.00039435429279047136,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.010334530246665752,
+    "beta": 0.4802996842853005,
+    "information_ratio": 0.08578543061668097,
+    "tracking_error": 0.12046952696249803
+  },
+  "trade_metrics": {
+    "num_trades": 350,
+    "num_buys": 167,
+    "num_sells": 183,
+    "total_commission": 0.0,
+    "total_slippage": 1354.6372481575024,
+    "total_transaction_costs": 1354.6372481575024,
+    "avg_trade_size": 3870.3921375928608
+  },
+  "final_positions": {
+    "MSFT": {
+      "qty": 24.0,
+      "avg_cost": 426.8498229980469,
+      "realized_pnl": 2514.4205322265598
+    },
+    "AAPL": {
+      "qty": 43.0,
+      "avg_cost": 194.99298825439217,
+      "realized_pnl": -120.68523308848086
+    },
+    "UNH": {
+      "qty": 17.0,
+      "avg_cost": 587.061279296875,
+      "realized_pnl": -36.917236328125625
+    },
+    "XOM": {
+      "qty": 90.0,
+      "avg_cost": 101.86205736890307,
+      "realized_pnl": 2440.3926812066493
+    },
+    "CVX": {
+      "qty": 66.0,
+      "avg_cost": 143.408447265625,
+      "realized_pnl": -2425.5847320556645
+    },
+    "NVDA": {
+      "qty": 73.0,
+      "avg_cost": 116.95361328125,
+      "realized_pnl": 8964.994583129883
+    },
+    "GOOGL": {
+      "qty": 59.0,
+      "avg_cost": 140.68988215250974,
+      "realized_pnl": 2045.7121488657506
+    },
+    "AMZN": {
+      "qty": 48.0,
+      "avg_cost": 150.69906741056857,
+      "realized_pnl": 1296.8718632097357
+    },
+    "JPM": {
+      "qty": 42.0,
+      "avg_cost": 158.46661621520548,
+      "realized_pnl": 560.1952473716391
+    },
+    "JNJ": {
+      "qty": 68.0,
+      "avg_cost": 152.88329906769616,
+      "realized_pnl": -1846.3213598077941
+    },
+    "MA": {
+      "qty": 19.0,
+      "avg_cost": 420.03703749475403,
+      "realized_pnl": 1205.7021865214183
+    },
+    "V": {
+      "qty": 32.0,
+      "avg_cost": 287.548828125,
+      "realized_pnl": 2760.1981353759784
+    }
+  },
+  "source": "political",
+  "description": "Stocks BOTH parties buy: strongest signal when Dems + GOP agree"
+}

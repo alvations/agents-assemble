@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.2150690358613483,
+    "cagr": 0.06732617376179761,
+    "annual_volatility": 0.20085014455356398,
+    "sharpe_ratio": 0.22981583486385745,
+    "sortino_ratio": 0.33548168885580937,
+    "calmar_ratio": 0.1858956128570257,
+    "max_drawdown": -0.36217193470605946,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.5106382978723404,
+    "profit_factor": 1.0772585275713087,
+    "num_trading_days": 752,
+    "skewness": 0.2959099136430002,
+    "kurtosis": 2.7124808360552817,
+    "best_day": 0.07381089592309498,
+    "worst_day": -0.047518207296796344,
+    "avg_daily_return": 0.0003388186868115158,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.019298405337966562,
+    "beta": 0.8877895710028513,
+    "information_ratio": -0.14992783277463703,
+    "tracking_error": 0.1287179637084118
+  },
+  "trade_metrics": {
+    "num_trades": 263,
+    "num_buys": 129,
+    "num_sells": 134,
+    "total_commission": 0.0,
+    "total_slippage": 2126.2873927249907,
+    "total_transaction_costs": 2126.2873927249907,
+    "avg_trade_size": 8084.742938117836
+  },
+  "final_positions": {
+    "TSM": {
+      "qty": 63.0,
+      "avg_cost": 168.76931762695312,
+      "realized_pnl": 69.88125610351562
+    },
+    "SPY": {
+      "qty": 26.0,
+      "avg_cost": 593.0029296875,
+      "realized_pnl": 1957.797088623046
+    },
+    "QQQ": {
+      "qty": 30.0,
+      "avg_cost": 481.96873372395834,
+      "realized_pnl": -1398.8684997558594
+    },
+    "NVDA": {
+      "qty": 87.0,
+      "avg_cost": 116.95361328125,
+      "realized_pnl": 10581.285306930542
+    },
+    "AAPL": {
+      "qty": 58.0,
+      "avg_cost": 238.28829956054688,
+      "realized_pnl": -1603.0102844238256
+    },
+    "META": {
+      "qty": 26.0,
+      "avg_cost": 523.4583694488103,
+      "realized_pnl": 8757.215724260379
+    },
+    "CRM": {
+      "qty": 37.0,
+      "avg_cost": 292.4747009277344,
+      "realized_pnl": -4561.820938110352
+    },
+    "AMZN": {
+      "qty": 57.0,
+      "avg_cost": 197.92999267578125,
+      "realized_pnl": 2243.2512130737296
+    }
+  },
+  "source": "political",
+  "description": "Mega-cap AI concentration: $4B NVDA + $3.2B AMZN, $67B AUM"
+}

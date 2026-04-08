@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": 0.13408338733929015,
+    "cagr": 0.04298376367446832,
+    "annual_volatility": 0.10731154401055473,
+    "sharpe_ratio": 0.08108719816421249,
+    "sortino_ratio": 0.11134793402874968,
+    "calmar_ratio": 0.23186153575423468,
+    "max_drawdown": -0.18538548679341815,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.535904255319149,
+    "profit_factor": 1.0753871316005479,
+    "num_trading_days": 752,
+    "skewness": -0.293607326159149,
+    "kurtosis": 0.8368378259729186,
+    "best_day": 0.024741719277568297,
+    "worst_day": -0.029603241374926315,
+    "avg_daily_return": 0.00019017999149956226,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.043640815425295854,
+    "beta": 0.5159298951004783,
+    "information_ratio": -0.42509746358051215,
+    "tracking_error": 0.10266072880726661
+  },
+  "trade_metrics": {
+    "num_trades": 687,
+    "num_buys": 336,
+    "num_sells": 351,
+    "total_commission": 0.0,
+    "total_slippage": 3618.136825487133,
+    "total_transaction_costs": 3618.136825487133,
+    "avg_trade_size": 5266.574709588263
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 49.0,
+      "avg_cost": 589.6258185891544,
+      "realized_pnl": 4596.459239286521
+    },
+    "QQQ": {
+      "qty": 44.0,
+      "avg_cost": 510.38992779071515,
+      "realized_pnl": 5062.537773719197
+    },
+    "XLP": {
+      "qty": 150.0,
+      "avg_cost": 76.39161682128906,
+      "realized_pnl": 2424.7481002807513
+    },
+    "XLV": {
+      "qty": 85.0,
+      "avg_cost": 135.7760862462661,
+      "realized_pnl": 1049.8694915771514
+    },
+    "TLT": {
+      "qty": 137.0,
+      "avg_cost": 84.7766872215077,
+      "realized_pnl": -2008.5192580631074
+    },
+    "GLD": {
+      "qty": 47.0,
+      "avg_cost": 241.2582987493941,
+      "realized_pnl": 2587.329845298678
+    }
+  },
+  "source": "political",
+  "description": "Political uncertainty\u2192defensive, stability\u2192risk-on (Polymarket proxy)"
+}

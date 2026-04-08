@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.3094378174802548,
+    "cagr": 0.09436531224340294,
+    "annual_volatility": 0.14959700996189773,
+    "sharpe_ratio": 0.4165714438993737,
+    "sortino_ratio": 0.5912325202144628,
+    "calmar_ratio": 0.4838911038590768,
+    "max_drawdown": -0.1950135298847835,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.526595744680851,
+    "profit_factor": 1.1184243978086796,
+    "num_trading_days": 752,
+    "skewness": -0.13655993693283197,
+    "kurtosis": 0.7935343554810519,
+    "best_day": 0.032835392533775876,
+    "worst_day": -0.034392824711196424,
+    "avg_daily_return": 0.00040294288835815455,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.007740733143638767,
+    "beta": 0.54673401263575,
+    "information_ratio": 0.055412150587784016,
+    "tracking_error": 0.13969378667907656
+  },
+  "trade_metrics": {
+    "num_trades": 1644,
+    "num_buys": 791,
+    "num_sells": 853,
+    "total_commission": 0.0,
+    "total_slippage": 7215.410757886638,
+    "total_transaction_costs": 7215.410757886638,
+    "avg_trade_size": 4388.935984115966
+  },
+  "final_positions": {
+    "TM": {
+      "qty": 82.0,
+      "avg_cost": 179.51305370796018,
+      "realized_pnl": 2330.1156463623042
+    },
+    "SONY": {
+      "qty": 747.0,
+      "avg_cost": 20.12992549812217,
+      "realized_pnl": 283.8793211573196
+    },
+    "TSM": {
+      "qty": 80.0,
+      "avg_cost": 194.2604408117441,
+      "realized_pnl": 3060.2832477276133
+    },
+    "LI": {
+      "qty": 651.0,
+      "avg_cost": 24.270000457763672,
+      "realized_pnl": 865.1515331268315
+    },
+    "SE": {
+      "qty": 147.0,
+      "avg_cost": 103.01565168708582,
+      "realized_pnl": 2318.930974545803
+    }
+  },
+  "source": "hedge_fund",
+  "description": "2025 hedge fund winner: healthcare + Asian equities momentum"
+}

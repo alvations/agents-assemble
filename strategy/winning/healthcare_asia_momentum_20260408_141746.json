@@ -1,0 +1,93 @@
+{
+  "strategy_name": "healthcare_asia_momentum",
+  "is_winning": true,
+  "generated_at": "2026-04-08T14:17:45.878315",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "5.6%",
+    "stop_loss": "23.4%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "19.5%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "TM",
+      "action": "BUY",
+      "current_position": 82.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "29.2% below entry",
+      "take_profit": "6.2% above entry",
+      "position_size": "4.5% of portfolio",
+      "trailing_stop": "20.5% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TM",
+      "yahoo_url": "https://finance.yahoo.com/quote/TM/"
+    },
+    {
+      "symbol": "SONY",
+      "action": "BUY",
+      "current_position": 747.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "29.5% below entry",
+      "take_profit": "6.3% above entry",
+      "position_size": "4.4% of portfolio",
+      "trailing_stop": "20.7% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SONY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SONY/"
+    },
+    {
+      "symbol": "TSM",
+      "action": "BUY",
+      "current_position": 80.0,
+      "annual_volatility": "42%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "8.7% above entry",
+      "position_size": "3.2% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSM",
+      "yahoo_url": "https://finance.yahoo.com/quote/TSM/"
+    },
+    {
+      "symbol": "LI",
+      "action": "BUY",
+      "current_position": 651.0,
+      "annual_volatility": "52%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.0% above entry",
+      "position_size": "2.5% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LI",
+      "yahoo_url": "https://finance.yahoo.com/quote/LI/"
+    },
+    {
+      "symbol": "SE",
+      "action": "BUY",
+      "current_position": 147.0,
+      "annual_volatility": "47%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "9.9% above entry",
+      "position_size": "2.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SE",
+      "yahoo_url": "https://finance.yahoo.com/quote/SE/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "30.94%",
+    "sharpe_ratio": "0.42",
+    "max_drawdown": "-19.50%",
+    "win_rate": "52.66%",
+    "alpha": "0.77%"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.61420169209106,
+    "cagr": 0.1737005632697839,
+    "annual_volatility": 0.15599877241109358,
+    "sharpe_ratio": 0.8554424547534596,
+    "sortino_ratio": 1.2280149381158252,
+    "calmar_ratio": 0.8406809494524977,
+    "max_drawdown": -0.20661888839387665,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.5492021276595744,
+    "profit_factor": 1.2165811187296853,
+    "num_trading_days": 752,
+    "skewness": -0.15610439422262987,
+    "kurtosis": 1.686278376137977,
+    "best_day": 0.044054909880954396,
+    "worst_day": -0.03388797852829839,
+    "avg_daily_return": 0.0006852053104494856,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.08707598417001972,
+    "beta": 0.6550203481587119,
+    "information_ratio": 0.7149759823134662,
+    "tracking_error": 0.12178868426917742
+  },
+  "trade_metrics": {
+    "num_trades": 300,
+    "num_buys": 135,
+    "num_sells": 165,
+    "total_commission": 0.0,
+    "total_slippage": 1889.1150847072593,
+    "total_transaction_costs": 1889.1150847072593,
+    "avg_trade_size": 6297.050282357533
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 51.0,
+      "avg_cost": 238.28829956054688,
+      "realized_pnl": -75.25363159179608
+    },
+    "NVDA": {
+      "qty": 87.0,
+      "avg_cost": 117.69917981377964,
+      "realized_pnl": 8070.546363830566
+    },
+    "PANW": {
+      "qty": 62.0,
+      "avg_cost": 181.32000732421875,
+      "realized_pnl": 3353.7350006103525
+    },
+    "META": {
+      "qty": 20.0,
+      "avg_cost": 499.34402286305146,
+      "realized_pnl": 6738.030786850873
+    },
+    "MA": {
+      "qty": 23.0,
+      "avg_cost": 458.46923828125,
+      "realized_pnl": 608.3191833496098
+    },
+    "V": {
+      "qty": 39.0,
+      "avg_cost": 274.5530700683594,
+      "realized_pnl": 2368.4932708740234
+    },
+    "GS": {
+      "qty": 21.0,
+      "avg_cost": 503.8026428222656,
+      "realized_pnl": 2037.2422790527353
+    },
+    "JPM": {
+      "qty": 51.0,
+      "avg_cost": 216.23146057128906,
+      "realized_pnl": 2816.7201232910156
+    },
+    "CRM": {
+      "qty": 37.0,
+      "avg_cost": 292.4747009277344,
+      "realized_pnl": 1941.2676086425763
+    },
+    "NOW": {
+      "qty": 58.0,
+      "avg_cost": 159.28667195638022,
+      "realized_pnl": 5226.870206197102
+    },
+    "GOOGL": {
+      "qty": 71.0,
+      "avg_cost": 166.28331573916154,
+      "realized_pnl": 2485.21923828125
+    },
+    "AMZN": {
+      "qty": 57.0,
+      "avg_cost": 185.1300048828125,
+      "realized_pnl": 2538.890869140626
+    }
+  },
+  "source": "political",
+  "description": "Congressional Dem trading: tech-heavy quality momentum, +74% since 2023"
+}
