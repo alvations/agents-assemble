@@ -35,6 +35,12 @@ _SYMBOL_RE = re.compile(r'^[A-Z0-9.\-^=]{1,15}$')
 _STRATEGY_RE = re.compile(r'^[a-z0-9_]{1,60}$')
 _DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
+def _mtime(p):
+    try:
+        return p.stat().st_mtime
+    except OSError:
+        return 0
+
 def _sanitize_for_json(obj):
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
@@ -540,11 +546,6 @@ def api_leaderboard():
             _leaderboard_cache[horizon] = (time.monotonic(), [])
             return jsonify([])
         results = []
-        def _mtime(p):
-            try:
-                return p.stat().st_mtime
-            except OSError:
-                return 0
         for f in sorted(results_dir.glob("*.json"), key=_mtime):
             try:
                 data = json.loads(f.read_text())
@@ -587,7 +588,10 @@ def api_leaderboard():
                 "sharpe": _safe_metric(m.get("sharpe_ratio", 0), 2),
                 "max_dd": _safe_metric(m.get("max_drawdown", 0)),
             })
-    results.sort(key=lambda x: x["return"], reverse=True)
+    seen = {}
+    for r in results:
+        seen[r["name"]] = r
+    results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)
     results = _sanitize_for_json(results[:30])
     _leaderboard_cache[horizon] = (time.monotonic(), results)
     return jsonify(results)
@@ -636,8 +640,9 @@ def api_market():
                     data[sym] = {"price": last, "change": change}
         except Exception:
             pass
-    _market_cache["data"] = data
-    _market_cache["ts"] = time.monotonic()
+    if data:
+        _market_cache["data"] = data
+        _market_cache["ts"] = time.monotonic()
     return jsonify(data)
 
 @app.route("/api/scan/<symbol>")
@@ -662,12 +667,17 @@ def api_scan(symbol):
                     bts[f'{strat}_10d'] = r
             except Exception:
                 pass
-    best = max(bts.values(), key=lambda b: b.total_return) if bts else None
+    best_entry = None
+    if bts:
+        best_key = max(bts, key=lambda k: bts[k].total_return)
+        best_dict = bts[best_key].to_dict()
+        best_dict.setdefault("strategy", best_key)
+        best_entry = best_dict
     return jsonify(_sanitize_for_json({
         "symbol": sym,
         "industry": a.industry,
         "patterns": {k: v for k, v in patterns.items() if k != "events"} if patterns else None,
-        "best": best.to_dict() if best else None,
+        "best": best_entry,
     }))
 
 @app.route("/api/catalyst/<symbol>")

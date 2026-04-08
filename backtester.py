@@ -255,14 +255,16 @@ def compute_metrics(
         sharpe = 0.0
 
     # Sortino ratio (downside deviation only)
+    # Use arithmetic annualized excess return (same as Sharpe numerator)
+    # so the two ratios are directly comparable.
     downside_diff = (returns - daily_rf).clip(upper=0)
     downside_dev = math.sqrt((downside_diff**2).mean()) * sqrt_periods
-    excess_cagr = cagr - risk_free_rate
+    annualized_excess = excess.mean() * periods_per_year
     if downside_dev > 0:
-        sortino = excess_cagr / downside_dev
-    elif excess_cagr > 0:
+        sortino = annualized_excess / downside_dev
+    elif annualized_excess > 0:
         sortino = float("inf")
-    elif excess_cagr < 0:
+    elif annualized_excess < 0:
         sortino = float("-inf")
     else:
         sortino = 0.0
@@ -451,7 +453,7 @@ class Backtester:
         from data_fetcher import fetch_ohlcv, fetch_multiple_ohlcv
 
         if self._external_data:
-            all_data = self._external_data
+            all_data = dict(self._external_data)  # Shallow copy — don't mutate caller's dict
         else:
             # Pre-load 1 year before start for indicator warmup
             from datetime import datetime, timedelta
@@ -467,7 +469,7 @@ class Backtester:
         if self.benchmark:
             if self.benchmark in all_data:
                 bench_data = all_data[self.benchmark]
-            elif self.benchmark not in self.symbols:
+            else:
                 try:
                     bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
                 except Exception:
@@ -505,11 +507,15 @@ class Backtester:
         if not all_data:
             raise ValueError("No data loaded for any symbol")
 
-        # Normalize all indexes to tz-naive for consistent comparison
+        # Normalize all indexes to tz-naive for consistent comparison.
+        # Copy DataFrames before modifying to avoid mutating caller's external data.
         for sym in list(all_data.keys()):
             if all_data[sym].index.tz is not None:
-                all_data[sym].index = all_data[sym].index.tz_localize(None)
+                df = all_data[sym].copy()
+                df.index = df.index.tz_localize(None)
+                all_data[sym] = df
         if bench_data is not None and bench_data.index.tz is not None:
+            bench_data = bench_data.copy()
             bench_data.index = bench_data.index.tz_localize(None)
 
         portfolio = Portfolio(

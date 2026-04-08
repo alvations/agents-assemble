@@ -1,11 +1,11 @@
-"""Cortex AI Custom Scanner — Claude-powered natural language stock screening.
+"""Insight Engine Custom Scanner — Claude-powered natural language stock screening.
 
 Uses claude_code_client to interpret natural language queries into
 technical screening criteria, then scans the universe for matches.
 
 Usage:
-    from cortex_scanner import CortexScanner
-    scanner = CortexScanner()
+    from insight_engine import InsightEngine
+    scanner = InsightEngine()
 
     # Claude interprets your query and screens stocks
     results = scanner.scan("find me oversold tech stocks that are still above their 200-day average")
@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from data_fetcher import fetch_ohlcv, UNIVERSE
 
 
-class CortexScanner:
+class InsightEngine:
     """AI-powered stock screener using Claude + technical data."""
 
     def __init__(self):
@@ -318,8 +318,8 @@ Return ONLY a JSON object (no other text) with these fields:
 
 if __name__ == "__main__":
     query = " ".join(sys.argv[1:]) or "oversold stocks above SMA200"
-    scanner = CortexScanner()
-    print(f"\n  Cortex AI Scan: \"{query}\"\n")
+    scanner = InsightEngine()
+    print(f"\n  Insight Engine Scan: \"{query}\"\n")
     result = scanner.scan(query)
     print(f"  Interpretation: {result['interpretation']}")
     print(f"  Criteria: {result['criteria']}")
