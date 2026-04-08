@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.040012605921895705,
+    "cagr": 0.013208998897920043,
+    "annual_volatility": 0.12755590331387615,
+    "sharpe_ratio": -0.14070726443292333,
+    "sortino_ratio": -0.19632776707222324,
+    "calmar_ratio": 0.057276539089557314,
+    "max_drawdown": -0.23061796518931632,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5132978723404256,
+    "profit_factor": 1.029681750450452,
+    "num_trading_days": 752,
+    "skewness": -0.06737491620915079,
+    "kurtosis": 3.3871250470294165,
+    "best_day": 0.04573668586275015,
+    "worst_day": -0.03795617116637706,
+    "avg_daily_return": 8.442747303901689e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07341558020184413,
+    "beta": 0.6642391611793383,
+    "information_ratio": -0.9322104997121735,
+    "tracking_error": 0.07875429446944837
+  },
+  "trade_metrics": {
+    "num_trades": 1518,
+    "num_buys": 770,
+    "num_sells": 748,
+    "total_commission": 0.0,
+    "total_slippage": 2148.4484802398683,
+    "total_transaction_costs": 2148.4484802398683,
+    "avg_trade_size": 1415.3152043740897
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 45.0,
+      "avg_cost": 551.2650815598248,
+      "realized_pnl": 3834.409627223354
+    },
+    "QQQ": {
+      "qty": 41.0,
+      "avg_cost": 495.76726474708454,
+      "realized_pnl": 3703.9446557779415
+    },
+    "TLT": {
+      "qty": 189.0,
+      "avg_cost": 87.92675128960141,
+      "realized_pnl": -6969.154980386459
+    },
+    "GLD": {
+      "qty": 43.0,
+      "avg_cost": 237.84878151214446,
+      "realized_pnl": 4024.9466711843183
+    },
+    "IWM": {
+      "qty": 48.0,
+      "avg_cost": 218.02819856007895,
+      "realized_pnl": 583.8159484863352
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy aggressively when volatility spikes, reduce when complacent"
+}
