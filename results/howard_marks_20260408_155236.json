@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.0040863653535858635,
+    "cagr": 0.0013649450549315656,
+    "annual_volatility": 0.04274603208974149,
+    "sharpe_ratio": -0.8643285159400036,
+    "sortino_ratio": -1.271899050555029,
+    "calmar_ratio": 0.02194653845364912,
+    "max_drawdown": -0.06219409306002022,
+    "max_drawdown_date": "2024-04-25",
+    "win_rate": 0.4095744680851064,
+    "profit_factor": 1.0113113359006496,
+    "num_trading_days": 752,
+    "skewness": 1.1429035761428767,
+    "kurtosis": 12.494142901410637,
+    "best_day": 0.017904169897244193,
+    "worst_day": -0.01540665957456655,
+    "avg_daily_return": 9.036313273603959e-06,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08525963404483261,
+    "beta": 0.12193968449767263,
+    "information_ratio": -0.5391940956381988,
+    "tracking_error": 0.15812419819604653
+  },
+  "trade_metrics": {
+    "num_trades": 35,
+    "num_buys": 18,
+    "num_sells": 17,
+    "total_commission": 0.0,
+    "total_slippage": 396.79450635910047,
+    "total_transaction_costs": 396.79450635910047,
+    "avg_trade_size": 11336.985895974296
+  },
+  "final_positions": {
+    "MRK": {
+      "qty": 156.0,
+      "avg_cost": 96.69276428222656,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "famous",
+  "description": "Second-level thinking: buy quality when others panic, control risk"
+}

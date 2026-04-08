@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.11763912566578694,
+    "cagr": 0.037900742381885344,
+    "annual_volatility": 0.19519519100642269,
+    "sharpe_ratio": 0.08776090964485109,
+    "sortino_ratio": 0.12013020574130863,
+    "calmar_ratio": 0.11166511797631602,
+    "max_drawdown": -0.3394143405635771,
+    "max_drawdown_date": "2023-03-20",
+    "win_rate": 0.5039893617021277,
+    "profit_factor": 1.0519145543511956,
+    "num_trading_days": 752,
+    "skewness": -0.3525441768592858,
+    "kurtosis": 1.4202541847356325,
+    "best_day": 0.04068127392497667,
+    "worst_day": -0.04647895933182755,
+    "avg_daily_return": 0.00022362806723977117,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.04872383671787883,
+    "beta": 0.5606346583183499,
+    "information_ratio": -0.26276202735977383,
+    "tracking_error": 0.18542952041988223
+  },
+  "trade_metrics": {
+    "num_trades": 1009,
+    "num_buys": 509,
+    "num_sells": 500,
+    "total_commission": 0.0,
+    "total_slippage": 9088.978029015308,
+    "total_transaction_costs": 9088.978029015308,
+    "avg_trade_size": 9007.90686721041
+  },
+  "final_positions": {
+    "ILF": {
+      "qty": 839.0,
+      "avg_cost": 19.99549102783203,
+      "realized_pnl": 1456.0148944854755
+    },
+    "GGAL": {
+      "qty": 276.0,
+      "avg_cost": 61.028486777043,
+      "realized_pnl": 20334.762659072876
+    },
+    "SQM": {
+      "qty": 460.0,
+      "avg_cost": 36.470001220703125,
+      "realized_pnl": -1731.9462890624982
+    }
+  },
+  "source": "theme",
+  "description": "Latin American fintech, e-commerce, commodities growth"
+}

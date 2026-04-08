@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.15894897319605827,
+    "cagr": 0.05057752419737538,
+    "annual_volatility": 0.1235169740504216,
+    "sharpe_ratio": 0.14446059907697384,
+    "sortino_ratio": 0.20012553564044303,
+    "calmar_ratio": 0.2173342091388435,
+    "max_drawdown": -0.23271773181857458,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5226063829787234,
+    "profit_factor": 1.0861259197018476,
+    "num_trading_days": 752,
+    "skewness": -0.303374880302434,
+    "kurtosis": 2.7980183421968037,
+    "best_day": 0.03375850318905127,
+    "worst_day": -0.03343345891471505,
+    "avg_daily_return": 0.00022645675194800464,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0360470549023888,
+    "beta": 0.5733373562335329,
+    "information_ratio": -0.3474960908431387,
+    "tracking_error": 0.10373369903220178
+  },
+  "trade_metrics": {
+    "num_trades": 6204,
+    "num_buys": 3112,
+    "num_sells": 3092,
+    "total_commission": 0.0,
+    "total_slippage": 13074.010422686597,
+    "total_transaction_costs": 13074.010422686597,
+    "avg_trade_size": 2107.3517767064113
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 83.0,
+      "avg_cost": 140.740843636649,
+      "realized_pnl": -1518.7670277186821
+    },
+    "KO": {
+      "qty": 193.0,
+      "avg_cost": 60.32628487298913,
+      "realized_pnl": 1528.1859817381367
+    },
+    "XOM": {
+      "qty": 112.0,
+      "avg_cost": 101.34040832519531,
+      "realized_pnl": 1260.2426757812514
+    },
+    "UNH": {
+      "qty": 20.0,
+      "avg_cost": 491.6780014038086,
+      "realized_pnl": -1214.376312255854
+    },
+    "NVDA": {
+      "qty": 86.0,
+      "avg_cost": 139.5284810620685,
+      "realized_pnl": 5198.01367473603
+    }
+  },
+  "source": "famous",
+  "description": "Pure systematic: multi-factor composite, vol-weighted, daily rebalance"
+}

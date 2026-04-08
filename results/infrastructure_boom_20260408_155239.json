@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.25480700739913864,
+    "cagr": 0.07887671092634863,
+    "annual_volatility": 0.15774313666365888,
+    "sharpe_ratio": 0.3123612807146077,
+    "sortino_ratio": 0.44935343595575183,
+    "calmar_ratio": 0.35567694403434214,
+    "max_drawdown": -0.22176503776621725,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.48936170212765956,
+    "profit_factor": 1.0991540130624478,
+    "num_trading_days": 752,
+    "skewness": 0.010938542912210877,
+    "kurtosis": 1.5203012739415303,
+    "best_day": 0.049310823092269196,
+    "worst_day": -0.038971605812038734,
+    "avg_daily_return": 0.00035117703815713537,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.007747868173415551,
+    "beta": 0.647541250388844,
+    "information_ratio": -0.0615642524981656,
+    "tracking_error": 0.1258501136458436
+  },
+  "trade_metrics": {
+    "num_trades": 404,
+    "num_buys": 210,
+    "num_sells": 194,
+    "total_commission": 0.0,
+    "total_slippage": 2788.662139310836,
+    "total_transaction_costs": 2788.662139310836,
+    "avg_trade_size": 6902.629057700091
+  },
+  "final_positions": {
+    "NEE": {
+      "qty": 266.0,
+      "avg_cost": 74.10232601309181,
+      "realized_pnl": 365.53097152709665
+    },
+    "MLM": {
+      "qty": 34.0,
+      "avg_cost": 581.0023229262408,
+      "realized_pnl": -2397.091339111327
+    },
+    "CCI": {
+      "qty": 203.0,
+      "avg_cost": 98.0153686448271,
+      "realized_pnl": -2011.0807342529329
+    }
+  },
+  "source": "theme",
+  "description": "Infrastructure spending: construction, 5G, data centers, utilities"
+}

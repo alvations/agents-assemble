@@ -1,0 +1,59 @@
+{
+  "metrics": {
+    "total_return": 0.21742038515304407,
+    "cagr": 0.06801657488437285,
+    "annual_volatility": 0.20880693847313042,
+    "sharpe_ratio": 0.23208410346874583,
+    "sortino_ratio": 0.33825912377151574,
+    "calmar_ratio": 0.2469943690134425,
+    "max_drawdown": -0.2753770264320119,
+    "max_drawdown_date": "2023-08-17",
+    "win_rate": 0.3896276595744681,
+    "profit_factor": 1.0907512767258283,
+    "num_trading_days": 752,
+    "skewness": 0.13846501774702705,
+    "kurtosis": 3.809740813296831,
+    "best_day": 0.06710337824472523,
+    "worst_day": -0.060982823125317775,
+    "avg_daily_return": 0.00034795451006741374,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.018608004215391327,
+    "beta": 0.4576619200554283,
+    "information_ratio": -0.08657623657322247,
+    "tracking_error": 0.21493200619379516
+  },
+  "trade_metrics": {
+    "num_trades": 509,
+    "num_buys": 255,
+    "num_sells": 254,
+    "total_commission": 0.0,
+    "total_slippage": 6496.594959165573,
+    "total_transaction_costs": 6496.594959165573,
+    "avg_trade_size": 12763.447856906823
+  },
+  "final_positions": {
+    "NET": {
+      "qty": 225.0,
+      "avg_cost": 109.02999877929688,
+      "realized_pnl": -4597.485515594481
+    },
+    "CRWD": {
+      "qty": 70.0,
+      "avg_cost": 358.3654279436384,
+      "realized_pnl": 2849.381576538085
+    },
+    "SHOP": {
+      "qty": 230.0,
+      "avg_cost": 108.62669624660326,
+      "realized_pnl": 10316.799976348875
+    },
+    "SE": {
+      "qty": 229.0,
+      "avg_cost": 112.86642049597862,
+      "realized_pnl": 11885.640426635737
+    }
+  },
+  "source": "generic",
+  "description": "Disruptive innovation: high growth, buy dips in uptrends"
+}

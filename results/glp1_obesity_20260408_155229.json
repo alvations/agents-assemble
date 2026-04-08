@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.2391236845824085,
+    "cagr": 0.07434757200888642,
+    "annual_volatility": 0.15040023934696353,
+    "sharpe_ratio": 0.29193628411456163,
+    "sortino_ratio": 0.43013034081759244,
+    "calmar_ratio": 0.5395023389678313,
+    "max_drawdown": -0.13780769171664242,
+    "max_drawdown_date": "2022-10-03",
+    "win_rate": 0.5013297872340425,
+    "profit_factor": 1.0994658668320436,
+    "num_trading_days": 752,
+    "skewness": 0.29809006041383634,
+    "kurtosis": 2.2474679333684047,
+    "best_day": 0.048039356822963786,
+    "worst_day": -0.03638569891355459,
+    "avg_daily_return": 0.00032988512868369616,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.012277007090877756,
+    "beta": 0.3603835721733917,
+    "information_ratio": -0.06952819439346153,
+    "tracking_error": 0.17657595164059506
+  },
+  "trade_metrics": {
+    "num_trades": 823,
+    "num_buys": 393,
+    "num_sells": 430,
+    "total_commission": 0.0,
+    "total_slippage": 5808.16177206946,
+    "total_transaction_costs": 5808.16177206946,
+    "avg_trade_size": 7057.304704823152
+  },
+  "final_positions": {
+    "PLNT": {
+      "qty": 187.0,
+      "avg_cost": 99.56607320357342,
+      "realized_pnl": -3600.575791339489
+    }
+  },
+  "source": "theme",
+  "description": "Weight loss drug megatrend: $73-87B market, LLY/NVO leaders"
+}

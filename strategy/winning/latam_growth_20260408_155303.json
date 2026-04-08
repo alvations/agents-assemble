@@ -1,0 +1,67 @@
+{
+  "strategy_name": "latam_growth",
+  "is_winning": true,
+  "generated_at": "2026-04-08T15:53:03.053360",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "2.5%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "33.9%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "ILF",
+      "action": "BUY",
+      "current_position": 839.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.7% below entry",
+      "take_profit": "4.5% above entry",
+      "position_size": "2.7% of portfolio",
+      "trailing_stop": "15.9% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ILF",
+      "yahoo_url": "https://finance.yahoo.com/quote/ILF/"
+    },
+    {
+      "symbol": "GGAL",
+      "action": "BUY",
+      "current_position": 276.0,
+      "annual_volatility": "67%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "14.1% above entry",
+      "position_size": "0.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 5.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GGAL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GGAL/"
+    },
+    {
+      "symbol": "SQM",
+      "action": "BUY",
+      "current_position": 460.0,
+      "annual_volatility": "90%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "15.0% above entry",
+      "position_size": "0.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 6.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SQM",
+      "yahoo_url": "https://finance.yahoo.com/quote/SQM/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "11.76%",
+    "sharpe_ratio": "0.09",
+    "max_drawdown": "-33.94%",
+    "win_rate": "50.40%",
+    "alpha": "-4.87%"
+  }
+}
