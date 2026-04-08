@@ -318,19 +318,20 @@ class CatalystAnalyzer:
 
         max_horizon = max(SELL_HORIZONS)
         last_event_i = -max_horizon  # Track last event to avoid overlapping windows
-        for i in range(25, len(df) - max_horizon):
+        for i in range(25, len(df) - max_horizon - 1):
             if pd.isna(vr.iloc[i]) or pd.isna(ret.iloc[i]):
                 continue
             if i - last_event_i < max_horizon:
                 continue  # Skip events whose forward windows overlap prior event
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
-                entry_price = close.iloc[i]
+                # Measure from next-day close (tradeable entry), consistent with backtest
+                entry_price = close.iloc[i + 1]
                 if pd.isna(entry_price) or entry_price == 0:
                     continue
                 post = {}
                 skip = False
                 for h in SELL_HORIZONS:
-                    future_price = close.iloc[i + h]
+                    future_price = close.iloc[i + 1 + h]
                     if pd.isna(future_price):
                         skip = True
                         break
@@ -402,16 +403,23 @@ class CatalystAnalyzer:
         ret_arr = df["daily_return"].values
         vr_arr = df["vol_ratio"].values
 
+        # Pre-compute entry signals (NaN comparisons produce False in numpy)
+        signals = {
+            "buy_spike": (ret_arr > 0.03) & (vr_arr > 2.0),
+            "buy_dip": (ret_arr < -0.03) & (vr_arr > 2.0),
+            "momentum": (ret_arr > 0.02) & (vr_arr > 1.5),
+        }
+
         results = {}
-        for strat in ["buy_spike", "buy_dip", "momentum"]:
+        for strat, signal_arr in signals.items():
             for hold in SELL_HORIZONS:
                 key = f"{strat}_{hold}d"
-                r = self._run_single_backtest(close_arr, ret_arr, vr_arr, strat, hold)
+                r = self._run_single_backtest(close_arr, signal_arr, strat, hold)
                 if r.total_trades > 0:
                     results[key] = r
         return results
 
-    def _run_single_backtest(self, close_arr, ret_arr, vr_arr, strategy: str, holding_days: int) -> BacktestResult:
+    def _run_single_backtest(self, close_arr, signal_arr, strategy: str, holding_days: int) -> BacktestResult:
         n = len(close_arr)
 
         trades = []
@@ -435,19 +443,10 @@ class CatalystAnalyzer:
                 else:
                     continue  # Still holding — skip entry check
 
-            if position is None and i + 1 < n:
-                r = ret_arr[i]
-                v = vr_arr[i]
-                if r != r: r = 0.0  # NaN → neutral
-                if v != v: v = 1.0  # NaN → neutral
+            if position is None and i + 1 < n and signal_arr[i]:
                 entry_price = close_arr[i + 1]
                 if entry_price == entry_price and entry_price > 0:
-                    if strategy == "buy_spike" and r > 0.03 and v > 2.0:
-                        position = (entry_price, i + 1)
-                    elif strategy == "buy_dip" and r < -0.03 and v > 2.0:
-                        position = (entry_price, i + 1)
-                    elif strategy == "momentum" and r > 0.02 and v > 1.5:
-                        position = (entry_price, i + 1)
+                    position = (entry_price, i + 1)
 
         # Close position at last valid price if holding period completed but
         # NaN close prices prevented exit (e.g., delisted stock)
@@ -494,6 +493,20 @@ class CatalystAnalyzer:
                 best_bt = bt
                 best_key = key
 
+        # Find best backtest matching industry-optimal strategy
+        industry_bt = None
+        industry_info = INDUSTRY_CATALYSTS.get(self.industry, {})
+        opt_strat = industry_info.get("optimal_strategy")
+        if opt_strat:
+            for key, bt in backtests.items():
+                if not key.startswith(opt_strat + "_"):
+                    continue
+                if bt.total_trades < 3 or bt.win_rate <= 0.5 or bt.profit_factor < 1.0:
+                    continue
+                if industry_bt is None or bt.avg_return > industry_bt.avg_return:
+                    industry_bt = bt
+        ind_best = industry_bt or best_bt
+
         # Industry-specific predictions
         if self.industry == "gaming":
             predictions.append(CatalystPrediction(
@@ -503,9 +516,9 @@ class CatalystAnalyzer:
                 historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
                                    if "after_up" in patterns else "No clear pattern",
                 recommended_action="BUY 3-6 months before announced release, SELL within days of launch",
-                confidence="medium" if best_bt else "low",
-                expected_return=best_bt.avg_return if best_bt else 0,
-                expected_holding_days=best_bt.holding_days if best_bt else 20,
+                confidence="medium" if ind_best else "low",
+                expected_return=ind_best.avg_return if ind_best else 0,
+                expected_holding_days=ind_best.holding_days if ind_best else 20,
             ))
 
         elif self.industry == "pharma_biotech":
@@ -517,7 +530,7 @@ class CatalystAnalyzer:
                                    if "after_down" in patterns else "Binary outcomes",
                 recommended_action="BUY dips before known FDA dates, small position size (binary risk)",
                 confidence="low",
-                expected_return=best_bt.avg_return if best_bt else 0,
+                expected_return=ind_best.avg_return if ind_best else 0,
                 expected_holding_days=10,
             ))
 
@@ -529,9 +542,9 @@ class CatalystAnalyzer:
                 historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d"
                                    if "after_up" in patterns else "Momentum continuation",
                 recommended_action="BUY on positive spike + volume, ride momentum 10-20 days",
-                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
-                expected_return=best_bt.avg_return if best_bt else 0,
-                expected_holding_days=best_bt.holding_days if best_bt else 10,
+                confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
+                expected_return=ind_best.avg_return if ind_best else 0,
+                expected_holding_days=ind_best.holding_days if ind_best else 10,
             ))
 
         elif self.industry == "automotive":
@@ -542,8 +555,8 @@ class CatalystAnalyzer:
                 historical_pattern=f"After DOWN events: bounce +{patterns.get('after_down', {}).get('5d', {}).get('avg_return', 0):.1%} in 5d"
                                    if "after_down" in patterns else "Buy dip on delivery miss",
                 recommended_action="BUY dips around delivery number releases",
-                confidence="medium" if best_bt else "low",
-                expected_return=best_bt.avg_return if best_bt else 0,
+                confidence="medium" if ind_best else "low",
+                expected_return=ind_best.avg_return if ind_best else 0,
                 expected_holding_days=5,
             ))
 
@@ -555,9 +568,9 @@ class CatalystAnalyzer:
                 historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
                                    if "after_up" in patterns else "Seasonal momentum",
                 recommended_action="BUY before seasonal peaks (holiday, back-to-school), ride momentum 20 days",
-                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
-                expected_return=best_bt.avg_return if best_bt else 0,
-                expected_holding_days=best_bt.holding_days if best_bt else 20,
+                confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
+                expected_return=ind_best.avg_return if ind_best else 0,
+                expected_holding_days=ind_best.holding_days if ind_best else 20,
             ))
 
         elif self.industry == "semiconductor":
@@ -568,9 +581,9 @@ class CatalystAnalyzer:
                 historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d"
                                    if "after_up" in patterns else "Momentum continuation",
                 recommended_action="BUY on positive spike + volume from chip launch / design win news",
-                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
-                expected_return=best_bt.avg_return if best_bt else 0,
-                expected_holding_days=best_bt.holding_days if best_bt else 10,
+                confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
+                expected_return=ind_best.avg_return if ind_best else 0,
+                expected_holding_days=ind_best.holding_days if ind_best else 10,
             ))
 
         elif self.industry == "media_entertainment":
@@ -581,9 +594,9 @@ class CatalystAnalyzer:
                 historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
                                    if "after_up" in patterns else "Earnings-driven",
                 recommended_action="BUY before subscriber number releases or major content launches",
-                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
-                expected_return=best_bt.avg_return if best_bt else 0,
-                expected_holding_days=best_bt.holding_days if best_bt else 20,
+                confidence="medium" if ind_best and ind_best.win_rate > 0.6 else "low",
+                expected_return=ind_best.avg_return if ind_best else 0,
+                expected_holding_days=ind_best.holding_days if ind_best else 20,
             ))
 
         # Generic prediction from best backtest

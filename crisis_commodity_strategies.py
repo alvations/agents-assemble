@@ -67,8 +67,12 @@ class GeopoliticalCrisis(BasePersona):
                     continue
                 crisis_picks.append(sym)
             for sym in ["GLD", "SLV"]:
-                if sym in self.config.universe and sym in prices:
-                    crisis_picks.append(sym)
+                if sym in self.config.universe and sym in prices and sym not in weights:
+                    haven_rsi = self._get_indicator(data, sym, "rsi_14", date)
+                    if haven_rsi is not None and haven_rsi > 80:
+                        weights[sym] = 0.0
+                    else:
+                        crisis_picks.append(sym)
             if crisis_picks:
                 per_stock = min(0.90 / len(crisis_picks), self.config.max_position_size)
                 for sym in crisis_picks:
@@ -88,8 +92,12 @@ class GeopoliticalCrisis(BasePersona):
             haven_budget = 0.0
             for sym in ["GLD", "SLV"]:
                 if sym in self.config.universe and sym in prices:
-                    weights[sym] = 0.05
-                    haven_budget += 0.05
+                    haven_rsi = self._get_indicator(data, sym, "rsi_14", date)
+                    if haven_rsi is not None and haven_rsi > 80:
+                        weights[sym] = 0.0
+                    else:
+                        weights[sym] = 0.05
+                        haven_budget += 0.05
             if top:
                 per_stock = min((0.90 - haven_budget) / len(top), self.config.max_position_size)
                 for sym, _ in top:
@@ -144,6 +152,9 @@ class AgricultureFoodSecurity(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             if rsi > 80:
+                weights[sym] = 0.0
+                continue
+            if sma200 is not None and price < sma200 * 0.80:
                 weights[sym] = 0.0
                 continue
             score = 0.0
@@ -285,6 +296,9 @@ class SmallCapValueRotation(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             if rsi > 80:
+                weights[sym] = 0.0
+                continue
+            if sma200 is not None and price < sma200 * 0.80:
                 weights[sym] = 0.0
                 continue
             score = 0.0

@@ -614,8 +614,13 @@ def api_strategies():
                             "universe_size": 0, "rebalance": "?", "risk": "?"})
     return jsonify(results)
 
+_market_cache = {}  # {"data": {...}, "ts": monotonic_time}
+_CACHE_TTL_MARKET = 60  # 60s — market data doesn't change between page loads
+
 @app.route("/api/market")
 def api_market():
+    if _market_cache and time.monotonic() - _market_cache.get("ts", 0) < _CACHE_TTL_MARKET:
+        return jsonify(_market_cache["data"])
     from data_fetcher import fetch_ohlcv
     indices = {"SPY": "S&P 500", "QQQ": "Nasdaq", "IWM": "Russell 2000",
                "TLT": "Bonds 20Y", "GLD": "Gold"}
@@ -631,6 +636,8 @@ def api_market():
                     data[sym] = {"price": last, "change": change}
         except Exception:
             pass
+    _market_cache["data"] = data
+    _market_cache["ts"] = time.monotonic()
     return jsonify(data)
 
 @app.route("/api/scan/<symbol>")
@@ -707,7 +714,6 @@ def api_trade_plan(strategy):
         return jsonify({"error": f"Unknown strategy: {strategy}"}), 400
     from data_fetcher import fetch_multiple_ohlcv
     from backtester import _compute_rsi, _compute_bollinger, _compute_atr
-    import pandas as pd
 
     try:
         amount = float(request.args.get("amount", 100000))
@@ -750,21 +756,26 @@ def api_trade_plan(strategy):
     if not enriched:
         return jsonify({"error": "No market data available for strategy symbols"}), 500
     from backtester import Portfolio
-    portfolio = Portfolio(initial_cash=amount, cash=amount)
+    portfolio = Portfolio(initial_cash=amount)
     last_dates = [df.index[-1] for df in enriched.values() if len(df) > 0]
-    signal_date = max(last_dates) if last_dates else pd.Timestamp.now().normalize()
+    signal_date = max(last_dates)
     try:
         weights = persona.generate_signals(signal_date, prices, portfolio, enriched)
     except Exception as e:
         return jsonify({"error": f"Strategy signal generation failed: {e}"}), 500
 
     orders = []
+    remaining = amount
     numeric_weights = {s: w for s, w in weights.items()
                        if isinstance(w, (int, float)) and not isinstance(w, bool) and math.isfinite(w)}
     for sym, w in sorted(numeric_weights.items(), key=lambda x: -x[1]):
+        if remaining <= 0:
+            break
         if w > 0 and sym in prices and prices[sym] > 0:
-            qty = int(amount * min(w, persona.config.max_position_size) / prices[sym])
+            alloc = min(amount * min(w, persona.config.max_position_size), remaining)
+            qty = int(alloc / prices[sym])
             if qty > 0:
+                remaining -= qty * prices[sym]
                 orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
 
     return jsonify({"strategy": strategy, "orders": orders, "amount": amount})
