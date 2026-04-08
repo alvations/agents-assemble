@@ -294,7 +294,11 @@ Return ONLY a JSON object (no other text) with these fields:
             macd = float((ema12 - ema26).iloc[-1])
             macd_signal = float((ema12 - ema26).ewm(span=9).mean().iloc[-1])
 
-            vol_20 = float(close.pct_change().tail(20).std())
+            vol_20 = close.pct_change().tail(20).std()
+            if pd.isna(vol_20):
+                vol_20 = 0.0
+            else:
+                vol_20 = float(vol_20)
             vol_avg = float(df["Volume"].rolling(20).mean().iloc[-1])
             vol_ratio = float(df["Volume"].iloc[-1] / vol_avg) if vol_avg > 0 else 1
 
@@ -306,7 +310,7 @@ Return ONLY a JSON object (no other text) with these fields:
                 "rsi_14": rsi,
                 "macd": macd,
                 "macd_signal": macd_signal,
-                "annual_vol": vol_20 * (252 ** 0.5),
+                "annual_vol": vol_20 * math.sqrt(252),
                 "vol_ratio": vol_ratio,
                 "52w_high": high_252,
                 "52w_low": low_252,

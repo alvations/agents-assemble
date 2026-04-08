@@ -138,25 +138,26 @@ class EarningsSurpriseDrift(BasePersona):
 
             vol_ratio = volume / vol_avg if vol_avg > 0 else 1
 
-            # Earnings surprise proxy: >3% move on >2x volume
-            if daily_ret > 0.03 and vol_ratio > 2.0:
-                score = daily_ret * vol_ratio
-                # Must be above SMA200 (quality filter)
-                if sma200 is not None and price > sma200 * 0.95:
-                    candidates.append((sym, score))
-
-            # Broken-trend exit: position drifted below SMA200 — thesis invalidated
-            elif sma200 is not None and price < sma200 * 0.90:
+            # Broken-trend exit (checked first — priority over buy)
+            if sma200 is not None and price < sma200 * 0.90:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0:
                     weights[sym] = 0.0
                 continue
 
             # Negative surprise: sell on big down + volume
-            elif daily_ret < -0.05 and vol_ratio > 2.0:
+            if daily_ret < -0.05 and vol_ratio > 2.0:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0:
                     weights[sym] = 0.0
+                continue
+
+            # Earnings surprise proxy: >3% move on >2x volume
+            if daily_ret > 0.03 and vol_ratio > 2.0:
+                score = daily_ret * vol_ratio
+                # Must be above SMA200 (quality filter)
+                if sma200 is not None and price > sma200 * 0.95:
+                    candidates.append((sym, score))
 
         candidates.sort(key=lambda x: x[1], reverse=True)
         top = candidates[:self.config.max_positions]
@@ -210,6 +211,18 @@ class CrisisAlpha(BasePersona):
             is_crisis = True  # High realized vol (annualized ~40%)
         if spy_rsi is not None and spy_rsi < 25:
             is_crisis = True  # Extremely oversold
+        # 5-day cumulative loss (weekly return proxy)
+        if not is_crisis and "SPY" in data and "Close" in data["SPY"].columns:
+            try:
+                loc = int(data["SPY"].index.get_loc(date))
+                if loc >= 5:
+                    close_5d = data["SPY"]["Close"].iloc[loc - 5]
+                    if close_5d > 0:
+                        ret_5d = data["SPY"]["Close"].iloc[loc] / close_5d - 1
+                        if ret_5d < -0.05:
+                            is_crisis = True  # >5% weekly drop
+            except (KeyError, TypeError, ValueError):
+                pass
 
         universe_set = set(self.config.universe)
         if is_crisis:
@@ -230,6 +243,13 @@ class CrisisAlpha(BasePersona):
                 "SHY": 0.0,
             }
         result = {k: v for k, v in raw.items() if k in prices and k in universe_set}
+        # Scale positive weights to recover budget lost from filtered symbols
+        total_pos = sum(v for v in result.values() if v > 0)
+        raw_pos = sum(v for v in raw.values() if v > 0)
+        if 0 < total_pos < raw_pos:
+            scale = raw_pos / total_pos
+            result = {k: min(v * scale, self.config.max_position_size) if v > 0 else v
+                      for k, v in result.items()}
         for sym in self.config.universe:
             if sym in prices and sym not in result:
                 result[sym] = 0.0
