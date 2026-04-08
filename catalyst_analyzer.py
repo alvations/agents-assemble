@@ -364,7 +364,9 @@ class CatalystAnalyzer:
         if up:
             sell_analysis = {}
             for h in SELL_HORIZONS:
-                rets = [e.post_returns.get(h, 0) for e in up]
+                rets = [e.post_returns[h] for e in up if h in e.post_returns]
+                if not rets:
+                    continue
                 sell_analysis[f"{h}d"] = {
                     "avg_return": sum(rets) / len(rets),
                     "win_rate": sum(1 for r in rets if r > 0) / len(rets),
@@ -380,7 +382,9 @@ class CatalystAnalyzer:
         if down:
             sell_analysis = {}
             for h in SELL_HORIZONS:
-                rets = [e.post_returns.get(h, 0) for e in down]
+                rets = [e.post_returns[h] for e in down if h in e.post_returns]
+                if not rets:
+                    continue
                 sell_analysis[f"{h}d"] = {
                     "avg_return": sum(rets) / len(rets),
                     "bounce_rate": sum(1 for r in rets if r > 0) / len(rets),
@@ -641,7 +645,10 @@ class CatalystAnalyzer:
         except Exception:
             backtests = {}
 
-        predictions = self.predict_next_catalyst(patterns=patterns, backtests=backtests)
+        try:
+            predictions = self.predict_next_catalyst(patterns=patterns, backtests=backtests)
+        except Exception:
+            predictions = []
 
         return self._sanitize_for_json({
             "symbol": self.symbol,
@@ -721,14 +728,14 @@ class CatalystAnalyzer:
     # ----- Helpers -----
 
     _CLASSIFY_RULES = (
-        (("launch", "release", "unveil", "debut", "premiere", "nintendo switch", "gta"), "product_launch"),
         (("fda", "approval", "trial", "phase"), "regulatory"),
+        (("earnings", "revenue", "profit", "beat", "miss", "eps"), "earnings"),
         (("acquire", "merger", "buyout", "deal"), "ma"),
+        (("launch", "release", "unveil", "debut", "premiere", "nintendo switch", "gta"), "product_launch"),
         (("patent", "intellectual property"), "patent"),
         (("delivery", "production", "sales figure"), "delivery_numbers"),
         (("subscriber", "streaming", "user growth", "monthly active"), "subscriber_numbers"),
         (("dividend", "buyback", "split"), "capital_return"),
-        (("earnings", "revenue", "profit", "beat", "miss", "eps"), "earnings"),
         (("upgrade", "downgrade", "target", "analyst", "rating"), "analyst"),
         (("guidance", "outlook", "forecast"), "guidance"),
     )
