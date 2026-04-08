@@ -192,14 +192,36 @@ button.danger { background: #ff4444; }
     <h2>💰 Trade Execution (Public.com)</h2>
     <p style="color:#ff4444; margin-bottom:10px;">⚠️ DISCLAIMER: This is not financial advice. Past performance does not predict future results. Trade at your own risk.</p>
     <div class="input-group">
-        <select id="trade-strategy">
-            <option value="momentum_crash_hedge">Momentum Crash-Hedged</option>
-            <option value="concentrate_winners">Concentrate Winners</option>
-            <option value="ai_revolution">AI Revolution</option>
-            <option value="barbell_portfolio">Barbell Portfolio</option>
-            <option value="nancy_pelosi">Nancy Pelosi</option>
+        <select id="trade-strategy" style="flex:2">
+            <optgroup label="⭐ Top Performers (Sharpe > 1.0)">
+                <option value="concentrate_winners">Concentrate Winners (1.11 Sharpe, +818% 10Y)</option>
+                <option value="momentum">Momentum (1.08 Sharpe, +570% 10Y)</option>
+                <option value="momentum_crash_hedge">Momentum Crash-Hedged (1.05 Sharpe, +743% 10Y)</option>
+                <option value="ai_revolution">AI Revolution (0.94 Sharpe, +783% 10Y)</option>
+            </optgroup>
+            <optgroup label="📊 Portfolio Strategies (hedged)">
+                <option value="barbell_portfolio">Barbell Portfolio (2.05 Sharpe 1Y)</option>
+                <option value="staples_hedged_growth">Staples-Hedged Growth</option>
+                <option value="core_satellite">Core-Satellite (60/40 active)</option>
+            </optgroup>
+            <optgroup label="🏛️ Political / Billionaire">
+                <option value="nancy_pelosi">Nancy Pelosi (1.39 Sharpe 3Y)</option>
+                <option value="bill_ackman">Bill Ackman (1.22 Sharpe 3Y)</option>
+                <option value="stanley_druckenmiller">Druckenmiller (1.38 Sharpe 1Y)</option>
+            </optgroup>
+            <optgroup label="🔬 Themes">
+                <option value="glp1_obesity">GLP-1 Obesity (0.92 Sharpe 3Y)</option>
+                <option value="defense_aerospace">Defense & Aerospace</option>
+                <option value="small_cap_value_rotation">Small Cap Value</option>
+            </optgroup>
+            <optgroup label="🛡️ Defensive">
+                <option value="defensive_rotation">Defensive Rotation (recession hedge)</option>
+                <option value="income_shield">Income Shield (high dividend)</option>
+            </optgroup>
         </select>
-        <button onclick="generateTradePlan()">Generate Trade Plan (Dry Run)</button>
+        <input type="number" id="trade-amount" value="100000" min="1000" step="1000" style="width:120px" placeholder="$">
+        <button onclick="generateTradePlan()" style="flex:0">📋 Generate Plan</button>
+        <button onclick="executeTrades()" class="danger" style="flex:0">⚡ EXECUTE (Live)</button>
     </div>
     <div id="trade-results"></div>
 </div>
@@ -392,6 +414,29 @@ function generateTradePlan() {
             html += '<p><span class="tag tag-blue">Order Type</span> LIMIT orders at 0.5% below current price. Scale in over 3 tranches.</p>';
         } else {
             html += '<p class="negative">No positions generated — strategy may not have signals today.</p>';
+        }
+        document.getElementById('trade-results').innerHTML = html;
+    }).catch(e => {
+        document.getElementById('trade-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
+    });
+}
+
+function executeTrades() {
+    if (!confirm('⚠️ LIVE TRADING: This will place REAL orders with REAL money on Public.com.\\n\\nDo you have PUBLIC_API_SECRET set?\\n\\nClick OK to proceed or Cancel to abort.')) return;
+    const strat = document.getElementById('trade-strategy').value;
+    const amt = document.getElementById('trade-amount').value;
+    document.getElementById('trade-results').innerHTML = '<p class="loading" style="color:#ff4444">⚡ EXECUTING live trades for ' + strat + '...</p>';
+    fetch('/api/execute-trade/' + strat + '?amount=' + amt).then(r => r.json()).then(data => {
+        let html = '<h3 style="color:#ff4444">⚡ EXECUTION RESULT: ' + strat + '</h3>';
+        if (data.error) {
+            html += '<p class="negative">' + data.error + '</p>';
+        } else if (data.placed) {
+            html += '<p class="positive">' + data.placed.length + ' orders placed!</p>';
+            html += '<table><tr><th>Symbol</th><th>Side</th><th>Qty</th><th>Status</th></tr>';
+            data.placed.forEach(o => {
+                html += '<tr><td>' + o.symbol + '</td><td>' + o.side + '</td><td>' + o.quantity + '</td><td class="positive">SENT</td></tr>';
+            });
+            html += '</table>';
         }
         document.getElementById('trade-results').innerHTML = html;
     }).catch(e => {
@@ -620,6 +665,23 @@ def api_trade_plan(strategy):
                 orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
 
     return jsonify({"strategy": strategy, "orders": orders})
+
+
+@app.route("/api/execute-trade/<strategy>")
+def api_execute_trade(strategy):
+    """LIVE trade execution via Public.com API. Requires PUBLIC_API_SECRET."""
+    import os
+    if not os.environ.get("PUBLIC_API_SECRET"):
+        return jsonify({"error": "PUBLIC_API_SECRET not set. Go to public.com/settings/security/api to get your key, then: export PUBLIC_API_SECRET=your_key"})
+
+    amount = float(request.args.get("amount", 100000))
+    from public_trader import PublicTrader
+    trader = PublicTrader(dry_run=False)
+    try:
+        results = trader.execute_strategy(strategy, portfolio_value=amount)
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 
 if __name__ == "__main__":
