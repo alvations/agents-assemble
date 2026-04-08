@@ -14,11 +14,6 @@ Strategies:
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
-import numpy as np
-import pandas as pd
-
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 
@@ -72,11 +67,11 @@ class NewsReactionMomentum(BasePersona):
             if vol_ratio > 2.0 and daily_ret > 0.01:
                 score = vol_ratio * daily_ret * 100
                 # Must be in reasonable trend (not broken stock)
-                if sma50 and price > sma50 * 0.90:
+                if sma50 is not None and price > sma50 * 0.90:
                     scored.append((sym, score))
 
             # Exit: RSI overbought after news run
-            if rsi and rsi > 80:
+            if rsi is not None and rsi > 80:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0:
                     weights[sym] = 0.0
@@ -87,6 +82,10 @@ class NewsReactionMomentum(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -139,7 +138,7 @@ class EarningsSurpriseDrift(BasePersona):
             if daily_ret > 0.03 and vol_ratio > 2.0:
                 score = daily_ret * vol_ratio
                 # Must be above SMA200 (quality filter)
-                if sma200 and price > sma200 * 0.95:
+                if sma200 is not None and price > sma200 * 0.95:
                     candidates.append((sym, score))
 
             # Negative surprise: sell on big down + volume
@@ -183,9 +182,9 @@ class CrisisAlpha(BasePersona):
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
-        spy_ret = self._get_indicator(data, "SPY", "daily_return", date)
-        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
-        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+        spy_ret = self._get_indicator(data, "SPY", "daily_return", date) if "SPY" in data else None
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date) if "SPY" in data else None
+        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date) if "SPY" in data else None
 
         # Crisis detection
         is_crisis = False
@@ -197,7 +196,7 @@ class CrisisAlpha(BasePersona):
             is_crisis = True  # Extremely oversold
 
         if is_crisis:
-            return {
+            raw = {
                 "TLT": 0.35,
                 "GLD": 0.30,
                 "SHY": 0.25,
@@ -206,13 +205,14 @@ class CrisisAlpha(BasePersona):
             }
         else:
             # Normal: 70/30 stocks/bonds
-            return {
+            raw = {
                 "SPY": 0.40,
                 "QQQ": 0.30,
                 "TLT": 0.10,
                 "GLD": 0.10,
                 "SHY": 0.0,
             }
+        return {k: v for k, v in raw.items() if k in prices}
 
 
 NEWS_EVENT_STRATEGIES = {
