@@ -197,7 +197,7 @@ class CatalystAnalyzer:
 
     def __init__(self, symbol: str, industry: str | None = None):
         self.symbol = symbol.upper()
-        self.industry = industry or self._detect_industry()
+        self.industry = industry.lower() if industry else self._detect_industry()
         self._price_data = None
         self._news_cache = None
 
@@ -437,8 +437,7 @@ class CatalystAnalyzer:
 
             if position is not None:
                 if i - position[1] >= holding_days:
-                    if price > 0:
-                        trades.append(float(price / position[0] - 1))
+                    trades.append(float(price / position[0] - 1))
                     position = None
                 else:
                     continue  # Still holding — skip entry check

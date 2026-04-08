@@ -195,10 +195,12 @@ def fetch_multiple_ohlcv(
     results = {}
 
     # Check cache first to avoid unnecessary network calls
+    intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
+    cache_ttl = 0.5 if intraday else 12
     uncached = []
     for sym in symbols:
         cache_key = f"ohlcv_{sym}_{start}_{end}_{interval}"
-        cached = _cache_get(cache_key)
+        cached = _cache_get(cache_key, max_age_hours=cache_ttl)
         if cached is not None:
             results[sym] = cached
         else:
@@ -250,7 +252,7 @@ def fetch_fundamentals(symbol: str) -> dict[str, Any]:
     ticker = yf.Ticker(symbol)
     info = ticker.info
 
-    return {
+    result = {
         "symbol": symbol,
         "name": info.get("longName", ""),
         "sector": info.get("sector", ""),
@@ -279,6 +281,10 @@ def fetch_fundamentals(symbol: str) -> dict[str, Any]:
         "shares_outstanding": info.get("sharesOutstanding"),
         "institutional_holders_pct": info.get("heldPercentInstitutions"),
     }
+    # yfinance .info can return NaN or Infinity for numeric fields;
+    # sanitize to None so downstream `is not None` checks work correctly
+    return {k: (None if isinstance(v, float) and not math.isfinite(v) else v)
+            for k, v in result.items()}
 
 
 def fetch_earnings(symbol: str) -> pd.DataFrame:
