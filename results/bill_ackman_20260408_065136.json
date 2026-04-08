@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.47152742605764475,
+    "cagr": 0.1379281195220845,
+    "annual_volatility": 0.1506164969956396,
+    "sharpe_ratio": 0.6745115064089049,
+    "sortino_ratio": 0.9700611408249867,
+    "calmar_ratio": 0.6760749950936122,
+    "max_drawdown": -0.20401304666353826,
+    "max_drawdown_date": "2022-12-28",
+    "win_rate": 0.5039893617021277,
+    "profit_factor": 1.1807537302429079,
+    "num_trading_days": 752,
+    "skewness": -0.10984536383074643,
+    "kurtosis": 1.5808603074045533,
+    "best_day": 0.03656260659870325,
+    "worst_day": -0.032544857592793686,
+    "avg_daily_return": 0.0005587949432617436,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.051303540422320326,
+    "beta": 0.6148065255654876,
+    "information_ratio": 0.41013440162670606,
+    "tracking_error": 0.12508958092478062
+  },
+  "trade_metrics": {
+    "num_trades": 263,
+    "num_buys": 141,
+    "num_sells": 122,
+    "total_commission": 0.0,
+    "total_slippage": 2224.381930610657,
+    "total_transaction_costs": 2224.381930610657,
+    "avg_trade_size": 8457.725971903637
+  },
+  "final_positions": {
+    "BN": {
+      "qty": 405.0,
+      "avg_cost": 26.166621440448072,
+      "realized_pnl": -4111.032373777953
+    },
+    "HLT": {
+      "qty": 66.0,
+      "avg_cost": 235.67881774902344,
+      "realized_pnl": 1944.2914276123065
+    },
+    "AMZN": {
+      "qty": 78.0,
+      "avg_cost": 185.1300048828125,
+      "realized_pnl": 1112.0048217773438
+    },
+    "GOOGL": {
+      "qty": 97.0,
+      "avg_cost": 166.30800258990416,
+      "realized_pnl": 460.86880493164074
+    },
+    "META": {
+      "qty": 28.0,
+      "avg_cost": 565.3506186349051,
+      "realized_pnl": 10617.06965637207
+    },
+    "MA": {
+      "qty": 31.0,
+      "avg_cost": 458.46923828125,
+      "realized_pnl": 900.3995056152339
+    },
+    "V": {
+      "qty": 52.0,
+      "avg_cost": 287.548828125,
+      "realized_pnl": 3243.798416137693
+    },
+    "NFLX": {
+      "qty": 183.0,
+      "avg_cost": 89.77400207519531,
+      "realized_pnl": 8625.694398880005
+    }
+  },
+  "source": "famous",
+  "description": "Ultra-concentrated compounders: 11 positions, 40% AI, 34% return 2025"
+}
