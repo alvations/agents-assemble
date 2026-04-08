@@ -1,0 +1,41 @@
+{
+  "strategy_name": "short_seller_dip_buy",
+  "is_winning": true,
+  "generated_at": "2026-04-08T15:25:11.852009",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "10.9%",
+    "stop_loss": "13.7%",
+    "take_profit_target": "8.3%",
+    "max_drawdown_tolerance": "11.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "AI",
+      "action": "BUY",
+      "current_position": 1029.0,
+      "annual_volatility": "65%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "37.2% below entry",
+      "take_profit": "22.7% above entry",
+      "position_size": "4.0% of portfolio",
+      "trailing_stop": "26.0% trailing after 9.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AI",
+      "yahoo_url": "https://finance.yahoo.com/quote/AI/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "58.58%",
+    "sharpe_ratio": "0.87",
+    "max_drawdown": "-11.38%",
+    "win_rate": "51.20%",
+    "alpha": "8.01%"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "strategy_name": "jim_simons",
+  "is_winning": true,
+  "generated_at": "2026-04-08T15:25:10.379158",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.2%",
+    "stop_loss": "23.6%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "19.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [],
+  "metrics_summary": {
+    "total_return": "26.34%",
+    "sharpe_ratio": "0.39",
+    "max_drawdown": "-19.65%",
+    "win_rate": "49.53%",
+    "alpha": "-0.66%"
+  }
+}
