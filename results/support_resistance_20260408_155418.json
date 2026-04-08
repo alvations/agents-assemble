@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.0020864807425367005,
+    "cagr": 0.0006973979731330626,
+    "annual_volatility": 0.1553921010883233,
+    "sharpe_ratio": -0.17032053510914819,
+    "sortino_ratio": -0.24062900674534426,
+    "calmar_ratio": 0.002160175653758451,
+    "max_drawdown": -0.3228431780164138,
+    "max_drawdown_date": "2024-02-14",
+    "win_rate": 0.4601063829787234,
+    "profit_factor": 1.015485499759074,
+    "num_trading_days": 752,
+    "skewness": 0.01817241251346152,
+    "kurtosis": 3.7010150334343295,
+    "best_day": 0.04442059243594265,
+    "worst_day": -0.05464953017428875,
+    "avg_daily_return": 5.06242048186514e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08592718112663111,
+    "beta": 0.30391848752800715,
+    "information_ratio": -0.45182929052214105,
+    "tracking_error": 0.19017620798185153
+  },
+  "trade_metrics": {
+    "num_trades": 3069,
+    "num_buys": 1478,
+    "num_sells": 1591,
+    "total_commission": 0.0,
+    "total_slippage": 28179.073456735554,
+    "total_transaction_costs": 28179.073456735554,
+    "avg_trade_size": 9181.842116890066
+  },
+  "final_positions": {
+    "DBA": {
+      "qty": 1952.0,
+      "avg_cost": 25.532348919702123,
+      "realized_pnl": 3989.0900146594213
+    },
+    "GLD": {
+      "qty": 83.0,
+      "avg_cost": 242.1300048828125,
+      "realized_pnl": 3954.5132751464835
+    },
+    "UNG": {
+      "qty": 1111.0,
+      "avg_cost": 18.030000686645508,
+      "realized_pnl": 2264.1258602142316
+    }
+  },
+  "source": "famous",
+  "description": "Breakout trading on commodity ETFs with defined S/R levels and ATR stops"
+}

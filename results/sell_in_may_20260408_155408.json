@@ -1,0 +1,49 @@
+{
+  "metrics": {
+    "total_return": 0.01812571490381476,
+    "cagr": 0.006026449773390841,
+    "annual_volatility": 0.13738630123978307,
+    "sharpe_ratio": -0.17318126215495427,
+    "sortino_ratio": -0.24726880840269536,
+    "calmar_ratio": 0.024537111459718947,
+    "max_drawdown": -0.24560550997553598,
+    "max_drawdown_date": "2022-11-03",
+    "win_rate": 0.5079787234042553,
+    "profit_factor": 1.0198621426908705,
+    "num_trading_days": 752,
+    "skewness": 0.2805310902276663,
+    "kurtosis": 3.7292055599623155,
+    "best_day": 0.05688701549282427,
+    "worst_day": -0.03607630969756925,
+    "avg_daily_return": 6.123425544401523e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08059812932637334,
+    "beta": 0.5080959283919961,
+    "information_ratio": -0.5945215814718441,
+    "tracking_error": 0.13556804637240974
+  },
+  "trade_metrics": {
+    "num_trades": 93,
+    "num_buys": 42,
+    "num_sells": 51,
+    "total_commission": 0.0,
+    "total_slippage": 1062.3126000061038,
+    "total_transaction_costs": 1062.3126000061038,
+    "avg_trade_size": 11422.716129097887
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 87.0,
+      "avg_cost": 560.9867553710938,
+      "realized_pnl": 4956.028991699219
+    },
+    "QQQ": {
+      "qty": 81.0,
+      "avg_cost": 483.57989501953125,
+      "realized_pnl": 3227.677978515625
+    }
+  },
+  "source": "unconventional",
+  "description": "Seasonal: stocks Nov-Apr, bonds May-Oct"
+}

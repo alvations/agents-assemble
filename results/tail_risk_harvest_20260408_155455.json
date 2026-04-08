@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "total_return": -0.001608094597493115,
+    "cagr": -0.0005381603788221501,
+    "annual_volatility": 0.09275624767871268,
+    "sharpe_ratio": -0.38228223695464464,
+    "sortino_ratio": -0.5231353849913823,
+    "calmar_ratio": -0.0031893128320743306,
+    "max_drawdown": -0.16873866163581397,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.4029255319148936,
+    "profit_factor": 1.008750180782179,
+    "num_trading_days": 752,
+    "skewness": -0.43056425485430033,
+    "kurtosis": 7.7066391728885755,
+    "best_day": 0.02771744098278739,
+    "worst_day": -0.04236759338418239,
+    "avg_daily_return": 1.4939284005003482e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08716273947858633,
+    "beta": 0.3654270577337383,
+    "information_ratio": -0.6714093596428955,
+    "tracking_error": 0.12982056062630082
+  },
+  "trade_metrics": {
+    "num_trades": 485,
+    "num_buys": 263,
+    "num_sells": 222,
+    "total_commission": 0.0,
+    "total_slippage": 5944.098733964918,
+    "total_transaction_costs": 5944.098733964918,
+    "avg_trade_size": 12255.873678278185
+  },
+  "final_positions": {},
+  "source": "unconventional",
+  "description": "Buy quality names after sharp single-day drops, capture mean-reversion"
+}

@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.3735417147849698,
+    "cagr": 0.11200072534685357,
+    "annual_volatility": 0.14807370654363608,
+    "sharpe_ratio": 0.5274221920001231,
+    "sortino_ratio": 0.776750985030076,
+    "calmar_ratio": 0.6876171312910992,
+    "max_drawdown": -0.16288239523142223,
+    "max_drawdown_date": "2024-09-10",
+    "win_rate": 0.4348404255319149,
+    "profit_factor": 1.1638996012834202,
+    "num_trading_days": 752,
+    "skewness": 0.11024056552109397,
+    "kurtosis": 3.0823113269779214,
+    "best_day": 0.048615274763429195,
+    "worst_day": -0.04084341352398724,
+    "avg_daily_return": 0.00046556001708819735,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.025376146247089393,
+    "beta": 0.4448246244178832,
+    "information_ratio": 0.15951258371906132,
+    "tracking_error": 0.1590855445723497
+  },
+  "trade_metrics": {
+    "num_trades": 570,
+    "num_buys": 267,
+    "num_sells": 303,
+    "total_commission": 0.0,
+    "total_slippage": 4418.746351437571,
+    "total_transaction_costs": 4418.746351437571,
+    "avg_trade_size": 7752.186581469418
+  },
+  "final_positions": {
+    "TSLA": {
+      "qty": 50.0,
+      "avg_cost": 430.3362060546875,
+      "realized_pnl": 13762.614501953127
+    },
+    "TER": {
+      "qty": 164.0,
+      "avg_cost": 119.04587722406154,
+      "realized_pnl": -3930.8666305541988
+    },
+    "GOOGL": {
+      "qty": 109.0,
+      "avg_cost": 193.70337152043615,
+      "realized_pnl": 4686.262298583982
+    }
+  },
+  "source": "theme",
+  "description": "Humanoid robots + autonomous vehicles: $200B market by 2030"
+}
