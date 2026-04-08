@@ -123,9 +123,9 @@ class Portfolio:
     def execute_trade(self, date: pd.Timestamp, symbol: str, side: Side,
                       quantity: float, price: float) -> Trade:
         """Execute a trade and update portfolio."""
-        if quantity <= 0:
+        if not (quantity > 0):
             raise ValueError(f"Quantity must be positive, got {quantity}")
-        if price <= 0:
+        if not (price > 0):
             raise ValueError(f"Price must be positive, got {price}")
 
         slippage = price * self.slippage_pct * quantity
@@ -338,17 +338,21 @@ def compute_metrics(
                 port_aligned_cagr = float("inf")
             metrics["benchmark_total_return"] = bench_total
             metrics["benchmark_cagr"] = bench_cagr
-            metrics["alpha"] = port_aligned_cagr - bench_cagr
+            # Guard against inf - inf = nan when both CAGRs overflow
+            alpha = port_aligned_cagr - bench_cagr
+            if math.isnan(alpha):
+                alpha = 0.0
+            metrics["alpha"] = alpha
 
             # Beta
             cov = aligned[["port", "bench"]].cov()
             beta = cov.iloc[0, 1] / cov.iloc[1, 1] if cov.iloc[1, 1] > 0 else 0
             metrics["beta"] = beta
 
-            # Information ratio
+            # Information ratio (use guarded alpha to prevent nan propagation)
             tracking = aligned["port"] - aligned["bench"]
             tracking_error = tracking.std() * sqrt_periods
-            info_ratio = (port_aligned_cagr - bench_cagr) / tracking_error if tracking_error > 0 else 0
+            info_ratio = alpha / tracking_error if tracking_error > 0 else 0
             metrics["information_ratio"] = info_ratio
             metrics["tracking_error"] = tracking_error
 
@@ -430,11 +434,11 @@ class Backtester:
         self.end = end
         if end is not None and pd.Timestamp(start) > pd.Timestamp(end):
             raise ValueError(f"start ({start}) must be before end ({end})")
-        if initial_cash <= 0:
+        if not (initial_cash > 0):
             raise ValueError(f"initial_cash must be positive, got {initial_cash}")
-        if slippage_pct < 0:
+        if not (slippage_pct >= 0):
             raise ValueError(f"slippage_pct must be non-negative, got {slippage_pct}")
-        if commission < 0:
+        if not (commission >= 0):
             raise ValueError(f"commission must be non-negative, got {commission}")
         self.initial_cash = initial_cash
         self.commission = commission
@@ -670,7 +674,7 @@ class Backtester:
             if sym not in prices:
                 continue
             price = prices[sym]
-            if price <= 0:
+            if not (price > 0):
                 continue
             target_value = total_value * target_w
             current_pos = portfolio.get_position(sym)
@@ -702,7 +706,7 @@ class Backtester:
             if sym not in prices:
                 continue
             price = prices[sym]
-            if price <= 0:
+            if not (price > 0):
                 continue
             target_value = total_value * target_w
             current_pos = portfolio.get_position(sym)
