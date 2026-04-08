@@ -588,7 +588,7 @@ class Backtester:
                 target_weights = {}
                 strategy_errors += 1
 
-            if target_weights is None:
+            if not isinstance(target_weights, dict):
                 target_weights = {}
                 strategy_errors += 1
 
@@ -638,7 +638,9 @@ class Backtester:
         # Filter out non-finite weights (NaN/inf from strategy bugs).
         # NaN weights silently fail all comparisons, leaving stale positions;
         # inf weights cause OverflowError in int(round(inf / price)).
-        # Filtered symbols fall through to orphan-close logic below.
+        # Preserve original keys so filtered symbols are treated as "hold
+        # current position" rather than orphans to be closed.
+        _requested_syms = set(target_weights)
         target_weights = {k: v for k, v in target_weights.items()
                           if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)}
         total_value = portfolio.total_value(prices)
@@ -663,9 +665,10 @@ class Backtester:
                 if qty > 0:
                     sells.append((sym, qty))
 
-        # Close long positions not in target weights
+        # Close long positions not in target weights (but not those the
+        # strategy requested with an invalid weight — those are held as-is)
         for sym in list(portfolio.positions.keys()):
-            if sym not in target_weights:
+            if sym not in _requested_syms:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0 and sym in prices and prices[sym] > 0:
                     qty = int(round(pos.quantity))
@@ -698,7 +701,7 @@ class Backtester:
 
         # Close short positions not in target weights (highest priority)
         for sym in list(portfolio.positions.keys()):
-            if sym not in target_weights:
+            if sym not in _requested_syms:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity < 0 and sym in prices and prices[sym] > 0:
                     qty = int(round(abs(pos.quantity)))

@@ -304,16 +304,19 @@ def fetch_options_chain(symbol: str, expiry: str | None = None) -> dict[str, pd.
     """Fetch options chain (calls and puts)."""
     import yfinance as yf
 
-    ticker = yf.Ticker(symbol)
-    if expiry:
-        chain = ticker.option_chain(expiry)
-    else:
-        expirations = ticker.options
-        if not expirations:
-            return {"calls": pd.DataFrame(), "puts": pd.DataFrame()}
-        chain = ticker.option_chain(expirations[0])
-
-    return {"calls": chain.calls, "puts": chain.puts}
+    empty = {"calls": pd.DataFrame(), "puts": pd.DataFrame()}
+    try:
+        ticker = yf.Ticker(symbol)
+        if expiry:
+            chain = ticker.option_chain(expiry)
+        else:
+            expirations = ticker.options
+            if not expirations:
+                return empty
+            chain = ticker.option_chain(expirations[0])
+        return {"calls": chain.calls, "puts": chain.puts}
+    except Exception:
+        return empty
 
 
 # ---------------------------------------------------------------------------
@@ -430,7 +433,9 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
                 return None
             if date:
                 idx = pd.to_datetime(date)
-                pos = df.index.get_indexer([idx], method="nearest")[0]
+                pos = df.index.get_indexer([idx], method="pad")[0]
+                if pos == -1:
+                    return None
                 nearest = df.index[pos]
                 if abs((nearest - idx).days) > 10:
                     return None
@@ -1159,7 +1164,7 @@ def scan_volatile_stocks(
     results = []
     for sym in universe:
         hist = fetched.get(sym)
-        if hist is None or len(hist) < 20:
+        if hist is None or "Close" not in hist.columns or len(hist) < 20:
             continue
         try:
             close = hist["Close"]

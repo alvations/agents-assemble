@@ -331,6 +331,9 @@ class GeorgeSoros(BasePersona):
                     break
             weights.update(raw)
 
+        for sym in self.config.universe:
+            if sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -541,6 +544,9 @@ class JimSimons(BasePersona):
                 raw_w = (inv_vol / total_inv_vol) * 0.90
                 weights[sym] = min(raw_w, self.config.max_position_size)
 
+        for sym in self.config.universe:
+            if sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -963,10 +969,15 @@ class PrinceAlwaleed(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "rsi_14", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
             if any(v is None for v in [sma200, rsi]):
                 continue
 
@@ -1198,6 +1209,9 @@ class SupportResistanceCommodity(BasePersona):
                     break
             weights.update(raw)
 
+        for sym in self.config.universe:
+            if sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -1688,10 +1702,15 @@ class BenjaminGraham(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "rsi_14", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
             if any(v is None for v in [sma200, rsi]):
                 continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0

@@ -169,7 +169,7 @@ class MultiFactorSmartBeta(BasePersona):
                 mom_score += 0.25
 
             # Factor 3: Quality (inverse vol, above SMA200)
-            # vol > 0 guaranteed by filter on line 142
+            # vol > 0 guaranteed by missing/zero filter above
             quality_score = min(1.0, 0.015 / vol)  # Normalize: lower vol → higher score
             if price > sma200:
                 quality_score = min(1.0, quality_score * 1.3)
@@ -669,11 +669,12 @@ class FactorETFRotation(BasePersona):
         )
         super().__init__(config)
 
+    _SAFE_HAVENS = ("TLT", "GLD")
+
     def generate_signals(self, date, prices, portfolio, data):
-        _SAFE_HAVENS = ("TLT", "GLD")
         scored = []
         for sym in self.config.universe:
-            if sym in _SAFE_HAVENS or sym not in prices:
+            if sym in self._SAFE_HAVENS or sym not in prices:
                 continue
             price = prices[sym]
             inds = self._get_indicators(data, sym, ["sma_50", "sma_200"], date)
@@ -700,7 +701,7 @@ class FactorETFRotation(BasePersona):
             # Allocate remainder to safe havens (matching FaberSectorRotation pattern)
             remainder = 0.90 - total_alloc
             if remainder > 0.05:
-                havens = [s for s in _SAFE_HAVENS
+                havens = [s for s in self._SAFE_HAVENS
                           if s in self.config.universe and s in prices]
                 if havens:
                     per_haven = min(remainder / len(havens),
@@ -722,9 +723,6 @@ class FactorETFRotation(BasePersona):
 
 
 # ---------------------------------------------------------------------------
-# Registry
-# ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
 # 9. Faber Sector Rotation (proven methodology)
 # ---------------------------------------------------------------------------
 class FaberSectorRotation(BasePersona):
@@ -732,6 +730,8 @@ class FaberSectorRotation(BasePersona):
 
     Source: Faber (2007). $10K→$135K (2000-2024) vs $62K S&P.
     """
+
+    _SAFE_HAVENS = ("TLT", "IEF")
 
     def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
@@ -752,7 +752,7 @@ class FaberSectorRotation(BasePersona):
     def generate_signals(self, date, prices, portfolio, data):
         scored = []
         for sym in self.config.universe:
-            if sym in ("TLT", "IEF") or sym not in prices:
+            if sym in self._SAFE_HAVENS or sym not in prices:
                 continue
             price = prices[sym]
             sma200 = self._get_indicator(data, sym, "sma_200", date)
@@ -773,7 +773,7 @@ class FaberSectorRotation(BasePersona):
             # Allocate capped remainder to safe havens (Faber: unallocated → bonds)
             remainder = 0.90 - total_alloc
             if remainder > 0.05:
-                havens = [s for s in ("TLT", "IEF")
+                havens = [s for s in self._SAFE_HAVENS
                           if s in self.config.universe and s in prices]
                 if havens:
                     per_haven = min(remainder / len(havens),
@@ -781,7 +781,7 @@ class FaberSectorRotation(BasePersona):
                     for s in havens:
                         weights[s] = per_haven
         else:
-            havens = [s for s in ("TLT", "IEF")
+            havens = [s for s in self._SAFE_HAVENS
                       if s in self.config.universe and s in prices]
             if havens:
                 per_haven = min(0.90 / len(havens),

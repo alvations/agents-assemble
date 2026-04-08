@@ -960,6 +960,11 @@ class PairsTrader(BasePersona):
             scale = 0.95 / total
             weights = {k: v * scale for k, v in weights.items()}
 
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
+
         return weights
 
 
@@ -982,11 +987,21 @@ class EnsembleStrategist(BasePersona):
     """
 
     def __init__(self, universe: list[str] | None = None):
+        # Create sub-strategies once — with custom universe if provided
+        subs = [
+            (MomentumTrader(universe=universe), 0.35),   # Best Sharpe
+            (GrowthInvestor(universe=universe), 0.25),
+            (BuffettValue(universe=universe), 0.25),
+            (DividendInvestor(universe=universe), 0.15),
+        ]
         if universe is None:
+            # Build union universe from sub-strategy defaults
             all_syms = list(dict.fromkeys(
-                sym for cls in [BuffettValue, MomentumTrader, GrowthInvestor, DividendInvestor]
-                for sym in cls().config.universe
+                sym for s, _ in subs for sym in s.config.universe
             ))
+            # Expand each sub-strategy to the full union universe
+            for s, _ in subs:
+                s.config.universe = all_syms
         else:
             all_syms = universe
         config = PersonaConfig(
@@ -999,14 +1014,7 @@ class EnsembleStrategist(BasePersona):
             universe=all_syms,
         )
         super().__init__(config)
-        # Sub-strategies with weights — use resolved universe so custom overrides propagate
-        uni = self.config.universe
-        self._sub_strategies = [
-            (MomentumTrader(universe=uni), 0.35),   # Best Sharpe
-            (GrowthInvestor(universe=uni), 0.25),
-            (BuffettValue(universe=uni), 0.25),
-            (DividendInvestor(universe=uni), 0.15),
-        ]
+        self._sub_strategies = subs
 
     def generate_signals(self, date, prices, portfolio, data):
         # Collect signals from all sub-strategies
@@ -1061,6 +1069,11 @@ class EnsembleStrategist(BasePersona):
         if total > 0.95:
             scale = 0.95 / total
             weights = {k: v * scale if v > 0 else v for k, v in weights.items()}
+
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
 
         return weights
 
