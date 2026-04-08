@@ -22,7 +22,7 @@ from data_fetcher import fetch_ohlcv
 class SignalForge:
     """Build and backtest custom signals from natural language."""
 
-    _UNSAFE = re.compile(r'__|import|exec|eval|compile|open|getattr|setattr|delattr|globals|locals|\bos\b|\bsys\b')
+    _UNSAFE = re.compile(r'__|\bimport\b|\bexec\b|\beval\b|\bcompile\b|\bopen\b|\bgetattr\b|\bsetattr\b|\bdelattr\b|\bglobals\b|\blocals\b|\bos\b|\bsys\b')
     _SAFE_GLOBALS = {"__builtins__": {}, "abs": abs, "min": min, "max": max, "round": round,
                      "sum": sum, "len": len, "int": int, "float": float, "bool": bool}
 
@@ -119,22 +119,31 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
                 if self._UNSAFE.search(expr):
                     return {"error": f"Unsafe pattern in {expr_name} expression", "signal": signal.get("name", "custom")}
             sg = self._SAFE_GLOBALS
-            buy_fn = lambda d, i, expr=buy_expr: eval(expr, sg, {k: float(d[k].iloc[i]) for k in d.columns})
-            sell_fn = lambda d, i, expr=sell_expr: eval(expr, sg, {k: float(d[k].iloc[i]) for k in d.columns})
+            vals = {k: data[k].values for k in data.columns}
+            buy_fn = lambda d, i, expr=buy_expr, v=vals: eval(expr, sg, {k: float(v[k][i]) for k in v})
+            sell_fn = lambda d, i, expr=sell_expr, v=vals: eval(expr, sg, {k: float(v[k][i]) for k in v})
         else:
             return {"error": "No signal logic"}
 
+        close_arr = c.values
         for i in range(200, len(data)):
+            price = float(close_arr[i])
+            if price != price:  # NaN guard
+                continue
             try:
                 if position is None and buy_fn(data, i):
-                    position = float(c.iloc[i])
+                    position = price
                 elif position is not None and sell_fn(data, i):
-                    trades.append(float(c.iloc[i]) / position - 1)
+                    trades.append(price / position - 1)
                     position = None
             except Exception:
                 errors += 1
 
-        if position is not None: trades.append(float(c.iloc[-1]) / position - 1)
+        if position is not None:
+            last = float(close_arr[-1])
+            if last == last:  # NaN guard
+                trades.append(last / position - 1)
+        trades = [t for t in trades if t == t]  # filter NaN
         if not trades:
             result = {"signal": signal["name"], "trades": 0, "note": "No signals triggered"}
             if errors: result["eval_errors"] = errors

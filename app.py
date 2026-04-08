@@ -189,7 +189,7 @@ button.danger { background: #ff4444; }
 <div class="panel">
     <h2>🎯 All 91 Strategies</h2>
     <div class="input-group">
-        <select id="cat-filter" onchange="filterStrategies()">
+        <select id="cat-filter" onchange="loadStrategies()">
             <option value="">All Categories</option>
             <option value="generic">Generic</option>
             <option value="famous">Famous Investors</option>
@@ -693,8 +693,8 @@ function analyzeStockPick() {
     const horizon = document.getElementById('pick-horizon').value;
     if (!syms) { document.getElementById('pick-results').innerHTML = '<p class="negative">Enter at least one ticker.</p>'; return; }
     document.getElementById('pick-results').innerHTML = '<p class="loading">Analyzing your picks... matching strategies, running backtests, asking Claude — ~30s</p>';
-    fetch('/api/stock-pick?symbols=' + encodeURIComponent(syms) + '&amount=' + amt + '&horizon=' + horizon + '&top_n=5')
-    .then(r => { if (!r.ok) return r.json().catch(() => ({error:'Server error ' + r.status})).then(d => { throw new Error(d.error || 'Server error ' + r.status); }); return r.json(); }).then(data => {
+    fetchJSON('/api/stock-pick?symbols=' + encodeURIComponent(syms) + '&amount=' + amt + '&horizon=' + horizon + '&top_n=5')
+    .then(data => {
         if (data.error) { document.getElementById('pick-results').innerHTML = '<p class="negative">' + esc(data.error) + '</p>'; return; }
         pickData = data;
         pickRecs = shuffleArray(data.recommendations || []);
@@ -726,8 +726,6 @@ function loadStrategies() {
         document.getElementById('all-strategies').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
-function filterStrategies() { loadStrategies(); }
-
 // Auto-load strategies when switching to that tab
 document.querySelector('[onclick*="strategies"]').addEventListener('click', () => setTimeout(loadStrategies, 100));
 </script>
@@ -815,7 +813,8 @@ def api_leaderboard():
         seen[r["name"]] = r
     results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)
     results = _sanitize_for_json(results[:30])
-    _leaderboard_cache[horizon] = (time.monotonic(), results)
+    if results:
+        _leaderboard_cache[horizon] = (time.monotonic(), results)
     return jsonify(results)
 
 _strategies_cache = {}  # {"data": [...], "ts": monotonic_time}
@@ -865,7 +864,7 @@ def api_market():
                 last = float(df["Close"].iloc[-1])
                 ref = float(df["Close"].iloc[-20]) if len(df) > 20 else float(df["Close"].iloc[0])
                 change = (last / ref - 1) if ref > 0 else 0
-                if math.isfinite(last) and math.isfinite(change):
+                if last > 0 and math.isfinite(last) and math.isfinite(change):
                     data[sym] = {"price": last, "change": change}
         except Exception:
             pass

@@ -270,7 +270,10 @@ def compute_metrics(
         sortino = 0.0
 
     # Drawdown analysis (cum_returns already computed above)
-    rolling_max = cum_returns.cummax()
+    # clip(lower=1.0) treats the initial investment as a peak so that
+    # early declines (e.g., equity drops from 1.0 to 0.8 on day 1) are
+    # captured as drawdowns from the investor's starting capital.
+    rolling_max = cum_returns.cummax().clip(lower=1.0)
     drawdowns = cum_returns / rolling_max - 1
     # Fix NaN from 0/0 when portfolio is wiped out (return of -1.0 makes
     # both cum_returns and rolling_max zero). NaN drawdown is -1.0 (total loss).
@@ -806,6 +809,8 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         f"  Sortino Ratio:      {_fmt_ratio(m.get('sortino_ratio', 0))}",
         f"  Calmar Ratio:       {_fmt_ratio(m.get('calmar_ratio', 0))}",
         f"  Max Drawdown:       {_fmt_pct(m.get('max_drawdown', 0))}",
+        f"  Max DD Date:        {m.get('max_drawdown_date') or '       N/A':>10s}",
+        f"  Trading Days:       {m.get('num_trading_days', 0):>10d}",
         f"  Win Rate:           {_fmt_pct(m.get('win_rate', 0))}",
         f"  Profit Factor:      {_fmt_ratio(m.get('profit_factor', 0))}",
         "",
@@ -843,7 +848,9 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
 
 
 def _sanitize_for_json(obj):
-    """Replace float inf/nan with None for JSON compliance."""
+    """Replace float inf/nan with None and Timestamps with strings for JSON compliance."""
+    if isinstance(obj, pd.Timestamp):
+        return obj.strftime("%Y-%m-%d")
     if isinstance(obj, float) and (math.isinf(obj) or math.isnan(obj)):
         return None
     if isinstance(obj, dict):

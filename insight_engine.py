@@ -176,6 +176,8 @@ Return ONLY a JSON object (no other text) with these fields:
 
         if "above sma50" in q or "uptrend" in q or "momentum" in q:
             criteria["above_sma50"] = True
+        if "below sma50" in q or "downtrend" in q:
+            criteria["above_sma50"] = False
 
         if "golden cross" in q:
             criteria["golden_cross"] = True
@@ -204,7 +206,7 @@ Return ONLY a JSON object (no other text) with these fields:
         if "volume" in q:
             sort_by = "vol_ratio"
             sort_asc = False
-        elif re.search(r"\bvol(?!ume)\b", q):
+        elif re.search(r"\bvol(?!ume)", q):
             sort_by = "annual_vol"
             sort_asc = "low" in q
 
@@ -284,7 +286,8 @@ Return ONLY a JSON object (no other text) with these fields:
 
     def _get_stock_data(self, symbol: str) -> dict | None:
         try:
-            df = fetch_ohlcv(symbol, start="2024-01-01", cache=True)
+            start = (pd.Timestamp.now() - pd.DateOffset(months=18)).strftime("%Y-%m-%d")
+            df = fetch_ohlcv(symbol, start=start, cache=True)
             if df.empty or len(df) < 20:
                 return None
             if df.index.tz is not None:
@@ -331,7 +334,7 @@ Return ONLY a JSON object (no other text) with these fields:
             macd = 0.0 if pd.isna(macd_raw) else float(macd_raw)
             macd_signal = 0.0 if pd.isna(macd_signal_raw) else float(macd_signal_raw)
 
-            vol_20 = close.pct_change().tail(20).std()
+            vol_20 = close.iloc[-21:].pct_change().std()
             if pd.isna(vol_20):
                 vol_20 = 0.0
             else:
