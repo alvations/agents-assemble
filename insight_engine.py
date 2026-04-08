@@ -22,9 +22,8 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+import math
 
-import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -49,7 +48,7 @@ class InsightEngine:
         return self._claude if self._claude else None
 
     def scan(self, query: str, universe: str = "auto", max_results: int = 20,
-             use_claude: bool = True) -> Dict[str, Any]:
+             use_claude: bool = True) -> dict:
         """Scan stocks using natural language.
 
         1. If use_claude=True: Claude interprets the query into screening criteria
@@ -99,7 +98,7 @@ class InsightEngine:
 
     # ----- Claude interpretation -----
 
-    def _claude_interpret(self, query: str) -> Optional[Dict]:
+    def _claude_interpret(self, query: str) -> dict | None:
         """Use Claude to interpret a natural language screening query."""
         claude = self._get_claude()
         if not claude:
@@ -143,7 +142,7 @@ Return ONLY a JSON object (no other text) with these fields:
 
     # ----- Keyword fallback interpretation -----
 
-    def _keyword_interpret(self, query: str) -> Dict:
+    def _keyword_interpret(self, query: str) -> dict:
         q = query.lower()
         criteria = {}
         description = query
@@ -201,7 +200,7 @@ Return ONLY a JSON object (no other text) with these fields:
 
     # ----- Screening logic -----
 
-    def _passes_criteria(self, data: Dict, criteria: Dict) -> bool:
+    def _passes_criteria(self, data: dict, criteria: dict) -> bool:
         if not criteria:
             return True
         for key, val in criteria.items():
@@ -212,16 +211,16 @@ Return ONLY a JSON object (no other text) with these fields:
             if key == "rsi_min" and data.get("rsi_14", 50) < val:
                 return False
             if key == "above_sma200" and val:
-                if not data.get("sma_200") or data["price"] <= data["sma_200"]:
+                if data.get("sma_200") is None or data["price"] <= data["sma_200"]:
                     return False
             if key == "above_sma200" and not val:
-                if data.get("sma_200") and data["price"] > data["sma_200"]:
+                if data.get("sma_200") is not None and data["price"] > data["sma_200"]:
                     return False
             if key == "above_sma50" and val:
-                if not data.get("sma_50") or data["price"] <= data["sma_50"]:
+                if data.get("sma_50") is None or data["price"] <= data["sma_50"]:
                     return False
             if key == "golden_cross" and val:
-                if not data.get("sma_50") or not data.get("sma_200") or data["sma_50"] <= data["sma_200"]:
+                if data.get("sma_50") is None or data.get("sma_200") is None or data["sma_50"] <= data["sma_200"]:
                     return False
             if key == "min_vol_ratio" and data.get("vol_ratio", 1) < val:
                 return False
@@ -238,7 +237,7 @@ Return ONLY a JSON object (no other text) with these fields:
                 return False
         return True
 
-    def _pick_universe(self, query: str, universe: str) -> List[str]:
+    def _pick_universe(self, query: str, universe: str) -> list[str]:
         if universe != "auto":
             return UNIVERSE.get(universe, UNIVERSE["mega_cap"])
 
@@ -258,10 +257,10 @@ Return ONLY a JSON object (no other text) with these fields:
             if re.search(pattern, q):
                 return UNIVERSE.get(cat, UNIVERSE["mega_cap"])
 
-        return list(set(UNIVERSE["mega_cap"] + UNIVERSE["growth"] + UNIVERSE["value"] +
-                        UNIVERSE["dividend"]))
+        return list(dict.fromkeys(UNIVERSE["mega_cap"] + UNIVERSE["growth"] + UNIVERSE["value"] +
+                                   UNIVERSE["dividend"]))
 
-    def _get_stock_data(self, symbol: str) -> Optional[Dict]:
+    def _get_stock_data(self, symbol: str) -> dict | None:
         try:
             df = fetch_ohlcv(symbol, start="2024-01-01", cache=True)
             if df.empty or len(df) < 20:
@@ -271,16 +270,21 @@ Return ONLY a JSON object (no other text) with these fields:
 
             close = df["Close"]
             price = float(close.iloc[-1])
-            high_252 = float(df["High"].max())
-            low_252 = float(df["Low"].min())
+            df_52w = df.iloc[-252:]
+            high_252 = float(df_52w["High"].max())
+            low_252 = float(df_52w["Low"].min())
 
-            sma50 = float(close.rolling(50).mean().iloc[-1]) if len(close) >= 50 else None
-            sma200 = float(close.rolling(200).mean().iloc[-1]) if len(close) >= 200 else None
+            sma50 = float(close.iloc[-50:].mean()) if len(close) >= 50 else None
+            sma200 = float(close.iloc[-200:].mean()) if len(close) >= 200 else None
+            if sma50 is not None and pd.isna(sma50):
+                sma50 = None
+            if sma200 is not None and pd.isna(sma200):
+                sma200 = None
 
             delta = close.diff()
             gain = delta.where(delta > 0, 0).rolling(14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-            rs = gain / loss.replace(0, np.nan)
+            rs = gain / loss.replace(0, float("nan"))
             rsi = float((100 - (100 / (1 + rs))).iloc[-1])
             if pd.isna(rsi):
                 rsi = 50
