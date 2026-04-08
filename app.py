@@ -422,7 +422,7 @@ function generateTradePlan() {
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading">Generating trade plan for ' + strat + '...</p>';
     fetch('/api/trade-plan/' + strat + '?amount=' + amt).then(r => r.json()).then(data => {
-        let html = '<h3>Trade Plan: ' + data.strategy + ' (DRY RUN)</h3>';
+        let html = '<h3>Trade Plan: ' + esc(data.strategy || '') + ' (DRY RUN)</h3>';
         const planAmt = data.amount || 100000;
         html += '<p style="color:#888;font-size:11px">Portfolio: $' + planAmt.toLocaleString() + ' | Slippage: 10bps | Positions: ' + (data.orders||[]).length + '</p>';
         if (data.orders && data.orders.length > 0) {
@@ -470,7 +470,7 @@ function executeTrades() {
             html += '<p class="positive">' + data.placed.length + ' orders placed!</p>';
             html += '<table><tr><th>Symbol</th><th>Side</th><th>Qty</th><th>Status</th></tr>';
             data.placed.forEach(o => {
-                html += '<tr><td>' + o.symbol + '</td><td>' + o.side + '</td><td>' + o.quantity + '</td><td class="positive">SENT</td></tr>';
+                html += '<tr><td>' + esc(o.symbol) + '</td><td>' + esc(o.side) + '</td><td>' + o.quantity + '</td><td class="positive">SENT</td></tr>';
             });
             html += '</table>';
         } else {
@@ -627,7 +627,8 @@ def api_market():
                 last = float(df["Close"].iloc[-1])
                 ref = float(df["Close"].iloc[-20]) if len(df) > 20 else float(df["Close"].iloc[0])
                 change = (last / ref - 1) if ref > 0 else 0
-                data[sym] = {"price": last, "change": change}
+                if math.isfinite(last) and math.isfinite(change):
+                    data[sym] = {"price": last, "change": change}
         except Exception:
             pass
     return jsonify(data)
@@ -684,7 +685,7 @@ def api_chart(symbol):
     t = Terminal()
     path = t.equity_chart(sym, start=start)
     if not path or not Path(path).is_file():
-        return jsonify({"error": f"Chart generation failed for {symbol}"}), 500
+        return jsonify({"error": f"Chart generation failed for {sym}"}), 500
     with open(path, "rb") as f:
         img_b64 = base64.b64encode(f.read()).decode()
     return jsonify({"image": img_b64})

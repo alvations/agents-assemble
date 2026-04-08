@@ -75,13 +75,14 @@ def fetch_news_finnhub(symbol: str, days_back: int = 30) -> list[dict]:
             return [
                 {
                     "title": n.get("headline", ""),
-                    "date": datetime.fromtimestamp(n.get("datetime", 0)).strftime("%Y-%m-%d"),
+                    "date": datetime.fromtimestamp(ts).strftime("%Y-%m-%d"),
                     "source": n.get("source", ""),
                     "url": n.get("url", ""),
                     "type": _classify_headline(n.get("headline", "")),
                     "sentiment": n.get("sentiment", None),
                 }
                 for n in resp.json()[:30]
+                if (ts := n.get("datetime") or 0) > 0
             ]
     except Exception:
         pass
@@ -152,11 +153,15 @@ def analyze_event_patterns(
             direction = "up" if ret > 0 else "down"
 
             # Pre-event: 5 days before (exclude event day itself)
-            pre_ret = close.iloc[i - 1] / close.iloc[i - 5] - 1
+            pre_denom = close.iloc[i - 5]
+            event_close = close.iloc[i]
+            if not pre_denom or not event_close:
+                continue
+            pre_ret = close.iloc[i - 1] / pre_denom - 1
             # Post-event: 5, 10, 20 days after (full windows guaranteed by loop bound)
-            post_5 = close.iloc[i + 5] / close.iloc[i] - 1
-            post_10 = close.iloc[i + 10] / close.iloc[i] - 1
-            post_20 = close.iloc[i + 20] / close.iloc[i] - 1
+            post_5 = close.iloc[i + 5] / event_close - 1
+            post_10 = close.iloc[i + 10] / event_close - 1
+            post_20 = close.iloc[i + 20] / event_close - 1
 
             events.append({
                 "date": str(date.date()),
@@ -273,12 +278,15 @@ def event_driven_backtest(
 
         # Check entry (signal at close of day i; execute at next day's close)
         if position is None and i + 1 < len(df):
-            if strategy == "buy_spike" and ret > 0.03 and vr > 2.0:
-                position = (df.index[i + 1], close.iloc[i + 1], i + 1)
+            entry_price = close.iloc[i + 1]
+            if pd.isna(entry_price) or entry_price <= 0:
+                pass  # Skip entry on invalid next-day price
+            elif strategy == "buy_spike" and ret > 0.03 and vr > 2.0:
+                position = (df.index[i + 1], entry_price, i + 1)
             elif strategy == "buy_dip" and ret < -0.03 and vr > 2.0:
-                position = (df.index[i + 1], close.iloc[i + 1], i + 1)
+                position = (df.index[i + 1], entry_price, i + 1)
             elif strategy == "momentum" and ret > 0.02 and vr > 1.5:
-                position = (df.index[i + 1], close.iloc[i + 1], i + 1)
+                position = (df.index[i + 1], entry_price, i + 1)
 
     # Close any remaining position
     if position is not None:
@@ -337,7 +345,9 @@ def scan_ticker(symbol: str, horizons: list[str] | None = None, start: str = "20
     print("\n  Fetching news...")
     news = fetch_news_yfinance(symbol)
     finnhub_news = fetch_news_finnhub(symbol)
-    all_news = news + finnhub_news
+    seen_titles = {n["title"].lower().strip() for n in news if n["title"]}
+    deduped_finnhub = [n for n in finnhub_news if n["title"].lower().strip() not in seen_titles]
+    all_news = news + deduped_finnhub
     print(f"  Found {len(all_news)} news items")
     for n in all_news[:5]:
         print(f"    [{n['type']}] {n['date']} — {n['title'][:70]}")
