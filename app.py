@@ -340,7 +340,7 @@ function scanTicker() {
     fetch('/api/scan/' + sym).then(r => r.json()).then(data => {
         let html = '<h3>' + sym + ' — ' + esc(data.industry || '') + '</h3>';
         if (data.best) {
-            html += '<p><span class="tag tag-green">' + data.best.strategy + '</span> '
+            html += '<p><span class="tag tag-green">' + esc(data.best.strategy || '') + '</span> '
                 + 'Win: ' + (data.best.win_rate*100).toFixed(0) + '% | '
                 + 'Return: <span class="positive">' + (data.best.total_return*100).toFixed(1) + '%</span></p>';
         }
@@ -644,9 +644,12 @@ def api_scan(symbol):
     df = a._get_price_data()
     bts = {}
     if len(df) >= 50:
+        close_arr = df["Close"].values
+        ret_arr = df["daily_return"].values
+        vr_arr = df["vol_ratio"].values
         for strat in ['buy_spike', 'buy_dip', 'momentum']:
             try:
-                r = a._run_single_backtest(df, strat, 10)
+                r = a._run_single_backtest(close_arr, ret_arr, vr_arr, strat, 10)
                 if r.total_trades > 0:
                     bts[f'{strat}_10d'] = r
             except Exception:
