@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": -0.5388956037645841,
+    "cagr": -0.22812274723095904,
+    "annual_volatility": 0.21592639953287168,
+    "sharpe_ratio": -1.2744311746173933,
+    "sortino_ratio": -1.6927893316914047,
+    "calmar_ratio": -0.41786050355816734,
+    "max_drawdown": -0.5459303889418774,
+    "max_drawdown_date": "2024-11-14",
+    "win_rate": 0.3816489361702128,
+    "profit_factor": 0.805317382888074,
+    "num_trading_days": 752,
+    "skewness": -0.03396187581771117,
+    "kurtosis": 3.576990818122438,
+    "best_day": 0.062598193182408,
+    "worst_day": -0.058267882396460524,
+    "avg_daily_return": -0.0009363474982705713,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.3147473263307232,
+    "beta": 0.5895155765883595,
+    "information_ratio": -1.5518417027854108,
+    "tracking_error": 0.20282179926327615
+  },
+  "trade_metrics": {
+    "num_trades": 699,
+    "num_buys": 360,
+    "num_sells": 339,
+    "total_commission": 0.0,
+    "total_slippage": 4022.3899064836482,
+    "total_transaction_costs": 4022.3899064836482,
+    "avg_trade_size": 5754.491997830687
+  },
+  "final_positions": {
+    "LI": {
+      "qty": 287.0,
+      "avg_cost": 24.270000457763672,
+      "realized_pnl": -3897.1299304962126
+    },
+    "XPEV": {
+      "qty": 586.0,
+      "avg_cost": 12.758669332432666,
+      "realized_pnl": -385.21933364868346
+    },
+    "RIVN": {
+      "qty": 512.0,
+      "avg_cost": 13.579999923706055,
+      "realized_pnl": -536.5522651672374
+    },
+    "SQM": {
+      "qty": 191.0,
+      "avg_cost": 36.470001220703125,
+      "realized_pnl": 1142.0814819335928
+    },
+    "ICLN": {
+      "qty": 620.0,
+      "avg_cost": 11.222372055053711,
+      "realized_pnl": -3437.25117111206
+    },
+    "NIO": {
+      "qty": 1588.0,
+      "avg_cost": 4.380000114440918,
+      "realized_pnl": -4886.329796791077
+    }
+  },
+  "source": "theme",
+  "description": "Renewables, EVs, batteries: buy the green transition"
+}

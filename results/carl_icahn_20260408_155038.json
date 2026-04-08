@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.15990088963829052,
+    "cagr": 0.0508660678616395,
+    "annual_volatility": 0.08766704723256177,
+    "sharpe_ratio": 0.16312051112413678,
+    "sortino_ratio": 0.27154018354851334,
+    "calmar_ratio": 0.6896662049655491,
+    "max_drawdown": -0.07375461853199028,
+    "max_drawdown_date": "2022-05-20",
+    "win_rate": 0.1901595744680851,
+    "profit_factor": 1.2083821926391947,
+    "num_trading_days": 752,
+    "skewness": 1.8933482354109366,
+    "kurtosis": 17.44552501457632,
+    "best_day": 0.0453470586355087,
+    "worst_day": -0.027663509522494967,
+    "avg_daily_return": 0.00021239705943141882,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03575851123812468,
+    "beta": 0.18665929970231213,
+    "information_ratio": -0.21804750023151026,
+    "tracking_error": 0.16399413522355613
+  },
+  "trade_metrics": {
+    "num_trades": 44,
+    "num_buys": 24,
+    "num_sells": 20,
+    "total_commission": 0.0,
+    "total_slippage": 1090.5846068038943,
+    "total_transaction_costs": 1090.5846068038943,
+    "avg_trade_size": 24786.013790997593
+  },
+  "final_positions": {
+    "DVN": {
+      "qty": 828.0,
+      "avg_cost": 36.16553497314453,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "famous",
+  "description": "Concentrated deep value: buy beaten-down large caps showing recovery"
+}

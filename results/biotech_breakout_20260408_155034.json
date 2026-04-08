@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.21453550953820155,
+    "cagr": 0.06716939648721243,
+    "annual_volatility": 0.17337592972808752,
+    "sharpe_ratio": 0.2358253554658825,
+    "sortino_ratio": 0.3390156818467141,
+    "calmar_ratio": 0.3982099342103653,
+    "max_drawdown": -0.16867835459807579,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.5226063829787234,
+    "profit_factor": 1.0805852450114917,
+    "num_trading_days": 752,
+    "skewness": 0.3838168113669425,
+    "kurtosis": 5.5394372174314555,
+    "best_day": 0.0849419025344873,
+    "worst_day": -0.04392474783579903,
+    "avg_daily_return": 0.000317897641590287,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.019455182612551747,
+    "beta": 0.6019837443320293,
+    "information_ratio": -0.12608973526556583,
+    "tracking_error": 0.15429632373781985
+  },
+  "trade_metrics": {
+    "num_trades": 1498,
+    "num_buys": 740,
+    "num_sells": 758,
+    "total_commission": 0.0,
+    "total_slippage": 6202.832059299479,
+    "total_transaction_costs": 6202.832059299479,
+    "avg_trade_size": 4140.742362683223
+  },
+  "final_positions": {
+    "ISRG": {
+      "qty": 28.0,
+      "avg_cost": 473.4972682293572,
+      "realized_pnl": 1228.49217497278
+    },
+    "GILD": {
+      "qty": 164.0,
+      "avg_cost": 80.12343858055335,
+      "realized_pnl": 2289.8390237988933
+    },
+    "ABBV": {
+      "qty": 86.0,
+      "avg_cost": 165.17827264193832,
+      "realized_pnl": 3406.4062305318894
+    }
+  },
+  "source": "theme",
+  "description": "Biotech innovation: diversified basket, momentum leaders, cut losers"
+}

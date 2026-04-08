@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.36285961087725527,
+    "cagr": 0.10910061231279689,
+    "annual_volatility": 0.10634707438910287,
+    "sharpe_ratio": 0.6598123208514377,
+    "sortino_ratio": 1.0464012137120169,
+    "calmar_ratio": 0.8704061935515784,
+    "max_drawdown": -0.12534448068162996,
+    "max_drawdown_date": "2022-10-11",
+    "win_rate": 0.4002659574468085,
+    "profit_factor": 1.2682258123985723,
+    "num_trading_days": 752,
+    "skewness": 0.7471795499500753,
+    "kurtosis": 9.18927055678231,
+    "best_day": 0.0435660007112717,
+    "worst_day": -0.03437789610880271,
+    "avg_daily_return": 0.0004340987118723519,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.02247603321303271,
+    "beta": 0.36046737915837945,
+    "information_ratio": 0.15947510616109273,
+    "tracking_error": 0.14093756545506664
+  },
+  "trade_metrics": {
+    "num_trades": 134,
+    "num_buys": 66,
+    "num_sells": 68,
+    "total_commission": 0.0,
+    "total_slippage": 2087.761921384811,
+    "total_transaction_costs": 2087.761921384811,
+    "avg_trade_size": 15580.31284615531
+  },
+  "final_positions": {
+    "MRK": {
+      "qty": 286.0,
+      "avg_cost": 96.68012080159221,
+      "realized_pnl": 3424.9267578125
+    }
+  },
+  "source": "generic",
+  "description": "Deep value investing: buy great companies when they're cheap"
+}

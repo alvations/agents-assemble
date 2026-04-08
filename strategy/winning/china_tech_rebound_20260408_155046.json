@@ -1,0 +1,132 @@
+{
+  "strategy_name": "china_tech_rebound",
+  "is_winning": true,
+  "generated_at": "2026-04-08T15:50:44.476244",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "2.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "30.9%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "LI",
+      "action": "BUY",
+      "current_position": 473.0,
+      "annual_volatility": "52%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.0% above entry",
+      "position_size": "0.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LI",
+      "yahoo_url": "https://finance.yahoo.com/quote/LI/"
+    },
+    {
+      "symbol": "NTES",
+      "action": "BUY",
+      "current_position": 133.0,
+      "annual_volatility": "37%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "38.7% below entry",
+      "take_profit": "7.7% above entry",
+      "position_size": "1.3% of portfolio",
+      "trailing_stop": "27.1% trailing after 3.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NTES",
+      "yahoo_url": "https://finance.yahoo.com/quote/NTES/"
+    },
+    {
+      "symbol": "WB",
+      "action": "BUY",
+      "current_position": 1345.0,
+      "annual_volatility": "43%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "9.0% above entry",
+      "position_size": "1.1% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=WB",
+      "yahoo_url": "https://finance.yahoo.com/quote/WB/"
+    },
+    {
+      "symbol": "JD",
+      "action": "BUY",
+      "current_position": 345.0,
+      "annual_volatility": "44%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "9.3% above entry",
+      "position_size": "1.1% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=JD",
+      "yahoo_url": "https://finance.yahoo.com/quote/JD/"
+    },
+    {
+      "symbol": "PDD",
+      "action": "BUY",
+      "current_position": 122.0,
+      "annual_volatility": "47%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.0% above entry",
+      "position_size": "1.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PDD",
+      "yahoo_url": "https://finance.yahoo.com/quote/PDD/"
+    },
+    {
+      "symbol": "KWEB",
+      "action": "BUY",
+      "current_position": 419.0,
+      "annual_volatility": "36%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "37.3% below entry",
+      "take_profit": "7.5% above entry",
+      "position_size": "1.3% of portfolio",
+      "trailing_stop": "26.1% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KWEB",
+      "yahoo_url": "https://finance.yahoo.com/quote/KWEB/"
+    },
+    {
+      "symbol": "BILI",
+      "action": "BUY",
+      "current_position": 624.0,
+      "annual_volatility": "64%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "13.4% above entry",
+      "position_size": "0.7% of portfolio",
+      "trailing_stop": "28.0% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BILI",
+      "yahoo_url": "https://finance.yahoo.com/quote/BILI/"
+    },
+    {
+      "symbol": "IQ",
+      "action": "BUY",
+      "current_position": 5687.0,
+      "annual_volatility": "60%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "12.5% above entry",
+      "position_size": "0.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 5.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=IQ",
+      "yahoo_url": "https://finance.yahoo.com/quote/IQ/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "2.06%",
+    "sharpe_ratio": "0.07",
+    "max_drawdown": "-30.93%",
+    "win_rate": "40.43%",
+    "alpha": "-7.98%"
+  }
+}

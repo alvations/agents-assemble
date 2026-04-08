@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.04660121184475696,
+    "cagr": 0.01535143694554053,
+    "annual_volatility": 0.1278955869155208,
+    "sharpe_ratio": -0.12341182844274459,
+    "sortino_ratio": -0.16990317954199632,
+    "calmar_ratio": 0.1093483033357496,
+    "max_drawdown": -0.1403902619175037,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5292553191489362,
+    "profit_factor": 1.0299955937261154,
+    "num_trading_days": 752,
+    "skewness": -0.18809346911490882,
+    "kurtosis": 0.6138570430020325,
+    "best_day": 0.028422439505229713,
+    "worst_day": -0.03325178251537808,
+    "avg_daily_return": 9.301562377934858e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07127314215422365,
+    "beta": 0.46833685845624307,
+    "information_ratio": -0.5268905486290892,
+    "tracking_error": 0.13527124815517844
+  },
+  "trade_metrics": {
+    "num_trades": 420,
+    "num_buys": 211,
+    "num_sells": 209,
+    "total_commission": 0.0,
+    "total_slippage": 2121.6019150943744,
+    "total_transaction_costs": 2121.6019150943744,
+    "avg_trade_size": 5051.433131177085
+  },
+  "final_positions": {
+    "MDT": {
+      "qty": 101.0,
+      "avg_cost": 85.66845385863049,
+      "realized_pnl": 1597.0396270751985
+    },
+    "JNJ": {
+      "qty": 56.0,
+      "avg_cost": 154.89957209995814,
+      "realized_pnl": 918.9603118896459
+    },
+    "VHT": {
+      "qty": 31.0,
+      "avg_cost": 273.5296630859375,
+      "realized_pnl": 88.90109252929699
+    },
+    "HUM": {
+      "qty": 29.0,
+      "avg_cost": 286.62799072265625,
+      "realized_pnl": -6601.258483886719
+    },
+    "XLV": {
+      "qty": 58.0,
+      "avg_cost": 149.26953125,
+      "realized_pnl": 675.9719009399399
+    },
+    "CI": {
+      "qty": 25.0,
+      "avg_cost": 337.79266357421875,
+      "realized_pnl": 4368.896911621093
+    },
+    "ABT": {
+      "qty": 73.0,
+      "avg_cost": 110.41698424456871,
+      "realized_pnl": 460.7242202758789
+    },
+    "LLY": {
+      "qty": 10.0,
+      "avg_cost": 810.1707153320312,
+      "realized_pnl": 300.58666992187557
+    },
+    "PFE": {
+      "qty": 351.0,
+      "avg_cost": 25.43034035120255,
+      "realized_pnl": -2305.48927688599
+    },
+    "MRK": {
+      "qty": 87.0,
+      "avg_cost": 114.66413812162318,
+      "realized_pnl": 2628.378473917643
+    },
+    "ELV": {
+      "qty": 21.0,
+      "avg_cost": 496.4507751464844,
+      "realized_pnl": 2392.499298095705
+    },
+    "ABBV": {
+      "qty": 48.0,
+      "avg_cost": 174.2272186279297,
+      "realized_pnl": 2388.745803833007
+    }
+  },
+  "source": "theme",
+  "description": "Demographic megatrend: healthcare, pharma, senior care"
+}

@@ -1,0 +1,67 @@
+{
+  "strategy_name": "biotech_breakout",
+  "is_winning": true,
+  "generated_at": "2026-04-08T15:50:34.118466",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "3.9%",
+    "stop_loss": "20.2%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "16.9%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "ISRG",
+      "action": "BUY",
+      "current_position": 28.0,
+      "annual_volatility": "32%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "27.2% below entry",
+      "take_profit": "6.7% above entry",
+      "position_size": "2.9% of portfolio",
+      "trailing_stop": "19.1% trailing after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ISRG",
+      "yahoo_url": "https://finance.yahoo.com/quote/ISRG/"
+    },
+    {
+      "symbol": "GILD",
+      "action": "BUY",
+      "current_position": 164.0,
+      "annual_volatility": "27%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.1% below entry",
+      "take_profit": "5.7% above entry",
+      "position_size": "3.4% of portfolio",
+      "trailing_stop": "16.1% trailing after 2.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GILD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GILD/"
+    },
+    {
+      "symbol": "ABBV",
+      "action": "BUY",
+      "current_position": 86.0,
+      "annual_volatility": "26%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.4% below entry",
+      "take_profit": "5.5% above entry",
+      "position_size": "3.5% of portfolio",
+      "trailing_stop": "15.7% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ABBV",
+      "yahoo_url": "https://finance.yahoo.com/quote/ABBV/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "21.45%",
+    "sharpe_ratio": "0.24",
+    "max_drawdown": "-16.87%",
+    "win_rate": "52.26%",
+    "alpha": "-1.95%"
+  }
+}

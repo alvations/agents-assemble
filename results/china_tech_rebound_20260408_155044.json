@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.020565830710084,
+    "cagr": 0.006832273370385611,
+    "annual_volatility": 0.3496962716921444,
+    "sharpe_ratio": 0.0720101117425181,
+    "sortino_ratio": 0.12508944284939386,
+    "calmar_ratio": 0.022088776298085457,
+    "max_drawdown": -0.30930972717478233,
+    "max_drawdown_date": "2022-03-14",
+    "win_rate": 0.40425531914893614,
+    "profit_factor": 1.0436498050466572,
+    "num_trading_days": 752,
+    "skewness": 4.885253764434978,
+    "kurtosis": 74.51046731076019,
+    "best_day": 0.33744811910141714,
+    "worst_day": -0.09106578773643881,
+    "avg_daily_return": 0.0002555771151741727,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07979230572937857,
+    "beta": 0.6431976100081545,
+    "information_ratio": -0.23683487314534965,
+    "tracking_error": 0.3369111341994329
+  },
+  "trade_metrics": {
+    "num_trades": 930,
+    "num_buys": 467,
+    "num_sells": 463,
+    "total_commission": 0.0,
+    "total_slippage": 9886.012885206941,
+    "total_transaction_costs": 9886.012885206941,
+    "avg_trade_size": 10630.121381942943
+  },
+  "final_positions": {
+    "LI": {
+      "qty": 473.0,
+      "avg_cost": 24.270000457763672,
+      "realized_pnl": -12068.206095695496
+    },
+    "NTES": {
+      "qty": 133.0,
+      "avg_cost": 89.14125061035156,
+      "realized_pnl": -7763.89083480835
+    },
+    "WB": {
+      "qty": 1345.0,
+      "avg_cost": 8.865859985351562,
+      "realized_pnl": -1772.2683925628648
+    },
+    "JD": {
+      "qty": 345.0,
+      "avg_cost": 33.278900146484375,
+      "realized_pnl": 2039.3918075561503
+    },
+    "PDD": {
+      "qty": 122.0,
+      "avg_cost": 94.38999938964844,
+      "realized_pnl": 15271.318094253536
+    },
+    "KWEB": {
+      "qty": 419.0,
+      "avg_cost": 27.43836784362793,
+      "realized_pnl": 2167.764581680298
+    },
+    "BILI": {
+      "qty": 624.0,
+      "avg_cost": 18.399999618530273,
+      "realized_pnl": 8686.860946655273
+    },
+    "IQ": {
+      "qty": 5687.0,
+      "avg_cost": 2.0199999809265137,
+      "realized_pnl": 9571.050587654112
+    }
+  },
+  "source": "theme",
+  "description": "China tech ADR recovery: deep value after regulatory crackdown"
+}
