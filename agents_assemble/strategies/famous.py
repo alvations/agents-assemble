@@ -77,10 +77,15 @@ class PeterLynch(BasePersona):
                 continue
 
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            vol20 = self._get_indicator(data, sym, "vol_20", date)
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "vol_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol20 = inds["vol_20"]
 
             if any(v is None for v in [sma50, sma200, rsi, vol20]):
                 continue
@@ -951,7 +956,7 @@ class PrinceAlwaleed(BasePersona):
             # Crisis buying: deep discount + oversold + high volume
             if discount > 0.10 and rsi < 35:
                 score = discount * 8
-                if volume and vol_avg and vol_avg > 0 and volume / vol_avg > 2:
+                if volume is not None and vol_avg is not None and vol_avg > 0 and volume / vol_avg > 2:
                     score *= 1.5  # Crisis volume
                 candidates.append((sym, score))
             # Also accumulate blue chips on moderate dips
@@ -1249,6 +1254,10 @@ class BillAckman(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        # Explicit 0.0 for uncovered symbols so backtester closes stale positions
+        for sym in self.config.universe:
+            if sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -1669,7 +1678,7 @@ class BenjaminGraham(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             # Graham: extreme deep value
             if discount > 0.15 and rsi < 30:
-                vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
+                vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
                 score = discount * 8
                 if vol_ratio > 2:
                     score *= 1.5  # Capitulation bonus
@@ -1677,7 +1686,7 @@ class BenjaminGraham(BasePersona):
                     score += 1.0  # Extreme oversold bonus
                 candidates.append((sym, score))
             # Take profits on recovery
-            elif rsi is not None and rsi > 65 and discount < -0.10:
+            elif rsi > 65 and discount < -0.10:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0:
                     weights[sym] = 0.0
@@ -1687,6 +1696,10 @@ class BenjaminGraham(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        # Explicit 0.0 for uncovered symbols so backtester closes stale positions
+        for sym in self.config.universe:
+            if sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 

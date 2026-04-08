@@ -226,10 +226,7 @@ def compute_metrics(
     # total_return (here) and drawdown analysis (below)
     cum_returns = (1 + returns).cumprod()
     total_return = cum_returns.iloc[-1] - 1
-    try:
-        n_years = (returns.index[-1] - returns.index[0]).days / 365.25
-    except (AttributeError, TypeError):
-        n_years = len(returns) / periods_per_year
+    n_years = (returns.index[-1] - returns.index[0]).days / 365.25
     growth = 1 + total_return
     if growth > 0:
         try:

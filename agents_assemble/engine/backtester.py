@@ -244,15 +244,14 @@ def compute_metrics(
     sqrt_periods = math.sqrt(periods_per_year)
     annual_vol = daily_vol * sqrt_periods
 
-    # Sharpe ratio
+    # Sharpe ratio — std(X - c) == std(X), so reuse daily_vol directly
     daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
-    excess = returns - daily_rf
-    excess_std = excess.std()
-    if excess_std > 0:
-        sharpe = excess.mean() / excess_std * sqrt_periods
-    elif excess.mean() > 0:
+    excess_mean = returns.mean() - daily_rf
+    if daily_vol > 0:
+        sharpe = excess_mean / daily_vol * sqrt_periods
+    elif excess_mean > 0:
         sharpe = float("inf")
-    elif excess.mean() < 0:
+    elif excess_mean < 0:
         sharpe = float("-inf")
     else:
         sharpe = 0.0
@@ -447,7 +446,7 @@ class Backtester:
         are warm even on short-horizon backtests (1 week, 1 month, etc.).
         Performance is only measured from self.start to self.end.
         """
-        from data_fetcher import fetch_ohlcv, fetch_multiple_ohlcv
+        from agents_assemble.data.fetcher import fetch_ohlcv, fetch_multiple_ohlcv
 
         if self._external_data:
             all_data = self._external_data
@@ -851,7 +850,7 @@ def save_results(results: dict[str, Any], path: str) -> None:
                 for t in v
             ]
         elif isinstance(v, list):
-            serializable[k] = json.loads(json.dumps(_sanitize_for_json(v), default=str))
+            serializable[k] = _sanitize_for_json(v)
         elif isinstance(v, dict):
             serializable[k] = {str(kk): vv for kk, vv in v.items()
                                 if not isinstance(vv, (pd.Series, pd.DataFrame))}
