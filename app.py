@@ -41,6 +41,16 @@ def _mtime(p):
     except OSError:
         return 0
 
+def _valid_date(s):
+    """Validate YYYY-MM-DD string is a real calendar date."""
+    if not _DATE_RE.match(s):
+        return False
+    try:
+        date.fromisoformat(s)
+        return True
+    except ValueError:
+        return False
+
 def _sanitize_for_json(obj):
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
@@ -651,8 +661,11 @@ def api_scan(symbol):
     if not _SYMBOL_RE.match(sym):
         return jsonify({"error": "Invalid symbol"}), 400
     from catalyst_analyzer import CatalystAnalyzer
-    a = CatalystAnalyzer(sym)
-    patterns = a.analyze_historical_patterns()
+    try:
+        a = CatalystAnalyzer(sym)
+        patterns = a.analyze_historical_patterns()
+    except Exception as e:
+        return jsonify({"error": f"Failed to analyze {sym}: {e}"}), 500
     # Quick mode: 3 strategies at 10d (fast)
     df = a._get_price_data()
     bts = {}
@@ -697,8 +710,8 @@ def api_chart(symbol):
         return jsonify({"error": "Invalid symbol"}), 400
     from terminal import Terminal
     start = request.args.get("start", "2024-01-01")
-    if not _DATE_RE.match(start):
-        return jsonify({"error": "Invalid start date format (expected YYYY-MM-DD)"}), 400
+    if not _valid_date(start):
+        return jsonify({"error": "Invalid start date (expected valid YYYY-MM-DD)"}), 400
     t = Terminal()
     path = t.equity_chart(sym, start=start)
     if not path or not Path(path).is_file():
@@ -706,6 +719,8 @@ def api_chart(symbol):
     chart_path = Path(path)
     try:
         img_b64 = base64.b64encode(chart_path.read_bytes()).decode()
+    except Exception:
+        return jsonify({"error": f"Failed to read chart for {sym}"}), 500
     finally:
         chart_path.unlink(missing_ok=True)
     return jsonify({"image": img_b64})
@@ -773,6 +788,8 @@ def api_trade_plan(strategy):
         weights = persona.generate_signals(signal_date, prices, portfolio, enriched)
     except Exception as e:
         return jsonify({"error": f"Strategy signal generation failed: {e}"}), 500
+    if not isinstance(weights, dict):
+        return jsonify({"strategy": strategy, "orders": [], "amount": amount})
 
     orders = []
     remaining = amount

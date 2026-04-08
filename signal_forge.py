@@ -13,7 +13,6 @@ Usage:
 from __future__ import annotations
 import sys, json, re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 import numpy as np, pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -31,7 +30,7 @@ class SignalForge:
         "volume_breakout": {"desc": "Buy on 2x volume + 2% up move", "buy": lambda d,i: d["vol_ratio"].iloc[i] > 2 and d["ret"].iloc[i] > 0.02, "sell": lambda d,i: d["rsi"].iloc[i] > 75},
     }
 
-    def build(self, description: str, symbol: str = "SPY", start: str = "2020-01-01") -> Dict[str, Any]:
+    def build(self, description: str, symbol: str = "SPY", start: str = "2020-01-01") -> dict:
         """Build a signal from description, backtest it, return results."""
         # Try Claude first
         signal = self._claude_build(description)
@@ -44,7 +43,7 @@ class SignalForge:
         # Backtest
         return self._backtest_signal(signal, symbol, start)
 
-    def _claude_build(self, description: str) -> Optional[Dict]:
+    def _claude_build(self, description: str) -> dict | None:
         try:
             from claude_code_client import ClaudeClient
             client = ClaudeClient()
@@ -64,18 +63,20 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             pass
         return None
 
-    def _match_builtin(self, description: str) -> Optional[Dict]:
+    def _match_builtin(self, description: str) -> dict | None:
         d = description.lower()
+        best, best_count = None, 0
         for name, sig in self.BUILTIN_SIGNALS.items():
             keywords = name.replace("_", " ").split()
-            if any(k in d for k in keywords):
-                return {"name": name, "desc": sig["desc"], "builtin": name}
-        return None
+            if all(k in d for k in keywords) and len(keywords) > best_count:
+                best = {"name": name, "desc": sig["desc"], "builtin": name}
+                best_count = len(keywords)
+        return best
 
-    def _backtest_signal(self, signal: Dict, symbol: str, start: str) -> Dict:
+    def _backtest_signal(self, signal: dict, symbol: str, start: str) -> dict:
         df = fetch_ohlcv(symbol, start=start)
         if df.index.tz is not None: df.index = df.index.tz_localize(None)
-        if len(df) < 50: return {"error": "Insufficient data"}
+        if len(df) < 201: return {"error": "Insufficient data (need 201+ rows for SMA200)"}
 
         c = df["Close"]
         data = pd.DataFrame({
@@ -86,7 +87,7 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
         delta = c.diff()
         gain = delta.where(delta > 0, 0).rolling(14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
-        data["rsi"] = 100 - (100 / (1 + gain / loss.replace(0, np.nan)))
+        data["rsi"] = np.where(loss > 0, 100 - (100 / (1 + gain / loss.replace(0, np.nan))), np.where(gain > 0, 100.0, np.nan))
         ema12, ema26 = c.ewm(span=12).mean(), c.ewm(span=26).mean()
         data["macd"] = ema12 - ema26
         data["signal"] = data["macd"].ewm(span=9).mean()
@@ -101,8 +102,8 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             buy_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["buy"]
             sell_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["sell"]
         elif "buy_expr" in signal:
-            buy_fn = lambda d, i, expr=signal["buy_expr"]: eval(expr, {k: d[k].iloc[i] for k in d.columns if not pd.isna(d[k].iloc[i])})
-            sell_fn = lambda d, i, expr=signal["sell_expr"]: eval(expr, {k: d[k].iloc[i] for k in d.columns if not pd.isna(d[k].iloc[i])})
+            buy_fn = lambda d, i, expr=signal["buy_expr"]: eval(expr, {"__builtins__": {}}, {k: d[k].iloc[i] for k in d.columns if not pd.isna(d[k].iloc[i])})
+            sell_fn = lambda d, i, expr=signal["sell_expr"]: eval(expr, {"__builtins__": {}}, {k: d[k].iloc[i] for k in d.columns if not pd.isna(d[k].iloc[i])})
         else:
             return {"error": "No signal logic"}
 
@@ -113,9 +114,9 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
                 elif position is not None and sell_fn(data, i):
                     trades.append(float(c.iloc[i]) / position - 1)
                     position = None
-            except: pass
+            except Exception: pass
 
-        if position: trades.append(float(c.iloc[-1]) / position - 1)
+        if position is not None: trades.append(float(c.iloc[-1]) / position - 1)
         if not trades: return {"signal": signal["name"], "trades": 0, "note": "No signals triggered"}
 
         winners = [t for t in trades if t > 0]
@@ -127,10 +128,10 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             "avg_return": float(np.mean(trades)),
             "total_return": float(np.prod([1+t for t in trades]) - 1),
             "best": float(max(trades)), "worst": float(min(trades)),
-            "profit_factor": abs(sum(winners)/sum(losers)) if losers else float("inf"),
+            "profit_factor": abs(sum(winners)/sum(losers)) if losers else 0.0,
         }
 
-    def list_signals(self) -> List[Dict]:
+    def list_signals(self) -> list[dict]:
         return [{"name": k, "description": v["desc"]} for k, v in self.BUILTIN_SIGNALS.items()]
 
 if __name__ == "__main__":

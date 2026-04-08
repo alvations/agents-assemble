@@ -13,8 +13,9 @@ Usage:
 from __future__ import annotations
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
-import numpy as np, pandas as pd
+import math
+from datetime import datetime, timedelta
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
 from data_fetcher import fetch_ohlcv, UNIVERSE
@@ -22,20 +23,25 @@ from data_fetcher import fetch_ohlcv, UNIVERSE
 class FlowRadar:
     """Detect unusual market flow patterns."""
 
-    def scan_volume_spikes(self, universe: str = "mega_cap", threshold: float = 2.5) -> List[Dict]:
+    def scan_volume_spikes(self, universe: str = "mega_cap", threshold: float = 2.5) -> list[dict]:
         """Find stocks with volume > threshold * 20-day average."""
         symbols = UNIVERSE.get(universe, UNIVERSE["mega_cap"])
         alerts = []
         for sym in symbols:
             try:
-                df = fetch_ohlcv(sym, start="2024-10-01", cache=True)
+                start = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+                df = fetch_ohlcv(sym, start=start, cache=True)
                 if len(df) < 25: continue
                 if df.index.tz is not None: df.index = df.index.tz_localize(None)
                 vol_avg = float(df["Volume"].rolling(20).mean().iloc[-1])
                 vol_today = float(df["Volume"].iloc[-1])
-                ratio = vol_today / vol_avg if vol_avg > 0 else 1
+                if not math.isfinite(vol_avg) or not math.isfinite(vol_today) or vol_avg <= 0:
+                    continue
+                ratio = vol_today / vol_avg
                 if ratio > threshold:
                     ret = float(df["Close"].pct_change().iloc[-1])
+                    if not math.isfinite(ret):
+                        continue
                     alerts.append({
                         "symbol": sym, "volume_ratio": round(ratio, 1),
                         "direction": "UP" if ret > 0.01 else "DOWN" if ret < -0.01 else "FLAT",
@@ -43,32 +49,37 @@ class FlowRadar:
                         "signal": "ACCUMULATION" if ret > 0 and ratio > 3 else "DISTRIBUTION" if ret < 0 and ratio > 3 else "UNUSUAL",
                         "tradingview": f"https://www.tradingview.com/chart/?symbol={sym}",
                     })
-            except: pass
+            except Exception: pass
         alerts.sort(key=lambda x: x["volume_ratio"], reverse=True)
         return alerts
 
-    def scan_momentum_shifts(self, universe: str = "mega_cap") -> List[Dict]:
+    def scan_momentum_shifts(self, universe: str = "mega_cap") -> list[dict]:
         """Find stocks where MACD just crossed (momentum shift)."""
         symbols = UNIVERSE.get(universe, UNIVERSE["mega_cap"])
         shifts = []
         for sym in symbols:
             try:
-                df = fetch_ohlcv(sym, start="2024-06-01", cache=True)
+                start = (datetime.now() - timedelta(days=120)).strftime("%Y-%m-%d")
+                df = fetch_ohlcv(sym, start=start, cache=True)
                 if len(df) < 30: continue
                 if df.index.tz is not None: df.index = df.index.tz_localize(None)
                 c = df["Close"]
                 macd = c.ewm(span=12).mean() - c.ewm(span=26).mean()
                 sig = macd.ewm(span=9).mean()
-                if macd.iloc[-1] > sig.iloc[-1] and macd.iloc[-2] <= sig.iloc[-2]:
-                    shifts.append({"symbol": sym, "signal": "BULLISH_CROSS", "macd": round(float(macd.iloc[-1]), 3),
+                m_cur, m_prev = float(macd.iloc[-1]), float(macd.iloc[-2])
+                s_cur, s_prev = float(sig.iloc[-1]), float(sig.iloc[-2])
+                if not all(math.isfinite(v) for v in (m_cur, m_prev, s_cur, s_prev)):
+                    continue
+                if m_cur > s_cur and m_prev <= s_prev:
+                    shifts.append({"symbol": sym, "signal": "BULLISH_CROSS", "macd": round(m_cur, 3),
                                    "tradingview": f"https://www.tradingview.com/chart/?symbol={sym}"})
-                elif macd.iloc[-1] < sig.iloc[-1] and macd.iloc[-2] >= sig.iloc[-2]:
-                    shifts.append({"symbol": sym, "signal": "BEARISH_CROSS", "macd": round(float(macd.iloc[-1]), 3),
+                elif m_cur < s_cur and m_prev >= s_prev:
+                    shifts.append({"symbol": sym, "signal": "BEARISH_CROSS", "macd": round(m_cur, 3),
                                    "tradingview": f"https://www.tradingview.com/chart/?symbol={sym}"})
-            except: pass
+            except Exception: pass
         return shifts
 
-    def scan_all(self) -> Dict[str, List]:
+    def scan_all(self) -> dict[str, list]:
         return {
             "volume_spikes": self.scan_volume_spikes(),
             "momentum_shifts": self.scan_momentum_shifts(),
