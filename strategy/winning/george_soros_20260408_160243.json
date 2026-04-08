@@ -1,0 +1,158 @@
+{
+  "strategy_name": "george_soros",
+  "is_winning": true,
+  "generated_at": "2026-04-08T16:02:43.564677",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "9.8%",
+    "stop_loss": "22.4%",
+    "take_profit_target": "9.5%",
+    "max_drawdown_tolerance": "18.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "SPY",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "16.0% below entry",
+      "take_profit": "6.8% above entry",
+      "position_size": "13.7% of portfolio",
+      "trailing_stop": "11.2% trailing after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SPY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SPY/"
+    },
+    {
+      "symbol": "QQQ",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "20.3% below entry",
+      "take_profit": "8.7% above entry",
+      "position_size": "10.8% of portfolio",
+      "trailing_stop": "14.2% trailing after 3.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=QQQ",
+      "yahoo_url": "https://finance.yahoo.com/quote/QQQ/"
+    },
+    {
+      "symbol": "TLT",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "13%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "11.8% below entry",
+      "take_profit": "5.0% above entry",
+      "position_size": "18.6% of portfolio",
+      "trailing_stop": "8.3% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo_url": "https://finance.yahoo.com/quote/TLT/"
+    },
+    {
+      "symbol": "GLD",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "21.6% below entry",
+      "take_profit": "9.2% above entry",
+      "position_size": "10.2% of portfolio",
+      "trailing_stop": "15.1% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "EEM",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "19%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "17.6% below entry",
+      "take_profit": "7.5% above entry",
+      "position_size": "12.5% of portfolio",
+      "trailing_stop": "12.3% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=EEM",
+      "yahoo_url": "https://finance.yahoo.com/quote/EEM/"
+    },
+    {
+      "symbol": "XLE",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "21.2% below entry",
+      "take_profit": "9.0% above entry",
+      "position_size": "10.4% of portfolio",
+      "trailing_stop": "14.9% trailing after 3.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XLE",
+      "yahoo_url": "https://finance.yahoo.com/quote/XLE/"
+    },
+    {
+      "symbol": "XLF",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "16.9% below entry",
+      "take_profit": "7.2% above entry",
+      "position_size": "13.0% of portfolio",
+      "trailing_stop": "11.8% trailing after 2.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XLF",
+      "yahoo_url": "https://finance.yahoo.com/quote/XLF/"
+    },
+    {
+      "symbol": "AAPL",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "29%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "26.9% below entry",
+      "take_profit": "11.5% above entry",
+      "position_size": "8.2% of portfolio",
+      "trailing_stop": "18.8% trailing after 4.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "NVDA",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "49%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "19.5% above entry",
+      "position_size": "4.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 7.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
+      "yahoo_url": "https://finance.yahoo.com/quote/NVDA/"
+    },
+    {
+      "symbol": "MSFT",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.9% below entry",
+      "take_profit": "9.8% above entry",
+      "position_size": "9.6% of portfolio",
+      "trailing_stop": "16.0% trailing after 3.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo_url": "https://finance.yahoo.com/quote/MSFT/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "68.40%",
+    "sharpe_ratio": "0.96",
+    "max_drawdown": "-18.63%",
+    "win_rate": "45.61%",
+    "alpha": "10.38%"
+  }
+}

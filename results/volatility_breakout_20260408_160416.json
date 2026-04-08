@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": -0.013098008432972263,
+    "cagr": -0.0044002306240684685,
+    "annual_volatility": 0.02427083367682676,
+    "sharpe_ratio": -1.7859949223100324,
+    "sortino_ratio": -2.3403022851498356,
+    "calmar_ratio": -0.08281766488935208,
+    "max_drawdown": -0.05313154663256159,
+    "max_drawdown_date": "2024-05-17",
+    "win_rate": 0.17553191489361702,
+    "profit_factor": 0.9487913961646347,
+    "num_trading_days": 752,
+    "skewness": -0.6975758046759734,
+    "kurtosis": 18.970725888878597,
+    "best_day": 0.00933847558137857,
+    "worst_day": -0.01216448804566228,
+    "avg_daily_return": -1.636436620494324e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.09102480972383264,
+    "beta": 0.023681404477290332,
+    "information_ratio": -0.5273935456961995,
+    "tracking_error": 0.1725937119758889
+  },
+  "trade_metrics": {
+    "num_trades": 618,
+    "num_buys": 298,
+    "num_sells": 320,
+    "total_commission": 0.0,
+    "total_slippage": 5065.045186180123,
+    "total_transaction_costs": 5065.045186180123,
+    "avg_trade_size": 8195.865997055202
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GLD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TLT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLE": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "math",
+  "description": "Donchian breakout with ATR position sizing (Turtle Trading)"
+}

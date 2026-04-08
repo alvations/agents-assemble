@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": -0.003772053888846383,
+    "cagr": -0.0012632560857367414,
+    "annual_volatility": 0.06354449077824277,
+    "sharpe_ratio": -0.6051596107020971,
+    "sortino_ratio": -0.7821310502462631,
+    "calmar_ratio": -0.010813865205036277,
+    "max_drawdown": -0.11681818311813363,
+    "max_drawdown_date": "2022-06-01",
+    "win_rate": 0.08909574468085106,
+    "profit_factor": 1.0059486711958392,
+    "num_trading_days": 752,
+    "skewness": -3.3681384217790713,
+    "kurtosis": 76.24846658912648,
+    "best_day": 0.03504858279538503,
+    "worst_day": -0.052779277388458334,
+    "avg_daily_return": 3.0524052451342772e-06,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08788783518550092,
+    "beta": 0.05514143352109535,
+    "information_ratio": -0.49670127756697646,
+    "tracking_error": 0.1769430423372525
+  },
+  "trade_metrics": {
+    "num_trades": 328,
+    "num_buys": 157,
+    "num_sells": 171,
+    "total_commission": 0.0,
+    "total_slippage": 4483.001360754968,
+    "total_transaction_costs": 4483.001360754968,
+    "avg_trade_size": 13667.687075472459
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "news_event",
+  "description": "Buy unusual volume + positive price moves (news proxy)"
+}

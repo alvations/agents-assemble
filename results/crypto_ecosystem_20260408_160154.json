@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.7357698091330729,
+    "cagr": 0.20255473870577156,
+    "annual_volatility": 0.3036756283924206,
+    "sharpe_ratio": 0.6285321472380038,
+    "sortino_ratio": 1.0413182865788837,
+    "calmar_ratio": 0.9646731554052685,
+    "max_drawdown": -0.20997240108819692,
+    "max_drawdown_date": "2023-01-05",
+    "win_rate": 0.20212765957446807,
+    "profit_factor": 1.2588165120619452,
+    "num_trading_days": 752,
+    "skewness": 1.5988899388936846,
+    "kurtosis": 17.834965307414524,
+    "best_day": 0.15702863821180935,
+    "worst_day": -0.10086264217523588,
+    "avg_daily_return": 0.0009130700801616526,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.11593015960600739,
+    "beta": 0.37124489733807986,
+    "information_ratio": 0.3663984191325899,
+    "tracking_error": 0.3164046391915663
+  },
+  "trade_metrics": {
+    "num_trades": 1131,
+    "num_buys": 548,
+    "num_sells": 583,
+    "total_commission": 0.0,
+    "total_slippage": 23175.471422050483,
+    "total_transaction_costs": 23175.471422050483,
+    "avg_trade_size": 20491.132999160458
+  },
+  "final_positions": {
+    "COIN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MARA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RIOT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CLSK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSTR": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HUT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SQ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PYPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BITO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IBIT": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "theme",
+  "description": "Crypto-adjacent: miners, exchanges, BTC treasury companies"
+}

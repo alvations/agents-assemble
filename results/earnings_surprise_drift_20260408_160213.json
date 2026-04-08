@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.03601156517919479,
+    "cagr": 0.011903556245743685,
+    "annual_volatility": 0.024188848423270865,
+    "sharpe_ratio": -1.1194096334166264,
+    "sortino_ratio": -2.0302993514610246,
+    "calmar_ratio": 0.45541560380408813,
+    "max_drawdown": -0.02613778743265105,
+    "max_drawdown_date": "2024-05-16",
+    "win_rate": 0.0598404255319149,
+    "profit_factor": 1.286986995784613,
+    "num_trading_days": 752,
+    "skewness": 4.75380177219778,
+    "kurtosis": 57.56420305583839,
+    "best_day": 0.01799018511932715,
+    "worst_day": -0.008478040279504384,
+    "avg_daily_return": 4.8200537607675594e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07472102285402049,
+    "beta": 0.01509033065338656,
+    "information_ratio": -0.4291812468013397,
+    "tracking_error": 0.17410132295134395
+  },
+  "trade_metrics": {
+    "num_trades": 205,
+    "num_buys": 98,
+    "num_sells": 107,
+    "total_commission": 0.0,
+    "total_slippage": 2369.5123530063624,
+    "total_transaction_costs": 2369.5123530063624,
+    "avg_trade_size": 11558.596843933477
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "news_event",
+  "description": "PEAD proxy: buy after >3% gap-up on 2x volume, ride drift 20-60 days"
+}

@@ -1,0 +1,158 @@
+{
+  "strategy_name": "michael_burry",
+  "is_winning": false,
+  "generated_at": "2026-04-08T16:02:54.959603",
+  "overall_assessment": "AVOID \u2014 Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "25.3%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Strategy has low win rate \u2014 enter only on strong setup days. Be patient.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "AAPL",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "29%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "30.1% below entry",
+      "take_profit": "6.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "21.1% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "GOOGL",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "31.4% below entry",
+      "take_profit": "6.3% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "22.0% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "META",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "36%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "37.8% below entry",
+      "take_profit": "7.6% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "26.4% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=META",
+      "yahoo_url": "https://finance.yahoo.com/quote/META/"
+    },
+    {
+      "symbol": "AMZN",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "34.3% below entry",
+      "take_profit": "6.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "24.0% trailing after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo_url": "https://finance.yahoo.com/quote/AMZN/"
+    },
+    {
+      "symbol": "CVX",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.4% below entry",
+      "take_profit": "4.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "17.1% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CVX",
+      "yahoo_url": "https://finance.yahoo.com/quote/CVX/"
+    },
+    {
+      "symbol": "XOM",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.5% below entry",
+      "take_profit": "4.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "17.1% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XOM",
+      "yahoo_url": "https://finance.yahoo.com/quote/XOM/"
+    },
+    {
+      "symbol": "JNJ",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "18.6% below entry",
+      "take_profit": "3.7% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "13.1% trailing after 1.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=JNJ",
+      "yahoo_url": "https://finance.yahoo.com/quote/JNJ/"
+    },
+    {
+      "symbol": "PFE",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "25.8% below entry",
+      "take_profit": "5.2% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.0% trailing after 2.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PFE",
+      "yahoo_url": "https://finance.yahoo.com/quote/PFE/"
+    },
+    {
+      "symbol": "BAC",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "26%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "27.0% below entry",
+      "take_profit": "5.4% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.9% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BAC",
+      "yahoo_url": "https://finance.yahoo.com/quote/BAC/"
+    },
+    {
+      "symbol": "C",
+      "action": "FLAT",
+      "current_position": 0.0,
+      "annual_volatility": "32%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "33.3% below entry",
+      "take_profit": "6.7% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "23.3% trailing after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=C",
+      "yahoo_url": "https://finance.yahoo.com/quote/C/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "-9.56%",
+    "sharpe_ratio": "-0.48",
+    "max_drawdown": "-25.28%",
+    "win_rate": "31.38%",
+    "alpha": "-11.97%"
+  }
+}

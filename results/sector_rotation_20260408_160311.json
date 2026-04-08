@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.219797196153523,
+    "cagr": 0.06871355073111118,
+    "annual_volatility": 0.11974529538772337,
+    "sharpe_ratio": 0.2883616789769109,
+    "sortino_ratio": 0.403853035766364,
+    "calmar_ratio": 0.4495053972311894,
+    "max_drawdown": -0.15286479573852696,
+    "max_drawdown_date": "2022-07-14",
+    "win_rate": 0.5,
+    "profit_factor": 1.1162328272218673,
+    "num_trading_days": 752,
+    "skewness": -0.15135685317877956,
+    "kurtosis": 3.2686274067016705,
+    "best_day": 0.038564063529991754,
+    "worst_day": -0.04202107991159931,
+    "avg_daily_return": 0.0002926734914721757,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.017911028368652993,
+    "beta": 0.49704739032952056,
+    "information_ratio": -0.14864083604682893,
+    "tracking_error": 0.12049870577295574
+  },
+  "trade_metrics": {
+    "num_trades": 752,
+    "num_buys": 321,
+    "num_sells": 431,
+    "total_commission": 0.0,
+    "total_slippage": 13455.813326635365,
+    "total_transaction_costs": 13455.813326635365,
+    "avg_trade_size": 17893.368785419363
+  },
+  "final_positions": {
+    "XLK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLF": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLV": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLI": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLP": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLU": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLRE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLB": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "Rotate into strongest sector ETFs, fade weakest"
+}
