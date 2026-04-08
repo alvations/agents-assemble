@@ -18,6 +18,7 @@ from __future__ import annotations
 import json
 import base64
 import sys
+from datetime import date, timedelta
 from pathlib import Path
 
 from flask import Flask, render_template_string, request, jsonify
@@ -95,11 +96,11 @@ button.danger { background: #ff4444; }
 <div class="topbar">
     <div class="logo">⚡ agents-assemble</div>
     <div class="nav">
-        <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
-        <a href="#" onclick="showSection('strategies')">Strategies</a>
-        <a href="#" onclick="showSection('catalyst')">Catalyst Scanner</a>
-        <a href="#" onclick="showSection('charts')">Charts</a>
-        <a href="#" onclick="showSection('trade')">Trade</a>
+        <a href="#" class="active" onclick="showSection('dashboard', this)">Dashboard</a>
+        <a href="#" onclick="showSection('strategies', this)">Strategies</a>
+        <a href="#" onclick="showSection('catalyst', this)">Catalyst Scanner</a>
+        <a href="#" onclick="showSection('charts', this)">Charts</a>
+        <a href="#" onclick="showSection('trade', this)">Trade</a>
     </div>
 </div>
 
@@ -237,11 +238,11 @@ function esc(s) {
     d.appendChild(document.createTextNode(s));
     return d.innerHTML;
 }
-function showSection(name) {
-    document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none');
+function showSection(name, el) {
+    document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
     document.getElementById('section-' + name).style.display = 'block';
     document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
-    event.target.classList.add('active');
+    el.classList.add('active');
 }
 
 // Sortable table helper
@@ -254,8 +255,9 @@ function renderLeaderboard() {
         return sortAsc ? va - vb : vb - va;
     });
     const arrow = sortAsc ? '▲' : '▼';
+    const horizon = document.getElementById('horizon-select').value.toUpperCase();
     const cols = [
-        {key:'return', label:'3Y Return'}, {key:'sharpe', label:'Sharpe'}, {key:'max_dd', label:'Max DD'}
+        {key:'return', label:horizon + ' Return'}, {key:'sharpe', label:'Sharpe'}, {key:'max_dd', label:'Max DD'}
     ];
     let html = '<table><tr><th>#</th><th>Strategy</th><th>Category</th>';
     cols.forEach(c => {
@@ -265,8 +267,8 @@ function renderLeaderboard() {
     html += '</tr>';
     sorted.forEach((s, i) => {
         const retClass = s.return > 0 ? 'positive' : 'negative';
-        html += '<tr><td>' + (i+1) + '</td><td><b>' + s.name + '</b></td>'
-            + '<td><span class="tag tag-blue">' + s.source + '</span></td>'
+        html += '<tr><td>' + (i+1) + '</td><td><b>' + esc(s.name) + '</b></td>'
+            + '<td><span class="tag tag-blue">' + esc(s.source) + '</span></td>'
             + '<td class="' + retClass + '">' + (s.return*100).toFixed(1) + '%</td>'
             + '<td>' + (s.sharpe||0).toFixed(2) + '</td>'
             + '<td class="negative">' + (s.max_dd*100).toFixed(1) + '%</td></tr>';
@@ -363,7 +365,7 @@ function runCatalyst() {
                 if (n.title && n.title.length > 5) {
                     html += '<p style="font-size:11px;margin:3px 0"><span class="tag tag-yellow">' + esc(n.catalyst_type || 'news') + '</span> '
                         + '<span style="color:#888">' + esc(n.date || '') + '</span> '
-                        + (n.url ? '<a href="' + encodeURI(n.url) + '" target="_blank">' + esc(n.title.substring(0, 80)) + '</a>' : esc(n.title.substring(0, 80)))
+                        + (n.url && /^https?:\/\//i.test(n.url) ? '<a href="' + encodeURI(n.url) + '" target="_blank">' + esc(n.title.substring(0, 80)) + '</a>' : esc(n.title.substring(0, 80)))
                         + '</p>';
                 }
             });
@@ -385,10 +387,12 @@ function loadChart() {
 
 function generateTradePlan() {
     const strat = document.getElementById('trade-strategy').value;
+    const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading">Generating trade plan for ' + strat + '...</p>';
-    fetch('/api/trade-plan/' + strat).then(r => r.json()).then(data => {
+    fetch('/api/trade-plan/' + strat + '?amount=' + amt).then(r => r.json()).then(data => {
         let html = '<h3>Trade Plan: ' + data.strategy + ' (DRY RUN)</h3>';
-        html += '<p style="color:#888;font-size:11px">Portfolio: $100,000 | Slippage: 10bps | Positions: ' + (data.orders||[]).length + '</p>';
+        const planAmt = data.amount || 100000;
+        html += '<p style="color:#888;font-size:11px">Portfolio: $' + planAmt.toLocaleString() + ' | Slippage: 10bps | Positions: ' + (data.orders||[]).length + '</p>';
         if (data.orders && data.orders.length > 0) {
             html += '<table><tr><th>Action</th><th>Symbol</th><th>Qty</th><th>Entry Price</th><th>Limit (0.5% below)</th><th>Stop Loss (15%)</th><th>Take Profit (10%)</th><th>Alloc</th></tr>';
             let totalAlloc = 0;
@@ -396,7 +400,7 @@ function generateTradePlan() {
                 const limit = (o.price * 0.995).toFixed(2);
                 const stopLoss = (o.price * 0.85).toFixed(2);
                 const takeProfit = (o.price * 1.10).toFixed(2);
-                const alloc = ((o.quantity * o.price / 100000) * 100).toFixed(1);
+                const alloc = ((o.quantity * o.price / planAmt) * 100).toFixed(1);
                 totalAlloc += parseFloat(alloc);
                 html += '<tr>'
                     + '<td><span class="tag tag-' + (o.side === 'BUY' ? 'green' : 'red') + '">' + o.side + '</span></td>'
@@ -426,7 +430,7 @@ function executeTrades() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading" style="color:#ff4444">⚡ EXECUTING live trades for ' + strat + '...</p>';
-    fetch('/api/execute-trade/' + strat + '?amount=' + amt).then(r => r.json()).then(data => {
+    fetch('/api/execute-trade/' + strat, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(r => r.json()).then(data => {
         let html = '<h3 style="color:#ff4444">⚡ EXECUTION RESULT: ' + strat + '</h3>';
         if (data.error) {
             html += '<p class="negative">' + data.error + '</p>';
@@ -452,11 +456,11 @@ function loadStrategies() {
         const filter = document.getElementById('cat-filter').value;
         data.forEach(s => {
             if (filter && s.source !== filter) return;
-            html += '<tr><td><b>' + s.name + '</b></td>'
-                + '<td><span class="tag tag-blue">' + s.source + '</span></td>'
+            html += '<tr><td><b>' + esc(s.name) + '</b></td>'
+                + '<td><span class="tag tag-blue">' + esc(s.source) + '</span></td>'
                 + '<td>' + s.universe_size + '</td>'
-                + '<td>' + s.rebalance + '</td>'
-                + '<td>' + s.risk + '</td></tr>';
+                + '<td>' + esc(s.rebalance || '?') + '</td>'
+                + '<td>' + esc(s.risk || '?') + '</td></tr>';
         });
         html += '</table>';
         document.getElementById('all-strategies').innerHTML = html;
@@ -567,7 +571,7 @@ def api_market():
     data = {}
     for sym in indices:
         try:
-            df = fetch_ohlcv(sym, start="2024-12-01", cache=True)
+            df = fetch_ohlcv(sym, start=str(date.today() - timedelta(days=60)), cache=True)
             if len(df) > 1:
                 data[sym] = {
                     "price": float(df["Close"].iloc[-1]),
@@ -627,13 +631,15 @@ def api_trade_plan(strategy):
     from backtester import _compute_rsi, _compute_bollinger, _compute_atr
     import pandas as pd
 
+    amount = float(request.args.get("amount", 100000))
     symbols = persona.config.universe[:15]
     all_data = fetch_multiple_ohlcv(symbols, start="2024-01-01")
 
     enriched = {}
     prices = {}
-    for sym, df in all_data.items():
-        if df.empty: continue
+    for sym, raw_df in all_data.items():
+        if raw_df.empty: continue
+        df = raw_df.copy()
         if df.index.tz is not None: df.index = df.index.tz_localize(None)
         close = df["Close"]
         df["sma_50"] = close.rolling(50).mean()
@@ -653,28 +659,29 @@ def api_trade_plan(strategy):
         prices[sym] = float(close.iloc[-1])
 
     from backtester import Portfolio
-    portfolio = Portfolio(initial_cash=100000, cash=100000)
+    portfolio = Portfolio(initial_cash=amount, cash=amount)
     today = pd.Timestamp.now().normalize()
     weights = persona.generate_signals(today, prices, portfolio, enriched)
 
     orders = []
     for sym, w in sorted(weights.items(), key=lambda x: -x[1]):
         if w > 0 and sym in prices and prices[sym] > 0:
-            qty = int(100000 * min(w, 0.20) / prices[sym])
+            qty = int(amount * min(w, persona.config.max_position_size) / prices[sym])
             if qty > 0:
                 orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
 
-    return jsonify({"strategy": strategy, "orders": orders})
+    return jsonify({"strategy": strategy, "orders": orders, "amount": amount})
 
 
-@app.route("/api/execute-trade/<strategy>")
+@app.route("/api/execute-trade/<strategy>", methods=["POST"])
 def api_execute_trade(strategy):
     """LIVE trade execution via Public.com API. Requires PUBLIC_API_SECRET."""
     import os
     if not os.environ.get("PUBLIC_API_SECRET"):
-        return jsonify({"error": "PUBLIC_API_SECRET not set. Go to public.com/settings/security/api to get your key, then: export PUBLIC_API_SECRET=your_key"})
+        return jsonify({"error": "PUBLIC_API_SECRET not set. Go to public.com/settings/security/api to get your key, then: export PUBLIC_API_SECRET=your_key"}), 403
 
-    amount = float(request.args.get("amount", 100000))
+    body = request.get_json(silent=True) or {}
+    amount = float(body.get("amount", request.args.get("amount", 100000)))
     from public_trader import PublicTrader
     trader = PublicTrader(dry_run=False)
     try:

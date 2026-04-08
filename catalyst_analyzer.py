@@ -158,7 +158,11 @@ class BacktestResult:
     profit_factor: float
 
     def to_dict(self):
-        return self.__dict__
+        d = self.__dict__.copy()
+        for k, v in d.items():
+            if isinstance(v, float) and not math.isfinite(v):
+                d[k] = None
+        return d
 
 
 @dataclass
@@ -222,8 +226,6 @@ class CatalystAnalyzer:
             df["vol_avg_20"] = df["Volume"].rolling(20).mean()
             vol_ratio = df["Volume"] / df["vol_avg_20"]
             df["vol_ratio"] = vol_ratio.replace([float("inf"), float("-inf")], float("nan"))
-            df["sma_50"] = df["Close"].rolling(50).mean()
-            df["sma_200"] = df["Close"].rolling(200).mean()
             self._price_data = df
         return self._price_data
 
@@ -243,15 +245,18 @@ class CatalystAnalyzer:
             import yfinance as yf
             ticker = yf.Ticker(self.symbol)
             for n in (ticker.news or [])[:self._NEWS_FETCH_CAP]:
-                title = n.get("title", "")
-                ts = n.get("providerPublishTime", 0)
-                items.append(NewsItem(
-                    title=title,
-                    date=datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts > 946684800 else "",
-                    source=n.get("publisher", "yfinance"),
-                    catalyst_type=self._classify(title),
-                    url=n.get("link", ""),
-                ))
+                try:
+                    title = n.get("title", "")
+                    ts = n.get("providerPublishTime", 0)
+                    items.append(NewsItem(
+                        title=title,
+                        date=datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts > 946684800 else "",
+                        source=n.get("publisher", "yfinance"),
+                        catalyst_type=self._classify(title),
+                        url=n.get("link", ""),
+                    ))
+                except Exception:
+                    continue
         except Exception:
             pass
 
@@ -267,15 +272,18 @@ class CatalystAnalyzer:
                                      timeout=15)
                 if resp.status_code == 200:
                     for n in resp.json()[:self._NEWS_FETCH_CAP]:
-                        title = n.get("headline", "")
-                        fh_ts = n.get("datetime", 0)
-                        items.append(NewsItem(
-                            title=title,
-                            date=datetime.fromtimestamp(fh_ts).strftime("%Y-%m-%d") if fh_ts > 946684800 else "",
-                            source=n.get("source", "finnhub"),
-                            catalyst_type=self._classify(title),
-                            url=n.get("url", ""),
-                        ))
+                        try:
+                            title = n.get("headline", "")
+                            fh_ts = n.get("datetime", 0)
+                            items.append(NewsItem(
+                                title=title,
+                                date=datetime.fromtimestamp(fh_ts).strftime("%Y-%m-%d") if fh_ts > 946684800 else "",
+                                source=n.get("source", "finnhub"),
+                                catalyst_type=self._classify(title),
+                                url=n.get("url", ""),
+                            ))
+                        except Exception:
+                            continue
             except Exception:
                 pass
 
@@ -411,8 +419,6 @@ class CatalystAnalyzer:
             price = close.iloc[i]
             if pd.isna(price):
                 continue
-            r = ret.iloc[i] if not pd.isna(ret.iloc[i]) else 0
-            v = vr.iloc[i] if not pd.isna(vr.iloc[i]) else 1
 
             if position is not None:
                 if i - position[1] >= holding_days:
@@ -422,6 +428,8 @@ class CatalystAnalyzer:
                     continue  # Still holding — skip entry check
 
             if position is None and i + 1 < len(df):
+                r = ret.iloc[i] if not pd.isna(ret.iloc[i]) else 0
+                v = vr.iloc[i] if not pd.isna(vr.iloc[i]) else 1
                 entry_price = close.iloc[i + 1]
                 if not pd.isna(entry_price) and entry_price > 0:
                     if strategy == "buy_spike" and r > 0.03 and v > 2.0:

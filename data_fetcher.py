@@ -386,7 +386,10 @@ def fetch_fred_series(
         # Fallback: scrape FRED CSV (no key needed)
         url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}&cosd={start}&coed={end}"
         try:
-            df = pd.read_csv(url, parse_dates=["DATE"], index_col="DATE")
+            from io import StringIO
+            resp = requests.get(url, timeout=30)
+            resp.raise_for_status()
+            df = pd.read_csv(StringIO(resp.text), parse_dates=["DATE"], index_col="DATE")
             df.index.name = "date"
             df.columns = ["value"]
             df["value"] = pd.to_numeric(df["value"], errors="coerce")
@@ -719,26 +722,53 @@ def fetch_market_breadth() -> dict[str, Any]:
     import yfinance as yf
     etfs = ["SPY", "QQQ", "IWM", "DIA", "VTI"]
     breadth = {}
+
+    # Batch download all ETFs in one HTTP call
+    fetched: dict[str, pd.DataFrame] = {}
+    try:
+        data = yf.download(etfs, period="3mo", group_by="ticker", progress=False)
+        for sym in etfs:
+            try:
+                df = data[sym].dropna(how="all")
+                if not df.empty:
+                    fetched[sym] = df
+            except (KeyError, AttributeError):
+                pass
+    except Exception:
+        pass
+
+    # Fallback: individually fetch any ETFs missing from batch
     for sym in etfs:
+        if sym in fetched:
+            continue
         try:
             ticker = yf.Ticker(sym)
             hist = ticker.history(period="3mo")
             if not hist.empty:
-                close = hist["Close"]
-                sma20 = close.rolling(20).mean()
-                valid_sma = sma20.notna()
-                above_sma = (close[valid_sma] > sma20[valid_sma]).sum() / valid_sma.sum() if valid_sma.sum() > 0 else 0
-                last_close = close.iloc[-1]
-                if pd.isna(last_close):
-                    continue
-                recent = close.iloc[-22:] if len(close) > 22 else close
-                first_close = recent.iloc[0] if len(recent) > 1 else None
-                ret_1m = (last_close / first_close - 1) if first_close is not None and not pd.isna(first_close) and first_close > 0 else 0
-                breadth[sym] = {
-                    "pct_above_sma20": float(above_sma),
-                    "return_1m": float(ret_1m),
-                    "current_price": float(last_close),
-                }
+                fetched[sym] = hist
+        except Exception:
+            pass
+
+    for sym in etfs:
+        hist = fetched.get(sym)
+        if hist is None:
+            continue
+        try:
+            close = hist["Close"]
+            sma20 = close.rolling(20).mean()
+            valid_sma = sma20.notna()
+            above_sma = (close[valid_sma] > sma20[valid_sma]).sum() / valid_sma.sum() if valid_sma.sum() > 0 else 0
+            last_close = close.iloc[-1]
+            if pd.isna(last_close):
+                continue
+            recent = close.iloc[-22:] if len(close) > 22 else close
+            first_close = recent.iloc[0] if len(recent) > 1 else None
+            ret_1m = (last_close / first_close - 1) if first_close is not None and not pd.isna(first_close) and first_close > 0 else 0
+            breadth[sym] = {
+                "pct_above_sma20": float(above_sma),
+                "return_1m": float(ret_1m),
+                "current_price": float(last_close),
+            }
         except Exception:
             pass
     return breadth
@@ -1017,7 +1047,7 @@ def scan_52_week_lows(
             low_52 = info.get("fiftyTwoWeekLow")
             high_52 = info.get("fiftyTwoWeekHigh")
 
-            if price is not None and price > 0 and low_52 is not None and low_52 > 0 and high_52 is not None:
+            if price is not None and price > 0 and low_52 is not None and low_52 > 0 and high_52 is not None and high_52 > 0:
                 pct_from_low = (price - low_52) / low_52
                 pct_from_high = (price - high_52) / high_52
                 results.append({
@@ -1116,8 +1146,6 @@ def discover_universe_from_etf(
 
     Useful for building universes from sector/theme ETFs.
     """
-    import yfinance as yf
-
     raise NotImplementedError(
         f"discover_universe_from_etf('{etf_symbol}') is not implemented. "
         "Use get_universe() with a category instead."
