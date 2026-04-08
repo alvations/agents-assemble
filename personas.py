@@ -257,10 +257,10 @@ class MomentumTrader(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        else:
-            for sym in self.config.universe:
-                if sym in prices:
-                    weights.setdefault(sym, 0.0)
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -368,10 +368,10 @@ class MemeStockTrader(BasePersona):
                     remaining[sym] += excess * (remaining[sym] / under_total)
             for sym, w in remaining.items():
                 weights[sym] = min(w, cap)
-        else:
-            for sym in self.config.universe:
-                if sym in prices:
-                    weights.setdefault(sym, 0.0)
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -449,10 +449,10 @@ class DividendInvestor(BasePersona):
             per_stock = min(budget / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        else:
-            for sym in self.config.universe:
-                if sym in prices:
-                    weights.setdefault(sym, 0.0)
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -552,10 +552,10 @@ class QuantStrategist(BasePersona):
                     remaining[sym] += excess * (remaining[sym] / under_total)
             for sym, w in remaining.items():
                 weights[sym] = min(w, cap)
-        else:
-            for sym in self.config.universe:
-                if sym in prices:
-                    weights.setdefault(sym, 0.0)
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
 
         return weights
 
@@ -650,9 +650,10 @@ class FixedIncomeStrat(BasePersona):
         cap = self.config.max_position_size
         result = {sym: min(w, cap) for sym, w in weights.items()
                   if sym in tradeable and sym in universe}
-        # Emit 0.0 for universe symbols not allocated so stale positions get closed
-        if not result:
-            return {sym: 0.0 for sym in universe if sym in tradeable}
+        # Close stale positions for universe symbols not allocated
+        for sym in universe:
+            if sym in tradeable:
+                result.setdefault(sym, 0.0)
         return result
 
 

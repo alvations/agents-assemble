@@ -1,8 +1,27 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. Backtested across multiple time horizons with 63 strategies, 510 tickers, and comprehensive research.
+Trading agents and algorithms for publicly tradable instruments. **91 strategies**, 580 tickers, backtested across 9 horizons (1W to 10Y).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
+
+> **Start here:**
+> - **[LEADERBOARD.md](LEADERBOARD.md)** — Full rankings with Return + Sharpe + Max DD
+> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
+> - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
+> - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
+> - **[knowledge/](knowledge/)** — 42 research files with backtested findings
+
+## Top 5 Strategies (Return + Sharpe + Max DD)
+
+| Rank | Strategy | 3Y Return | 3Y Sharpe | 3Y Max DD | 10Y Return |
+|------|----------|-----------|-----------|-----------|-----------|
+| 1 | **AI Revolution** | **183.6%** | **1.41** | -22.0% | 783% |
+| 2 | **Concentrate Winners** | **135.6%** | **1.28** | -18.0% | 818% |
+| 3 | **Momentum** | **135.0%** | **1.36** | -17.9% | 570% |
+| 4 | **Momentum Crash-Hedged** | **117.1%** | **1.26** | -20.8% | 743% |
+| 5 | **GLP-1 Obesity** | **80.7%** | **0.92** | -12.5% | — |
+
+**NEW:** Williams %R(2) on SPY: 77% win rate, +96% 10Y, invested only 22% of the time → [LEADERBOARD.md](LEADERBOARD.md)
 
 ## Quick Start
 
