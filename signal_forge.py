@@ -11,7 +11,7 @@ Usage:
 """
 
 from __future__ import annotations
-import sys, json, re
+import sys, json, math, re
 from pathlib import Path
 import numpy as np, pandas as pd
 
@@ -76,13 +76,13 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
     def _backtest_signal(self, signal: dict, symbol: str, start: str) -> dict:
         df = fetch_ohlcv(symbol, start=start)
         if df.index.tz is not None: df.index = df.index.tz_localize(None)
-        if len(df) < 201: return {"error": "Insufficient data (need 201+ rows for SMA200)"}
+        if len(df) < 200: return {"error": "Insufficient data (need 200+ rows for SMA200)"}
 
         c = df["Close"]
         data = pd.DataFrame({
             "close": c, "sma20": c.rolling(20).mean(), "sma50": c.rolling(50).mean(),
             "sma200": c.rolling(200).mean(), "ret": c.pct_change(),
-            "vol_ratio": df["Volume"] / df["Volume"].rolling(20).mean(),
+            "vol_ratio": df["Volume"] / df["Volume"].rolling(20).mean().replace(0, np.nan),
         })
         delta = c.diff()
         gain = delta.where(delta > 0, 0).rolling(14).mean()
@@ -102,12 +102,12 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             buy_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["buy"]
             sell_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["sell"]
         elif "buy_expr" in signal:
-            buy_fn = lambda d, i, expr=signal["buy_expr"]: eval(expr, {"__builtins__": {}}, {k: d[k].iloc[i] for k in d.columns if not pd.isna(d[k].iloc[i])})
-            sell_fn = lambda d, i, expr=signal["sell_expr"]: eval(expr, {"__builtins__": {}}, {k: d[k].iloc[i] for k in d.columns if not pd.isna(d[k].iloc[i])})
+            buy_fn = lambda d, i, expr=signal["buy_expr"]: eval(expr, {"__builtins__": {}}, {k: float(d[k].iloc[i]) for k in d.columns})
+            sell_fn = lambda d, i, expr=signal["sell_expr"]: eval(expr, {"__builtins__": {}}, {k: float(d[k].iloc[i]) for k in d.columns})
         else:
             return {"error": "No signal logic"}
 
-        for i in range(201, len(data)):
+        for i in range(200, len(data)):
             try:
                 if position is None and buy_fn(data, i):
                     position = float(c.iloc[i])
@@ -128,7 +128,7 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             "avg_return": float(np.mean(trades)),
             "total_return": float(np.prod([1+t for t in trades]) - 1),
             "best": float(max(trades)), "worst": float(min(trades)),
-            "profit_factor": abs(sum(winners)/sum(losers)) if losers else 0.0,
+            "profit_factor": abs(sum(winners)/sum(losers)) if losers else float("inf"),
         }
 
     def list_signals(self) -> list[dict]:
@@ -138,4 +138,12 @@ if __name__ == "__main__":
     f = SignalForge()
     print("Built-in signals:", [s["name"] for s in f.list_signals()])
     r = f.build("RSI oversold bounce", symbol="SPY")
-    print(json.dumps(r, indent=2, default=str))
+    def _sanitize(obj):
+        if isinstance(obj, dict):
+            return {k: _sanitize(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_sanitize(v) for v in obj]
+        if isinstance(obj, float) and not math.isfinite(obj):
+            return None
+        return obj
+    print(json.dumps(_sanitize(r), indent=2, default=str))

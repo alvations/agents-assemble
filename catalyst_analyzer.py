@@ -27,7 +27,7 @@ from __future__ import annotations
 import json
 import math
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -131,11 +131,11 @@ class EventPattern:
 
     # Legacy compat
     @property
-    def post_5d(self): return self.post_returns.get(5, 0)
+    def post_5d(self): return self.post_returns.get(5)
     @property
-    def post_10d(self): return self.post_returns.get(10, 0)
+    def post_10d(self): return self.post_returns.get(10)
     @property
-    def post_20d(self): return self.post_returns.get(20, 0)
+    def post_20d(self): return self.post_returns.get(20)
 
     def to_dict(self):
         d = {"date": self.date, "return_pct": self.return_pct,
@@ -250,7 +250,7 @@ class CatalystAnalyzer:
                     ts = n.get("providerPublishTime", 0)
                     items.append(NewsItem(
                         title=title,
-                        date=datetime.fromtimestamp(ts).strftime("%Y-%m-%d") if ts > 946684800 else "",
+                        date=datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d") if ts > 946684800 else "",
                         source=n.get("publisher", "yfinance"),
                         catalyst_type=self._classify(title),
                         url=n.get("link", ""),
@@ -277,7 +277,7 @@ class CatalystAnalyzer:
                             fh_ts = n.get("datetime", 0)
                             items.append(NewsItem(
                                 title=title,
-                                date=datetime.fromtimestamp(fh_ts).strftime("%Y-%m-%d") if fh_ts > 946684800 else "",
+                                date=datetime.fromtimestamp(fh_ts, tz=timezone.utc).strftime("%Y-%m-%d") if fh_ts > 946684800 else "",
                                 source=n.get("source", "finnhub"),
                                 catalyst_type=self._classify(title),
                                 url=n.get("url", ""),
@@ -312,37 +312,40 @@ class CatalystAnalyzer:
             return {"error": "Insufficient data"}
 
         events = []
-        close = df["Close"]
-        ret = df["daily_return"]
-        vr = df["vol_ratio"]
+        close_arr = df["Close"].values
+        ret_arr = df["daily_return"].values
+        vr_arr = df["vol_ratio"].values
+        dates = df.index
 
         max_horizon = max(SELL_HORIZONS)
         last_event_i = -max_horizon  # Track last event to avoid overlapping windows
         for i in range(25, len(df) - max_horizon - 1):
-            if pd.isna(vr.iloc[i]) or pd.isna(ret.iloc[i]):
+            r_i = ret_arr[i]
+            v_i = vr_arr[i]
+            if r_i != r_i or v_i != v_i:  # NaN check
                 continue
             if i - last_event_i < max_horizon:
                 continue  # Skip events whose forward windows overlap prior event
-            if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
+            if v_i > volume_threshold and abs(r_i) > return_threshold:
                 # Measure from next-day close (tradeable entry), consistent with backtest
-                entry_price = close.iloc[i + 1]
-                if pd.isna(entry_price) or entry_price <= 0:
+                entry_price = close_arr[i + 1]
+                if entry_price != entry_price or entry_price <= 0:
                     continue
                 post = {}
                 skip = False
                 for h in SELL_HORIZONS:
-                    future_price = close.iloc[i + 1 + h]
-                    if pd.isna(future_price):
+                    future_price = close_arr[i + 1 + h]
+                    if future_price != future_price:  # NaN
                         skip = True
                         break
                     post[h] = float(future_price / entry_price - 1)
                 if skip:
                     continue
                 events.append(EventPattern(
-                    date=str(df.index[i].date()),
-                    return_pct=float(ret.iloc[i]),
-                    volume_ratio=float(vr.iloc[i]),
-                    direction="up" if ret.iloc[i] > 0 else "down",
+                    date=str(dates[i].date()),
+                    return_pct=float(r_i),
+                    volume_ratio=float(v_i),
+                    direction="up" if r_i > 0 else "down",
                     post_returns=post,
                 ))
                 last_event_i = i
@@ -412,6 +415,8 @@ class CatalystAnalyzer:
 
         results = {}
         for strat, signal_arr in signals.items():
+            if not signal_arr[25:].any():
+                continue
             for hold in SELL_HORIZONS:
                 key = f"{strat}_{hold}d"
                 r = self._run_single_backtest(close_arr, signal_arr, strat, hold)
@@ -621,9 +626,21 @@ class CatalystAnalyzer:
 
     def full_report(self) -> dict:
         """Generate complete catalyst analysis report."""
-        news = self.get_news()
-        patterns = self.analyze_historical_patterns()
-        backtests = self.backtest_event_strategy()
+        try:
+            news = self.get_news()
+        except Exception:
+            news = []
+
+        try:
+            patterns = self.analyze_historical_patterns()
+        except Exception as e:
+            patterns = {"error": str(e)}
+
+        try:
+            backtests = self.backtest_event_strategy()
+        except Exception:
+            backtests = {}
+
         predictions = self.predict_next_catalyst(patterns=patterns, backtests=backtests)
 
         return self._sanitize_for_json({
@@ -704,10 +721,10 @@ class CatalystAnalyzer:
     # ----- Helpers -----
 
     _CLASSIFY_RULES = (
-        (("launch", "release", "unveil", "debut", "premiere", "switch", "gta"), "product_launch"),
+        (("launch", "release", "unveil", "debut", "premiere", "nintendo switch", "gta"), "product_launch"),
         (("fda", "approval", "trial", "phase"), "regulatory"),
         (("acquire", "merger", "buyout", "deal"), "ma"),
-        (("patent", "intellectual property", "ip ruling"), "patent"),
+        (("patent", "intellectual property"), "patent"),
         (("delivery", "production", "sales figure"), "delivery_numbers"),
         (("subscriber", "streaming", "user growth", "monthly active"), "subscriber_numbers"),
         (("dividend", "buyback", "split"), "capital_return"),
@@ -774,11 +791,12 @@ def scan_all_industries() -> dict[str, dict]:
             viable = [b for b in backtests.values()
                       if b.total_trades >= 3 and b.win_rate > 0.5 and b.profit_factor >= 1.0]
             best = max(viable, key=lambda b: b.total_return) if viable else None
+            _san = CatalystAnalyzer._sanitize_for_json
             results[f"{industry}/{sym}"] = {
                 "best_strategy": best.strategy if best else None,
                 "holding_days": best.holding_days if best else None,
-                "win_rate": best.win_rate if best else None,
-                "total_return": best.total_return if best else None,
+                "win_rate": _san(best.win_rate) if best else None,
+                "total_return": _san(best.total_return) if best else None,
             }
         except Exception as e:
             results[f"{industry}/{sym}"] = {"error": str(e)}

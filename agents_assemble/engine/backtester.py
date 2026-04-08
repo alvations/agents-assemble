@@ -272,6 +272,9 @@ def compute_metrics(
     # Drawdown analysis (cum_returns already computed above)
     rolling_max = cum_returns.cummax()
     drawdowns = cum_returns / rolling_max - 1
+    # Fix NaN from 0/0 when portfolio is wiped out (return of -1.0 makes
+    # both cum_returns and rolling_max zero). NaN drawdown is -1.0 (total loss).
+    drawdowns = drawdowns.fillna(-1.0)
     max_drawdown = drawdowns.min()
     max_dd_end = drawdowns.idxmin() if max_drawdown < 0 else None
 
@@ -417,6 +420,8 @@ class Backtester:
         rebalance_frequency: str = "daily",  # daily, weekly, monthly
         data: dict[str, pd.DataFrame] | None = None,
     ):
+        if not callable(strategy):
+            raise TypeError(f"strategy must be callable, got {type(strategy).__name__}")
         self.strategy = strategy
         if not symbols:
             raise ValueError("symbols must be a non-empty list")
@@ -610,7 +615,12 @@ class Backtester:
 
         # Compute results
         equity_curve = pd.Series(equity_values, index=equity_dates)
-        daily_returns = equity_curve.pct_change().dropna()
+        # Post-wipeout 0→0 returns are 0% (not NaN from 0/0 division).
+        # Without this, dropna removes all post-wipeout days, computing
+        # metrics from only pre-wipeout returns which is misleading.
+        daily_returns = equity_curve.pct_change()
+        zero_to_zero = (equity_curve == 0) & (equity_curve.shift(1) == 0)
+        daily_returns = daily_returns.where(~zero_to_zero, 0.0).dropna()
 
         bench_returns = None
         if bench_data is not None and not bench_data.empty:

@@ -24,7 +24,7 @@ import time
 from datetime import date, timedelta
 from pathlib import Path
 
-from flask import Flask, render_template_string, request, jsonify
+from flask import Flask, request, jsonify
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -138,6 +138,7 @@ button.danger { background: #ff4444; }
         <a href="#" onclick="showSection('strategies', this)">Strategies</a>
         <a href="#" onclick="showSection('catalyst', this)">Catalyst Scanner</a>
         <a href="#" onclick="showSection('charts', this)">Charts</a>
+        <a href="#" onclick="showSection('stockpick', this)">StockPick</a>
         <a href="#" onclick="showSection('trade', this)">Trade</a>
     </div>
 </div>
@@ -222,6 +223,25 @@ button.danger { background: #ff4444; }
         <button onclick="loadChart()">Generate</button>
     </div>
     <div id="chart-container"></div>
+</div>
+</div>
+
+<!-- STOCK PICK -->
+<div id="section-stockpick" style="display:none">
+<div class="panel">
+    <h2>🎯 StockPick — AI Strategy Matcher</h2>
+    <p style="color:#888; margin-bottom:10px;">Enter your stock picks. We'll match them to our best backtested strategy, suggest additional tickers, and show vol-adjusted position sizing. Claude AI reviews the result.</p>
+    <div class="input-group">
+        <input type="text" id="pick-symbols" placeholder="Tickers separated by commas (e.g. NVDA, AAPL, TSLA)" style="flex:3">
+        <input type="number" id="pick-amount" value="100000" min="1000" step="1000" style="width:120px" placeholder="Portfolio $">
+        <select id="pick-horizon" style="width:80px">
+            <option value="3y" selected>3Y</option>
+            <option value="1y">1Y</option>
+            <option value="5y">5Y</option>
+        </select>
+        <button onclick="analyzeStockPick()">🔍 Analyze</button>
+    </div>
+    <div id="pick-results"></div>
 </div>
 </div>
 
@@ -498,6 +518,177 @@ function executeTrades() {
     });
 }
 
+// StockPick analyzer — carousel of N strategies with shuffle re-roll
+let pickData = null;       // Full API response
+let pickRecs = [];         // Shuffled recommendations array
+let pickIdx = 0;           // Current index in carousel
+let pickCycleCount = 0;    // How many full cycles done
+
+function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function renderPickRecommendation(rec, idx, total) {
+    let html = '';
+    const ms = rec.matched_strategy;
+
+    // Navigation bar
+    html += '<div style="display:flex;align-items:center;gap:10px;margin:10px 0">';
+    html += '<button onclick="prevPick()" style="padding:4px 12px">&lt; Prev</button>';
+    html += '<span style="color:#888">Strategy ' + (idx+1) + ' of ' + total + '</span>';
+    html += '<button onclick="nextPick()" style="padding:4px 12px">Next &gt;</button>';
+    html += '<button onclick="rerollPicks()" style="padding:4px 12px;background:#ffaa00;color:#0a0a1a">🎲 Re-roll</button>';
+    html += '</div>';
+
+    // Strategy match header
+    if (ms) {
+        html += '<div class="panel" style="margin:10px 0; border-color:#00ff88">';
+        html += '<h2>🎯 Matched Strategy: ' + esc(ms.name) + ' <span class="tag tag-blue">' + esc(ms.source) + '</span></h2>';
+        html += '<p>' + esc(rec.strategy_explanation || '') + '</p>';
+        html += '</div>';
+    } else {
+        html += '<div class="panel" style="margin:10px 0; border-color:#ffaa00">';
+        html += '<h2>⚠️ No Direct Strategy Match</h2>';
+        html += '<p>' + esc(rec.strategy_explanation || '') + '</p>';
+        html += '</div>';
+    }
+
+    // Backtest results
+    if (rec.backtest && rec.backtest.metrics) {
+        const m = rec.backtest.metrics;
+        const ret = m.total_return || 0;
+        const sharpe = m.sharpe_ratio || 0;
+        const maxdd = m.max_drawdown || 0;
+        const alpha = m.alpha || 0;
+        const winr = m.win_rate || 0;
+        html += '<div class="grid-3" style="margin:10px 0">';
+        html += '<div class="panel"><h3>Backtest (' + esc(rec.backtest.horizon) + ')</h3>';
+        html += '<p><b>Return:</b> <span class="' + (ret > 0 ? 'positive' : 'negative') + '">' + (ret*100).toFixed(1) + '%</span></p>';
+        html += '<p><b>Sharpe:</b> ' + sharpe.toFixed(2) + '</p>';
+        html += '<p><b>Max DD:</b> <span class="negative">' + (maxdd*100).toFixed(1) + '%</span></p>';
+        html += '</div>';
+        html += '<div class="panel"><h3>Alpha & Edge</h3>';
+        html += '<p><b>Alpha:</b> <span class="' + (alpha > 0 ? 'positive' : 'negative') + '">' + (alpha*100).toFixed(1) + '%</span></p>';
+        html += '<p><b>Win Rate:</b> ' + (winr*100).toFixed(0) + '%</p>';
+        html += '<p><b>Beta:</b> ' + (m.beta || 0).toFixed(2) + '</p>';
+        html += '</div>';
+        html += '<div class="panel"><h3>Hypothesis</h3>';
+        html += '<p style="font-size:11px">' + esc(rec.hypothesis || '') + '</p>';
+        html += '</div>';
+        html += '</div>';
+    }
+
+    // Position table
+    if (rec.positions && rec.positions.length > 0) {
+        html += '<div class="panel" style="margin:10px 0">';
+        html += '<h2>Position Recommendations — Vol-Adjusted Risk</h2>';
+        html += '<p style="color:#888;font-size:11px">Each position sized by volatility. Your picks highlighted in green.</p>';
+        html += '<table><tr><th></th><th>Symbol</th><th>Action</th><th>Vol</th><th>Entry Rule</th><th>Stop Loss</th><th>Take Profit</th><th>Size</th><th>$ Amount</th><th>Live Price</th></tr>';
+        rec.positions.forEach(p => {
+            const rowStyle = p.is_user_pick ? ' style="background:#00ff8811"' : '';
+            const pickTag = p.is_user_pick ? '<span class="tag tag-green">YOUR PICK</span>' : '<span class="tag tag-yellow">SUGGESTED</span>';
+            const actionClass = p.action === 'BUY' ? 'tag-green' : p.action === 'HOLD' ? 'tag-yellow' : p.action === 'WATCH' ? 'tag-blue' : 'tag-red';
+            const links = (p.tradingview_url ? '<a href="' + encodeURI(p.tradingview_url) + '" target="_blank">TV</a>' : '')
+                + (p.yahoo_url ? ' <a href="' + encodeURI(p.yahoo_url) + '" target="_blank">YF</a>' : '');
+            html += '<tr' + rowStyle + '>'
+                + '<td>' + pickTag + '</td>'
+                + '<td><b>' + esc(p.symbol) + '</b></td>'
+                + '<td><span class="tag ' + actionClass + '">' + esc(p.action) + '</span></td>'
+                + '<td>' + esc(p.annual_volatility) + '</td>'
+                + '<td style="font-size:11px">' + esc(p.entry_rule) + '</td>'
+                + '<td class="negative">' + esc(p.stop_loss) + '</td>'
+                + '<td class="positive">' + esc(p.take_profit) + '</td>'
+                + '<td><b>' + esc(p.position_size) + '</b></td>'
+                + '<td>' + esc(p.position_dollars) + '</td>'
+                + '<td>' + links + '</td></tr>';
+            if (p.note) {
+                html += '<tr' + rowStyle + '><td colspan="10" style="font-size:11px;color:#ffaa00;padding-left:30px">⚠️ ' + esc(p.note) + '</td></tr>';
+            }
+        });
+        html += '</table></div>';
+    }
+
+    // Notes
+    if (rec.notes && rec.notes.length > 0) {
+        html += '<div class="panel" style="margin:10px 0; border-color:#ffaa00">';
+        html += '<h2>Notes & Warnings</h2>';
+        rec.notes.forEach(n => {
+            html += '<p style="color:#ffaa00; font-size:12px">⚠️ ' + esc(n) + '</p>';
+        });
+        html += '</div>';
+    }
+
+    // Claude AI analysis
+    if (rec.claude_analysis) {
+        html += '<div class="panel" style="margin:10px 0; border-color:#4488ff">';
+        html += '<h2>🤖 Claude AI Analysis</h2>';
+        html += '<div style="white-space:pre-wrap; font-size:12px; line-height:1.5">' + esc(rec.claude_analysis) + '</div>';
+        html += '</div>';
+    }
+
+    return html;
+}
+
+function showPickResult() {
+    if (!pickData || !pickRecs.length) return;
+    let html = '';
+    // Invalid picks warning
+    if (pickData.invalid_picks && pickData.invalid_picks.length > 0) {
+        html += '<p class="negative" style="font-size:11px">Could not find data for: ' + esc(pickData.invalid_picks.join(', ')) + '</p>';
+    }
+    html += '<p style="color:#888;font-size:11px">' + pickData.total_strategies_matched + ' strategies matched your picks. Showing top ' + pickRecs.length + '.</p>';
+    html += renderPickRecommendation(pickRecs[pickIdx], pickIdx, pickRecs.length);
+    html += '<p style="color:#555;font-size:10px;margin-top:10px">Not financial advice. Past performance does not predict future results. Trade at your own risk.</p>';
+    document.getElementById('pick-results').innerHTML = html;
+}
+
+function nextPick() {
+    pickIdx++;
+    if (pickIdx >= pickRecs.length) {
+        // Completed a full cycle — reshuffle
+        pickIdx = 0;
+        pickCycleCount++;
+        pickRecs = shuffleArray(pickRecs);
+    }
+    showPickResult();
+}
+
+function prevPick() {
+    pickIdx--;
+    if (pickIdx < 0) pickIdx = pickRecs.length - 1;
+    showPickResult();
+}
+
+function rerollPicks() {
+    pickRecs = shuffleArray(pickRecs);
+    pickIdx = 0;
+    showPickResult();
+}
+
+function analyzeStockPick() {
+    const syms = document.getElementById('pick-symbols').value.toUpperCase().trim();
+    const amt = document.getElementById('pick-amount').value;
+    const horizon = document.getElementById('pick-horizon').value;
+    if (!syms) { document.getElementById('pick-results').innerHTML = '<p class="negative">Enter at least one ticker.</p>'; return; }
+    document.getElementById('pick-results').innerHTML = '<p class="loading">Analyzing your picks... matching strategies, running backtests, asking Claude — ~30s</p>';
+    fetch('/api/stock-pick?symbols=' + encodeURIComponent(syms) + '&amount=' + amt + '&horizon=' + horizon + '&top_n=5')
+    .then(r => r.json()).then(data => {
+        if (data.error) { document.getElementById('pick-results').innerHTML = '<p class="negative">' + esc(data.error) + '</p>'; return; }
+        pickData = data;
+        pickRecs = shuffleArray(data.recommendations || []);
+        pickIdx = 0;
+        pickCycleCount = 0;
+        showPickResult();
+    }).catch(e => {
+        document.getElementById('pick-results').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
+    });
+}
+
 // Load all strategies list
 function loadStrategies() {
     document.getElementById('all-strategies').innerHTML = '<p class="loading">Loading...</p>';
@@ -532,7 +723,7 @@ document.querySelector('[onclick*="strategies"]').addEventListener('click', () =
 # ---------------------------------------------------------------------------
 @app.route("/")
 def index():
-    return render_template_string(HTML)
+    return HTML
 
 _leaderboard_cache = {}  # {horizon: (timestamp, results)}
 _CACHE_TTL_FILE = 300   # 5 min for file-based (3y)
@@ -561,10 +752,13 @@ def api_leaderboard():
                 data = json.loads(f.read_text())
                 metrics = data.get("metrics", data)
                 name = _DATE_SUFFIX_RE.sub('', f.stem)
+                if not name:
+                    continue
                 ret = metrics.get("total_return", 0)
                 if isinstance(ret, (int, float)) and not isinstance(ret, bool):
+                    source = data.get("source", data.get("category", "backtest"))
                     results.append({
-                        "name": name, "source": "backtest",
+                        "name": name, "source": source,
                         "return": _safe_metric(ret),
                         "sharpe": _safe_metric(metrics.get("sharpe_ratio", 0), 2),
                         "max_dd": _safe_metric(metrics.get("max_drawdown", 0)),
@@ -651,8 +845,11 @@ def api_market():
         except Exception:
             pass
     if data:
-        _market_cache["data"] = data
+        merged = _market_cache.get("data", {}).copy()
+        merged.update(data)
+        _market_cache["data"] = merged
         _market_cache["ts"] = time.monotonic()
+        return jsonify(merged)
     elif _market_cache.get("data"):
         return jsonify(_market_cache["data"])
     return jsonify(data)
@@ -790,7 +987,7 @@ def api_trade_plan(strategy):
         return jsonify({"error": "No market data available for strategy symbols"}), 500
     from backtester import Portfolio
     portfolio = Portfolio(initial_cash=amount)
-    last_dates = [df.index[-1] for df in enriched.values() if len(df) > 0]
+    last_dates = [df.index[-1] for df in enriched.values()]
     signal_date = max(last_dates)
     try:
         weights = persona.generate_signals(signal_date, prices, portfolio, enriched)
@@ -819,6 +1016,55 @@ def api_trade_plan(strategy):
             orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
 
     return jsonify({"strategy": strategy, "orders": orders, "amount": amount})
+
+
+@app.route("/api/stock-pick")
+def api_stock_pick():
+    """StockPick: Analyze user stock picks, match to strategy, generate recs."""
+    raw = request.args.get("symbols", "")
+    symbols = [s.strip().upper() for s in raw.split(",") if s.strip()]
+    if not symbols:
+        return jsonify({"error": "No symbols provided. Enter tickers separated by commas."}), 400
+    # Validate each symbol
+    for s in symbols:
+        if not re.match(r'^[A-Z0-9.\-^=]{1,15}$', s):
+            return jsonify({"error": f"Invalid ticker: {s}"}), 400
+    if len(symbols) > 20:
+        return jsonify({"error": "Maximum 20 tickers at once"}), 400
+
+    try:
+        amount = float(request.args.get("amount", 100000))
+    except (ValueError, TypeError):
+        amount = 100000
+    if amount <= 0 or not math.isfinite(amount):
+        amount = 100000
+
+    horizon = request.args.get("horizon", "3y")
+    if horizon not in ("1y", "3y", "5y"):
+        horizon = "3y"
+
+    # Check if Claude is available (don't fail if not)
+    include_claude = request.args.get("claude", "1") != "0"
+
+    try:
+        top_n = int(request.args.get("top_n", 5))
+    except (ValueError, TypeError):
+        top_n = 5
+    top_n = max(1, min(top_n, 10))
+
+    from stock_picker import analyze_stock_picks
+    try:
+        result = analyze_stock_picks(
+            symbols,
+            portfolio_amount=amount,
+            horizon=horizon,
+            include_claude=include_claude,
+            top_n=top_n,
+        )
+    except Exception as e:
+        return jsonify({"error": f"Analysis failed: {str(e)[:200]}"}), 500
+
+    return jsonify(_sanitize_for_json(result))
 
 
 @app.route("/api/execute-trade/<strategy>", methods=["POST"])

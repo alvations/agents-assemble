@@ -187,7 +187,10 @@ Return ONLY a JSON object (no other text) with these fields:
         if "momentum" in q or "uptrend" in q:
             sort_by = "pct_from_high"
             sort_asc = False
-        if "vol" in q:
+        if "volume" in q:
+            sort_by = "vol_ratio"
+            sort_asc = False
+        elif "vol" in q:
             sort_by = "annual_vol"
             sort_asc = "low" in q
 
@@ -239,7 +242,9 @@ Return ONLY a JSON object (no other text) with these fields:
 
     def _pick_universe(self, query: str, universe: str) -> list[str]:
         if universe != "auto":
-            return UNIVERSE.get(universe, UNIVERSE["mega_cap"])
+            if universe not in UNIVERSE:
+                raise ValueError(f"Unknown universe '{universe}'. Available: {sorted(UNIVERSE.keys())}")
+            return UNIVERSE[universe]
 
         q = query.lower()
         for pattern, cat in [
@@ -271,8 +276,12 @@ Return ONLY a JSON object (no other text) with these fields:
             close = df["Close"]
             price = float(close.iloc[-1])
             df_52w = df.iloc[-252:]
-            high_252 = float(df_52w["High"].max())
-            low_252 = float(df_52w["Low"].min())
+            high_252 = df_52w["High"].max()
+            low_252 = df_52w["Low"].min()
+            if pd.isna(high_252) or pd.isna(low_252):
+                return None
+            high_252 = float(high_252)
+            low_252 = float(low_252)
 
             sma50 = float(close.iloc[-50:].mean()) if len(close) >= 50 else None
             sma200 = float(close.iloc[-200:].mean()) if len(close) >= 200 else None
@@ -299,8 +308,11 @@ Return ONLY a JSON object (no other text) with these fields:
                 vol_20 = 0.0
             else:
                 vol_20 = float(vol_20)
-            vol_avg = float(df["Volume"].rolling(20).mean().iloc[-1])
-            vol_ratio = float(df["Volume"].iloc[-1] / vol_avg) if vol_avg > 0 else 1
+            vol_avg = df["Volume"].rolling(20).mean().iloc[-1]
+            if pd.isna(vol_avg) or vol_avg <= 0:
+                vol_ratio = 1.0
+            else:
+                vol_ratio = float(df["Volume"].iloc[-1] / vol_avg)
 
             return {
                 "symbol": symbol,
@@ -316,7 +328,7 @@ Return ONLY a JSON object (no other text) with these fields:
                 "52w_low": low_252,
                 "near_52w_high": price >= high_252 * 0.95,
                 "near_52w_low": price <= low_252 * 1.05,
-                "pct_from_high": (price - high_252) / high_252,
+                "pct_from_high": (price - high_252) / high_252 if high_252 > 0 else 0.0,
                 "tradingview": f"https://www.tradingview.com/chart/?symbol={symbol}",
                 "yahoo": f"https://finance.yahoo.com/quote/{symbol}/",
             }

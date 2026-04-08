@@ -97,6 +97,12 @@ def _cache_path(key: str) -> Path:
     return CACHE_DIR / f"{safe}.parquet"
 
 
+def _canonical_cache_path(symbol: str, interval: str = "1d") -> Path:
+    """One file per ticker+interval — no date range in filename."""
+    safe = symbol.replace("/", "_").replace(":", "_")
+    return CACHE_DIR / f"ohlcv_{safe}_{interval}.parquet"
+
+
 def _cache_get(key: str, max_age_hours: float = 12) -> pd.DataFrame | None:
     path = _cache_path(key)
     try:
@@ -129,6 +135,152 @@ def _cache_set(key: str, df: pd.DataFrame) -> None:
             pass
 
 
+def _canonical_cache_read(symbol: str, interval: str = "1d") -> pd.DataFrame | None:
+    """Read the canonical (one-per-ticker) cache file."""
+    path = _canonical_cache_path(symbol, interval)
+    try:
+        if path.exists():
+            return pd.read_parquet(path)
+    except Exception:
+        try:
+            path.unlink()
+        except OSError:
+            pass
+    return None
+
+
+def _canonical_cache_write(symbol: str, df: pd.DataFrame, interval: str = "1d") -> None:
+    """Write/overwrite the canonical cache file for a ticker."""
+    CACHE_DIR.mkdir(exist_ok=True)
+    path = _canonical_cache_path(symbol, interval)
+    tmp = path.with_suffix(".parquet.tmp")
+    try:
+        df.to_parquet(tmp)
+        tmp.replace(path)
+    except Exception:
+        try:
+            tmp.unlink(missing_ok=True)
+        except Exception:
+            pass
+
+
+def migrate_cache() -> dict[str, int]:
+    """Migrate old date-range cache files into canonical per-ticker files.
+
+    Merges all ohlcv_{SYM}_{start}_{end}_{interval}.parquet files into
+    one ohlcv_{SYM}_{interval}.parquet per ticker, then deletes the old files.
+    Returns counts of files migrated and removed.
+    """
+    import re
+
+    if not CACHE_DIR.exists():
+        return {"migrated": 0, "removed": 0}
+
+    # Find old-format files: ohlcv_SYM_YYYY-MM-DD_YYYY-MM-DD_1d.parquet
+    old_pattern = re.compile(
+        r"^ohlcv_(.+?)_(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})_(\w+)\.parquet$"
+    )
+
+    # Group old files by (symbol, interval)
+    groups: dict[tuple[str, str], list[Path]] = {}
+    for f in CACHE_DIR.iterdir():
+        m = old_pattern.match(f.name)
+        if m:
+            sym, _, _, interval = m.groups()
+            groups.setdefault((sym, interval), []).append(f)
+
+    migrated = 0
+    removed = 0
+    for (sym, interval), files in groups.items():
+        # Read and merge all old files for this ticker
+        frames = []
+        for f in files:
+            try:
+                df = pd.read_parquet(f)
+                if df.index.tz is not None:
+                    df.index = df.index.tz_localize(None)
+                frames.append(df)
+            except Exception:
+                pass
+
+        if frames:
+            merged = pd.concat(frames)
+            merged = merged[~merged.index.duplicated(keep="last")]
+            merged = merged.sort_index()
+
+            # Also merge with existing canonical file if present
+            existing = _canonical_cache_read(sym, interval)
+            if existing is not None and not existing.empty:
+                if existing.index.tz is not None:
+                    existing.index = existing.index.tz_localize(None)
+                merged = pd.concat([existing, merged])
+                merged = merged[~merged.index.duplicated(keep="last")]
+                merged = merged.sort_index()
+
+            _canonical_cache_write(sym, merged, interval)
+            migrated += 1
+
+        # Remove old files
+        for f in files:
+            try:
+                f.unlink()
+                removed += 1
+            except OSError:
+                pass
+
+    return {"migrated": migrated, "removed": removed}
+
+
+def refresh_cache(max_age_days: int = 1) -> dict[str, int]:
+    """Incrementally update all cached tickers that are older than max_age_days.
+
+    Call daily (or weekly with max_age_days=7) to keep cache fresh.
+    Only downloads missing days — not full re-download.
+
+    Returns counts of tickers updated and skipped.
+    """
+    import re
+
+    if not CACHE_DIR.exists():
+        return {"updated": 0, "skipped": 0, "failed": 0}
+
+    canonical = re.compile(r"^ohlcv_(.+?)_([\w]+)\.parquet$")
+    today = pd.Timestamp(datetime.now().strftime("%Y-%m-%d"))
+    updated = 0
+    skipped = 0
+    failed = 0
+
+    files = sorted(CACHE_DIR.iterdir())
+    for f in files:
+        m = canonical.match(f.name)
+        if not m:
+            continue
+        sym, interval = m.groups()
+        # Skip intraday
+        if interval not in ("1d", "1wk", "1mo"):
+            continue
+
+        try:
+            df = pd.read_parquet(f)
+            if df.index.tz is not None:
+                df.index = df.index.tz_localize(None)
+            if df.empty:
+                continue
+
+            cached_max = df.index.max()
+            if cached_max >= today - timedelta(days=max_age_days):
+                skipped += 1
+                continue
+
+            # Fetch only missing days
+            fetch_ohlcv(sym, start=df.index.min().strftime("%Y-%m-%d"), interval=interval, cache=True)
+            updated += 1
+        except Exception:
+            failed += 1
+
+    return {"updated": updated, "skipped": skipped, "failed": failed}
+
+
 # ---------------------------------------------------------------------------
 # FREE DATA: yfinance
 # ---------------------------------------------------------------------------
@@ -140,6 +292,10 @@ def fetch_ohlcv(
     cache: bool = True,
 ) -> pd.DataFrame:
     """Fetch OHLCV data for a stock/ETF/index via yfinance.
+
+    Uses ONE canonical cache file per ticker+interval (no date range in key).
+    On cache hit, checks if we need to fetch newer data and appends incrementally.
+    Returns only the requested [start, end] slice.
 
     Args:
         symbol: Ticker symbol (e.g., 'AAPL', 'SPY', 'BND')
@@ -154,32 +310,108 @@ def fetch_ohlcv(
     import yfinance as yf
 
     end = end or datetime.now().strftime("%Y-%m-%d")
-    cache_key = f"ohlcv_{symbol}_{start}_{end}_{interval}"
+    intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
 
-    if cache:
-        # Intraday data goes stale within minutes; 12h TTL would serve
-        # morning data all day.  Use 30min TTL for sub-daily intervals.
-        intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
-        cached = _cache_get(cache_key, max_age_hours=0.5 if intraday else 12)
-        if cached is not None:
-            return cached
+    # Intraday: use old per-request cache (short TTL, yfinance limits history)
+    if intraday:
+        cache_key = f"ohlcv_{symbol}_{start}_{end}_{interval}"
+        if cache:
+            cached = _cache_get(cache_key, max_age_hours=0.5)
+            if cached is not None:
+                return cached
+        ticker = yf.Ticker(symbol)
+        df = ticker.history(start=start, end=end, interval=interval)
+        if df.empty:
+            raise ValueError(f"No data returned for {symbol}")
+        if "Close" in df.columns:
+            df = df.dropna(subset=["Close"])
+            if df.empty:
+                raise ValueError(f"No valid price data for {symbol} (all Close values NaN)")
+        if cache:
+            _cache_set(cache_key, df)
+        return df
 
-    ticker = yf.Ticker(symbol)
-    df = ticker.history(start=start, end=end, interval=interval)
+    # Daily/weekly/monthly: canonical per-ticker cache with incremental updates
+    req_start = pd.Timestamp(start)
+    req_end = pd.Timestamp(end)
+    cached_df = _canonical_cache_read(symbol, interval) if cache else None
 
-    if df.empty:
+    need_fetch = True
+    fetch_start = start
+    fetch_end = end
+
+    if cached_df is not None and not cached_df.empty:
+        # Normalize index to tz-naive for comparison
+        if cached_df.index.tz is not None:
+            cached_df.index = cached_df.index.tz_localize(None)
+
+        cached_min = cached_df.index.min()
+        cached_max = cached_df.index.max()
+        today = pd.Timestamp(datetime.now().strftime("%Y-%m-%d"))
+
+        # Check if cached data fully covers the request
+        covers_start = cached_min <= req_start
+        covers_end = cached_max >= req_end - timedelta(days=3)  # 3-day grace for weekends
+        is_fresh = cached_max >= today - timedelta(days=1)  # Has yesterday's data
+
+        if covers_start and covers_end and is_fresh:
+            # Cache fully covers request and is fresh — no fetch needed
+            need_fetch = False
+        elif covers_start and is_fresh:
+            # Covers start but not end (shouldn't happen if fresh) — no fetch
+            need_fetch = False
+        elif covers_start and not is_fresh:
+            # Has historical data but needs update — fetch only new days
+            fetch_start = (cached_max + timedelta(days=1)).strftime("%Y-%m-%d")
+            fetch_end = end
+        elif not covers_start:
+            # Need earlier data — fetch from requested start to cached start
+            # Then also check if we need newer data
+            fetch_start = start
+            if is_fresh:
+                fetch_end = (cached_min - timedelta(days=1)).strftime("%Y-%m-%d")
+            else:
+                fetch_end = end  # Need both earlier and newer — just refetch all
+
+    if need_fetch:
+        try:
+            ticker = yf.Ticker(symbol)
+            df_new = ticker.history(start=fetch_start, end=fetch_end, interval=interval)
+        except Exception:
+            df_new = pd.DataFrame()
+
+        if not df_new.empty:
+            if df_new.index.tz is not None:
+                df_new.index = df_new.index.tz_localize(None)
+            if "Close" in df_new.columns:
+                df_new = df_new.dropna(subset=["Close"])
+
+        # Merge with cached data
+        if cached_df is not None and not cached_df.empty and not df_new.empty:
+            merged = pd.concat([cached_df, df_new])
+            merged = merged[~merged.index.duplicated(keep="last")]
+            merged = merged.sort_index()
+            cached_df = merged
+        elif not df_new.empty:
+            cached_df = df_new
+        # else: keep whatever cached_df we had (may be None)
+
+        # Write merged data back to canonical cache
+        if cache and cached_df is not None and not cached_df.empty:
+            _canonical_cache_write(symbol, cached_df, interval)
+
+    if cached_df is None or cached_df.empty:
         raise ValueError(f"No data returned for {symbol}")
 
-    # Drop rows where Close is NaN (e.g., delisted/suspended tickers)
-    if "Close" in df.columns:
-        df = df.dropna(subset=["Close"])
-        if df.empty:
-            raise ValueError(f"No valid price data for {symbol} (all Close values NaN)")
+    # Slice to requested range
+    result = cached_df.loc[
+        (cached_df.index >= req_start) & (cached_df.index <= req_end)
+    ]
 
-    if cache:
-        _cache_set(cache_key, df)
+    if result.empty:
+        raise ValueError(f"No data for {symbol} in range {start} to {end}")
 
-    return df
+    return result
 
 
 def fetch_multiple_ohlcv(
@@ -188,49 +420,53 @@ def fetch_multiple_ohlcv(
     end: str | None = None,
     interval: str = "1d",
 ) -> dict[str, pd.DataFrame]:
-    """Fetch OHLCV for multiple symbols. Falls back to individual downloads on failure."""
+    """Fetch OHLCV for multiple symbols using canonical per-ticker cache.
+
+    Each symbol goes through fetch_ohlcv which handles incremental updates.
+    For symbols with no cache at all, does a batch yf.download to save time.
+    """
     import yfinance as yf
 
     end = end or datetime.now().strftime("%Y-%m-%d")
+    intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
     results = {}
 
-    # Check cache first to avoid unnecessary network calls
-    intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
-    cache_ttl = 0.5 if intraday else 12
-    uncached = []
-    for sym in symbols:
-        cache_key = f"ohlcv_{sym}_{start}_{end}_{interval}"
-        cached = _cache_get(cache_key, max_age_hours=cache_ttl)
-        if cached is not None:
-            results[sym] = cached
-        else:
-            uncached.append(sym)
+    # For daily data: check which symbols already have fresh canonical cache
+    need_any_fetch = []
+    if not intraday:
+        today = pd.Timestamp(datetime.now().strftime("%Y-%m-%d"))
+        req_start = pd.Timestamp(start)
+        req_end = pd.Timestamp(end)
 
-    if not uncached:
+        for sym in symbols:
+            cached = _canonical_cache_read(sym, interval)
+            if cached is not None and not cached.empty:
+                if cached.index.tz is not None:
+                    cached.index = cached.index.tz_localize(None)
+                cached_min = cached.index.min()
+                cached_max = cached.index.max()
+                covers_start = cached_min <= req_start
+                is_fresh = cached_max >= today - timedelta(days=1)
+
+                if covers_start and is_fresh:
+                    # Slice and use directly — no fetch needed
+                    sliced = cached.loc[
+                        (cached.index >= req_start) & (cached.index <= req_end)
+                    ]
+                    if not sliced.empty:
+                        results[sym] = sliced
+                        continue
+
+            need_any_fetch.append(sym)
+    else:
+        need_any_fetch = list(symbols)
+
+    if not need_any_fetch:
         return results
 
-    # Try batch download for uncached symbols (only when >1, since
-    # yf.download with a single-element list + group_by="ticker" returns
-    # multi-level columns inconsistent with fetch_ohlcv's Ticker.history())
-    if len(uncached) > 1:
-        try:
-            data = yf.download(uncached, start=start, end=end, interval=interval, group_by="ticker", progress=False)
-            for sym in uncached:
-                try:
-                    df = data[sym].dropna(how="all")
-                    if "Close" in df.columns:
-                        df = df.dropna(subset=["Close"])
-                    if not df.empty:
-                        results[sym] = df
-                        _cache_set(f"ohlcv_{sym}_{start}_{end}_{interval}", df)
-                except (KeyError, AttributeError):
-                    pass
-        except Exception:
-            pass
-
-    # Fallback: individually fetch any symbols still missing after batch
-    missing = [s for s in uncached if s not in results]
-    for sym in missing:
+    # Batch fetch uncached symbols — each goes through fetch_ohlcv
+    # which handles canonical caching internally
+    for sym in need_any_fetch:
         try:
             df = fetch_ohlcv(sym, start=start, end=end, interval=interval, cache=True)
             if not df.empty:
@@ -835,6 +1071,33 @@ UNIVERSE = {
     # Hong Kong / Singapore
     "hk_etf": ["EWH", "FLHK"],
     "singapore_etf": ["EWS"],
+    "singapore_sgx": [
+        # Banks & Financials
+        "D05.SI", "U11.SI", "O39.SI",  # DBS, UOB, OCBC
+        "S68.SI", "BN4.SI", "G07.SI",  # SGX, Keppel, Great Eastern
+        # REITs (SGX is REIT capital of Asia)
+        "A17U.SI", "N2IU.SI", "C38U.SI",  # CapitaLand Ascendas, Mapletree Pan Asia, CapitaLand Integrated
+        "ME8U.SI", "M44U.SI", "BUOU.SI",  # Mapletree Industrial, Mapletree Logistics, Frasers Logistics
+        "J69U.SI", "T82U.SI", "SK6U.SI",  # Frasers Centrepoint, Suntec REIT, Parkway Life
+        "N2HU.SI", "HMN.SI", "AJBU.SI",   # Mapletree US, CapitaLand China Trust, Keppel DC REIT (data centres)
+        "A68U.SI", "J36.SI",               # CDL Hospitality, Jardine Matheson
+        # Telco & Tech
+        "Z74.SI", "CC3.SI", "S63.SI",  # SingTel, StarHub, ST Engineering
+        "S58.SI", "BN2.SI",            # SATS, Nanofilm
+        # Consumer & Healthcare
+        "F34.SI", "Y92.SI", "OV8.SI",  # Wilmar, Thai Bev, Sheng Siong
+        "C52.SI", "U96.SI", "S51.SI",  # ComfortDelGro, Sembcorp Industries, Seatrium
+        "H78.SI", "V03.SI",            # Hongkong Land, Venture Corp
+        # Property & Conglomerates
+        "C09.SI", "U14.SI", "C31.SI",  # City Developments, UOL Group, CapitaLand Investment
+        "CY6U.SI", "TQ5.SI",           # CapSpring, Frasers Property
+        # Industrials & Offshore
+        "BS6.SI", "AWX.SI", "S56.SI",  # YZJ Shipbuilding, AEM Holdings, SembMarine
+        "BLA.SI", "EB5.SI",            # Bumitama Agri, First Resources
+        # Small/Mid Cap (popular retail plays)
+        "5CP.SI", "Z25.SI", "Q0F.SI",  # Silverlake Axis, Yanlord Land, iFast Corp
+        "AIY.SI", "A30.SI",            # iX Biopharma, Centurion Corp
+    ],
     # Europe ADRs — comprehensive by country
     "europe_uk": [
         "SHEL", "BP", "HSBC", "AZN", "GSK", "UL", "DEO", "BCS", "LYG",
