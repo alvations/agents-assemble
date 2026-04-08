@@ -1,0 +1,49 @@
+{
+  "metrics": {
+    "total_return": 0.14944619972884432,
+    "cagr": 0.047688371433080246,
+    "annual_volatility": 0.1261147460521406,
+    "sharpe_ratio": 0.12211548361278779,
+    "sortino_ratio": 0.17559822398925806,
+    "calmar_ratio": 0.3019328304448321,
+    "max_drawdown": -0.1579436438323777,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.363031914893617,
+    "profit_factor": 1.104678627692649,
+    "num_trading_days": 752,
+    "skewness": -0.08169791664231699,
+    "kurtosis": 8.3420539989675,
+    "best_day": 0.05058121704584395,
+    "worst_day": -0.04767591752314593,
+    "avg_daily_return": 0.00021676320884229879,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03893620766668393,
+    "beta": 0.4210280042363595,
+    "information_ratio": -0.2703244450513797,
+    "tracking_error": 0.1440350970082763
+  },
+  "trade_metrics": {
+    "num_trades": 132,
+    "num_buys": 69,
+    "num_sells": 63,
+    "total_commission": 0.0,
+    "total_slippage": 1450.1649764184951,
+    "total_transaction_costs": 1450.1649764184951,
+    "avg_trade_size": 10986.098306200722
+  },
+  "final_positions": {
+    "INTC": {
+      "qty": 595.0,
+      "avg_cost": 23.93000030517578,
+      "realized_pnl": -183.01948928833008
+    },
+    "DOW": {
+      "qty": 349.0,
+      "avg_cost": 40.80983352661133,
+      "realized_pnl": 289.2367744445801
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Deep-value activist targets: buy >20% below SMA200, catalyst-driven recovery"
+}

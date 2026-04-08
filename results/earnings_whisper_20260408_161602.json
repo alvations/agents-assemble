@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 1.975434912004914e-05,
+    "cagr": 6.6073521860499085e-06,
+    "annual_volatility": 0.13193529188475858,
+    "sharpe_ratio": -0.23146817342691298,
+    "sortino_ratio": -0.3324186845634365,
+    "calmar_ratio": 2.799568417242054e-05,
+    "max_drawdown": -0.2360132420896156,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.45478723404255317,
+    "profit_factor": 1.0132059795695862,
+    "num_trading_days": 752,
+    "skewness": 0.3214873236904227,
+    "kurtosis": 4.859368007214908,
+    "best_day": 0.04301288407955406,
+    "worst_day": -0.03686042613141438,
+    "avg_daily_return": 3.4464065080502166e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08661797174757813,
+    "beta": 0.46834320415268005,
+    "information_ratio": -0.6227229767883409,
+    "tracking_error": 0.1390955127339375
+  },
+  "trade_metrics": {
+    "num_trades": 3776,
+    "num_buys": 1825,
+    "num_sells": 1951,
+    "total_commission": 0.0,
+    "total_slippage": 19072.264418045055,
+    "total_transaction_costs": 19072.264418045055,
+    "avg_trade_size": 5050.917483592438
+  },
+  "final_positions": {
+    "V": {
+      "qty": 32.0,
+      "avg_cost": 312.0158996582031,
+      "realized_pnl": -1294.2853240966806
+    },
+    "AAPL": {
+      "qty": 40.0,
+      "avg_cost": 254.2013702392578,
+      "realized_pnl": 3475.0313110351562
+    },
+    "GOOGL": {
+      "qty": 53.0,
+      "avg_cost": 191.87290954589844,
+      "realized_pnl": 1383.880424499514
+    }
+  },
+  "source": "news_event",
+  "description": "Pre-earnings drift: accumulation patterns predict positive surprises"
+}

@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.18504180043800034,
+    "cagr": 0.058430368102576624,
+    "annual_volatility": 0.13347355954227075,
+    "sharpe_ratio": 0.1990988639594568,
+    "sortino_ratio": 0.28067129629388776,
+    "calmar_ratio": 0.27894824993158385,
+    "max_drawdown": -0.20946669540643303,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5226063829787234,
+    "profit_factor": 1.087064784012271,
+    "num_trading_days": 752,
+    "skewness": -0.062116176789763285,
+    "kurtosis": 2.4975146735752083,
+    "best_day": 0.049270963812997115,
+    "worst_day": -0.03369442247330012,
+    "avg_daily_return": 0.000261103966257497,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.028194210997187552,
+    "beta": 0.6962540629931887,
+    "information_ratio": -0.37070929696807264,
+    "tracking_error": 0.07605477183275439
+  },
+  "trade_metrics": {
+    "num_trades": 547,
+    "num_buys": 289,
+    "num_sells": 258,
+    "total_commission": 0.0,
+    "total_slippage": 688.105398735047,
+    "total_transaction_costs": 688.105398735047,
+    "avg_trade_size": 1257.9623377240337
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 143.0,
+      "avg_cost": 92.69526821148844,
+      "realized_pnl": -3886.084633733227
+    },
+    "IEF": {
+      "qty": 67.0,
+      "avg_cost": 91.50426847515178,
+      "realized_pnl": -775.6157074162968
+    },
+    "GLD": {
+      "qty": 49.0,
+      "avg_cost": 199.50353657485394,
+      "realized_pnl": 2697.0231304246713
+    },
+    "SPY": {
+      "qty": 72.0,
+      "avg_cost": 575.6620483398438,
+      "realized_pnl": 10350.883789062498
+    },
+    "QQQ": {
+      "qty": 70.0,
+      "avg_cost": 502.7281542096819,
+      "realized_pnl": 10344.596862792976
+    }
+  },
+  "source": "recession",
+  "description": "TLT/SHY ratio proxy for yield curve: go defensive on flattening"
+}

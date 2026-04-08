@@ -1,0 +1,67 @@
+{
+  "strategy_name": "earnings_whisper",
+  "is_winning": false,
+  "generated_at": "2026-04-08T16:16:02.081787",
+  "overall_assessment": "NEUTRAL \u2014 Mixed signals. Paper trade before committing capital.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "23.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "V",
+      "action": "BUY",
+      "current_position": 32.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.8% below entry",
+      "take_profit": "4.6% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "15.9% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo_url": "https://finance.yahoo.com/quote/V/"
+    },
+    {
+      "symbol": "AAPL",
+      "action": "BUY",
+      "current_position": 40.0,
+      "annual_volatility": "29%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "30.1% below entry",
+      "take_profit": "6.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "21.1% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "GOOGL",
+      "action": "BUY",
+      "current_position": 53.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "31.4% below entry",
+      "take_profit": "6.3% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "22.0% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "0.00%",
+    "sharpe_ratio": "-0.23",
+    "max_drawdown": "-23.60%",
+    "win_rate": "45.48%",
+    "alpha": "-8.66%"
+  }
+}

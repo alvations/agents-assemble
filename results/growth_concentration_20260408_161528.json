@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": 0.3951568153088658,
+    "cagr": 0.11782346852591541,
+    "annual_volatility": 0.2218971947115546,
+    "sharpe_ratio": 0.43706655155034946,
+    "sortino_ratio": 0.6236747963704439,
+    "calmar_ratio": 0.47972896803919585,
+    "max_drawdown": -0.2456042398429622,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.4654255319148936,
+    "profit_factor": 1.1163827322070468,
+    "num_trading_days": 752,
+    "skewness": -0.032119494285410256,
+    "kurtosis": 1.5707225457077736,
+    "best_day": 0.05701823165326814,
+    "worst_day": -0.05268214977771635,
+    "avg_daily_return": 0.0005405063774391819,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.031198889426151233,
+    "beta": 0.7522076733095243,
+    "information_ratio": 0.16975633254427408,
+    "tracking_error": 0.1837863068702563
+  },
+  "trade_metrics": {
+    "num_trades": 855,
+    "num_buys": 409,
+    "num_sells": 446,
+    "total_commission": 0.0,
+    "total_slippage": 7169.9784005966185,
+    "total_transaction_costs": 7169.9784005966185,
+    "avg_trade_size": 8385.939649820606
+  },
+  "final_positions": {
+    "SHOP": {
+      "qty": 205.0,
+      "avg_cost": 98.13547785047888,
+      "realized_pnl": -560.1887334618859
+    },
+    "SE": {
+      "qty": 194.0,
+      "avg_cost": 103.04245021253001,
+      "realized_pnl": 6914.030759016471
+    },
+    "RBLX": {
+      "qty": 416.0,
+      "avg_cost": 59.06110598490788,
+      "realized_pnl": 913.1516265869154
+    },
+    "NOW": {
+      "qty": 90.0,
+      "avg_cost": 189.5075255772631,
+      "realized_pnl": 5834.0472436651025
+    },
+    "PLTR": {
+      "qty": 320.0,
+      "avg_cost": 67.09988534992392,
+      "realized_pnl": 16646.66763860529
+    },
+    "GOOGL": {
+      "qty": 98.0,
+      "avg_cost": 193.45886884416853,
+      "realized_pnl": 2545.8604812622107
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Concentrated high-conviction growth bets, Tiger Global-inspired"
+}

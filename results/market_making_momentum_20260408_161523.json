@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.01843482176458866,
+    "cagr": 0.006128600239516668,
+    "annual_volatility": 0.1231795515575382,
+    "sharpe_ratio": -0.2072329923713702,
+    "sortino_ratio": -0.2896329899368056,
+    "calmar_ratio": 0.03655174773008133,
+    "max_drawdown": -0.1676691436145188,
+    "max_drawdown_date": "2023-03-10",
+    "win_rate": 0.5053191489361702,
+    "profit_factor": 1.0194012923013915,
+    "num_trading_days": 752,
+    "skewness": 0.04494908257726427,
+    "kurtosis": 2.393240401152456,
+    "best_day": 0.03730443226001001,
+    "worst_day": -0.035767151681393994,
+    "avg_daily_return": 5.435277125065921e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08049597886024751,
+    "beta": 0.5133902341042094,
+    "information_ratio": -0.6719124983838602,
+    "tracking_error": 0.11980128224115956
+  },
+  "trade_metrics": {
+    "num_trades": 5419,
+    "num_buys": 2677,
+    "num_sells": 2742,
+    "total_commission": 0.0,
+    "total_slippage": 30714.997371388392,
+    "total_transaction_costs": 30714.997371388392,
+    "avg_trade_size": 5668.019444803181
+  },
+  "final_positions": {
+    "UNH": {
+      "qty": 23.0,
+      "avg_cost": 489.89312744140625,
+      "realized_pnl": -1945.827301025391
+    },
+    "QQQ": {
+      "qty": 23.0,
+      "avg_cost": 516.6785659790039,
+      "realized_pnl": 1671.4227828979413
+    },
+    "LLY": {
+      "qty": 15.0,
+      "avg_cost": 780.3510360717773,
+      "realized_pnl": 5119.893196105955
+    },
+    "XOM": {
+      "qty": 111.0,
+      "avg_cost": 103.07476806640625,
+      "realized_pnl": -1691.671333312984
+    },
+    "JPM": {
+      "qty": 49.0,
+      "avg_cost": 231.23251539698188,
+      "realized_pnl": 2730.1285983852113
+    },
+    "GS": {
+      "qty": 21.0,
+      "avg_cost": 555.4823978308475,
+      "realized_pnl": 129.39442305131342
+    },
+    "MA": {
+      "qty": 22.0,
+      "avg_cost": 528.6272264563519,
+      "realized_pnl": 1514.102082625679
+    },
+    "AMZN": {
+      "qty": 52.0,
+      "avg_cost": 222.85909201882103,
+      "realized_pnl": 2877.7341863458805
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Multi-factor momentum + short-term mean-reversion entry, Citadel-inspired"
+}

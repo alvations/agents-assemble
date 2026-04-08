@@ -1,0 +1,132 @@
+{
+  "strategy_name": "market_making_momentum",
+  "is_winning": false,
+  "generated_at": "2026-04-08T16:15:23.187255",
+  "overall_assessment": "NEUTRAL \u2014 Mixed signals. Paper trade before committing capital.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "20.1%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "16.8%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "UNH",
+      "action": "BUY",
+      "current_position": 23.0,
+      "annual_volatility": "43%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "36.5% below entry",
+      "take_profit": "9.1% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "25.6% trailing after 3.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UNH",
+      "yahoo_url": "https://finance.yahoo.com/quote/UNH/"
+    },
+    {
+      "symbol": "QQQ",
+      "action": "BUY",
+      "current_position": 23.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "18.3% below entry",
+      "take_profit": "4.5% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "12.8% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=QQQ",
+      "yahoo_url": "https://finance.yahoo.com/quote/QQQ/"
+    },
+    {
+      "symbol": "LLY",
+      "action": "BUY",
+      "current_position": 15.0,
+      "annual_volatility": "38%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "32.3% below entry",
+      "take_profit": "8.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "22.6% trailing after 3.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LLY",
+      "yahoo_url": "https://finance.yahoo.com/quote/LLY/"
+    },
+    {
+      "symbol": "XOM",
+      "action": "BUY",
+      "current_position": 111.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "19.7% below entry",
+      "take_profit": "4.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "13.8% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XOM",
+      "yahoo_url": "https://finance.yahoo.com/quote/XOM/"
+    },
+    {
+      "symbol": "JPM",
+      "action": "BUY",
+      "current_position": 49.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "21.5% below entry",
+      "take_profit": "5.3% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "15.0% trailing after 2.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=JPM",
+      "yahoo_url": "https://finance.yahoo.com/quote/JPM/"
+    },
+    {
+      "symbol": "GS",
+      "action": "BUY",
+      "current_position": 21.0,
+      "annual_volatility": "31%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "26.4% below entry",
+      "take_profit": "6.5% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.4% trailing after 2.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GS",
+      "yahoo_url": "https://finance.yahoo.com/quote/GS/"
+    },
+    {
+      "symbol": "MA",
+      "action": "BUY",
+      "current_position": 22.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "18.2% below entry",
+      "take_profit": "4.5% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "12.7% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MA",
+      "yahoo_url": "https://finance.yahoo.com/quote/MA/"
+    },
+    {
+      "symbol": "AMZN",
+      "action": "BUY",
+      "current_position": 52.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "27.6% below entry",
+      "take_profit": "6.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "19.3% trailing after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo_url": "https://finance.yahoo.com/quote/AMZN/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "1.84%",
+    "sharpe_ratio": "-0.21",
+    "max_drawdown": "-16.77%",
+    "win_rate": "50.53%",
+    "alpha": "-8.05%"
+  }
+}

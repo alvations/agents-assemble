@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": -0.11840074385144961,
+    "cagr": -0.0412741788812554,
+    "annual_volatility": 0.0927575231307886,
+    "sharpe_ratio": -0.8318396390071455,
+    "sortino_ratio": -1.1370933137203107,
+    "calmar_ratio": -0.219488869232369,
+    "max_drawdown": -0.18804679720482387,
+    "max_drawdown_date": "2023-12-20",
+    "win_rate": 0.4920212765957447,
+    "profit_factor": 0.9252011637379322,
+    "num_trading_days": 752,
+    "skewness": 0.45050775468010473,
+    "kurtosis": 8.58350291872787,
+    "best_day": 0.04948169099952948,
+    "worst_day": -0.023655728217136684,
+    "avg_daily_return": -0.00015053817116235675,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.12789875798101957,
+    "beta": 0.22052626004097883,
+    "information_ratio": -0.7972462335681101,
+    "tracking_error": 0.16042566599355776
+  },
+  "trade_metrics": {
+    "num_trades": 2078,
+    "num_buys": 995,
+    "num_sells": 1083,
+    "total_commission": 0.0,
+    "total_slippage": 11615.430864078513,
+    "total_transaction_costs": 11615.430864078513,
+    "avg_trade_size": 5589.716488969452
+  },
+  "final_positions": {
+    "GILD": {
+      "qty": 118.0,
+      "avg_cost": 88.75865298910867,
+      "realized_pnl": -426.3678938183806
+    }
+  },
+  "source": "news_event",
+  "description": "Biotech FDA event plays: volume spike + momentum in pharma/biotech"
+}

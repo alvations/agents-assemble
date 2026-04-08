@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.08715645704410702,
+    "cagr": 0.028345123580350684,
+    "annual_volatility": 0.03762635076348386,
+    "sharpe_ratio": -0.27938291239269075,
+    "sortino_ratio": -0.39901026756947594,
+    "calmar_ratio": 0.7450553745888124,
+    "max_drawdown": -0.03804431797568608,
+    "max_drawdown_date": "2022-02-24",
+    "win_rate": 0.4640957446808511,
+    "profit_factor": 1.1549108400582406,
+    "num_trading_days": 752,
+    "skewness": 0.13869504259305687,
+    "kurtosis": 3.5093535107669873,
+    "best_day": 0.012763262701759093,
+    "worst_day": -0.010516336325637421,
+    "avg_daily_return": 0.00011393494430312366,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.05827945551941349,
+    "beta": 0.10887689880446966,
+    "information_ratio": -0.3657313775989371,
+    "tracking_error": 0.15935043884400601
+  },
+  "trade_metrics": {
+    "num_trades": 1199,
+    "num_buys": 638,
+    "num_sells": 561,
+    "total_commission": 0.0,
+    "total_slippage": 6749.314077236188,
+    "total_transaction_costs": 6749.314077236188,
+    "avg_trade_size": 5629.1193304722065
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 79.0,
+      "avg_cost": 138.34710693359375,
+      "realized_pnl": 258.16497802734557
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Short-term mean reversion across sector pairs, Renaissance-inspired"
+}

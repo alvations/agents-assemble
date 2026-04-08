@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": -0.0165063560034564,
+    "cagr": -0.0055566938045518155,
+    "annual_volatility": 0.025149562719320236,
+    "sharpe_ratio": -1.769108425859621,
+    "sortino_ratio": -2.2924540654691365,
+    "calmar_ratio": -0.10599584143948079,
+    "max_drawdown": -0.052423696336468595,
+    "max_drawdown_date": "2024-10-30",
+    "win_rate": 0.12250332889480692,
+    "profit_factor": 0.9197870820925252,
+    "num_trading_days": 751,
+    "skewness": -1.5313215291803812,
+    "kurtosis": 66.30811592823535,
+    "best_day": 0.01702509026744292,
+    "worst_day": -0.021263333458787836,
+    "avg_daily_return": -2.0906896389032536e-05,
+    "benchmark_total_return": 0.2866221187402662,
+    "benchmark_cagr": 0.08803411767458291,
+    "alpha": -0.09359081147913473,
+    "beta": 0.02283422522754401,
+    "information_ratio": -0.541089143469169,
+    "tracking_error": 0.17296745390062973
+  },
+  "trade_metrics": {
+    "num_trades": 239,
+    "num_buys": 118,
+    "num_sells": 121,
+    "total_commission": 0.0,
+    "total_slippage": 1852.5880577735898,
+    "total_transaction_costs": 1852.5880577735898,
+    "avg_trade_size": 7751.414467671925
+  },
+  "final_positions": {
+    "ATVI": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "VMW": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SPLK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "FORG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "COUP": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SGEN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ALNY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BMRN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HZNP": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IONS": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "news_event",
+  "description": "M&A deal spread capture: buy targets at discount to deal price"
+}

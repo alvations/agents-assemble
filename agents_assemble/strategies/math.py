@@ -9,6 +9,9 @@ Strategies:
     3. HurstExponent       — Regime detection via Hurst exponent proxy
     4. VolatilityBreakout  — Donchian channel breakouts scaled by ATR
     5. EqualRiskContrib    — Equal risk contribution (ERC) portfolio
+    6. EntropyRegime       — Shannon entropy-based regime detection
+    7. CointegrationPairs  — Cointegration-based pairs trading (stat arb)
+    8. OptimalStopping     — Optimal stopping theory for exit timing
 """
 
 from __future__ import annotations

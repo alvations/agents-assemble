@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": -0.16134253240631402,
+    "cagr": -0.05715406212662688,
+    "annual_volatility": 0.10260359082111765,
+    "sharpe_ratio": -0.9055621781072647,
+    "sortino_ratio": -1.1929748292424873,
+    "calmar_ratio": -0.20924495503596588,
+    "max_drawdown": -0.2731442778001649,
+    "max_drawdown_date": "2023-10-06",
+    "win_rate": 0.4867021276595745,
+    "profit_factor": 0.9133825391584838,
+    "num_trading_days": 752,
+    "skewness": -0.3317199092489551,
+    "kurtosis": 2.1970834151638496,
+    "best_day": 0.02331760674694472,
+    "worst_day": -0.03215073748573549,
+    "avg_daily_return": -0.000213056213342062,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.14377864122639106,
+    "beta": 0.3092170144459814,
+    "information_ratio": -0.9644802418851101,
+    "tracking_error": 0.14907370310186005
+  },
+  "trade_metrics": {
+    "num_trades": 1569,
+    "num_buys": 780,
+    "num_sells": 789,
+    "total_commission": 0.0,
+    "total_slippage": 7873.4521827926765,
+    "total_transaction_costs": 7873.4521827926765,
+    "avg_trade_size": 5018.133959714891
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PEP": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MCD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MMM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ABT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IBM": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "news_event",
+  "description": "Dividend capture: hold high-yield low-vol stocks, harvest dividends"
+}

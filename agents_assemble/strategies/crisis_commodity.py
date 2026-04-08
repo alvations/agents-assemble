@@ -5,6 +5,12 @@ Based on research findings from agents:
 - Food crisis → fertilizer/agriculture
 - Gaming/entertainment → content release catalysts
 - Small cap value rotation
+- Contrarian fallen angels
+
+New additions:
+- Rare earth / critical minerals
+- Water scarcity plays
+- Shipping / freight cycle
 
 All backtested — never trust blindly.
 """
@@ -392,12 +398,372 @@ class ContrarianFallenAngels(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 6. Rare Earth / Critical Minerals
+# ---------------------------------------------------------------------------
+class RareEarthCriticalMinerals(BasePersona):
+    """Rare earth and critical minerals supply chain strategy.
+
+    Hypothesis: China controls ~60% of rare earth mining and ~90% of
+    processing. Any geopolitical tension, export restrictions, or
+    supply disruption creates massive price spikes in rare earth
+    miners and downstream users (EV, defense, semiconductors).
+    The US CHIPS Act and EU Critical Raw Materials Act are creating
+    secular demand for non-Chinese supply chains.
+
+    Source: IEA (2021) "The Role of Critical Minerals in Clean Energy
+    Transitions". US DoE Critical Materials Assessment (2023). MP
+    Materials is the only US rare earth mine. Lynas (ASX:LYC, OTC:LYSCF)
+    is the largest non-Chinese producer.
+
+    Signal: Momentum in rare earth miners + materials ETFs. Buy on
+    uptrend confirmation, exit on overbought or breakdown.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Rare Earth / Critical Minerals",
+            description="Critical minerals supply chain: rare earth miners + battery metals",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Rare earth miners
+                "MP",     # MP Materials (only US rare earth mine)
+                # Lithium / battery metals
+                "ALB",    # Albemarle (lithium)
+                "SQM",    # Sociedad Quimica y Minera (lithium, Chile)
+                "LAC",    # Lithium Americas
+                "LTHM",   # Livent (lithium)
+                # Uranium (nuclear renaissance)
+                "CCJ",    # Cameco (uranium)
+                "URA",    # Global X Uranium ETF
+                # Copper (electrification metal)
+                "FCX",    # Freeport-McMoRan (copper)
+                "SCCO",   # Southern Copper
+                # Broader materials
+                "XME",    # SPDR S&P Metals & Mining ETF
+                "PICK",   # iShares MSCI Global Metals & Mining
+                "REMX",   # VanEck Rare Earth/Strategic Metals ETF
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            # Exit: overbought commodity spike (take profits)
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Exit: broken below SMA200 (structural downturn)
+            if sma200 is not None and price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Momentum: uptrend in miners
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+
+            # MACD bullish
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume confirmation (supply fears = volume surge)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.5:
+                score += 0.5
+
+            # RSI healthy range
+            if 35 < rsi < 70:
+                score += 0.5
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 7. Water Scarcity Plays
+# ---------------------------------------------------------------------------
+class WaterScarcity(BasePersona):
+    """Water scarcity and water infrastructure investment strategy.
+
+    Hypothesis: Global water stress is a secular mega-trend. 2 billion
+    people lack safe drinking water (UN 2023). US water infrastructure
+    needs $600B+ in investment (ASCE Infrastructure Report Card: D+).
+    Water utilities have regulated returns + inflation pass-through,
+    and water technology companies benefit from capex cycles.
+
+    Source: Barclays "Blue Gold" (2019) -- water is the commodity of
+    the 21st century. World Resources Institute: 17 countries (25% of
+    world pop) face "extremely high" water stress. Xylem, Veolia, and
+    American Water Works are the "Big 3" of water infrastructure.
+
+    Signal: Momentum in water stocks + utilities. Low vol, defensive
+    characteristics with secular growth tailwind.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Water Scarcity Plays",
+            description="Water infrastructure and technology: secular scarcity mega-trend",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Water utilities
+                "AWK",    # American Water Works (largest US water utility)
+                "WTR",    # Essential Utilities (water + gas)
+                "SJW",    # SJW Group (water utility, CA/TX)
+                "YORW",   # York Water (oldest US utility, est. 1816)
+                # Water technology / infrastructure
+                "XYL",    # Xylem (water technology, pumps, analytics)
+                "A",      # Agilent (water quality testing)
+                "WTRG",   # Essential Utilities (Aqua America)
+                "FBIN",   # Fortune Brands Innovations (water products)
+                # Water ETFs
+                "PHO",    # Invesco Water Resources ETF
+                "FIW",    # First Trust Water ETF
+                "CGW",    # Invesco S&P Global Water Index ETF
+                # Broader infrastructure
+                "ECL",    # Ecolab (water treatment / hygiene)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol20 = inds["vol_20"]
+
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            score = 0.0
+
+            # Uptrend (quality filter for water utilities)
+            if sma200 is not None and price > sma50 > sma200:
+                score += 2.5
+            elif price > sma50:
+                score += 1.5
+            else:
+                continue  # Water stocks in downtrend = avoid
+
+            # Low volatility bonus (water utilities are naturally low-vol)
+            if vol20 is not None:
+                if vol20 < 0.012:
+                    score += 2.0
+                elif vol20 < 0.018:
+                    score += 1.0
+
+            # RSI in healthy range
+            if 30 < rsi < 65:
+                score += 1.0
+            elif rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 3.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 8. Shipping / Freight Cycle
+# ---------------------------------------------------------------------------
+class ShippingFreightCycle(BasePersona):
+    """Shipping and freight cycle strategy.
+
+    Hypothesis: Shipping is deeply cyclical with booms and busts driven
+    by global trade volumes, fleet supply, and commodity demand. The
+    Baltic Dry Index (BDI) is the best leading indicator of global
+    growth. We proxy BDI via shipping stock performance.
+
+    During upswings, container/bulk shippers see 3-5x earnings growth.
+    During busts, they trade at deep discounts to NAV. The strategy
+    buys shipping stocks in confirmed uptrends (momentum) and exits
+    when momentum breaks.
+
+    Source: Stopford (2009) "Maritime Economics" -- shipping cycles
+    average 7-10 years. Greenwood & Hanson (2015) show investment in
+    shipping perfectly inversely predicts returns. Alizadeh & Nomikos
+    (2009) document mean reversion in freight rates.
+
+    Signal: Momentum in shipping stocks. SMA50 > SMA200 = cycle upturn.
+    Volume confirms institutional interest.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Shipping / Freight Cycle",
+            description="Global shipping cycle: container/bulk shippers + freight ETFs",
+            risk_tolerance=0.7,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Container shipping
+                "ZIM",    # ZIM Integrated Shipping
+                "MATX",   # Matson (Pacific container)
+                # Dry bulk shipping
+                "SBLK",   # Star Bulk Carriers
+                "GOGL",   # Golden Ocean Group
+                "GNK",    # Genco Shipping
+                "EGLE",   # Eagle Bulk Shipping
+                # Tankers
+                "STNG",   # Scorpio Tankers
+                "FRO",    # Frontline (VLCC tankers)
+                "TNK",    # Teekay Tankers
+                # LNG shipping
+                "FLNG",   # Flex LNG
+                # Shipping / logistics ETF
+                "SEA",    # US Global Sea to Sky Cargo ETF
+                # Freight / logistics
+                "EXPD",   # Expeditors International
+                "CHRW",   # CH Robinson (freight broker)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20", "atr_14"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+            atr = inds["atr_14"]
+
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            # Exit: cycle bust signal (price crashed below SMA200)
+            if sma200 is not None and price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+
+            # Exit: overbought (take profits at cycle top)
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Cycle upturn: SMA50 > SMA200 (golden cross = cycle starting)
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+                # Extra for strong momentum (typical in shipping booms)
+                if sma200 > 0:
+                    pct_above = (price - sma200) / sma200
+                    score += min(pct_above * 3, 2.0)
+            elif price > sma50:
+                score += 1.5
+
+            # MACD confirmation
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume rising (freight demand picking up)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.3:
+                score += 0.5
+
+            # RSI in momentum zone (not too hot, not too cold)
+            if 40 < rsi < 70:
+                score += 0.5
+
+            if score >= 3.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 CRISIS_COMMODITY_STRATEGIES = {
     "geopolitical_crisis": GeopoliticalCrisis,
     "agriculture_food": AgricultureFoodSecurity,
     "gaming_catalyst": GamingContentCatalyst,
     "small_cap_value_rotation": SmallCapValueRotation,
     "contrarian_fallen_angels": ContrarianFallenAngels,
+    "rare_earth_minerals": RareEarthCriticalMinerals,
+    "water_scarcity": WaterScarcity,
+    "shipping_freight_cycle": ShippingFreightCycle,
 }
 
 

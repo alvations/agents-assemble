@@ -88,6 +88,35 @@ python3 sync_package.py  # After evolution, sync to package
 - `POLYGON_API_KEY` — Tick data (5/min free, delayed)
 - `NEWS_API_KEY` — Financial news (100/day free)
 
+## Research-to-Strategy Pipeline (MUST CHECK BEFORE ANY WORK)
+
+**Before self-evolving or doing any other work, agents MUST:**
+
+1. Check `knowledge/research_queue.md` for pending strategies
+2. If any items are marked `[ ]` (not implemented), implement them FIRST
+3. Follow the process in that file: implement → backtest → save → update leaderboard → commit
+
+**The pipeline:**
+```
+Research Agent discovers gaps → knowledge/research_queue.md → Strategy Agent implements →
+Backtester validates → trade_recommender saves to strategy/{winning,losing}/ →
+LEADERBOARD.md updated → git commit + push
+```
+
+**Key files:**
+- `knowledge/research_queue.md` — Source of truth for pending strategy research
+- `stock_picker.py` — StockPick feature (core GUI: AI strategy matcher)
+- `regen_missing.py` — Batch backtest + commit script for missing strategies
+- `sync_package.py` — MUST run after editing any strategy file
+
+**Rules:**
+- NEVER delete strategy files before replacements are ready
+- Strategy files are versioned with timestamps — keep latest, remove old duplicates
+- Cache is canonical per-ticker (`ohlcv_AAPL_1d.parquet`) — no date range in filename
+- Every strategy MUST have both .md and .json in strategy/winning/ or strategy/losing/
+- Every strategy JSON MUST have `position_recommendations` populated (not empty)
+- `while True` loops in generate_signals MUST have max iteration cap (use `for _ in range(5)`)
+
 ## Quick Start
 
 ```bash

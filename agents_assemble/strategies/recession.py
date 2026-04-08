@@ -8,10 +8,13 @@ Recession Detection:
 - VIX regime
 
 Recession-Proof Strategies:
-1. RecessionDetector    — Regime detection, shifts to defensive
-2. TreasurySafe        — Flight to quality during downturns
-3. DefensiveRotation   — Rotate to staples/utilities/healthcare in recessions
-4. GoldBug             — Gold and precious metals as recession hedge
+1. RecessionDetector         — Regime detection, shifts to defensive
+2. TreasurySafe             — Flight to quality during downturns
+3. DefensiveRotation        — Rotate to staples/utilities/healthcare in recessions
+4. GoldBug                  — Gold and precious metals as recession hedge
+5. YieldCurveInversion      — Yield curve inversion as recession leading indicator
+6. ConsumerCreditStress     — Consumer discretionary weakness as subprime proxy
+7. UnemploymentMomentum     — Unemployment claims momentum via sector rotation
 """
 
 from __future__ import annotations
@@ -373,6 +376,368 @@ class GoldBug(BasePersona):
 
 
 # ---------------------------------------------------------------------------
+# 5. Yield Curve Inversion Signal
+# ---------------------------------------------------------------------------
+class YieldCurveInversion(BasePersona):
+    """Yield curve inversion as recession leading indicator.
+
+    Hypothesis: The 10Y-2Y Treasury spread inversion has predicted
+    every US recession since 1960 with a 12-18 month lead time.
+    Since we cannot directly observe yield curves from equity data,
+    we use TLT/SHY ratio as a proxy: when long bonds rally vs short
+    bonds (TLT outperforms SHY), the curve is flattening/inverting.
+
+    The strategy goes defensive when TLT outperforms SHY on a trend
+    basis (SMA50 of TLT/SHY ratio rising = flattening curve), and
+    becomes aggressive when the ratio normalizes (steepening).
+
+    Source: Estrella & Mishkin (1998) show yield curve predicts
+    recessions 4-6 quarters ahead with >80% accuracy. Harvey (1989)
+    established the inverted yield curve as the single best recession
+    predictor. Campbell & Shiller (1991) confirm term spread
+    forecasting power.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Yield Curve Inversion Signal",
+            description="TLT/SHY ratio proxy for yield curve: go defensive on flattening",
+            risk_tolerance=0.3,
+            max_position_size=0.35,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "TLT", "SHY", "IEF",  # Treasury ETFs (curve proxy)
+                "SPY", "QQQ",          # Equities (risk-on)
+                "XLP", "XLU", "XLV",   # Defensive sectors
+                "GLD",                  # Gold hedge
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        # Compute yield curve proxy: TLT relative strength vs SHY
+        curve_flattening = False
+        curve_inverting = False
+
+        if "TLT" in data and "SHY" in data and "TLT" in prices and "SHY" in prices:
+            tlt_sma50 = _safe_get(data, "TLT", "sma_50", date)
+            tlt_sma200 = _safe_get(data, "TLT", "sma_200", date)
+            shy_sma50 = _safe_get(data, "SHY", "sma_50", date)
+            shy_sma200 = _safe_get(data, "SHY", "sma_200", date)
+
+            if all(v is not None for v in [tlt_sma50, tlt_sma200, shy_sma50, shy_sma200]):
+                # TLT relative strength: long bonds outperforming short bonds
+                tlt_trend = (tlt_sma50 - tlt_sma200) / tlt_sma200 if tlt_sma200 > 0 else 0
+                shy_trend = (shy_sma50 - shy_sma200) / shy_sma200 if shy_sma200 > 0 else 0
+                relative_strength = tlt_trend - shy_trend
+
+                if relative_strength > 0.02:
+                    curve_inverting = True  # Strong flattening/inversion
+                elif relative_strength > 0.005:
+                    curve_flattening = True  # Moderate flattening
+
+        # Also check broader recession regime
+        regime = detect_recession_regime(date, data, prices)
+
+        if curve_inverting or (curve_flattening and regime["is_recession"]):
+            # Full defensive: yield curve inverted = recession in 12-18 months
+            weights = {
+                "TLT": 0.30,   # Long bonds rally in rate cuts
+                "IEF": 0.15,
+                "XLP": 0.15,   # Consumer staples
+                "XLU": 0.10,   # Utilities
+                "XLV": 0.10,   # Healthcare
+                "GLD": 0.15,   # Gold
+                "SPY": 0.0,
+                "QQQ": 0.0,
+                "SHY": 0.0,
+            }
+        elif curve_flattening:
+            # Cautious: flattening but not inverted
+            weights = {
+                "SPY": 0.15,
+                "XLP": 0.15,
+                "XLV": 0.10,
+                "TLT": 0.20,
+                "IEF": 0.15,
+                "GLD": 0.15,
+                "QQQ": 0.0,
+                "XLU": 0.05,
+                "SHY": 0.0,
+            }
+        else:
+            # Normal: risk-on, steep curve is bullish
+            weights = {
+                "SPY": 0.35,
+                "QQQ": 0.30,
+                "TLT": 0.10,
+                "GLD": 0.10,
+                "IEF": 0.05,
+                "XLP": 0.0,
+                "XLU": 0.0,
+                "XLV": 0.0,
+                "SHY": 0.0,
+            }
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 6. Consumer Credit Stress (Subprime Indicator Proxy)
+# ---------------------------------------------------------------------------
+class ConsumerCreditStress(BasePersona):
+    """Consumer credit stress proxy via consumer discretionary weakness.
+
+    Hypothesis: When consumer credit is stressed (rising delinquencies,
+    tightening lending), consumer discretionary stocks underperform
+    staples. The XLY/XLP ratio falling signals credit stress. This
+    preceded both the 2008 GFC and the 2020 COVID recession.
+
+    We proxy subprime stress by: (1) XLY underperforming XLP (consumer
+    weakness), (2) regional bank weakness (KRE) as lending proxy,
+    (3) high yield credit via HYG weakness (credit spreads widening).
+    When all three signal stress, rotate to cash-rich defensives.
+
+    Source: Mian & Sufi (2009) "The Consequences of Mortgage Credit
+    Expansion" show consumer credit as the primary amplifier of
+    recessions. Adrian & Shin (2010) link credit conditions to
+    financial stability.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Consumer Credit Stress (Subprime Proxy)",
+            description="Consumer discretionary vs staples ratio as credit stress indicator",
+            risk_tolerance=0.3,
+            max_position_size=0.25,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Stress indicators
+                "XLY", "XLP",  # Consumer discretionary vs staples
+                "KRE",         # Regional banks (lending proxy)
+                "HYG",         # High yield bonds (credit spread proxy)
+                # Defensive assets
+                "SHY", "TLT", "GLD",
+                # Cash-rich defensives (survive credit crunches)
+                "JNJ", "PG", "KO", "WMT", "COST",
+                # Avoid in stress
+                "SPY", "QQQ",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        stress_signals = 0
+        total_checks = 0
+
+        # Check 1: XLY underperforming XLP (consumer weakness)
+        xly_sma50 = _safe_get(data, "XLY", "sma_50", date)
+        xly_sma200 = _safe_get(data, "XLY", "sma_200", date)
+        xlp_sma50 = _safe_get(data, "XLP", "sma_50", date)
+        xlp_sma200 = _safe_get(data, "XLP", "sma_200", date)
+        if all(v is not None for v in [xly_sma50, xly_sma200, xlp_sma50, xlp_sma200]):
+            total_checks += 1
+            xly_trend = (xly_sma50 - xly_sma200) / xly_sma200 if xly_sma200 > 0 else 0
+            xlp_trend = (xlp_sma50 - xlp_sma200) / xlp_sma200 if xlp_sma200 > 0 else 0
+            if xly_trend < xlp_trend - 0.01:
+                stress_signals += 1  # Consumer discretionary lagging staples
+
+        # Check 2: Regional banks (KRE) in downtrend
+        kre_price = prices.get("KRE")
+        kre_sma200 = _safe_get(data, "KRE", "sma_200", date)
+        if kre_price is not None and kre_sma200 is not None:
+            total_checks += 1
+            if kre_price < kre_sma200:
+                stress_signals += 1  # Banks below SMA200 = credit tightening
+
+        # Check 3: HYG weakness (credit spreads widening)
+        hyg_price = prices.get("HYG")
+        hyg_sma50 = _safe_get(data, "HYG", "sma_50", date)
+        hyg_sma200 = _safe_get(data, "HYG", "sma_200", date)
+        if hyg_price is not None and hyg_sma200 is not None:
+            total_checks += 1
+            if hyg_price < hyg_sma200:
+                stress_signals += 1  # HYG below SMA200 = credit stress
+
+        # Also check broader regime
+        regime = detect_recession_regime(date, data, prices)
+
+        credit_stress = total_checks > 0 and (stress_signals / total_checks) >= 0.5
+        severe_stress = credit_stress and regime["is_recession"]
+
+        if severe_stress:
+            # Full defensive: credit crunch
+            weights = {
+                "TLT": 0.25,
+                "SHY": 0.20,
+                "GLD": 0.20,
+                "JNJ": 0.10,
+                "PG": 0.08,
+                "KO": 0.07,
+                "WMT": 0.05,
+                "XLY": 0.0, "XLP": 0.0, "KRE": 0.0,
+                "HYG": 0.0, "SPY": 0.0, "QQQ": 0.0,
+                "COST": 0.0,
+            }
+        elif credit_stress:
+            # Moderate stress: reduce risk, overweight defensives
+            weights = {
+                "XLP": 0.15,
+                "JNJ": 0.10,
+                "PG": 0.10,
+                "WMT": 0.10,
+                "COST": 0.10,
+                "TLT": 0.15,
+                "GLD": 0.10,
+                "SHY": 0.10,
+                "SPY": 0.05,
+                "XLY": 0.0, "KRE": 0.0,
+                "HYG": 0.0, "QQQ": 0.0,
+                "KO": 0.0,
+            }
+        else:
+            # No stress: normal risk-on
+            weights = {
+                "SPY": 0.30,
+                "QQQ": 0.25,
+                "XLY": 0.15,
+                "KRE": 0.10,
+                "HYG": 0.05,
+                "GLD": 0.05,
+                "TLT": 0.05,
+                "XLP": 0.0, "SHY": 0.0,
+                "JNJ": 0.0, "PG": 0.0, "KO": 0.0,
+                "WMT": 0.0, "COST": 0.0,
+            }
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# 7. Unemployment Claims Momentum
+# ---------------------------------------------------------------------------
+class UnemploymentMomentum(BasePersona):
+    """Unemployment claims momentum via sector performance proxy.
+
+    Hypothesis: Rising unemployment claims signal economic weakness.
+    Since we cannot directly observe jobless claims from equity data,
+    we use sector rotation patterns that correlate with employment
+    cycles: (1) staffing companies (HAYS, MAN, RHI) as leading
+    indicators, (2) consumer discretionary weakness, (3) regional
+    bank lending pullback.
+
+    When staffing stocks break down (below SMA200), it signals
+    companies are cutting hiring -- a leading indicator of recession
+    by 2-4 quarters. We shift to defensive sectors that benefit
+    from falling rates (utilities, REITs) and counter-cyclical
+    sectors (healthcare, staples).
+
+    Source: Sims (2012) "Macroeconomics and Methodology" -- employment
+    leads GDP by 1-2 quarters. Caballero & Hammour (1994) document
+    the "cleansing effect" of recessions on labor markets.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Unemployment Claims Momentum",
+            description="Staffing stock weakness as unemployment proxy, rotate to defensives",
+            risk_tolerance=0.3,
+            max_position_size=0.20,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Staffing / employment proxies (leading indicators)
+                "MAN", "RHI", "HAYS", "ASGN", "KFRC",
+                # Risk-on cyclicals
+                "SPY", "QQQ", "XLI",
+                # Defensive destinations
+                "XLP", "XLU", "XLV",
+                "TLT", "GLD",
+                # Rate-sensitive beneficiaries
+                "VNQ", "IEF",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        # Check staffing company health as employment proxy
+        staffing_stocks = ["MAN", "RHI", "ASGN", "KFRC"]
+        staffing_weak = 0
+        staffing_checked = 0
+
+        for sym in staffing_stocks:
+            if sym not in data or sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = _safe_get(data, sym, "sma_200", date)
+            sma50 = _safe_get(data, sym, "sma_50", date)
+            if sma200 is not None:
+                staffing_checked += 1
+                if price < sma200:
+                    staffing_weak += 1
+                    # Death cross (SMA50 < SMA200) = severe
+                    if sma50 is not None and sma50 < sma200:
+                        staffing_weak += 0.5
+
+        # Also check industrial sector (employment-correlated)
+        xli_price = prices.get("XLI")
+        xli_sma200 = _safe_get(data, "XLI", "sma_200", date)
+        if xli_price is not None and xli_sma200 is not None:
+            staffing_checked += 1
+            if xli_price < xli_sma200:
+                staffing_weak += 1
+
+        regime = detect_recession_regime(date, data, prices)
+
+        employment_stress = staffing_checked > 0 and (staffing_weak / staffing_checked) >= 0.5
+        severe_stress = employment_stress and regime["is_recession"]
+
+        if severe_stress:
+            # Severe: staffing collapsing + recession signals
+            weights = {
+                "XLU": 0.20,   # Utilities (rate cut beneficiary)
+                "XLV": 0.15,   # Healthcare (inelastic demand)
+                "XLP": 0.15,   # Staples
+                "TLT": 0.20,   # Long bonds (rate cuts coming)
+                "GLD": 0.15,   # Gold
+                "VNQ": 0.10,   # REITs (rate cut beneficiary)
+                "SPY": 0.0, "QQQ": 0.0, "XLI": 0.0, "IEF": 0.0,
+            }
+        elif employment_stress:
+            # Moderate: staffing weak but no full recession yet
+            weights = {
+                "XLP": 0.15,
+                "XLV": 0.15,
+                "XLU": 0.10,
+                "TLT": 0.15,
+                "GLD": 0.10,
+                "IEF": 0.10,
+                "SPY": 0.10,
+                "VNQ": 0.10,
+                "QQQ": 0.0, "XLI": 0.0,
+            }
+        else:
+            # Healthy employment: risk-on, favor cyclicals
+            weights = {
+                "SPY": 0.30,
+                "QQQ": 0.25,
+                "XLI": 0.15,   # Industrials (employment growth)
+                "TLT": 0.10,
+                "GLD": 0.05,
+                "XLP": 0.05,
+                "XLU": 0.0, "XLV": 0.0, "VNQ": 0.0, "IEF": 0.0,
+            }
+
+        # Remove staffing stocks from weights (they are indicators, not holdings)
+        for sym in staffing_stocks:
+            weights.pop(sym, None)
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
 RECESSION_STRATEGIES = {
@@ -380,6 +745,9 @@ RECESSION_STRATEGIES = {
     "treasury_safe": TreasurySafe,
     "defensive_rotation": DefensiveRotation,
     "gold_bug": GoldBug,
+    "yield_curve_inversion": YieldCurveInversion,
+    "consumer_credit_stress": ConsumerCreditStress,
+    "unemployment_momentum": UnemploymentMomentum,
 }
 
 
