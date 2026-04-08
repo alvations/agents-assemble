@@ -27,7 +27,7 @@
 | 14 | Growth Disruption | Generic | 55.7% | 0.65 | -20.6% |
 | 15 | Global Rotation | Research | 52.4% | 1.00 | -8.1% |
 
-## NEW: Williams %R(2) Strategy (not yet coded as strategy module)
+## NEW: Williams %R(2) Strategy (CODED — williams_seasonal_strategies.py)
 
 | Ticker | 3Y Return | 3Y Win% | 10Y Return | 10Y Win% | 10Y PF |
 |--------|-----------|---------|------------|----------|--------|

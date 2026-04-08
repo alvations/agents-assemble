@@ -1,6 +1,6 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **91 strategies**, 580 tickers, backtested across 9 horizons (1W to 10Y).
+Trading agents and algorithms for publicly tradable instruments. **99 strategies**, 580 tickers, backtested across 9 horizons (1W to 10Y).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
