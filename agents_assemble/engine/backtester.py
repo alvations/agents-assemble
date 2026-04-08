@@ -107,7 +107,7 @@ class Position:
 class Portfolio:
     """Tracks cash, positions, and portfolio value over time."""
     initial_cash: float = 100_000.0
-    cash: float = 100_000.0
+    cash: float | None = None
     positions: dict[str, Position] = field(default_factory=dict)
     trades: list[Trade] = field(default_factory=list)
     history: list[dict[str, Any]] = field(default_factory=list)
@@ -115,6 +115,10 @@ class Portfolio:
     # Transaction cost model
     commission_per_trade: float = 0.0  # Robinhood = $0
     slippage_pct: float = 0.001  # 10 bps default slippage
+
+    def __post_init__(self):
+        if self.cash is None:
+            self.cash = self.initial_cash
 
     def execute_trade(self, date: pd.Timestamp, symbol: str, side: Side,
                       quantity: float, price: float) -> Trade:
@@ -218,12 +222,17 @@ def compute_metrics(
     if len(returns) < 2:
         return {"error": "Insufficient data after removing NaN/inf"}
 
-    # Basic return stats
-    total_return = (1 + returns).prod() - 1
+    # Basic return stats — compute cumulative product once and reuse for
+    # total_return (here) and drawdown analysis (below)
+    cum_returns = (1 + returns).cumprod()
+    total_return = cum_returns.iloc[-1] - 1
     n_years = (returns.index[-1] - returns.index[0]).days / 365.25
     growth = 1 + total_return
     if growth > 0:
-        cagr = growth ** (1 / max(n_years, 0.01)) - 1
+        try:
+            cagr = growth ** (1 / max(n_years, 0.01)) - 1
+        except OverflowError:
+            cagr = float("inf")
     else:
         cagr = -1.0  # Total loss
 
@@ -258,8 +267,7 @@ def compute_metrics(
     else:
         sortino = 0.0
 
-    # Drawdown analysis
-    cum_returns = (1 + returns).cumprod()
+    # Drawdown analysis (cum_returns already computed above)
     rolling_max = cum_returns.cummax()
     drawdowns = cum_returns / rolling_max - 1
     max_drawdown = drawdowns.min()
@@ -313,10 +321,16 @@ def compute_metrics(
             aligned_n_years = (aligned.index[-1] - aligned.index[0]).days / 365.25
             bench_total = (1 + aligned["bench"]).prod() - 1
             bench_growth = 1 + bench_total
-            bench_cagr = bench_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if bench_growth > 0 else -1.0
+            try:
+                bench_cagr = bench_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if bench_growth > 0 else -1.0
+            except OverflowError:
+                bench_cagr = float("inf")
             port_aligned_total = (1 + aligned["port"]).prod() - 1
             port_growth = 1 + port_aligned_total
-            port_aligned_cagr = port_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if port_growth > 0 else -1.0
+            try:
+                port_aligned_cagr = port_growth ** (1 / max(aligned_n_years, 0.01)) - 1 if port_growth > 0 else -1.0
+            except OverflowError:
+                port_aligned_cagr = float("inf")
             metrics["benchmark_total_return"] = bench_total
             metrics["benchmark_cagr"] = bench_cagr
             metrics["alpha"] = port_aligned_cagr - bench_cagr
@@ -409,6 +423,8 @@ class Backtester:
             raise ValueError(f"initial_cash must be positive, got {initial_cash}")
         if slippage_pct < 0:
             raise ValueError(f"slippage_pct must be non-negative, got {slippage_pct}")
+        if commission < 0:
+            raise ValueError(f"commission must be non-negative, got {commission}")
         self.initial_cash = initial_cash
         self.commission = commission
         self.slippage_pct = slippage_pct
@@ -494,7 +510,6 @@ class Backtester:
 
         portfolio = Portfolio(
             initial_cash=self.initial_cash,
-            cash=self.initial_cash,
             commission_per_trade=self.commission,
             slippage_pct=self.slippage_pct,
         )
@@ -566,6 +581,10 @@ class Backtester:
             try:
                 target_weights = self.strategy(date, prices, portfolio, enriched_data)
             except Exception:
+                target_weights = {}
+                strategy_errors += 1
+
+            if target_weights is None:
                 target_weights = {}
                 strategy_errors += 1
 
@@ -645,7 +664,9 @@ class Backtester:
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity > 0 and sym in prices and prices[sym] > 0:
-                    sells.append((sym, int(round(pos.quantity))))
+                    qty = int(round(pos.quantity))
+                    if qty > 0:
+                        sells.append((sym, qty))
 
         for sym, qty in sells:
             portfolio.execute_trade(date, sym, Side.SELL, qty, prices[sym])
@@ -676,7 +697,9 @@ class Backtester:
             if sym not in target_weights:
                 pos = portfolio.get_position(sym)
                 if pos and pos.quantity < 0 and sym in prices and prices[sym] > 0:
-                    buys.append((sym, int(round(abs(pos.quantity))), float("inf")))
+                    qty = int(round(abs(pos.quantity)))
+                    if qty > 0:
+                        buys.append((sym, qty, float("inf")))
 
         # Execute buys with highest-weight positions first
         buys.sort(key=lambda x: (-x[2], x[0]))
@@ -776,6 +799,14 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         f"  Final Value:        ${results.get('final_value', 0):>10,.2f}",
     ]
 
+    strategy_errors = results.get("strategy_errors", 0)
+    if strategy_errors:
+        lines.extend([
+            "",
+            "--- Warnings ---",
+            f"  Strategy Errors:    {strategy_errors:>10d}",
+        ])
+
     if "benchmark_total_return" in m:
         lines.extend([
             "",
@@ -798,6 +829,8 @@ def _sanitize_for_json(obj):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [_sanitize_for_json(v) for v in obj]
+    if isinstance(obj, tuple):
+        return tuple(_sanitize_for_json(v) for v in obj)
     return obj
 
 
@@ -833,8 +866,6 @@ def save_results(results: dict[str, Any], path: str) -> None:
 
 
 if __name__ == "__main__":
-    from agents_assemble.data.fetcher import fetch_ohlcv
-
     # Simple buy-and-hold strategy test
     def buy_and_hold(date, prices, portfolio, data):
         if not portfolio.get_position("AAPL"):

@@ -113,10 +113,19 @@ def _cache_get(key: str, max_age_hours: float = 12) -> pd.DataFrame | None:
 
 
 def _cache_set(key: str, df: pd.DataFrame) -> None:
+    tmp = None
     try:
-        df.to_parquet(_cache_path(key))
+        CACHE_DIR.mkdir(exist_ok=True)
+        path = _cache_path(key)
+        tmp = path.with_suffix(".parquet.tmp")
+        df.to_parquet(tmp)
+        tmp.replace(path)  # atomic on POSIX
     except Exception:
-        pass
+        try:
+            if tmp is not None:
+                tmp.unlink(missing_ok=True)
+        except Exception:
+            pass
 
 
 # ---------------------------------------------------------------------------
@@ -199,7 +208,7 @@ def fetch_multiple_ohlcv(
     # multi-level columns inconsistent with fetch_ohlcv's Ticker.history())
     if len(uncached) > 1:
         try:
-            data = yf.download(uncached, start=start, end=end, interval=interval, group_by="ticker")
+            data = yf.download(uncached, start=start, end=end, interval=interval, group_by="ticker", progress=False)
             for sym in uncached:
                 try:
                     df = data[sym].dropna(how="all")
@@ -392,11 +401,12 @@ def fetch_fred_series(
 
 def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
     """Fetch US Treasury yield curve for a given date."""
+    from concurrent.futures import ThreadPoolExecutor
+
     maturities = {"DGS1MO": "1M", "DGS3MO": "3M", "DGS6MO": "6M",
                   "DGS1": "1Y", "DGS2": "2Y", "DGS3": "3Y", "DGS5": "5Y",
                   "DGS7": "7Y", "DGS10": "10Y", "DGS20": "20Y", "DGS30": "30Y"}
 
-    curve = {}
     if date:
         dt = datetime.strptime(date, "%Y-%m-%d")
         start = (dt - timedelta(days=365)).strftime("%Y-%m-%d")
@@ -404,27 +414,33 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
     else:
         start = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
         end = None
-    for series_id, label in maturities.items():
+
+    def _fetch_one(item: tuple[str, str]) -> tuple[str, float] | None:
+        series_id, label = item
         try:
             df = fetch_fred_series(series_id, start=start, end=end)
-            if not df.empty:
-                if date:
-                    idx = pd.to_datetime(date)
-                    pos = df.index.get_indexer([idx], method="nearest")[0]
-                    nearest = df.index[pos]
-                    if abs((nearest - idx).days) > 10:
-                        continue
-                    val = df.loc[nearest, "value"]
-                    if pd.isna(val):
-                        continue
-                    curve[label] = float(val)
-                else:
-                    val = df.iloc[-1]["value"]
-                    if pd.isna(val):
-                        continue
-                    curve[label] = float(val)
+            if df.empty:
+                return None
+            if date:
+                idx = pd.to_datetime(date)
+                pos = df.index.get_indexer([idx], method="nearest")[0]
+                nearest = df.index[pos]
+                if abs((nearest - idx).days) > 10:
+                    return None
+                val = df.loc[nearest, "value"]
+            else:
+                val = df.iloc[-1]["value"]
+            if pd.isna(val):
+                return None
+            return (label, float(val))
         except Exception:
-            pass
+            return None
+
+    curve = {}
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        for result in executor.map(_fetch_one, maturities.items()):
+            if result is not None:
+                curve[result[0]] = result[1]
 
     return curve
 
@@ -659,15 +675,40 @@ def fetch_sector_performance(period: str = "1mo") -> dict[str, float]:
         "Materials": "XLB", "Consumer Disc": "XLY",
     }
     results = {}
+    etf_list = list(sectors.values())
+    etf_to_name = {etf: name for name, etf in sectors.items()}
+
+    # Batch download all sector ETFs in one HTTP call
+    try:
+        data = yf.download(etf_list, period=period, group_by="ticker", progress=False)
+        for etf in etf_list:
+            try:
+                hist = data[etf].dropna(how="all")
+                if len(hist) < 2:
+                    continue
+                first_close = hist["Close"].iloc[0]
+                last_close = hist["Close"].iloc[-1]
+                if (not pd.isna(first_close) and first_close > 0
+                        and not pd.isna(last_close)):
+                    results[etf_to_name[etf]] = float((last_close / first_close) - 1)
+            except (KeyError, AttributeError):
+                pass
+    except Exception:
+        pass
+
+    # Fallback: individually fetch any sectors still missing
     for name, etf in sectors.items():
+        if name in results:
+            continue
         try:
             ticker = yf.Ticker(etf)
             hist = ticker.history(period=period)
             if not hist.empty and len(hist) > 1:
                 first_close = hist["Close"].iloc[0]
-                if first_close is not None and not pd.isna(first_close) and first_close > 0:
-                    ret = (hist["Close"].iloc[-1] / first_close) - 1
-                    results[name] = float(ret)
+                last_close = hist["Close"].iloc[-1]
+                if (first_close is not None and not pd.isna(first_close) and first_close > 0
+                        and last_close is not None and not pd.isna(last_close)):
+                    results[name] = float((last_close / first_close) - 1)
         except Exception:
             pass
     return results
@@ -687,13 +728,16 @@ def fetch_market_breadth() -> dict[str, Any]:
                 sma20 = close.rolling(20).mean()
                 valid_sma = sma20.notna()
                 above_sma = (close[valid_sma] > sma20[valid_sma]).sum() / valid_sma.sum() if valid_sma.sum() > 0 else 0
+                last_close = close.iloc[-1]
+                if pd.isna(last_close):
+                    continue
                 recent = close.iloc[-22:] if len(close) > 22 else close
                 first_close = recent.iloc[0] if len(recent) > 1 else None
-                ret_1m = (close.iloc[-1] / first_close - 1) if first_close is not None and not pd.isna(first_close) and first_close > 0 else 0
+                ret_1m = (last_close / first_close - 1) if first_close is not None and not pd.isna(first_close) and first_close > 0 else 0
                 breadth[sym] = {
                     "pct_above_sma20": float(above_sma),
                     "return_1m": float(ret_1m),
-                    "current_price": float(close.iloc[-1]),
+                    "current_price": float(last_close),
                 }
         except Exception:
             pass
@@ -973,7 +1017,7 @@ def scan_52_week_lows(
             low_52 = info.get("fiftyTwoWeekLow")
             high_52 = info.get("fiftyTwoWeekHigh")
 
-            if price is not None and low_52 is not None and high_52 is not None and low_52 > 0:
+            if price is not None and price > 0 and low_52 is not None and low_52 > 0 and high_52 is not None:
                 pct_from_low = (price - low_52) / low_52
                 pct_from_high = (price - high_52) / high_52
                 results.append({
@@ -1007,22 +1051,56 @@ def scan_volatile_stocks(
     if universe is None:
         universe = _all_universe_symbols()
 
-    results = []
+    # Batch download all symbols in one HTTP call instead of N individual calls
+    fetched: dict[str, pd.DataFrame] = {}
+    if len(universe) > 1:
+        try:
+            data = yf.download(universe, period=period, group_by="ticker", progress=False)
+            for sym in universe:
+                try:
+                    df = data[sym].dropna(how="all")
+                    if "Close" in df.columns:
+                        df = df.dropna(subset=["Close"])
+                    if not df.empty:
+                        fetched[sym] = df
+                except (KeyError, AttributeError):
+                    pass
+        except Exception:
+            pass
+
+    # Fallback: individually fetch symbols not in batch
     for sym in universe:
+        if sym in fetched:
+            continue
         try:
             ticker = yf.Ticker(sym)
             hist = ticker.history(period=period)
-            if len(hist) < 20:
+            if not hist.empty:
+                fetched[sym] = hist
+        except Exception:
+            pass
+
+    results = []
+    for sym in universe:
+        hist = fetched.get(sym)
+        if hist is None or len(hist) < 20:
+            continue
+        try:
+            close = hist["Close"]
+            last_close = close.iloc[-1]
+            if pd.isna(last_close):
                 continue
-            daily_vol = hist["Close"].pct_change().std()
-            if daily_vol >= min_vol:
-                results.append({
-                    "symbol": sym,
-                    "daily_vol": float(daily_vol),
-                    "annual_vol": float(daily_vol * _SQRT_252),
-                    "avg_volume": float(hist["Volume"].mean()),
-                    "price": float(hist["Close"].iloc[-1]),
-                })
+            daily_vol = close.pct_change().std()
+            if pd.isna(daily_vol) or daily_vol < min_vol:
+                continue
+            avg_vol = hist["Volume"].mean() if "Volume" in hist.columns else 0.0
+            results.append({
+                "symbol": sym,
+                "daily_vol": float(daily_vol),
+                "annual_vol": float(daily_vol * _SQRT_252),
+                "avg_volume": float(avg_vol) if not pd.isna(avg_vol) else 0.0,
+                "price": float(last_close),
+            })
         except Exception:
             pass
 

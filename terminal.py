@@ -26,6 +26,7 @@ Usage:
 
 from __future__ import annotations
 
+import math
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -48,6 +49,19 @@ def _get_plt():
 
 CHARTS_DIR = Path(__file__).parent / "charts"
 CHARTS_DIR.mkdir(exist_ok=True)
+
+
+def _safe_metric(value, default: float = 0.0) -> float:
+    """Coerce a metric value to a finite float; return *default* for None/NaN/inf."""
+    if value is None or isinstance(value, bool):
+        return default
+    try:
+        f = float(value)
+    except (TypeError, ValueError):
+        return default
+    if not math.isfinite(f):
+        return default
+    return f
 
 
 def _empty_chart(path: Path, message: str = "No data available") -> Path:
@@ -120,8 +134,9 @@ class Terminal:
                       labelcolor="white")
             ax.tick_params(colors="white", labelsize=8)
             ax.grid(True, alpha=0.15, color="white")
+            pct_change = ((close.iloc[-1] / close.iloc[0] - 1) * 100) if close.iloc[0] != 0 else 0.0
             ax.set_title(f"  {symbol}  |  {close.iloc[-1]:.2f}  |  "
-                         f"{(close.iloc[-1]/close.iloc[0]-1)*100:+.1f}%  |  "
+                         f"{pct_change:+.1f}%  |  "
                          f"{df.index[0].strftime('%Y-%m-%d')} → {df.index[-1].strftime('%Y-%m-%d')}",
                          color="#00ff88", fontsize=12, loc="left", fontweight="bold")
 
@@ -187,7 +202,7 @@ class Terminal:
     # ----- 2. Strategy Equity Curve Comparison -----
 
     def strategy_comparison(
-        self, strategies: list[str], start: str = "2022-01-01", end: str = "2024-12-31",
+        self, strategies: list[str], start: str = "2022-01-01", end: str | None = None,
     ) -> Path:
         """Compare equity curves of multiple strategies."""
         plt, _ = _get_plt()
@@ -233,9 +248,9 @@ class Terminal:
             fig.patch.set_facecolor("#1a1a2e")
 
             names = list(results.keys())
-            returns = [(results[n].get("total_return") or 0) * 100 for n in names]
-            sharpes = [(results[n].get("sharpe_ratio") or 0) for n in names]
-            max_dds = [(results[n].get("max_drawdown") or 0) * 100 for n in names]
+            returns = [_safe_metric(results[n].get("total_return")) * 100 for n in names]
+            sharpes = [_safe_metric(results[n].get("sharpe_ratio")) for n in names]
+            max_dds = [_safe_metric(results[n].get("max_drawdown")) * 100 for n in names]
 
             colors = ["#00ff88" if r > 0 else "#ff4444" for r in returns]
 
@@ -295,7 +310,7 @@ class Terminal:
             for h_name, (start, end) in horizons.items():
                 r = run_single(strat_info, h_name, start, end, verbose=False)
                 if r["status"] == "success":
-                    row[h_name] = r["metrics"].get("total_return", 0) * 100
+                    row[h_name] = _safe_metric(r["metrics"].get("total_return")) * 100
             if row:
                 data[name] = row
 
@@ -304,6 +319,9 @@ class Terminal:
             return _empty_chart(path, "No strategy data available")
 
         df = pd.DataFrame(data).T.fillna(0)
+        # Ensure temporal column order regardless of which strategies populated first
+        temporal_order = [c for c in ["3m", "6m", "1y", "3y"] if c in df.columns]
+        df = df[temporal_order]
         # Sort by longest available horizon
         sort_col = next((c for c in ["3y", "1y", "6m", "3m"] if c in df.columns), df.columns[-1])
         df = df.sort_values(sort_col, ascending=False).head(top_n)
@@ -329,7 +347,11 @@ class Terminal:
 
             ax.set_title("Strategy Returns Heatmap (%)", color="#00ff88",
                           fontsize=12, fontweight="bold")
-            plt.colorbar(im, ax=ax, label="Return (%)", shrink=0.8)
+            cbar = plt.colorbar(im, ax=ax, label="Return (%)", shrink=0.8)
+            cbar.ax.yaxis.set_tick_params(color="white")
+            cbar.ax.yaxis.label.set_color("white")
+            for label in cbar.ax.get_yticklabels():
+                label.set_color("white")
             plt.tight_layout()
 
             path = self.output_dir / "leaderboard_heatmap.png"
@@ -360,17 +382,16 @@ class Terminal:
             r = run_single(strat_info, horizon, start, end, verbose=False)
             if r["status"] == "success":
                 m = r["metrics"]
-                ret = m.get("total_return")
-                vol = m.get("annual_volatility")
-                if ret is None or vol is None:
+                ret = _safe_metric(m.get("total_return"), default=float("nan"))
+                vol = _safe_metric(m.get("annual_volatility"), default=float("nan"))
+                if not math.isfinite(ret) or not math.isfinite(vol):
                     continue
                 points.append({
                     "name": strat_info["key"],
                     "source": strat_info["source"],
                     "return": ret * 100,
                     "vol": vol * 100,
-                    "sharpe": m.get("sharpe_ratio") or 0,
-                    "max_dd": (m.get("max_drawdown") or 0) * 100,
+                    "sharpe": _safe_metric(m.get("sharpe_ratio")),
                 })
 
         if not points:
@@ -436,6 +457,8 @@ class Terminal:
         if len(df) < 2:
             path = self.output_dir / f"{symbol}_catalyst_timeline.png"
             return _empty_chart(path, f"Insufficient data for {symbol}")
+        if df.index.tz is not None:
+            df.index = df.index.tz_localize(None)
 
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 7),
                                         gridspec_kw={"height_ratios": [3, 1]})
@@ -459,7 +482,7 @@ class Terminal:
                         continue
                     price = df["Close"].iloc[idx]
                     marker = "^" if e["direction"] == "up" else "v"
-                    ax1.scatter(date, price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
+                    ax1.scatter(df.index[idx], price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
                 except (IndexError, KeyError):
                     pass
 
@@ -485,10 +508,17 @@ class Terminal:
                 ax2.set_xticks(x)
                 ax2.set_xticklabels(h_names, color="white", fontsize=8)
                 for i, (r, w) in enumerate(zip(avg_rets, win_rates)):
-                    ax2.text(i, r + 0.2, f"{w:.0f}%w", ha="center", color="white", fontsize=7)
+                    offset = 0.2 if r >= 0 else -0.2
+                    va = "bottom" if r >= 0 else "top"
+                    ax2.text(i, r + offset, f"{w:.0f}%w", ha="center", va=va, color="white", fontsize=7)
                 ax2.set_ylabel("Avg Return (%)", color="white", fontsize=9)
                 ax2.set_title("  Post-Event Returns by Sell Horizon (UP events)",
                               color="#ffaa00", fontsize=10, loc="left")
+            else:
+                ax2.text(0.5, 0.5, "No post-event return data", color="white",
+                         fontsize=11, ha="center", va="center", transform=ax2.transAxes)
+                ax2.set_xticks([])
+                ax2.set_yticks([])
             ax2.tick_params(colors="white", labelsize=8)
             ax2.axhline(0, color="white", linewidth=0.3, alpha=0.3)
             ax2.grid(True, axis="y", alpha=0.15, color="white")
@@ -518,7 +548,7 @@ class Terminal:
         for name, etf in sectors.items():
             try:
                 df = fetch_ohlcv(etf, start=ytd_start, cache=True)
-                if len(df) > 5:
+                if len(df) > 5 and df["Close"].iloc[0] != 0:
                     rets[name] = (df["Close"].iloc[-1] / df["Close"].iloc[0] - 1) * 100
             except Exception:
                 pass
@@ -539,7 +569,7 @@ class Terminal:
 
             bars = ax.barh(names, values, color=colors, alpha=0.8, edgecolor="#333")
             for bar, val in zip(bars, values):
-                ax.text(val + (1 if val > 0 else -1), bar.get_y() + bar.get_height()/2,
+                ax.text(val + (1 if val >= 0 else -1), bar.get_y() + bar.get_height()/2,
                         f"{val:+.1f}%", va="center", color="white", fontsize=9)
 
             ax.axvline(0, color="white", linewidth=0.5, alpha=0.3)

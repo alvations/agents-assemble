@@ -221,8 +221,7 @@ class CatalystAnalyzer:
             df["daily_return"] = df["Close"].pct_change()
             df["vol_avg_20"] = df["Volume"].rolling(20).mean()
             vol_ratio = df["Volume"] / df["vol_avg_20"]
-            vol_ratio.replace([float("inf"), float("-inf")], float("nan"), inplace=True)
-            df["vol_ratio"] = vol_ratio
+            df["vol_ratio"] = vol_ratio.replace([float("inf"), float("-inf")], float("nan"))
             df["sma_50"] = df["Close"].rolling(50).mean()
             df["sma_200"] = df["Close"].rolling(200).mean()
             self._price_data = df
@@ -289,7 +288,6 @@ class CatalystAnalyzer:
                 seen.add(dedup_key)
                 unique.append(item)
 
-        unique = unique[:max_items]
         self._news_cache = unique
         return unique[:max_items]
 
@@ -423,13 +421,15 @@ class CatalystAnalyzer:
                 else:
                     continue  # Still holding — skip entry check
 
-            if position is None and price > 0:
-                if strategy == "buy_spike" and r > 0.03 and v > 2.0:
-                    position = (price, i)
-                elif strategy == "buy_dip" and r < -0.03 and v > 2.0:
-                    position = (price, i)
-                elif strategy == "momentum" and r > 0.02 and v > 1.5:
-                    position = (price, i)
+            if position is None and i + 1 < len(df):
+                entry_price = close.iloc[i + 1]
+                if not pd.isna(entry_price) and entry_price > 0:
+                    if strategy == "buy_spike" and r > 0.03 and v > 2.0:
+                        position = (entry_price, i + 1)
+                    elif strategy == "buy_dip" and r < -0.03 and v > 2.0:
+                        position = (entry_price, i + 1)
+                    elif strategy == "momentum" and r > 0.02 and v > 1.5:
+                        position = (entry_price, i + 1)
 
         # Drop incomplete position — it hasn't held for holding_days
         # so including it would bias avg_return and win_rate
@@ -524,6 +524,45 @@ class CatalystAnalyzer:
                 confidence="medium",
                 expected_return=best_bt.avg_return if best_bt else 0,
                 expected_holding_days=5,
+            ))
+
+        elif self.industry == "retail_seasonal":
+            predictions.append(CatalystPrediction(
+                catalyst_type="holiday_season",
+                description=f"Next seasonal catalyst (holiday, Prime Day) for {self.symbol}",
+                expected_date=None,
+                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
+                                   if "after_up" in patterns else "Seasonal momentum",
+                recommended_action="BUY before seasonal peaks (holiday, back-to-school), ride momentum 20 days",
+                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
+                expected_return=best_bt.avg_return if best_bt else 0,
+                expected_holding_days=best_bt.holding_days if best_bt else 20,
+            ))
+
+        elif self.industry == "semiconductor":
+            predictions.append(CatalystPrediction(
+                catalyst_type="chip_launch",
+                description=f"Next chip launch / design win for {self.symbol}",
+                expected_date=None,
+                historical_pattern=f"After UP spikes: avg +{patterns.get('after_up', {}).get('10d', {}).get('avg_return', 0):.1%} in 10d"
+                                   if "after_up" in patterns else "Momentum continuation",
+                recommended_action="BUY on positive spike + volume from chip launch / design win news",
+                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
+                expected_return=best_bt.avg_return if best_bt else 0,
+                expected_holding_days=best_bt.holding_days if best_bt else 10,
+            ))
+
+        elif self.industry == "media_entertainment":
+            predictions.append(CatalystPrediction(
+                catalyst_type="subscriber_numbers",
+                description=f"Next subscriber / box office report for {self.symbol}",
+                expected_date=None,
+                historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
+                                   if "after_up" in patterns else "Earnings-driven",
+                recommended_action="BUY before subscriber number releases or major content launches",
+                confidence="medium" if best_bt and best_bt.win_rate > 0.6 else "low",
+                expected_return=best_bt.avg_return if best_bt else 0,
+                expected_holding_days=best_bt.holding_days if best_bt else 20,
             ))
 
         # Generic prediction from best backtest
@@ -641,6 +680,12 @@ class CatalystAnalyzer:
             return "capital_return"
         if any(w in t for w in ["delivery", "production", "sales figure"]):
             return "delivery_numbers"
+        if any(w in t for w in ["guidance", "outlook", "forecast", "raises guidance", "lowers guidance"]):
+            return "guidance"
+        if any(w in t for w in ["subscriber", "streaming", "user growth", "monthly active"]):
+            return "subscriber_numbers"
+        if any(w in t for w in ["patent", "intellectual property", "ip ruling"]):
+            return "patent"
         return "general"
 
     @staticmethod
@@ -655,7 +700,7 @@ class CatalystAnalyzer:
 
     def save_report(self, directory: str | None = None) -> Path:
         """Save full report as JSON."""
-        report = self._sanitize_for_json(self.full_report())
+        report = self.full_report()
         out_dir = Path(directory or str(Path(__file__).parent / "knowledge" / "catalyst_scans"))
         out_dir.mkdir(parents=True, exist_ok=True)
         ts = datetime.now().strftime("%Y%m%d_%H%M")
