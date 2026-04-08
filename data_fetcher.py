@@ -397,7 +397,7 @@ def fetch_fred_series(
         except Exception as e:
             raise ValueError(f"Could not fetch FRED series {series_id}. Set FRED_API_KEY for reliable access.") from e
 
-    if cache:
+    if cache and not df.empty:
         _cache_set(cache_key, df)
     return df
 
@@ -431,6 +431,8 @@ def fetch_yield_curve(date: str | None = None) -> dict[str, float]:
                 if abs((nearest - idx).days) > 10:
                     return None
                 val = df.loc[nearest, "value"]
+                if isinstance(val, pd.Series):
+                    val = val.iloc[-1]
             else:
                 val = df.iloc[-1]["value"]
             if pd.isna(val):
@@ -687,6 +689,8 @@ def fetch_sector_performance(period: str = "1mo") -> dict[str, float]:
         for etf in etf_list:
             try:
                 hist = data[etf].dropna(how="all")
+                if "Close" in hist.columns:
+                    hist = hist.dropna(subset=["Close"])
                 if len(hist) < 2:
                     continue
                 first_close = hist["Close"].iloc[0]
@@ -730,6 +734,8 @@ def fetch_market_breadth() -> dict[str, Any]:
         for sym in etfs:
             try:
                 df = data[sym].dropna(how="all")
+                if "Close" in df.columns:
+                    df = df.dropna(subset=["Close"])
                 if not df.empty:
                     fetched[sym] = df
             except (KeyError, AttributeError):
