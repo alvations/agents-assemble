@@ -105,10 +105,24 @@ def generate_trade_recommendations(
         },
     }
 
-    # Generate individual position recommendations
+    # Generate per-position recommendations with vol-adjusted risk
+    vol_data = {}
     if final_positions:
+        # Compute per-stock volatility from price data if available
+        try:
+            from agents_assemble.data.fetcher import fetch_ohlcv
+            for sym in list(final_positions.keys())[:15]:
+                try:
+                    df = fetch_ohlcv(sym, start="2024-06-01", cache=True)
+                    if len(df) > 20:
+                        vol_data[sym] = float(df["Close"].pct_change().std())
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
         for sym, pos_info in final_positions.items():
-            rec = _generate_position_rec(sym, pos_info, stop_loss_pct, take_profit_pct, kelly_fraction)
+            rec = _generate_position_rec(sym, pos_info, stop_loss_pct, take_profit_pct, kelly_fraction, vol_data)
             recs["position_recommendations"].append(rec)
 
     return recs
@@ -148,33 +162,42 @@ def _timing_guidance(metrics: dict[str, float]) -> str:
 def _generate_position_rec(
     symbol: str,
     pos_info: dict[str, Any],
-    stop_loss_pct: float,
-    take_profit_pct: float,
-    position_size_pct: float,
+    base_stop_pct: float,
+    base_target_pct: float,
+    base_size_pct: float,
+    vol_data: dict[str, float] | None = None,
 ) -> dict[str, Any]:
-    """Generate recommendation for a single position.
+    """Generate per-position recommendation with VOL-ADJUSTED risk.
 
-    Uses percentage-based rules (not stale prices) so recs stay valid.
-    Includes TradingView live chart link for current prices.
+    Each stock gets different stop/target/size based on its realized volatility:
+    - High vol stocks (TSLA, NVDA): wider stop, smaller size
+    - Low vol stocks (KO, PG): tighter stop, larger size
     """
     qty = _safe_float(pos_info.get("qty"), 0.0)
     action = "BUY" if qty > 0 else "SELL" if qty < 0 else "FLAT"
 
-    # TradingView live links
     tv_chart = f"https://www.tradingview.com/chart/?symbol={symbol}"
-    tv_widget = f"https://www.tradingview.com/symbols/{symbol}/"
     yahoo_url = f"https://finance.yahoo.com/quote/{symbol}/"
+
+    # Per-position vol-adjusted risk
+    stock_vol = (vol_data or {}).get(symbol, 0.02)  # daily vol, default 2%
+    ann_vol = stock_vol * (252 ** 0.5)
+    # Scale: if stock vol is 2x average, stop is 2x wider, size is 0.5x
+    vol_ratio = max(0.5, min(3.0, stock_vol / 0.015))  # Normalize to 1.5% baseline
+    adj_stop = min(base_stop_pct * vol_ratio, 0.40)  # Cap at 40%
+    adj_target = max(base_target_pct * vol_ratio, 0.03)  # Floor at 3%
+    adj_size = base_size_pct / vol_ratio  # Inverse vol sizing
 
     return {
         "symbol": symbol,
         "action": action,
         "current_position": qty,
-        "live_price": f"[TradingView]({tv_chart}) | [Yahoo]({yahoo_url})",
-        "entry_rule": "Limit order at 0.5% below current market price",
-        "stop_loss": f"{stop_loss_pct:.1%} below entry price",
-        "take_profit": f"{take_profit_pct:.1%} above entry price",
-        "position_size": f"{position_size_pct:.1%} of portfolio" if qty != 0 else "0.0% — position closed",
-        "trailing_stop": f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain",
+        "annual_volatility": f"{ann_vol:.0%}",
+        "entry_rule": f"Limit 0.5% below market" if ann_vol < 0.30 else "Market order (volatile)",
+        "stop_loss": f"{adj_stop:.1%} below entry",
+        "take_profit": f"{adj_target:.1%} above entry",
+        "position_size": f"{adj_size:.1%} of portfolio",
+        "trailing_stop": f"{adj_stop * 0.7:.1%} trailing after {adj_target * 0.4:.1%} gain",
         "tradingview_url": tv_chart,
         "yahoo_url": yahoo_url,
     }
@@ -230,24 +253,26 @@ def save_strategy_recommendation(
 
     if recs["position_recommendations"]:
         md_lines.extend([
-            "", "## Positions — Live Prices + Trade Rules", "",
-            "| Symbol | Action | Entry Rule | Stop Loss | Take Profit | Size | Live Price |",
-            "|--------|--------|-----------|-----------|-------------|------|------------|",
+            "", "## Positions — Vol-Adjusted Risk (per-stock sizing)", "",
+            "*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*", "",
+            "| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |",
+            "|--------|--------|-----|-------|-----------|-------------|------|------------|",
         ])
         for rec in recs["position_recommendations"]:
             sym = rec["symbol"]
             tv = f"[Chart](https://www.tradingview.com/chart/?symbol={sym})"
             yf = f"[Yahoo](https://finance.yahoo.com/quote/{sym}/)"
+            vol_str = rec.get("annual_volatility", "?")
             md_lines.append(
-                f"| **{sym}** | {rec['action']} | {rec['entry_rule']} | "
+                f"| **{sym}** | {rec['action']} | {vol_str} | {rec['entry_rule']} | "
                 f"{rec['stop_loss']} | {rec['take_profit']} | "
                 f"{rec['position_size']} | {tv} / {yf} |"
             )
         md_lines.extend([
             "",
-            "> **How to read:** Click the Live Price links to see current market price.",
-            "> Apply the % rules to the current price to calculate your exact entry, stop, and target.",
-            "> Example: If AAPL is $250 and entry rule is '0.5% below', your limit = $248.75.",
+            "> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.",
+            "> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.",
+            "> Click Live Price links for current market price. Apply % rules to calculate exact levels.",
             "",
         ])
 

@@ -337,7 +337,7 @@ fetch('/api/market').then(r => r.json()).then(data => {
 function scanTicker() {
     const sym = document.getElementById('scan-ticker').value.toUpperCase();
     document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + sym + '...</p>';
-    fetch('/api/scan/' + sym).then(r => r.json()).then(data => {
+    fetch('/api/scan/' + encodeURIComponent(sym)).then(r => r.json()).then(data => {
         let html = '<h3>' + sym + ' — ' + esc(data.industry || '') + '</h3>';
         if (data.best) {
             html += '<p><span class="tag tag-green">' + esc(data.best.strategy || '') + '</span> '
@@ -356,7 +356,7 @@ function scanTicker() {
 function runCatalyst() {
     const sym = document.getElementById('catalyst-ticker').value.toUpperCase();
     document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + sym + '... (this takes ~30s)</p>';
-    fetch('/api/catalyst/' + sym).then(r => r.json()).then(data => {
+    fetch('/api/catalyst/' + encodeURIComponent(sym)).then(r => r.json()).then(data => {
         let html = '<h3>' + sym + ' — ' + esc(data.industry || 'general') + '</h3>';
         // Patterns
         if (data.historical_patterns && data.historical_patterns.total_events) {
@@ -408,7 +408,7 @@ function loadChart() {
     const sym = document.getElementById('chart-ticker').value.toUpperCase();
     const start = document.getElementById('chart-start').value;
     document.getElementById('chart-container').innerHTML = '<p class="loading">Generating chart for ' + sym + '...</p>';
-    fetch('/api/chart/' + sym + '?start=' + start).then(r => r.json()).then(data => {
+    fetch('/api/chart/' + encodeURIComponent(sym) + '?start=' + encodeURIComponent(start)).then(r => r.json()).then(data => {
         if (data.image) {
             document.getElementById('chart-container').innerHTML = '<img class="chart-img" src="data:image/png;base64,' + data.image + '">';
         }
@@ -465,7 +465,7 @@ function executeTrades() {
     fetch('/api/execute-trade/' + strat, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(r => r.json()).then(data => {
         let html = '<h3 style="color:#ff4444">⚡ EXECUTION RESULT: ' + strat + '</h3>';
         if (data.error) {
-            html += '<p class="negative">' + data.error + '</p>';
+            html += '<p class="negative">' + esc(data.error) + '</p>';
         } else if (data.placed && data.placed.length > 0) {
             html += '<p class="positive">' + data.placed.length + ' orders placed!</p>';
             html += '<table><tr><th>Symbol</th><th>Side</th><th>Qty</th><th>Status</th></tr>';
@@ -571,7 +571,7 @@ def api_leaderboard():
     from run_multi_horizon import run_single, _get_all_strategies, ALL_HORIZONS
     h_map = ALL_HORIZONS
     if horizon not in h_map:
-        return jsonify([])
+        return jsonify({"error": f"Invalid horizon: {horizon}"}), 400
     start, end = h_map[horizon]
     results = []
     for s in _get_all_strategies():
@@ -686,8 +686,11 @@ def api_chart(symbol):
     path = t.equity_chart(sym, start=start)
     if not path or not Path(path).is_file():
         return jsonify({"error": f"Chart generation failed for {sym}"}), 500
-    with open(path, "rb") as f:
-        img_b64 = base64.b64encode(f.read()).decode()
+    chart_path = Path(path)
+    try:
+        img_b64 = base64.b64encode(chart_path.read_bytes()).decode()
+    finally:
+        chart_path.unlink(missing_ok=True)
     return jsonify({"image": img_b64})
 
 @app.route("/api/trade-plan/<strategy>")

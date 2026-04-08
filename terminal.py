@@ -213,7 +213,7 @@ class Terminal:
         plt, _ = _get_plt()
         from run_multi_horizon import run_single, _get_all_strategies
 
-        all_strats = _get_all_strategies()
+        strat_map = {s["key"]: s for s in _get_all_strategies()}
 
         # Derive horizon label from actual date range
         try:
@@ -236,10 +236,13 @@ class Terminal:
 
         results = {}
         for name in strategies:
-            strat_info = next((s for s in all_strats if s["key"] == name), None)
+            strat_info = strat_map.get(name)
             if not strat_info:
                 continue
-            r = run_single(strat_info, horizon_label, start, end, verbose=False)
+            try:
+                r = run_single(strat_info, horizon_label, start, end, verbose=False)
+            except Exception:
+                continue
             if r["status"] == "success":
                 results[name] = r["metrics"]
 
@@ -313,7 +316,10 @@ class Terminal:
             name = strat_info["key"]
             row = {}
             for h_name, (start, end) in horizons.items():
-                r = run_single(strat_info, h_name, start, end, verbose=False)
+                try:
+                    r = run_single(strat_info, h_name, start, end, verbose=False)
+                except Exception:
+                    continue
                 if r["status"] == "success":
                     row[h_name] = _safe_metric(r["metrics"].get("total_return")) * 100
             if row:
@@ -384,7 +390,10 @@ class Terminal:
 
         points = []
         for strat_info in _get_all_strategies():
-            r = run_single(strat_info, horizon, start, end, verbose=False)
+            try:
+                r = run_single(strat_info, horizon, start, end, verbose=False)
+            except Exception:
+                continue
             if r["status"] == "success":
                 m = r["metrics"]
                 ret = _safe_metric(m.get("total_return"), default=float("nan"))
@@ -476,10 +485,10 @@ class Terminal:
 
             events = patterns.get("events", [])
             for e in events:
-                date = pd.Timestamp(e.get("date"))
-                direction = e.get("direction", "up")
-                color = "#00ff88" if direction == "up" else "#ff4444"
                 try:
+                    date = pd.Timestamp(e.get("date"))
+                    direction = e.get("direction", "up")
+                    color = "#00ff88" if direction == "up" else "#ff4444"
                     idx = df.index.get_indexer([date], method="nearest")[0]
                     if idx < 0:
                         continue
@@ -489,7 +498,7 @@ class Terminal:
                     price = df["Close"].iloc[idx]
                     marker = "^" if direction == "up" else "v"
                     ax1.scatter(df.index[idx], price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
-                except (IndexError, KeyError, ValueError):
+                except (IndexError, KeyError, TypeError, ValueError):
                     pass
 
             ax1.set_ylabel("Price ($)", color="white", fontsize=9)
