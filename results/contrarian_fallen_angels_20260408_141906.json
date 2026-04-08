@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.022172737141533005,
+    "cagr": 0.007362237986564546,
+    "annual_volatility": 0.13768169185570442,
+    "sharpe_ratio": -0.16259916993593743,
+    "sortino_ratio": -0.22447914634544125,
+    "calmar_ratio": 0.05252609779725377,
+    "max_drawdown": -0.1401634291392091,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.41888297872340424,
+    "profit_factor": 1.0265853734328618,
+    "num_trading_days": 752,
+    "skewness": -0.3637121892464564,
+    "kurtosis": 5.738064254208618,
+    "best_day": 0.03464737279173025,
+    "worst_day": -0.04318166853623473,
+    "avg_daily_return": 6.681284369954435e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07926234111319963,
+    "beta": 0.43849649617727027,
+    "information_ratio": -0.5257750632921099,
+    "tracking_error": 0.15075332903181657
+  },
+  "trade_metrics": {
+    "num_trades": 184,
+    "num_buys": 98,
+    "num_sells": 86,
+    "total_commission": 0.0,
+    "total_slippage": 1963.7690505104065,
+    "total_transaction_costs": 1963.7690505104065,
+    "avg_trade_size": 10672.65788320873
+  },
+  "final_positions": {
+    "INTC": {
+      "qty": 523.0,
+      "avg_cost": 23.93000030517578,
+      "realized_pnl": -903.1938171386719
+    }
+  },
+  "source": "crisis",
+  "description": "Buy beaten-down quality + activist catalysts: BA, INTC, PFE, NCLH"
+}

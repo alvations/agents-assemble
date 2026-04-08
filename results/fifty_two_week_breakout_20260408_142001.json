@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.1513970057327454,
+    "cagr": 0.04828277312585483,
+    "annual_volatility": 0.03632572138896325,
+    "sharpe_ratio": 0.23891601259029624,
+    "sortino_ratio": 0.3893515390765583,
+    "calmar_ratio": 2.2650974173927065,
+    "max_drawdown": -0.021315980829394898,
+    "max_drawdown_date": "2023-03-10",
+    "win_rate": 0.45611702127659576,
+    "profit_factor": 1.3138320729770145,
+    "num_trading_days": 752,
+    "skewness": 2.6511841798569353,
+    "kurtosis": 32.56407132803119,
+    "best_day": 0.028020263533646395,
+    "worst_day": -0.011130727915071859,
+    "avg_daily_return": 0.00019008953147664826,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03834180597390935,
+    "beta": 0.0682823452223416,
+    "information_ratio": -0.23002124407878607,
+    "tracking_error": 0.16668810799395836
+  },
+  "trade_metrics": {
+    "num_trades": 159,
+    "num_buys": 70,
+    "num_sells": 89,
+    "total_commission": 0.0,
+    "total_slippage": 1836.93290489006,
+    "total_transaction_costs": 1836.93290489006,
+    "avg_trade_size": 11553.037137673336
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 55.0,
+      "avg_cost": 253.10736083984375,
+      "realized_pnl": 923.4161529541016
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy new 52-week highs on 1.5x volume. 72% continuation, +11.4%/31d"
+}

@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": -0.010771666819979542,
+    "cagr": -0.003615877748349594,
+    "annual_volatility": 0.11722446221829994,
+    "sharpe_ratio": -0.30704372559929394,
+    "sortino_ratio": -0.4332850591120404,
+    "calmar_ratio": -0.017840105485245814,
+    "max_drawdown": -0.2026825318572253,
+    "max_drawdown_date": "2024-10-17",
+    "win_rate": 0.39361702127659576,
+    "profit_factor": 1.0055930652023548,
+    "num_trading_days": 752,
+    "skewness": 0.08865824829869756,
+    "kurtosis": 4.850917235738475,
+    "best_day": 0.04285082901818682,
+    "worst_day": -0.03780065984294789,
+    "avg_daily_return": 1.2820356398879942e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.09024045684811377,
+    "beta": 0.25302930271743274,
+    "information_ratio": -0.5309962610966105,
+    "tracking_error": 0.1699455598081796
+  },
+  "trade_metrics": {
+    "num_trades": 523,
+    "num_buys": 242,
+    "num_sells": 281,
+    "total_commission": 0.0,
+    "total_slippage": 3934.063651290892,
+    "total_transaction_costs": 3934.063651290892,
+    "avg_trade_size": 7522.110231913754
+  },
+  "final_positions": {
+    "TTWO": {
+      "qty": 69.0,
+      "avg_cost": 187.94295426489603,
+      "realized_pnl": 1022.2156234526288
+    },
+    "WBD": {
+      "qty": 1212.0,
+      "avg_cost": 10.423573190435263,
+      "realized_pnl": -3898.321620691853
+    },
+    "NTDOY": {
+      "qty": 878.0,
+      "avg_cost": 14.807663917541504,
+      "realized_pnl": 2525.236790657043
+    },
+    "NFLX": {
+      "qty": 141.0,
+      "avg_cost": 87.17657664749844,
+      "realized_pnl": 14304.379343887851
+    },
+    "RBLX": {
+      "qty": 218.0,
+      "avg_cost": 59.259128885531645,
+      "realized_pnl": -10427.513744354246
+    },
+    "U": {
+      "qty": 566.0,
+      "avg_cost": 24.958949114103035,
+      "realized_pnl": -1004.942175990437
+    },
+    "DIS": {
+      "qty": 116.0,
+      "avg_cost": 112.823424021403,
+      "realized_pnl": 3408.127789815268
+    }
+  },
+  "source": "crisis",
+  "description": "Buy-the-rumor on game publishers: NTDOY, TTWO, EA momentum"
+}

@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.051054657924634705,
+    "cagr": 0.01679449902852026,
+    "annual_volatility": 0.05467140358318639,
+    "sharpe_ratio": -0.38492439644150706,
+    "sortino_ratio": -0.549950106813489,
+    "calmar_ratio": 0.2847298848705807,
+    "max_drawdown": -0.05898397014473533,
+    "max_drawdown_date": "2023-10-26",
+    "win_rate": 0.19281914893617022,
+    "profit_factor": 1.1062215012290784,
+    "num_trading_days": 752,
+    "skewness": -0.007956469663394824,
+    "kurtosis": 11.488448617045455,
+    "best_day": 0.01787470651755485,
+    "worst_day": -0.019795276152322017,
+    "avg_daily_return": 7.214050951004033e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.06983008007124392,
+    "beta": 0.12002027894457565,
+    "information_ratio": -0.43073269272046877,
+    "tracking_error": 0.16211929405730371
+  },
+  "trade_metrics": {
+    "num_trades": 761,
+    "num_buys": 381,
+    "num_sells": 380,
+    "total_commission": 0.0,
+    "total_slippage": 10785.653445436485,
+    "total_transaction_costs": 10785.653445436485,
+    "avg_trade_size": 14173.000585330457
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 117.0,
+      "avg_cost": 134.2460174560547,
+      "realized_pnl": 5674.191053390503
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy %R<-90 above SMA200, exit close>prev high. 77% win SPY, 22% invested"
+}

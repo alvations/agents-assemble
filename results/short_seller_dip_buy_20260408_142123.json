@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.5858403168926329,
+    "cagr": 0.16676229568718237,
+    "annual_volatility": 0.14419908948711865,
+    "sharpe_ratio": 0.87161151783711,
+    "sortino_ratio": 1.3697357082175863,
+    "calmar_ratio": 1.4656243952363925,
+    "max_drawdown": -0.11378242353852541,
+    "max_drawdown_date": "2023-05-02",
+    "win_rate": 0.511968085106383,
+    "profit_factor": 1.2705054291406361,
+    "num_trading_days": 752,
+    "skewness": 0.7049809870290249,
+    "kurtosis": 15.601340317575627,
+    "best_day": 0.0631487456981561,
+    "worst_day": -0.07071450140011182,
+    "avg_daily_return": 0.0006544021931825197,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.0801377165874182,
+    "beta": 0.3187273155644615,
+    "information_ratio": 0.4486439776456954,
+    "tracking_error": 0.17862207135365765
+  },
+  "trade_metrics": {
+    "num_trades": 33,
+    "num_buys": 17,
+    "num_sells": 16,
+    "total_commission": 0.0,
+    "total_slippage": 576.0240081777573,
+    "total_transaction_costs": 576.0240081777573,
+    "avg_trade_size": 17455.272975083553
+  },
+  "final_positions": {
+    "AI": {
+      "qty": 1029.0,
+      "avg_cost": 21.1200008392334,
+      "realized_pnl": 15558.650016784668
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy >5% drops on 3x volume (short report proxy). MSTR +226%, HOOD +168%"
+}

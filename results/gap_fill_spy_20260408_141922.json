@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "total_return": -0.12982075711090246,
+    "cagr": -0.045446127289432425,
+    "annual_volatility": 0.0774252872190174,
+    "sharpe_ratio": -1.0698223712454051,
+    "sortino_ratio": -1.513565640146146,
+    "calmar_ratio": -0.3343371716286327,
+    "max_drawdown": -0.13592902957231456,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.1023936170212766,
+    "profit_factor": 0.8281244254569496,
+    "num_trading_days": 752,
+    "skewness": 0.822335918758607,
+    "kurtosis": 21.74485810067849,
+    "best_day": 0.04846689940981874,
+    "worst_day": -0.027746970019411066,
+    "avg_daily_return": -0.00017304578945875996,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.1320707063891966,
+    "beta": 0.2216964072703001,
+    "information_ratio": -0.8698019434010318,
+    "tracking_error": 0.1518399762051393
+  },
+  "trade_metrics": {
+    "num_trades": 260,
+    "num_buys": 128,
+    "num_sells": 132,
+    "total_commission": 0.0,
+    "total_slippage": 21481.019162017838,
+    "total_transaction_costs": 21481.019162017838,
+    "avg_trade_size": 82619.30446929931
+  },
+  "final_positions": {},
+  "source": "williams_seasonal",
+  "description": "Buy SPY on -0.15% to -0.6% gap down, exit on fill or close. 89% win"
+}

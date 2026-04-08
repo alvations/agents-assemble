@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.07906993745840896,
+    "cagr": 0.025780319833606624,
+    "annual_volatility": 0.05645008498967094,
+    "sharpe_ratio": -0.21497843638721192,
+    "sortino_ratio": -0.33313282139727346,
+    "calmar_ratio": 0.3230828544984443,
+    "max_drawdown": -0.07979476309143096,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.2632978723404255,
+    "profit_factor": 1.1308163865193166,
+    "num_trading_days": 752,
+    "skewness": 1.5233576459050684,
+    "kurtosis": 18.794715032736168,
+    "best_day": 0.0350608110244881,
+    "worst_day": -0.02267616629262781,
+    "avg_daily_return": 0.00010749291435870455,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.06084425926615755,
+    "beta": 0.13336714667556415,
+    "information_ratio": -0.3798160832869204,
+    "tracking_error": 0.1601940042654661
+  },
+  "trade_metrics": {
+    "num_trades": 68,
+    "num_buys": 32,
+    "num_sells": 36,
+    "total_commission": 0.0,
+    "total_slippage": 983.6556386575701,
+    "total_transaction_costs": 983.6556386575701,
+    "avg_trade_size": 14465.52409790544
+  },
+  "final_positions": {
+    "PLTR": {
+      "qty": 203.0,
+      "avg_cost": 80.55000305175781,
+      "realized_pnl": 5641.848982810974
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy 4%+ gap-up on 3x volume (earnings proxy). 60-70% win, hold 1-5d"
+}

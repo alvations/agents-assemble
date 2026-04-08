@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.06855482091033394,
+    "cagr": 0.022426034014277896,
+    "annual_volatility": 0.14218488967071907,
+    "sharpe_ratio": -0.04844268670810059,
+    "sortino_ratio": -0.06583917985885715,
+    "calmar_ratio": 0.09304118159064143,
+    "max_drawdown": -0.24103341800781286,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.4946808510638298,
+    "profit_factor": 1.0407448757282103,
+    "num_trading_days": 752,
+    "skewness": -0.3257241745171018,
+    "kurtosis": 2.253589891015048,
+    "best_day": 0.037123538205982465,
+    "worst_day": -0.034723537056202014,
+    "avg_daily_return": 0.00012831725142243547,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.06419854508548628,
+    "beta": 0.5864365600092997,
+    "information_ratio": -0.525621696568949,
+    "tracking_error": 0.12213830879613428
+  },
+  "trade_metrics": {
+    "num_trades": 146,
+    "num_buys": 65,
+    "num_sells": 81,
+    "total_commission": 0.0,
+    "total_slippage": 3045.270719182968,
+    "total_transaction_costs": 3045.270719182968,
+    "avg_trade_size": 20858.018624540877
+  },
+  "final_positions": {
+    "XLF": {
+      "qty": 658.0,
+      "avg_cost": 45.57017517089844,
+      "realized_pnl": 488.8751335144043
+    },
+    "XLY": {
+      "qty": 295.0,
+      "avg_cost": 98.5390396118164,
+      "realized_pnl": -713.43992614746
+    },
+    "XLC": {
+      "qty": 335.0,
+      "avg_cost": 90.82290501381034,
+      "realized_pnl": 4188.456558227539
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Top 3 of 11 sector ETFs by 3-month momentum. 13.94% CAGR"
+}

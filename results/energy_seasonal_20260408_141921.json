@@ -1,0 +1,59 @@
+{
+  "metrics": {
+    "total_return": 0.4118570234250518,
+    "cagr": 0.12228123984412176,
+    "annual_volatility": 0.1738168091483769,
+    "sharpe_ratio": 0.5260069453909637,
+    "sortino_ratio": 0.7951463054276722,
+    "calmar_ratio": 0.4930092064341708,
+    "max_drawdown": -0.24803033746277392,
+    "max_drawdown_date": "2024-01-18",
+    "win_rate": 0.5106382978723404,
+    "profit_factor": 1.1802918711079675,
+    "num_trading_days": 752,
+    "skewness": 0.36431103113552926,
+    "kurtosis": 6.084582884207869,
+    "best_day": 0.052519440220014424,
+    "worst_day": -0.05831199959022537,
+    "avg_daily_return": 0.0005184627550045242,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.03565666074435758,
+    "beta": 0.24226346228344658,
+    "information_ratio": 0.16622804178562978,
+    "tracking_error": 0.21450448649537096
+  },
+  "trade_metrics": {
+    "num_trades": 119,
+    "num_buys": 48,
+    "num_sells": 71,
+    "total_commission": 0.0,
+    "total_slippage": 1959.373511268616,
+    "total_transaction_costs": 1959.373511268616,
+    "avg_trade_size": 16465.323624106015
+  },
+  "final_positions": {
+    "CVX": {
+      "qty": 175.0,
+      "avg_cost": 135.52928161621094,
+      "realized_pnl": 7776.177345275876
+    },
+    "XOM": {
+      "qty": 238.0,
+      "avg_cost": 109.73248396801347,
+      "realized_pnl": 13654.868431091305
+    },
+    "XLE": {
+      "qty": 595.0,
+      "avg_cost": 42.08341979980469,
+      "realized_pnl": 11769.135171890259
+    },
+    "OXY": {
+      "qty": 549.0,
+      "avg_cost": 48.87871551513672,
+      "realized_pnl": 8658.286672592161
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy energy Sep-Oct, sell Apr. CVX 82% win, +245% 10Y"
+}

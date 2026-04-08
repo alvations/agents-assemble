@@ -1,0 +1,59 @@
+{
+  "metrics": {
+    "total_return": 0.03604863451359197,
+    "cagr": 0.01191566645708031,
+    "annual_volatility": 0.18060370706732398,
+    "sharpe_ratio": -0.061454769248359936,
+    "sortino_ratio": -0.08746284667656085,
+    "calmar_ratio": 0.05345828499016829,
+    "max_drawdown": -0.2228965343589261,
+    "max_drawdown_date": "2023-03-17",
+    "win_rate": 0.49867021276595747,
+    "profit_factor": 1.0284516536612998,
+    "num_trading_days": 752,
+    "skewness": 0.2915400697978725,
+    "kurtosis": 4.923402446272746,
+    "best_day": 0.07857060199900379,
+    "worst_day": -0.053276105866409185,
+    "avg_daily_return": 0.00011160637412768825,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07470891264268387,
+    "beta": 0.6397053775545369,
+    "information_ratio": -0.48170823988557526,
+    "tracking_error": 0.15509162280560154
+  },
+  "trade_metrics": {
+    "num_trades": 1037,
+    "num_buys": 519,
+    "num_sells": 518,
+    "total_commission": 0.0,
+    "total_slippage": 6160.977135701191,
+    "total_transaction_costs": 6160.977135701191,
+    "avg_trade_size": 5941.154422084069
+  },
+  "final_positions": {
+    "WTTR": {
+      "qty": 1230.0,
+      "avg_cost": 12.638401985168457,
+      "realized_pnl": 7061.253734588622
+    },
+    "LULU": {
+      "qty": 40.0,
+      "avg_cost": 387.396240234375,
+      "realized_pnl": 2223.5792846679683
+    },
+    "DECK": {
+      "qty": 76.0,
+      "avg_cost": 203.9081573486328,
+      "realized_pnl": 6920.867504119877
+    },
+    "EVLV": {
+      "qty": 3926.0,
+      "avg_cost": 3.75,
+      "realized_pnl": 1324.1892471313467
+    }
+  },
+  "source": "crisis",
+  "description": "Small caps at 50-year cheap: AVUV + momentum picks, 18% YTD 2026"
+}
