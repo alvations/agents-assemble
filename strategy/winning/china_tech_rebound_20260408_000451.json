@@ -1,0 +1,80 @@
+{
+  "strategy": "china_tech_rebound",
+  "description": "China tech ADR recovery: deep value after regulatory crackdown",
+  "metrics": {
+    "total_return": 0.08419169049110553,
+    "cagr": 0.027495513961521167,
+    "annual_volatility": 0.26162948892919013,
+    "sharpe_ratio": 0.08361006424468592,
+    "sortino_ratio": -0.07239524958843968,
+    "calmar_ratio": 0.0958525338622226,
+    "max_drawdown": -0.28685223909722535,
+    "max_drawdown_date": "2022-10-24 00:00:00",
+    "win_rate": 0.39280958721704395,
+    "profit_factor": 1.0474332315960506,
+    "num_trading_days": 751,
+    "skewness": 0.6049975139874139,
+    "kurtosis": 3.7737902813866597,
+    "best_day": 0.09074453088055723,
+    "worst_day": -0.0654678377064859,
+    "avg_daily_return": 0.00024245485635346096,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": -0.06074919979197646,
+    "beta": 0.4878060619509478,
+    "information_ratio": -0.23093652583956345,
+    "tracking_error": 0.2630558313420729
+  },
+  "positions": [
+    {
+      "symbol": "BABA",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=BABA",
+      "yahoo": "https://finance.yahoo.com/quote/BABA/"
+    },
+    {
+      "symbol": "JD",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=JD",
+      "yahoo": "https://finance.yahoo.com/quote/JD/"
+    },
+    {
+      "symbol": "PDD",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=PDD",
+      "yahoo": "https://finance.yahoo.com/quote/PDD/"
+    },
+    {
+      "symbol": "BIDU",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=BIDU",
+      "yahoo": "https://finance.yahoo.com/quote/BIDU/"
+    },
+    {
+      "symbol": "NIO",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=NIO",
+      "yahoo": "https://finance.yahoo.com/quote/NIO/"
+    },
+    {
+      "symbol": "XPEV",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XPEV",
+      "yahoo": "https://finance.yahoo.com/quote/XPEV/"
+    },
+    {
+      "symbol": "LI",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=LI",
+      "yahoo": "https://finance.yahoo.com/quote/LI/"
+    },
+    {
+      "symbol": "TME",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=TME",
+      "yahoo": "https://finance.yahoo.com/quote/TME/"
+    },
+    {
+      "symbol": "BILI",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=BILI",
+      "yahoo": "https://finance.yahoo.com/quote/BILI/"
+    },
+    {
+      "symbol": "NTES",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=NTES",
+      "yahoo": "https://finance.yahoo.com/quote/NTES/"
+    }
+  ]
+}

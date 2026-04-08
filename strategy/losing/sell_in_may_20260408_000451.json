@@ -1,0 +1,49 @@
+{
+  "strategy": "sell_in_may",
+  "description": "Seasonal: stocks Nov-Apr, bonds May-Oct",
+  "metrics": {
+    "total_return": 0.02211336967916,
+    "cagr": 0.007366344608791708,
+    "annual_volatility": 0.1373221280133959,
+    "sharpe_ratio": -0.1637100512406782,
+    "sortino_ratio": -0.33905550327070194,
+    "calmar_ratio": 0.03050033364204682,
+    "max_drawdown": -0.24151685339719342,
+    "max_drawdown_date": "2022-11-03 00:00:00",
+    "win_rate": 0.5086551264980027,
+    "profit_factor": 1.0215686525994867,
+    "num_trading_days": 751,
+    "skewness": 0.26450604116250165,
+    "kurtosis": 3.6477459254338678,
+    "best_day": 0.056379971058810874,
+    "worst_day": -0.036255078317206535,
+    "avg_daily_return": 6.643949527716751e-05
+  },
+  "positions": [
+    {
+      "symbol": "SPY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SPY",
+      "yahoo": "https://finance.yahoo.com/quote/SPY/"
+    },
+    {
+      "symbol": "QQQ",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=QQQ",
+      "yahoo": "https://finance.yahoo.com/quote/QQQ/"
+    },
+    {
+      "symbol": "TLT",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo": "https://finance.yahoo.com/quote/TLT/"
+    },
+    {
+      "symbol": "IEF",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=IEF",
+      "yahoo": "https://finance.yahoo.com/quote/IEF/"
+    },
+    {
+      "symbol": "SHY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SHY",
+      "yahoo": "https://finance.yahoo.com/quote/SHY/"
+    }
+  ]
+}

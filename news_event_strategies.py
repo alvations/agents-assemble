@@ -81,13 +81,12 @@ class NewsReactionMomentum(BasePersona):
 
         scored.sort(key=lambda x: x[1], reverse=True)
         top = scored[:self.config.max_positions]
-        top_syms = {sym for sym, _ in top}
         if top:
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
         for sym in self.config.universe:
-            if sym in prices and sym not in weights and sym not in top_syms:
+            if sym in prices and sym not in weights:
                 weights[sym] = 0.0
         return weights
 
@@ -146,6 +145,13 @@ class EarningsSurpriseDrift(BasePersona):
                 if sma200 is not None and price > sma200 * 0.95:
                     candidates.append((sym, score))
 
+            # Broken-trend exit: position drifted below SMA200 — thesis invalidated
+            elif sma200 is not None and price < sma200 * 0.90:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                continue
+
             # Negative surprise: sell on big down + volume
             elif daily_ret < -0.05 and vol_ratio > 2.0:
                 pos = portfolio.get_position(sym)
@@ -158,9 +164,8 @@ class EarningsSurpriseDrift(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
-        top_syms = {sym for sym, _ in top}
         for sym in self.config.universe:
-            if sym in prices and sym not in weights and sym not in top_syms:
+            if sym in prices and sym not in weights:
                 weights[sym] = 0.0
         return weights
 
@@ -191,9 +196,11 @@ class CrisisAlpha(BasePersona):
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
-        spy_ret = self._get_indicator(data, "SPY", "daily_return", date) if "SPY" in data else None
-        spy_vol = self._get_indicator(data, "SPY", "vol_20", date) if "SPY" in data else None
-        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date) if "SPY" in data else None
+        spy_ind = self._get_indicators(data, "SPY",
+            ["daily_return", "vol_20", "rsi_14"], date) if "SPY" in data else {}
+        spy_ret = spy_ind.get("daily_return")
+        spy_vol = spy_ind.get("vol_20")
+        spy_rsi = spy_ind.get("rsi_14")
 
         # Crisis detection
         is_crisis = False
@@ -222,7 +229,11 @@ class CrisisAlpha(BasePersona):
                 "GLD": 0.10,
                 "SHY": 0.0,
             }
-        return {k: v for k, v in raw.items() if k in prices and k in universe_set}
+        result = {k: v for k, v in raw.items() if k in prices and k in universe_set}
+        for sym in self.config.universe:
+            if sym in prices and sym not in result:
+                result[sym] = 0.0
+        return result
 
 
 NEWS_EVENT_STRATEGIES = {

@@ -53,17 +53,26 @@ class GeopoliticalCrisis(BasePersona):
         defense = ["LMT", "RTX", "NOC", "GD", "ITA"]
 
         if ann_vol > 0.22:
-            # Crisis mode: heavy energy + defense
-            for sym in energy:
-                if sym in prices:
-                    sma50 = self._get_indicator(data, sym, "sma_50", date)
-                    if sma50 is not None and prices[sym] > sma50:
-                        weights[sym] = 0.10
-            for sym in defense:
-                if sym in prices:
-                    weights[sym] = 0.08
-            if "GLD" in self.config.universe:
-                weights["GLD"] = 0.10
+            # Crisis mode: heavy energy + defense + safe havens
+            crisis_picks = []
+            for sym in energy + defense:
+                if sym not in prices:
+                    continue
+                inds = self._get_indicators(data, sym, ["sma_50", "rsi_14"], date)
+                sma50, rsi = inds["sma_50"], inds["rsi_14"]
+                if rsi is not None and rsi > 80:
+                    weights[sym] = 0.0
+                    continue
+                if sym in energy and (sma50 is None or prices[sym] <= sma50):
+                    continue
+                crisis_picks.append(sym)
+            for sym in ["GLD", "SLV"]:
+                if sym in self.config.universe and sym in prices:
+                    crisis_picks.append(sym)
+            if crisis_picks:
+                per_stock = min(0.90 / len(crisis_picks), self.config.max_position_size)
+                for sym in crisis_picks:
+                    weights[sym] = per_stock
         else:
             # Normal: momentum-select best performers
             scored = []
@@ -75,10 +84,16 @@ class GeopoliticalCrisis(BasePersona):
                 if sma50 is not None and sma200 is not None and sma200 > 0 and prices[sym] > sma50 > sma200:
                     scored.append((sym, (prices[sym] - sma200) / sma200))
             scored.sort(key=lambda x: x[1], reverse=True)
-            for sym, _ in scored[:6]:
-                weights[sym] = 0.12
-            if "GLD" in self.config.universe:
-                weights["GLD"] = 0.05
+            top = scored[:self.config.max_positions]
+            haven_budget = 0.0
+            for sym in ["GLD", "SLV"]:
+                if sym in self.config.universe and sym in prices:
+                    weights[sym] = 0.05
+                    haven_budget += 0.05
+            if top:
+                per_stock = min((0.90 - haven_budget) / len(top), self.config.max_position_size)
+                for sym, _ in top:
+                    weights[sym] = per_stock
 
         # Close stale positions for symbols not in current weights
         for sym in self.config.universe:
@@ -337,6 +352,10 @@ class ContrarianFallenAngels(BasePersona):
             if any(v is None for v in [sma200, rsi]):
                 continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            # Exit structural freefall — >30% below SMA200 is falling knife
+            if discount > 0.30:
+                weights[sym] = 0.0
+                continue
             # Buy deep discount + recovery signal
             if discount > 0.05 and rsi < 45:
                 vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1

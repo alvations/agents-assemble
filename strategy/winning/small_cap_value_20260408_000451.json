@@ -1,0 +1,80 @@
+{
+  "strategy": "small_cap_value",
+  "description": "Small cap inefficiency: buy deeply oversold with volume spikes",
+  "metrics": {
+    "total_return": 0.5614602075788391,
+    "cagr": 0.16128763832542203,
+    "annual_volatility": 0.10481816820268114,
+    "sharpe_ratio": 1.1045943018551094,
+    "sortino_ratio": 2.1282892353407905,
+    "calmar_ratio": 3.495905203390744,
+    "max_drawdown": -0.0461361590036784,
+    "max_drawdown_date": "2022-06-16 00:00:00",
+    "win_rate": 0.26897470039946736,
+    "profit_factor": 1.5377290426043626,
+    "num_trading_days": 751,
+    "skewness": 2.2433812439448677,
+    "kurtosis": 21.346308124200355,
+    "best_day": 0.061830805916303744,
+    "worst_day": -0.03970412137983481,
+    "avg_daily_return": 0.0006151004632975009,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": 0.0730429245719244,
+    "beta": 0.24060306738828063,
+    "information_ratio": 0.44529374058295146,
+    "tracking_error": 0.16403312670935158
+  },
+  "positions": [
+    {
+      "symbol": "SMCI",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SMCI",
+      "yahoo": "https://finance.yahoo.com/quote/SMCI/"
+    },
+    {
+      "symbol": "CELH",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=CELH",
+      "yahoo": "https://finance.yahoo.com/quote/CELH/"
+    },
+    {
+      "symbol": "CAVA",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=CAVA",
+      "yahoo": "https://finance.yahoo.com/quote/CAVA/"
+    },
+    {
+      "symbol": "DUOL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=DUOL",
+      "yahoo": "https://finance.yahoo.com/quote/DUOL/"
+    },
+    {
+      "symbol": "RELY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=RELY",
+      "yahoo": "https://finance.yahoo.com/quote/RELY/"
+    },
+    {
+      "symbol": "CWAN",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=CWAN",
+      "yahoo": "https://finance.yahoo.com/quote/CWAN/"
+    },
+    {
+      "symbol": "HUBS",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=HUBS",
+      "yahoo": "https://finance.yahoo.com/quote/HUBS/"
+    },
+    {
+      "symbol": "SAIA",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SAIA",
+      "yahoo": "https://finance.yahoo.com/quote/SAIA/"
+    },
+    {
+      "symbol": "RCL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=RCL",
+      "yahoo": "https://finance.yahoo.com/quote/RCL/"
+    },
+    {
+      "symbol": "BURL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=BURL",
+      "yahoo": "https://finance.yahoo.com/quote/BURL/"
+    }
+  ]
+}

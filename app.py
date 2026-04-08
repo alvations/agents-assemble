@@ -32,6 +32,8 @@ app = Flask(__name__)
 
 _DATE_SUFFIX_RE = re.compile(r'_\d{4}(-\d{2}(-\d{2})?)?$')
 _SYMBOL_RE = re.compile(r'^[A-Z0-9.\-^=]{1,15}$')
+_STRATEGY_RE = re.compile(r'^[a-z0-9_]{1,60}$')
+_DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
 def _sanitize_for_json(obj):
     if isinstance(obj, dict):
@@ -534,8 +536,16 @@ def api_leaderboard():
     # For 3y, read from existing results/ files (instant)
     if horizon == "3y":
         results_dir = Path(__file__).parent / "results"
+        if not results_dir.is_dir():
+            _leaderboard_cache[horizon] = (time.monotonic(), [])
+            return jsonify([])
         results = []
-        for f in sorted(results_dir.glob("*.json"), key=lambda p: p.stat().st_mtime):
+        def _mtime(p):
+            try:
+                return p.stat().st_mtime
+            except OSError:
+                return 0
+        for f in sorted(results_dir.glob("*.json"), key=_mtime):
             try:
                 data = json.loads(f.read_text())
                 metrics = data.get("metrics", data)
@@ -558,14 +568,17 @@ def api_leaderboard():
         return jsonify(results)
 
     # For other horizons, run backtests (slower but cached after first load)
-    from run_multi_horizon import run_single, _get_all_strategies, SHORT_HORIZONS, HORIZONS, ALL_HORIZONS
+    from run_multi_horizon import run_single, _get_all_strategies, ALL_HORIZONS
     h_map = ALL_HORIZONS
     if horizon not in h_map:
         return jsonify([])
     start, end = h_map[horizon]
     results = []
     for s in _get_all_strategies():
-        r = run_single(s, horizon, start, end, verbose=False)
+        try:
+            r = run_single(s, horizon, start, end, verbose=False)
+        except Exception:
+            continue
         if r["status"] == "success":
             m = r["metrics"]
             results.append({
@@ -642,7 +655,7 @@ def api_scan(symbol):
     return jsonify(_sanitize_for_json({
         "symbol": sym,
         "industry": a.industry,
-        "patterns": {k: v for k, v in patterns.items() if k != "events"},
+        "patterns": {k: v for k, v in patterns.items() if k != "events"} if patterns else None,
         "best": best.to_dict() if best else None,
     }))
 
@@ -663,6 +676,8 @@ def api_chart(symbol):
         return jsonify({"error": "Invalid symbol"}), 400
     from terminal import Terminal
     start = request.args.get("start", "2024-01-01")
+    if not _DATE_RE.match(start):
+        return jsonify({"error": "Invalid start date format (expected YYYY-MM-DD)"}), 400
     t = Terminal()
     path = t.equity_chart(sym, start=start)
     if not path or not Path(path).is_file():
@@ -673,6 +688,8 @@ def api_chart(symbol):
 
 @app.route("/api/trade-plan/<strategy>")
 def api_trade_plan(strategy):
+    if not _STRATEGY_RE.match(strategy):
+        return jsonify({"error": "Invalid strategy name"}), 400
     from public_trader import PublicTrader
     trader = PublicTrader(dry_run=True)
     try:
@@ -702,7 +719,7 @@ def api_trade_plan(strategy):
     for sym, raw_df in all_data.items():
         if raw_df.empty: continue
         df = raw_df.copy()
-        if df.index.tz is not None: df.index = df.index.tz_localize(None)
+        if df.index.tz is not None: df.index = df.index.tz_convert(None)
         close = df["Close"]
         df["sma_50"] = close.rolling(50).mean()
         df["sma_200"] = close.rolling(200).mean()
@@ -735,7 +752,9 @@ def api_trade_plan(strategy):
         return jsonify({"error": f"Strategy signal generation failed: {e}"}), 500
 
     orders = []
-    for sym, w in sorted(weights.items(), key=lambda x: -x[1]):
+    numeric_weights = {s: w for s, w in weights.items()
+                       if isinstance(w, (int, float)) and not isinstance(w, bool) and math.isfinite(w)}
+    for sym, w in sorted(numeric_weights.items(), key=lambda x: -x[1]):
         if w > 0 and sym in prices and prices[sym] > 0:
             qty = int(amount * min(w, persona.config.max_position_size) / prices[sym])
             if qty > 0:
@@ -747,6 +766,8 @@ def api_trade_plan(strategy):
 @app.route("/api/execute-trade/<strategy>", methods=["POST"])
 def api_execute_trade(strategy):
     """LIVE trade execution via Public.com API. Requires PUBLIC_API_SECRET."""
+    if not _STRATEGY_RE.match(strategy):
+        return jsonify({"error": "Invalid strategy name"}), 400
     import os
     if not os.environ.get("PUBLIC_API_SECRET"):
         return jsonify({"error": "PUBLIC_API_SECRET not set. Go to public.com/settings/security/api to get your key, then: export PUBLIC_API_SECRET=your_key"}), 403
@@ -762,7 +783,7 @@ def api_execute_trade(strategy):
     trader = PublicTrader(dry_run=False)
     try:
         results = trader.execute_strategy(strategy, portfolio_value=amount)
-        return jsonify(results)
+        return jsonify(_sanitize_for_json(results))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

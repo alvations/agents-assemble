@@ -1,0 +1,80 @@
+{
+  "strategy": "nassef_sawiris",
+  "description": "Emerging market industrials: materials, construction, global value",
+  "metrics": {
+    "total_return": 0.23314639078761212,
+    "cagr": 0.07285294450211399,
+    "annual_volatility": 0.08542050252066019,
+    "sharpe_ratio": 0.4065470697559157,
+    "sortino_ratio": 0.6377971149802952,
+    "calmar_ratio": 0.699128792657226,
+    "max_drawdown": -0.10420532706887509,
+    "max_drawdown_date": "2024-12-19 00:00:00",
+    "win_rate": 0.20505992010652463,
+    "profit_factor": 1.2914217593194999,
+    "num_trading_days": 751,
+    "skewness": 1.798335422425894,
+    "kurtosis": 17.596344914338587,
+    "best_day": 0.04721341690825698,
+    "worst_day": -0.030170223366876026,
+    "avg_daily_return": 0.00029345722388988266,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": -0.015391769251383636,
+    "beta": 0.1263403277232148,
+    "information_ratio": -0.08852667256698978,
+    "tracking_error": 0.173865896063544
+  },
+  "positions": [
+    {
+      "symbol": "XLB",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XLB",
+      "yahoo": "https://finance.yahoo.com/quote/XLB/"
+    },
+    {
+      "symbol": "XLI",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XLI",
+      "yahoo": "https://finance.yahoo.com/quote/XLI/"
+    },
+    {
+      "symbol": "EEM",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=EEM",
+      "yahoo": "https://finance.yahoo.com/quote/EEM/"
+    },
+    {
+      "symbol": "VWO",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=VWO",
+      "yahoo": "https://finance.yahoo.com/quote/VWO/"
+    },
+    {
+      "symbol": "NUE",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=NUE",
+      "yahoo": "https://finance.yahoo.com/quote/NUE/"
+    },
+    {
+      "symbol": "FCX",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=FCX",
+      "yahoo": "https://finance.yahoo.com/quote/FCX/"
+    },
+    {
+      "symbol": "VALE",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=VALE",
+      "yahoo": "https://finance.yahoo.com/quote/VALE/"
+    },
+    {
+      "symbol": "BHP",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=BHP",
+      "yahoo": "https://finance.yahoo.com/quote/BHP/"
+    },
+    {
+      "symbol": "CAT",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=CAT",
+      "yahoo": "https://finance.yahoo.com/quote/CAT/"
+    },
+    {
+      "symbol": "DE",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=DE",
+      "yahoo": "https://finance.yahoo.com/quote/DE/"
+    }
+  ]
+}

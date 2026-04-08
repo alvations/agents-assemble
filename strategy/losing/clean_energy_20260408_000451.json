@@ -1,0 +1,80 @@
+{
+  "strategy": "clean_energy",
+  "description": "Renewables, EVs, batteries: buy the green transition",
+  "metrics": {
+    "total_return": -0.44117934436062267,
+    "cagr": -0.1773850186463235,
+    "annual_volatility": 0.21102736375541278,
+    "sharpe_ratio": -1.0053778962117048,
+    "sortino_ratio": -1.4006617468851015,
+    "calmar_ratio": -0.34333506450994966,
+    "max_drawdown": -0.5166527890167856,
+    "max_drawdown_date": "2024-11-14 00:00:00",
+    "win_rate": 0.3355525965379494,
+    "profit_factor": 0.8405635115626808,
+    "num_trading_days": 751,
+    "skewness": 0.06930856440079278,
+    "kurtosis": 5.016849692813741,
+    "best_day": 0.07201824622031516,
+    "worst_day": -0.05819957569619372,
+    "avg_daily_return": -0.0006862638158417493,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": -0.26562973239982113,
+    "beta": 0.4864601980124037,
+    "information_ratio": -1.2471631428191614,
+    "tracking_error": 0.21298715723700426
+  },
+  "positions": [
+    {
+      "symbol": "ENPH",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=ENPH",
+      "yahoo": "https://finance.yahoo.com/quote/ENPH/"
+    },
+    {
+      "symbol": "SEDG",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SEDG",
+      "yahoo": "https://finance.yahoo.com/quote/SEDG/"
+    },
+    {
+      "symbol": "FSLR",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=FSLR",
+      "yahoo": "https://finance.yahoo.com/quote/FSLR/"
+    },
+    {
+      "symbol": "RUN",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=RUN",
+      "yahoo": "https://finance.yahoo.com/quote/RUN/"
+    },
+    {
+      "symbol": "TSLA",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=TSLA",
+      "yahoo": "https://finance.yahoo.com/quote/TSLA/"
+    },
+    {
+      "symbol": "RIVN",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=RIVN",
+      "yahoo": "https://finance.yahoo.com/quote/RIVN/"
+    },
+    {
+      "symbol": "LCID",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=LCID",
+      "yahoo": "https://finance.yahoo.com/quote/LCID/"
+    },
+    {
+      "symbol": "NIO",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=NIO",
+      "yahoo": "https://finance.yahoo.com/quote/NIO/"
+    },
+    {
+      "symbol": "LI",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=LI",
+      "yahoo": "https://finance.yahoo.com/quote/LI/"
+    },
+    {
+      "symbol": "XPEV",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XPEV",
+      "yahoo": "https://finance.yahoo.com/quote/XPEV/"
+    }
+  ]
+}

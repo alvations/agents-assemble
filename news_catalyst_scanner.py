@@ -46,12 +46,13 @@ def fetch_news_yfinance(symbol: str, max_items: int = 20) -> list[dict]:
             return [
                 {
                     "title": n.get("title", ""),
-                    "date": datetime.fromtimestamp(n.get("providerPublishTime", 0)).strftime("%Y-%m-%d"),
+                    "date": datetime.fromtimestamp(ts).strftime("%Y-%m-%d"),
                     "source": n.get("publisher", ""),
                     "url": n.get("link", ""),
                     "type": _classify_headline(n.get("title", "")),
                 }
                 for n in news[:max_items]
+                if (ts := n.get("providerPublishTime") or 0) > 0
             ]
     except Exception:
         pass
@@ -141,13 +142,17 @@ def analyze_event_patterns(
     # Find event days: unusual volume + significant move
     events = []
     for i in range(25, len(df) - 20):
-        if vol_ratio.iloc[i] > volume_threshold and abs(daily_ret.iloc[i]) > return_threshold:
+        vr = vol_ratio.iloc[i]
+        dr = daily_ret.iloc[i]
+        if pd.isna(vr) or not math.isfinite(vr) or pd.isna(dr):
+            continue
+        if vr > volume_threshold and abs(dr) > return_threshold:
             date = df.index[i]
             ret = daily_ret.iloc[i]
             direction = "up" if ret > 0 else "down"
 
-            # Pre-event: 5 days before
-            pre_ret = close.iloc[i] / close.iloc[i - 5] - 1
+            # Pre-event: 5 days before (exclude event day itself)
+            pre_ret = close.iloc[i - 1] / close.iloc[i - 5] - 1
             # Post-event: 5, 10, 20 days after (full windows guaranteed by loop bound)
             post_5 = close.iloc[i + 5] / close.iloc[i] - 1
             post_10 = close.iloc[i + 10] / close.iloc[i] - 1
@@ -248,7 +253,8 @@ def event_driven_backtest(
     for i in range(20, len(df)):
         price = close.iloc[i]
         ret = daily_ret.iloc[i] if not pd.isna(daily_ret.iloc[i]) else 0
-        vr = vol_ratio.iloc[i] if not pd.isna(vol_ratio.iloc[i]) else 1
+        vr_raw = vol_ratio.iloc[i]
+        vr = vr_raw if not pd.isna(vr_raw) and math.isfinite(vr_raw) else 1.0
 
         # Check exit
         if position is not None:
@@ -265,14 +271,14 @@ def event_driven_backtest(
                 })
                 position = None
 
-        # Check entry
-        if position is None:
+        # Check entry (signal at close of day i; execute at next day's close)
+        if position is None and i + 1 < len(df):
             if strategy == "buy_spike" and ret > 0.03 and vr > 2.0:
-                position = (df.index[i], price, i)
+                position = (df.index[i + 1], close.iloc[i + 1], i + 1)
             elif strategy == "buy_dip" and ret < -0.03 and vr > 2.0:
-                position = (df.index[i], price, i)
+                position = (df.index[i + 1], close.iloc[i + 1], i + 1)
             elif strategy == "momentum" and ret > 0.02 and vr > 1.5:
-                position = (df.index[i], price, i)
+                position = (df.index[i + 1], close.iloc[i + 1], i + 1)
 
     # Close any remaining position
     if position is not None:

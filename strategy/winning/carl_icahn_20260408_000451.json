@@ -1,0 +1,80 @@
+{
+  "strategy": "carl_icahn",
+  "description": "Concentrated deep value: buy beaten-down large caps showing recovery",
+  "metrics": {
+    "total_return": 0.3106455294540589,
+    "cagr": 0.09502108276212828,
+    "annual_volatility": 0.0853275676065656,
+    "sharpe_ratio": 0.6461976590331724,
+    "sortino_ratio": 1.3151756231303713,
+    "calmar_ratio": 1.698025384412329,
+    "max_drawdown": -0.055959753979186955,
+    "max_drawdown_date": "2022-11-03 00:00:00",
+    "win_rate": 0.16644474034620507,
+    "profit_factor": 1.5233916011914328,
+    "num_trading_days": 751,
+    "skewness": 5.017045987828373,
+    "kurtosis": 62.36145902429606,
+    "best_day": 0.07407666833239879,
+    "worst_day": -0.033930842273765194,
+    "avg_daily_return": 0.0003744533327847447,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": 0.006776369008630656,
+    "beta": 0.13996226841125323,
+    "information_ratio": 0.039535745332427465,
+    "tracking_error": 0.17139853951539485
+  },
+  "positions": [
+    {
+      "symbol": "AAPL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "MSFT",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo": "https://finance.yahoo.com/quote/MSFT/"
+    },
+    {
+      "symbol": "META",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=META",
+      "yahoo": "https://finance.yahoo.com/quote/META/"
+    },
+    {
+      "symbol": "AMZN",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo": "https://finance.yahoo.com/quote/AMZN/"
+    },
+    {
+      "symbol": "GOOGL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "XOM",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XOM",
+      "yahoo": "https://finance.yahoo.com/quote/XOM/"
+    },
+    {
+      "symbol": "CVX",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=CVX",
+      "yahoo": "https://finance.yahoo.com/quote/CVX/"
+    },
+    {
+      "symbol": "OXY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=OXY",
+      "yahoo": "https://finance.yahoo.com/quote/OXY/"
+    },
+    {
+      "symbol": "DVN",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=DVN",
+      "yahoo": "https://finance.yahoo.com/quote/DVN/"
+    },
+    {
+      "symbol": "JPM",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=JPM",
+      "yahoo": "https://finance.yahoo.com/quote/JPM/"
+    }
+  ]
+}

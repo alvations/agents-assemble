@@ -223,7 +223,7 @@ class CatalystAnalyzer:
             if df.index.tz is not None:
                 df.index = df.index.tz_localize(None)
             df["daily_return"] = df["Close"].pct_change().replace([float("inf"), float("-inf")], float("nan"))
-            df["vol_avg_20"] = df["Volume"].rolling(20).mean()
+            df["vol_avg_20"] = df["Volume"].rolling(20).mean().shift(1)
             vol_ratio = df["Volume"] / df["vol_avg_20"]
             df["vol_ratio"] = vol_ratio.replace([float("inf"), float("-inf")], float("nan"))
             self._price_data = df
@@ -398,35 +398,39 @@ class CatalystAnalyzer:
         if len(df) < 50:
             return {}
 
+        close_arr = df["Close"].values
+        ret_arr = df["daily_return"].values
+        vr_arr = df["vol_ratio"].values
+
         results = {}
         for strat in ["buy_spike", "buy_dip", "momentum"]:
             for hold in SELL_HORIZONS:
                 key = f"{strat}_{hold}d"
-                r = self._run_single_backtest(df, strat, hold)
+                r = self._run_single_backtest(close_arr, ret_arr, vr_arr, strat, hold)
                 if r.total_trades > 0:
                     results[key] = r
         return results
 
-    def _run_single_backtest(self, df: pd.DataFrame, strategy: str, holding_days: int) -> BacktestResult:
-        close_arr = df["Close"].values
-        ret_arr = df["daily_return"].values
-        vr_arr = df["vol_ratio"].values
+    def _run_single_backtest(self, close_arr, ret_arr, vr_arr, strategy: str, holding_days: int) -> BacktestResult:
         n = len(close_arr)
 
         trades = []
         position = None
         last_valid_price = None
+        last_valid_i = -1
 
         for i in range(25, n):
             price = close_arr[i]
             if price == price:  # not NaN
                 last_valid_price = price
+                last_valid_i = i
             else:
                 continue
 
             if position is not None:
                 if i - position[1] >= holding_days:
-                    trades.append(float(price / position[0] - 1))
+                    if price > 0:
+                        trades.append(float(price / position[0] - 1))
                     position = None
                 else:
                     continue  # Still holding — skip entry check
@@ -448,7 +452,7 @@ class CatalystAnalyzer:
         # Close position at last valid price if holding period completed but
         # NaN close prices prevented exit (e.g., delisted stock)
         if position is not None:
-            if n - 1 - position[1] >= holding_days and last_valid_price is not None:
+            if last_valid_i - position[1] >= holding_days and last_valid_price is not None:
                 trades.append(float(last_valid_price / position[0] - 1))
 
         if not trades:
@@ -486,7 +490,7 @@ class CatalystAnalyzer:
         for key, bt in backtests.items():
             if bt.total_trades < 3 or bt.win_rate <= 0.5 or bt.profit_factor < 1.0:
                 continue
-            if best_bt is None or bt.total_return > best_bt.total_return:
+            if best_bt is None or bt.avg_return > best_bt.avg_return:
                 best_bt = bt
                 best_key = key
 
@@ -639,7 +643,9 @@ class CatalystAnalyzer:
 
         # Patterns with sell-horizon grid
         p = report["historical_patterns"]
-        if "total_events" in p:
+        if "error" in p:
+            print(f"\n  Historical Events: {p['error']}")
+        elif "total_events" in p:
             print(f"\n  Historical Events: {p['total_events']} ({p['up_events']} up, {p['down_events']} down)")
 
             if "after_up" in p:
@@ -687,15 +693,15 @@ class CatalystAnalyzer:
 
     _CLASSIFY_RULES = (
         (("launch", "release", "unveil", "debut", "premiere", "switch", "gta"), "product_launch"),
-        (("earnings", "revenue", "profit", "beat", "miss", "eps"), "earnings"),
-        (("acquire", "merger", "buyout", "deal"), "ma"),
         (("fda", "approval", "trial", "phase"), "regulatory"),
-        (("upgrade", "downgrade", "target", "analyst", "rating"), "analyst"),
-        (("dividend", "buyback", "split"), "capital_return"),
+        (("acquire", "merger", "buyout", "deal"), "ma"),
+        (("patent", "intellectual property", "ip ruling"), "patent"),
         (("delivery", "production", "sales figure"), "delivery_numbers"),
         (("subscriber", "streaming", "user growth", "monthly active"), "subscriber_numbers"),
+        (("dividend", "buyback", "split"), "capital_return"),
+        (("earnings", "revenue", "profit", "beat", "miss", "eps"), "earnings"),
+        (("upgrade", "downgrade", "target", "analyst", "rating"), "analyst"),
         (("guidance", "outlook", "forecast"), "guidance"),
-        (("patent", "intellectual property", "ip ruling"), "patent"),
     )
 
     def _classify(self, title: str) -> str:
@@ -731,7 +737,7 @@ class CatalystAnalyzer:
 # ---------------------------------------------------------------------------
 def scan_industry(industry: str) -> dict[str, dict]:
     """Scan all tickers in an industry."""
-    info = INDUSTRY_CATALYSTS.get(industry)
+    info = INDUSTRY_CATALYSTS.get(industry.lower())
     if not info:
         raise ValueError(f"Unknown industry: {industry}. Available: {list(INDUSTRY_CATALYSTS.keys())}")
 

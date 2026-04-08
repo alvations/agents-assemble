@@ -1,0 +1,39 @@
+{
+  "strategy": "turn_of_month",
+  "description": "Buy last 3 + first 3 days of month, cash otherwise",
+  "metrics": {
+    "total_return": 0.07438717905911729,
+    "cagr": 0.024368212096721464,
+    "annual_volatility": 0.09716128842657887,
+    "sharpe_ratio": -0.10745214883553379,
+    "sortino_ratio": -0.2402348068304017,
+    "calmar_ratio": 0.21267092353863992,
+    "max_drawdown": -0.11458177587823393,
+    "max_drawdown_date": "2024-12-30 00:00:00",
+    "win_rate": 0.459387483355526,
+    "profit_factor": 1.0761973171423445,
+    "num_trading_days": 751,
+    "skewness": 0.4152269146637809,
+    "kurtosis": 9.049997511061655,
+    "best_day": 0.03387937914985906,
+    "worst_day": -0.03653416589294323,
+    "avg_daily_return": 0.00011422054046957639
+  },
+  "positions": [
+    {
+      "symbol": "SPY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SPY",
+      "yahoo": "https://finance.yahoo.com/quote/SPY/"
+    },
+    {
+      "symbol": "QQQ",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=QQQ",
+      "yahoo": "https://finance.yahoo.com/quote/QQQ/"
+    },
+    {
+      "symbol": "SHY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SHY",
+      "yahoo": "https://finance.yahoo.com/quote/SHY/"
+    }
+  ]
+}

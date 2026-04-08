@@ -1,0 +1,80 @@
+{
+  "strategy": "dogs_of_dow",
+  "description": "Buy worst-performing blue chips yearly, contrarian equal-weight",
+  "metrics": {
+    "total_return": 0.3310758566789429,
+    "cagr": 0.10071928138766029,
+    "annual_volatility": 0.1169590169569854,
+    "sharpe_ratio": 0.5434962795364805,
+    "sortino_ratio": 0.7858595268779083,
+    "calmar_ratio": 1.2081111215820557,
+    "max_drawdown": -0.0833692195927851,
+    "max_drawdown_date": "2024-08-07 00:00:00",
+    "win_rate": 0.37683089214380827,
+    "profit_factor": 1.1965730265919114,
+    "num_trading_days": 751,
+    "skewness": 0.6357847701379128,
+    "kurtosis": 7.883755431874093,
+    "best_day": 0.05937042759476974,
+    "worst_day": -0.034547472705424576,
+    "avg_daily_return": 0.00040789903173715845,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": 0.012474567634162659,
+    "beta": 0.3508396737793327,
+    "information_ratio": 0.08255357035986158,
+    "tracking_error": 0.15110875980026572
+  },
+  "positions": [
+    {
+      "symbol": "AAPL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "MSFT",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo": "https://finance.yahoo.com/quote/MSFT/"
+    },
+    {
+      "symbol": "AMZN",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo": "https://finance.yahoo.com/quote/AMZN/"
+    },
+    {
+      "symbol": "UNH",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=UNH",
+      "yahoo": "https://finance.yahoo.com/quote/UNH/"
+    },
+    {
+      "symbol": "GS",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=GS",
+      "yahoo": "https://finance.yahoo.com/quote/GS/"
+    },
+    {
+      "symbol": "HD",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=HD",
+      "yahoo": "https://finance.yahoo.com/quote/HD/"
+    },
+    {
+      "symbol": "MCD",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=MCD",
+      "yahoo": "https://finance.yahoo.com/quote/MCD/"
+    },
+    {
+      "symbol": "V",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo": "https://finance.yahoo.com/quote/V/"
+    },
+    {
+      "symbol": "CRM",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=CRM",
+      "yahoo": "https://finance.yahoo.com/quote/CRM/"
+    },
+    {
+      "symbol": "DIS",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=DIS",
+      "yahoo": "https://finance.yahoo.com/quote/DIS/"
+    }
+  ]
+}

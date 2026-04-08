@@ -1,0 +1,80 @@
+{
+  "strategy": "quality_factor",
+  "description": "Buy low-vol stocks in uptrends \u2014 quality minus junk",
+  "metrics": {
+    "total_return": 0.31942435867244745,
+    "cagr": 0.09747675567798608,
+    "annual_volatility": 0.08112668500291834,
+    "sharpe_ratio": 0.7037663687091074,
+    "sortino_ratio": 1.0303206816252937,
+    "calmar_ratio": 1.101390825019986,
+    "max_drawdown": -0.08850333002929933,
+    "max_drawdown_date": "2023-03-13 00:00:00",
+    "win_rate": 0.38615179760319573,
+    "profit_factor": 1.2579455967016544,
+    "num_trading_days": 751,
+    "skewness": -0.1621888225384973,
+    "kurtosis": 2.217970018123199,
+    "best_day": 0.020789744662063292,
+    "worst_day": -0.025076193742966435,
+    "avg_daily_return": 0.00038221427751313354,
+    "benchmark_total_return": 0.2866220704304123,
+    "benchmark_cagr": 0.08824471375349763,
+    "alpha": 0.009232041924488454,
+    "beta": 0.2456534053788509,
+    "information_ratio": 0.06197313147301092,
+    "tracking_error": 0.14896845947681336
+  },
+  "positions": [
+    {
+      "symbol": "AAPL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "MSFT",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo": "https://finance.yahoo.com/quote/MSFT/"
+    },
+    {
+      "symbol": "GOOGL",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "JNJ",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=JNJ",
+      "yahoo": "https://finance.yahoo.com/quote/JNJ/"
+    },
+    {
+      "symbol": "PG",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=PG",
+      "yahoo": "https://finance.yahoo.com/quote/PG/"
+    },
+    {
+      "symbol": "KO",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=KO",
+      "yahoo": "https://finance.yahoo.com/quote/KO/"
+    },
+    {
+      "symbol": "PEP",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=PEP",
+      "yahoo": "https://finance.yahoo.com/quote/PEP/"
+    },
+    {
+      "symbol": "V",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo": "https://finance.yahoo.com/quote/V/"
+    },
+    {
+      "symbol": "MA",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=MA",
+      "yahoo": "https://finance.yahoo.com/quote/MA/"
+    },
+    {
+      "symbol": "UNH",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=UNH",
+      "yahoo": "https://finance.yahoo.com/quote/UNH/"
+    }
+  ]
+}

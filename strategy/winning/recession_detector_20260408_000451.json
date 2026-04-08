@@ -1,0 +1,64 @@
+{
+  "strategy": "recession_detector",
+  "description": "Regime-switching: risk-on in growth, defensive in recession",
+  "metrics": {
+    "total_return": 0.13614096938558284,
+    "cagr": 0.043759462267103144,
+    "annual_volatility": 0.12419727266981558,
+    "sharpe_ratio": 0.09101777755782527,
+    "sortino_ratio": 0.0431157459827037,
+    "calmar_ratio": 0.16236479314128435,
+    "max_drawdown": -0.2695132449620722,
+    "max_drawdown_date": "2022-11-03 00:00:00",
+    "win_rate": 0.5166444740346205,
+    "profit_factor": 1.0692393557411701,
+    "num_trading_days": 751,
+    "skewness": 0.16575038807655346,
+    "kurtosis": 2.6722011112391746,
+    "best_day": 0.05095296290241169,
+    "worst_day": -0.03267657923420353,
+    "avg_daily_return": 0.0002005076395259844
+  },
+  "positions": [
+    {
+      "symbol": "SPY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SPY",
+      "yahoo": "https://finance.yahoo.com/quote/SPY/"
+    },
+    {
+      "symbol": "QQQ",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=QQQ",
+      "yahoo": "https://finance.yahoo.com/quote/QQQ/"
+    },
+    {
+      "symbol": "TLT",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo": "https://finance.yahoo.com/quote/TLT/"
+    },
+    {
+      "symbol": "IEF",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=IEF",
+      "yahoo": "https://finance.yahoo.com/quote/IEF/"
+    },
+    {
+      "symbol": "GLD",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "XLP",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XLP",
+      "yahoo": "https://finance.yahoo.com/quote/XLP/"
+    },
+    {
+      "symbol": "XLV",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=XLV",
+      "yahoo": "https://finance.yahoo.com/quote/XLV/"
+    },
+    {
+      "symbol": "SHY",
+      "tradingview": "https://www.tradingview.com/chart/?symbol=SHY",
+      "yahoo": "https://finance.yahoo.com/quote/SHY/"
+    }
+  ]
+}
