@@ -653,6 +653,8 @@ def api_market():
     if data:
         _market_cache["data"] = data
         _market_cache["ts"] = time.monotonic()
+    elif _market_cache.get("data"):
+        return jsonify(_market_cache["data"])
     return jsonify(data)
 
 @app.route("/api/scan/<symbol>")
@@ -667,25 +669,28 @@ def api_scan(symbol):
     except Exception as e:
         return jsonify({"error": f"Failed to analyze {sym}: {e}"}), 500
     # Quick mode: 3 strategies at 10d (fast)
-    df = a._get_price_data()
-    bts = {}
-    if len(df) >= 50:
-        close_arr = df["Close"].values
-        ret_arr = df["daily_return"].values
-        vr_arr = df["vol_ratio"].values
-        for strat in ['buy_spike', 'buy_dip', 'momentum']:
-            try:
-                r = a._run_single_backtest(close_arr, ret_arr, vr_arr, strat, 10)
-                if r.total_trades > 0:
-                    bts[f'{strat}_10d'] = r
-            except Exception:
-                pass
     best_entry = None
-    if bts:
-        best_key = max(bts, key=lambda k: bts[k].total_return)
-        best_dict = bts[best_key].to_dict()
-        best_dict.setdefault("strategy", best_key)
-        best_entry = best_dict
+    try:
+        df = a._get_price_data()
+        bts = {}
+        if len(df) >= 50:
+            close_arr = df["Close"].values
+            ret_arr = df["daily_return"].values
+            vr_arr = df["vol_ratio"].values
+            for strat in ['buy_spike', 'buy_dip', 'momentum']:
+                try:
+                    r = a._run_single_backtest(close_arr, ret_arr, vr_arr, strat, 10)
+                    if r.total_trades > 0:
+                        bts[f'{strat}_10d'] = r
+                except Exception:
+                    pass
+        if bts:
+            best_key = max(bts, key=lambda k: bts[k].total_return)
+            best_dict = bts[best_key].to_dict()
+            best_dict.setdefault("strategy", best_key)
+            best_entry = best_dict
+    except Exception:
+        pass
     return jsonify(_sanitize_for_json({
         "symbol": sym,
         "industry": a.industry,
@@ -699,8 +704,11 @@ def api_catalyst(symbol):
     if not _SYMBOL_RE.match(sym):
         return jsonify({"error": "Invalid symbol"}), 400
     from catalyst_analyzer import CatalystAnalyzer
-    a = CatalystAnalyzer(sym)
-    report = a.full_report()
+    try:
+        a = CatalystAnalyzer(sym)
+        report = a.full_report()
+    except Exception as e:
+        return jsonify({"error": f"Catalyst analysis failed for {sym}: {e}"}), 500
     return jsonify(_sanitize_for_json(report))
 
 @app.route("/api/chart/<symbol>")
@@ -795,15 +803,20 @@ def api_trade_plan(strategy):
     remaining = amount
     numeric_weights = {s: w for s, w in weights.items()
                        if isinstance(w, (int, float)) and not isinstance(w, bool) and math.isfinite(w)}
-    for sym, w in sorted(numeric_weights.items(), key=lambda x: -x[1]):
+    max_pos = persona.config.max_position_size
+    capped = {s: min(w, max_pos) for s, w in numeric_weights.items()
+              if w > 0 and s in prices and prices[s] > 0}
+    total_w = sum(capped.values())
+    if total_w > 1.0:
+        capped = {s: w / total_w for s, w in capped.items()}
+    for sym, w in sorted(capped.items(), key=lambda x: -x[1]):
         if remaining <= 0:
             break
-        if w > 0 and sym in prices and prices[sym] > 0:
-            alloc = min(amount * min(w, persona.config.max_position_size), remaining)
-            qty = int(alloc / prices[sym])
-            if qty > 0:
-                remaining -= qty * prices[sym]
-                orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
+        alloc = min(amount * w, remaining)
+        qty = int(alloc / prices[sym])
+        if qty > 0:
+            remaining -= qty * prices[sym]
+            orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
 
     return jsonify({"strategy": strategy, "orders": orders, "amount": amount})
 
