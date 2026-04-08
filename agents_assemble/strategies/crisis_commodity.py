@@ -62,21 +62,23 @@ class GeopoliticalCrisis(BasePersona):
             for sym in defense:
                 if sym in prices:
                     weights[sym] = 0.08
-            weights["GLD"] = 0.10
+            if "GLD" in self.config.universe:
+                weights["GLD"] = 0.10
         else:
             # Normal: momentum-select best performers
             scored = []
             for sym in energy + defense:
                 if sym not in prices:
                     continue
-                sma50 = self._get_indicator(data, sym, "sma_50", date)
-                sma200 = self._get_indicator(data, sym, "sma_200", date)
-                if sma50 is not None and sma200 is not None and prices[sym] > sma50 > sma200:
+                inds = self._get_indicators(data, sym, ["sma_50", "sma_200"], date)
+                sma50, sma200 = inds["sma_50"], inds["sma_200"]
+                if sma50 is not None and sma200 is not None and sma200 > 0 and prices[sym] > sma50 > sma200:
                     scored.append((sym, (prices[sym] - sma200) / sma200))
             scored.sort(key=lambda x: x[1], reverse=True)
             for sym, _ in scored[:6]:
                 weights[sym] = 0.12
-            weights["GLD"] = 0.05
+            if "GLD" in self.config.universe:
+                weights["GLD"] = 0.05
 
         # Close stale positions for symbols not in current weights
         for sym in self.config.universe:
@@ -122,10 +124,12 @@ class AgricultureFoodSecurity(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
             if any(v is None for v in [sma50, rsi]):
+                continue
+            if rsi > 80:
+                weights[sym] = 0.0
                 continue
             score = 0.0
             if sma200 is not None and price > sma50 > sma200:
@@ -189,11 +193,9 @@ class GamingContentCatalyst(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "Volume", "volume_sma_20"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            volume, vol_avg = inds["Volume"], inds["volume_sma_20"]
             if any(v is None for v in [sma50, rsi]):
                 continue
             vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
@@ -263,10 +265,12 @@ class SmallCapValueRotation(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma50 = self._get_indicator(data, sym, "sma_50", date)
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
             if any(v is None for v in [sma50, rsi]):
+                continue
+            if rsi > 80:
+                weights[sym] = 0.0
                 continue
             score = 0.0
             if sma200 is not None and price > sma50 > sma200:
@@ -327,10 +331,9 @@ class ContrarianFallenAngels(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
-            volume = self._get_indicator(data, sym, "Volume", date)
-            vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14", "Volume", "volume_sma_20"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
+            volume, vol_avg = inds["Volume"], inds["volume_sma_20"]
             if any(v is None for v in [sma200, rsi]):
                 continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0

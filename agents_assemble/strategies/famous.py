@@ -298,7 +298,7 @@ class GeorgeSoros(BasePersona):
                 trend_strength += 1.0
 
             # Volume confirmation (Soros loves conviction)
-            if volume and vol_avg and vol_avg > 0:
+            if volume is not None and vol_avg is not None and vol_avg > 0:
                 vol_ratio = volume / vol_avg
                 if vol_ratio > 1.5:
                     trend_strength += 1.0
@@ -592,10 +592,18 @@ class CarlIcahn(BasePersona):
                 continue
 
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "rsi_14"], date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
 
             if any(v is None for v in [sma200, rsi]):
+                continue
+
+            # Broken thesis: even activists cut positions in freefall
+            if price < sma200 * 0.80:
+                weights[sym] = 0.0
                 continue
 
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
@@ -741,9 +749,17 @@ class LiKaShing(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "rsi_14"], date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
             if sma200 is None:
+                continue
+
+            # Even patient infrastructure investors exit total collapses
+            if price < sma200 * 0.80:
+                weights[sym] = 0.0
                 continue
 
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
@@ -808,8 +824,11 @@ class NassefSawiris(BasePersona):
             if sym not in prices:
                 continue
             price = prices[sym]
-            sma200 = self._get_indicator(data, sym, "sma_200", date)
-            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "rsi_14"], date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
             if any(v is None for v in [sma200, rsi]):
                 continue
 
@@ -1135,7 +1154,7 @@ class SupportResistanceCommodity(BasePersona):
                 continue
 
             # Breakout above resistance — BUY
-            vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
             if price > bb_upper and 55 < rsi < 80 and vol_ratio > 1.3:
                 # Breakout with volume confirmation
                 score = 3.0 + vol_ratio

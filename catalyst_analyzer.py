@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import json
 import math
-from dataclasses import dataclass, field as dataclass_field
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -127,7 +127,7 @@ class EventPattern:
     volume_ratio: float
     direction: str  # "up" or "down"
     # Returns at each sell horizon
-    post_returns: dict[int, float] = dataclass_field(default_factory=dict)  # {1: 0.02, 2: 0.03, ...}
+    post_returns: dict[int, float] = field(default_factory=dict)  # {1: 0.02, 2: 0.03, ...}
 
     # Legacy compat
     @property
@@ -222,7 +222,7 @@ class CatalystAnalyzer:
             df = fetch_ohlcv(self.symbol, start=start)
             if df.index.tz is not None:
                 df.index = df.index.tz_localize(None)
-            df["daily_return"] = df["Close"].pct_change()
+            df["daily_return"] = df["Close"].pct_change().replace([float("inf"), float("-inf")], float("nan"))
             df["vol_avg_20"] = df["Volume"].rolling(20).mean()
             vol_ratio = df["Volume"] / df["vol_avg_20"]
             df["vol_ratio"] = vol_ratio.replace([float("inf"), float("-inf")], float("nan"))
@@ -667,8 +667,12 @@ class CatalystAnalyzer:
             print(f"  {'Strategy':20s} | {'Trades':>6s} | {'Win%':>5s} | {'Avg Ret':>8s} | {'Total Ret':>10s}")
             print(f"  {'-'*60}")
             for key, bt in sorted(bts.items(), key=lambda x: float("inf") if x[1]["total_return"] is None else -x[1]["total_return"]):
-                print(f"  {key:20s} | {bt['total_trades']:6d} | {bt['win_rate']:4.0%} | "
-                      f"{bt['avg_return']:+7.1%} | {bt['total_return']:+9.1%}")
+                wr = bt['win_rate'] if bt['win_rate'] is not None else 0
+                ar = bt['avg_return'] if bt['avg_return'] is not None else 0
+                tr = bt['total_return']
+                tr_s = f"{tr:+9.1%}" if tr is not None else "      N/A"
+                print(f"  {key:20s} | {bt['total_trades']:6d} | {wr:4.0%} | "
+                      f"{ar:+7.1%} | {tr_s}")
 
         # Predictions
         preds = report["predictions"]

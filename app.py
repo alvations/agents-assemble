@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 app = Flask(__name__)
 
 _DATE_SUFFIX_RE = re.compile(r'_\d{4}(-\d{2}(-\d{2})?)?$')
+_SYMBOL_RE = re.compile(r'^[A-Z0-9.\-^=]{1,15}$')
 
 def _sanitize_for_json(obj):
     if isinstance(obj, dict):
@@ -463,13 +464,15 @@ function executeTrades() {
         let html = '<h3 style="color:#ff4444">⚡ EXECUTION RESULT: ' + strat + '</h3>';
         if (data.error) {
             html += '<p class="negative">' + data.error + '</p>';
-        } else if (data.placed) {
+        } else if (data.placed && data.placed.length > 0) {
             html += '<p class="positive">' + data.placed.length + ' orders placed!</p>';
             html += '<table><tr><th>Symbol</th><th>Side</th><th>Qty</th><th>Status</th></tr>';
             data.placed.forEach(o => {
                 html += '<tr><td>' + o.symbol + '</td><td>' + o.side + '</td><td>' + o.quantity + '</td><td class="positive">SENT</td></tr>';
             });
             html += '</table>';
+        } else {
+            html += '<p class="negative">No orders were placed — strategy may not have signals today.</p>';
         }
         document.getElementById('trade-results').innerHTML = html;
     }).catch(e => {
@@ -609,11 +612,8 @@ def api_market():
             df = fetch_ohlcv(sym, start=str(date.today() - timedelta(days=60)), cache=True)
             if len(df) > 1:
                 last = float(df["Close"].iloc[-1])
-                if len(df) > 20:
-                    ref = float(df["Close"].iloc[-20])
-                    change = (last / ref - 1) if ref > 0 else 0
-                else:
-                    change = 0
+                ref = float(df["Close"].iloc[-20]) if len(df) > 20 else float(df["Close"].iloc[0])
+                change = (last / ref - 1) if ref > 0 else 0
                 data[sym] = {"price": last, "change": change}
         except Exception:
             pass
@@ -621,8 +621,11 @@ def api_market():
 
 @app.route("/api/scan/<symbol>")
 def api_scan(symbol):
+    sym = symbol.upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
     from catalyst_analyzer import CatalystAnalyzer
-    a = CatalystAnalyzer(symbol.upper())
+    a = CatalystAnalyzer(sym)
     patterns = a.analyze_historical_patterns()
     # Quick mode: 3 strategies at 10d (fast)
     df = a._get_price_data()
@@ -637,7 +640,7 @@ def api_scan(symbol):
                 pass
     best = max(bts.values(), key=lambda b: b.total_return) if bts else None
     return jsonify(_sanitize_for_json({
-        "symbol": symbol.upper(),
+        "symbol": sym,
         "industry": a.industry,
         "patterns": {k: v for k, v in patterns.items() if k != "events"},
         "best": best.to_dict() if best else None,
@@ -645,17 +648,23 @@ def api_scan(symbol):
 
 @app.route("/api/catalyst/<symbol>")
 def api_catalyst(symbol):
+    sym = symbol.upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
     from catalyst_analyzer import CatalystAnalyzer
-    a = CatalystAnalyzer(symbol.upper())
+    a = CatalystAnalyzer(sym)
     report = a.full_report()
     return jsonify(_sanitize_for_json(report))
 
 @app.route("/api/chart/<symbol>")
 def api_chart(symbol):
+    sym = symbol.upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
     from terminal import Terminal
     start = request.args.get("start", "2024-01-01")
     t = Terminal()
-    path = t.equity_chart(symbol.upper(), start=start)
+    path = t.equity_chart(sym, start=start)
     if not path or not Path(path).is_file():
         return jsonify({"error": f"Chart generation failed for {symbol}"}), 500
     with open(path, "rb") as f:
@@ -684,7 +693,7 @@ def api_trade_plan(strategy):
         return jsonify({"error": "Amount must be a positive number"}), 400
     symbols = persona.config.universe[:15]
     try:
-        all_data = fetch_multiple_ohlcv(symbols, start="2024-01-01")
+        all_data = fetch_multiple_ohlcv(symbols, start=str(date.today() - timedelta(days=400)))
     except Exception as e:
         return jsonify({"error": f"Failed to fetch market data: {e}"}), 500
 
@@ -708,8 +717,11 @@ def api_trade_plan(strategy):
         df["volume_sma_20"] = df["Volume"].rolling(20).mean()
         df["sma_20"] = close.rolling(20).mean()
         df["atr_14"] = _compute_atr(df, 14)
+        last_close = float(close.iloc[-1])
+        if not math.isfinite(last_close) or last_close <= 0:
+            continue
         enriched[sym] = df
-        prices[sym] = float(close.iloc[-1])
+        prices[sym] = last_close
 
     if not enriched:
         return jsonify({"error": "No market data available for strategy symbols"}), 500

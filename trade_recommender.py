@@ -152,60 +152,31 @@ def _generate_position_rec(
     take_profit_pct: float,
     position_size_pct: float,
 ) -> dict[str, Any]:
-    """Generate recommendation for a single position."""
-    avg_cost = _safe_float(pos_info.get("avg_cost"), 0.0)
+    """Generate recommendation for a single position.
+
+    Uses percentage-based rules (not stale prices) so recs stay valid.
+    Includes TradingView live chart link for current prices.
+    """
     qty = _safe_float(pos_info.get("qty"), 0.0)
+    action = "BUY" if qty > 0 else "SELL" if qty < 0 else "FLAT"
 
-    if qty > 0:
-        action = "BUY"
-    elif qty < 0:
-        action = "SELL"
-    else:
-        action = "FLAT"
-
-    if avg_cost > 0 and qty != 0:
-        if qty > 0:
-            stop_price = avg_cost * (1 - stop_loss_pct)
-            target_price = avg_cost * (1 + take_profit_pct)
-            stop_label = "below"
-            target_label = "above"
-            limit_price = avg_cost * 0.995
-            limit_desc = "0.5% below avg cost"
-        else:
-            stop_price = avg_cost * (1 + stop_loss_pct)
-            target_price = avg_cost * (1 - take_profit_pct)
-            stop_label = "above"
-            target_label = "below"
-            limit_price = avg_cost * 1.005
-            limit_desc = "0.5% above avg cost"
-        entry_info = {
-            "limit_price": f"${limit_price:.2f} ({limit_desc})",
-            "market_price": "Use market order if volatile",
-        }
-        stop_str = f"${stop_price:.2f} ({stop_loss_pct:.1%} {stop_label} entry)"
-        target_str = f"${target_price:.2f} ({take_profit_pct:.1%} {target_label} entry)"
-    else:
-        entry_info = {"limit_price": "N/A (no cost basis)", "market_price": "N/A"}
-        stop_str = "N/A (no cost basis)"
-        target_str = "N/A (no cost basis)"
-
-    if qty > 0:
-        trailing_desc = f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain"
-    elif qty < 0:
-        trailing_desc = f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} decline"
-    else:
-        trailing_desc = "N/A — no position"
+    # TradingView live links
+    tv_chart = f"https://www.tradingview.com/chart/?symbol={symbol}"
+    tv_widget = f"https://www.tradingview.com/symbols/{symbol}/"
+    yahoo_url = f"https://finance.yahoo.com/quote/{symbol}/"
 
     return {
         "symbol": symbol,
         "action": action,
         "current_position": qty,
-        "avg_cost_basis": f"${avg_cost:.2f}" if avg_cost > 0 else "N/A",
-        "recommended_entry": entry_info,
-        "stop_loss": stop_str,
-        "take_profit": target_str,
+        "live_price": f"[TradingView]({tv_chart}) | [Yahoo]({yahoo_url})",
+        "entry_rule": "Limit order at 0.5% below current market price",
+        "stop_loss": f"{stop_loss_pct:.1%} below entry price",
+        "take_profit": f"{take_profit_pct:.1%} above entry price",
         "position_size": f"{position_size_pct:.1%} of portfolio" if qty != 0 else "0.0% — position closed",
-        "trailing_stop": trailing_desc,
+        "trailing_stop": f"{stop_loss_pct * 0.8:.1%} trailing stop after {take_profit_pct * 0.5:.1%} gain",
+        "tradingview_url": tv_chart,
+        "yahoo_url": yahoo_url,
     }
 
 
@@ -258,15 +229,27 @@ def save_strategy_recommendation(
         md_lines.append(f"- **{k}:** {v}")
 
     if recs["position_recommendations"]:
-        md_lines.extend(["", "## Position Recommendations", ""])
+        md_lines.extend([
+            "", "## Positions — Live Prices + Trade Rules", "",
+            "| Symbol | Action | Entry Rule | Stop Loss | Take Profit | Size | Live Price |",
+            "|--------|--------|-----------|-----------|-------------|------|------------|",
+        ])
         for rec in recs["position_recommendations"]:
-            md_lines.append(f"### {rec['symbol']} — {rec['action']}")
-            md_lines.append(f"- Entry limit: {rec['recommended_entry']['limit_price']}")
-            md_lines.append(f"- Stop-loss: {rec['stop_loss']}")
-            md_lines.append(f"- Take-profit: {rec['take_profit']}")
-            md_lines.append(f"- Position size: {rec['position_size']}")
-            md_lines.append(f"- Trailing stop: {rec['trailing_stop']}")
-            md_lines.append("")
+            sym = rec["symbol"]
+            tv = f"[Chart](https://www.tradingview.com/chart/?symbol={sym})"
+            yf = f"[Yahoo](https://finance.yahoo.com/quote/{sym}/)"
+            md_lines.append(
+                f"| **{sym}** | {rec['action']} | {rec['entry_rule']} | "
+                f"{rec['stop_loss']} | {rec['take_profit']} | "
+                f"{rec['position_size']} | {tv} / {yf} |"
+            )
+        md_lines.extend([
+            "",
+            "> **How to read:** Click the Live Price links to see current market price.",
+            "> Apply the % rules to the current price to calculate your exact entry, stop, and target.",
+            "> Example: If AAPL is $250 and entry rule is '0.5% below', your limit = $248.75.",
+            "",
+        ])
 
     if not is_winning:
         md_lines.extend([

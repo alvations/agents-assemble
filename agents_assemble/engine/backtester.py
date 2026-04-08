@@ -302,7 +302,7 @@ def compute_metrics(
         "sortino_ratio": sortino,
         "calmar_ratio": calmar,
         "max_drawdown": max_drawdown,
-        "max_drawdown_date": str(max_dd_end) if max_dd_end is not None else None,
+        "max_drawdown_date": max_dd_end.strftime("%Y-%m-%d") if max_dd_end is not None else None,
         "win_rate": win_rate,
         "profit_factor": profit_factor,
         "num_trading_days": total_days,
@@ -416,9 +416,13 @@ class Backtester:
         data: dict[str, pd.DataFrame] | None = None,
     ):
         self.strategy = strategy
+        if not symbols:
+            raise ValueError("symbols must be a non-empty list")
         self.symbols = symbols
         self.start = start
         self.end = end
+        if end is not None and pd.Timestamp(start) > pd.Timestamp(end):
+            raise ValueError(f"start ({start}) must be before end ({end})")
         if initial_cash <= 0:
             raise ValueError(f"initial_cash must be positive, got {initial_cash}")
         if slippage_pct < 0:
@@ -848,7 +852,7 @@ def save_results(results: dict[str, Any], path: str) -> None:
                 for t in v
             ]
         elif isinstance(v, list):
-            serializable[k] = json.loads(json.dumps(_sanitize_for_json(v), default=str))
+            serializable[k] = _sanitize_for_json(v)
         elif isinstance(v, dict):
             serializable[k] = {str(kk): vv for kk, vv in v.items()
                                 if not isinstance(vv, (pd.Series, pd.DataFrame))}
