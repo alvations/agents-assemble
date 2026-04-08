@@ -1,7 +1,7 @@
 {
   "strategy_name": "buffett_value",
   "is_winning": true,
-  "generated_at": "2026-04-07T23:17:00.646065",
+  "generated_at": "2026-04-07T23:32:07.604779",
   "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
   "risk_parameters": {
     "max_portfolio_allocation": "8.4%",
@@ -21,15 +21,14 @@
       "symbol": "MRK",
       "action": "BUY",
       "current_position": 286.0,
-      "avg_cost_basis": "$96.68",
-      "recommended_entry": {
-        "limit_price": "$96.20 (0.5% below avg cost)",
-        "market_price": "Use market order if volatile"
-      },
-      "stop_loss": "$82.14 (15.0% below entry)",
-      "take_profit": "$101.92 (5.4% above entry)",
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=MRK) | [Yahoo](https://finance.yahoo.com/quote/MRK/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "15.0% below entry price",
+      "take_profit": "5.4% above entry price",
       "position_size": "8.4% of portfolio",
-      "trailing_stop": "12.0% trailing stop after 2.7% gain"
+      "trailing_stop": "12.0% trailing stop after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MRK",
+      "yahoo_url": "https://finance.yahoo.com/quote/MRK/"
     }
   ],
   "metrics_summary": {

@@ -1,7 +1,7 @@
 {
   "strategy_name": "sector_rotation",
   "is_winning": true,
-  "generated_at": "2026-04-07T23:17:37.608697",
+  "generated_at": "2026-04-07T23:32:34.018992",
   "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
   "risk_parameters": {
     "max_portfolio_allocation": "5.2%",

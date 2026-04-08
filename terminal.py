@@ -108,7 +108,7 @@ class Terminal:
         close = df["Close"]
         sma20 = close.rolling(20).mean()
         sma50 = close.rolling(50).mean()
-        sma200 = close.rolling(200).mean()
+        sma200 = close.rolling(200).mean() if len(close) > 200 else None
 
         n_panels = 1 + show_volume + show_rsi + show_macd
         ratios = [3] + ([1] if show_volume else []) + ([1] if show_rsi else []) + ([1.2] if show_macd else [])
@@ -126,7 +126,7 @@ class Terminal:
             ax.plot(close.index, close, color="#00ff88", linewidth=1.2, label="Price")
             ax.plot(sma20.index, sma20, color="#ffaa00", linewidth=0.7, alpha=0.7, label="SMA20")
             ax.plot(sma50.index, sma50, color="#ff4444", linewidth=0.7, alpha=0.7, label="SMA50")
-            if len(close) > 200:
+            if sma200 is not None:
                 ax.plot(sma200.index, sma200, color="#4488ff", linewidth=0.7, alpha=0.7, label="SMA200")
             ax.fill_between(close.index, close, close.min(), alpha=0.1, color="#00ff88")
             ax.set_ylabel("Price ($)", color="white", fontsize=9)
@@ -489,7 +489,7 @@ class Terminal:
                     price = df["Close"].iloc[idx]
                     marker = "^" if direction == "up" else "v"
                     ax1.scatter(df.index[idx], price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
-                except (IndexError, KeyError):
+                except (IndexError, KeyError, ValueError):
                     pass
 
             ax1.set_ylabel("Price ($)", color="white", fontsize=9)
@@ -506,8 +506,8 @@ class Terminal:
                     digits = "".join(c for c in x if c.isdigit())
                     return int(digits) if digits else 0
                 h_names = sorted(horizons_data.keys(), key=_horizon_sort_key)
-                avg_rets = [horizons_data[h]["avg_return"] * 100 for h in h_names]
-                win_rates = [horizons_data[h].get("win_rate", 0) * 100 for h in h_names]
+                avg_rets = [_safe_metric(horizons_data[h].get("avg_return")) * 100 for h in h_names]
+                win_rates = [_safe_metric(horizons_data[h].get("win_rate")) * 100 for h in h_names]
                 colors = ["#00ff88" if r > 0 else "#ff4444" for r in avg_rets]
                 x = range(len(h_names))
                 ax2.bar(x, avg_rets, color=colors, alpha=0.7)
@@ -554,8 +554,10 @@ class Terminal:
         for name, etf in sectors.items():
             try:
                 df = fetch_ohlcv(etf, start=ytd_start, cache=True)
+                if len(df) <= 5:
+                    continue
                 first, last = df["Close"].iloc[0], df["Close"].iloc[-1]
-                if len(df) > 5 and math.isfinite(first) and first != 0 and math.isfinite(last):
+                if math.isfinite(first) and first != 0 and math.isfinite(last):
                     rets[name] = (last / first - 1) * 100
             except Exception:
                 pass

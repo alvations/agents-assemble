@@ -1,0 +1,93 @@
+{
+  "strategy_name": "momentum",
+  "is_winning": true,
+  "generated_at": "2026-04-07T23:32:10.821306",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.9%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "10.2%",
+    "max_drawdown_tolerance": "30.2%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "AAPL",
+      "action": "BUY",
+      "current_position": 125.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=AAPL) | [Yahoo](https://finance.yahoo.com/quote/AAPL/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "25.0% below entry price",
+      "take_profit": "10.2% above entry price",
+      "position_size": "6.9% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 5.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "AVGO",
+      "action": "BUY",
+      "current_position": 134.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=AVGO) | [Yahoo](https://finance.yahoo.com/quote/AVGO/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "25.0% below entry price",
+      "take_profit": "10.2% above entry price",
+      "position_size": "6.9% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 5.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AVGO",
+      "yahoo_url": "https://finance.yahoo.com/quote/AVGO/"
+    },
+    {
+      "symbol": "TSLA",
+      "action": "BUY",
+      "current_position": 75.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=TSLA) | [Yahoo](https://finance.yahoo.com/quote/TSLA/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "25.0% below entry price",
+      "take_profit": "10.2% above entry price",
+      "position_size": "6.9% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 5.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
+      "yahoo_url": "https://finance.yahoo.com/quote/TSLA/"
+    },
+    {
+      "symbol": "GOOGL",
+      "action": "BUY",
+      "current_position": 164.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=GOOGL) | [Yahoo](https://finance.yahoo.com/quote/GOOGL/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "25.0% below entry price",
+      "take_profit": "10.2% above entry price",
+      "position_size": "6.9% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 5.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "PLTR",
+      "action": "BUY",
+      "current_position": 405.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=PLTR) | [Yahoo](https://finance.yahoo.com/quote/PLTR/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "25.0% below entry price",
+      "take_profit": "10.2% above entry price",
+      "position_size": "6.9% of portfolio",
+      "trailing_stop": "20.0% trailing stop after 5.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PLTR",
+      "yahoo_url": "https://finance.yahoo.com/quote/PLTR/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "73.69%",
+    "sharpe_ratio": "0.76",
+    "max_drawdown": "-30.21%",
+    "win_rate": "44.74%",
+    "alpha": "11.50%"
+  }
+}

@@ -99,16 +99,17 @@ def _cache_path(key: str) -> Path:
 
 def _cache_get(key: str, max_age_hours: float = 12) -> pd.DataFrame | None:
     path = _cache_path(key)
-    if path.exists():
+    try:
         age = time.time() - path.stat().st_mtime
         if age < max_age_hours * 3600:
-            try:
-                return pd.read_parquet(path)
-            except Exception:
-                try:
-                    path.unlink()
-                except OSError:
-                    pass
+            return pd.read_parquet(path)
+    except FileNotFoundError:
+        return None
+    except Exception:
+        try:
+            path.unlink()
+        except OSError:
+            pass
     return None
 
 
@@ -156,7 +157,10 @@ def fetch_ohlcv(
     cache_key = f"ohlcv_{symbol}_{start}_{end}_{interval}"
 
     if cache:
-        cached = _cache_get(cache_key)
+        # Intraday data goes stale within minutes; 12h TTL would serve
+        # morning data all day.  Use 30min TTL for sub-daily intervals.
+        intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
+        cached = _cache_get(cache_key, max_age_hours=0.5 if intraday else 12)
         if cached is not None:
             return cached
 
@@ -1044,29 +1048,65 @@ def scan_52_week_lows(
     if universe is None:
         universe = _all_universe_symbols()
 
-    results = []
-    for sym in universe:
-        try:
-            ticker = yf.Ticker(sym)
-            info = ticker.info
-            price = info.get("currentPrice") or info.get("regularMarketPrice")
-            low_52 = info.get("fiftyTwoWeekLow")
-            high_52 = info.get("fiftyTwoWeekHigh")
+    # Batch download 1-year history (1 HTTP call) instead of N individual
+    # yf.Ticker.info calls which each make a separate request.
+    end = datetime.now().strftime("%Y-%m-%d")
+    start = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
 
-            if price is not None and price > 0 and low_52 is not None and low_52 > 0 and high_52 is not None and high_52 > 0:
-                pct_from_low = (price - low_52) / low_52
-                pct_from_high = (price - high_52) / high_52
-                results.append({
-                    "symbol": sym,
-                    "price": price,
-                    "52w_low": low_52,
-                    "52w_high": high_52,
-                    "pct_from_low": pct_from_low,
-                    "pct_from_high": pct_from_high,
-                    "range_position": (price - low_52) / (high_52 - low_52) if high_52 > low_52 else 0.5,
-                })
+    fetched: dict[str, pd.DataFrame] = {}
+    if len(universe) > 1:
+        try:
+            data = yf.download(universe, start=start, end=end, group_by="ticker", progress=False)
+            for sym in universe:
+                try:
+                    df = data[sym].dropna(how="all")
+                    if "Close" in df.columns:
+                        df = df.dropna(subset=["Close"])
+                    if not df.empty:
+                        fetched[sym] = df
+                except (KeyError, AttributeError):
+                    pass
         except Exception:
             pass
+
+    # Fallback: individually fetch symbols missing from batch
+    for sym in universe:
+        if sym in fetched:
+            continue
+        try:
+            df = fetch_ohlcv(sym, start=start, end=end)
+            if not df.empty:
+                fetched[sym] = df
+        except Exception:
+            pass
+
+    results = []
+    for sym in universe:
+        hist = fetched.get(sym)
+        if hist is None or "Close" not in hist.columns:
+            continue
+        close = hist["Close"]
+        if len(close) < 20:
+            continue
+        price = close.iloc[-1]
+        if pd.isna(price) or price <= 0:
+            continue
+        low_52 = float(close.min())
+        high_52 = float(close.max())
+        if low_52 <= 0 or high_52 <= 0:
+            continue
+
+        pct_from_low = (price - low_52) / low_52
+        pct_from_high = (price - high_52) / high_52
+        results.append({
+            "symbol": sym,
+            "price": float(price),
+            "52w_low": low_52,
+            "52w_high": high_52,
+            "pct_from_low": float(pct_from_low),
+            "pct_from_high": float(pct_from_high),
+            "range_position": float((price - low_52) / (high_52 - low_52)) if high_52 > low_52 else 0.5,
+        })
 
     results.sort(key=lambda x: x["pct_from_low"])
     return results[:max_results]

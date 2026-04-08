@@ -1,0 +1,158 @@
+{
+  "strategy_name": "peter_lynch",
+  "is_winning": false,
+  "generated_at": "2026-04-07T23:32:59.784691",
+  "overall_assessment": "NEUTRAL \u2014 Mixed signals. Paper trade before committing capital.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "22.7%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "18.9%",
+    "rebalance_frequency": "monthly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "GOOGL",
+      "action": "BUY",
+      "current_position": 59.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=GOOGL) | [Yahoo](https://finance.yahoo.com/quote/GOOGL/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "JNJ",
+      "action": "BUY",
+      "current_position": 67.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=JNJ) | [Yahoo](https://finance.yahoo.com/quote/JNJ/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=JNJ",
+      "yahoo_url": "https://finance.yahoo.com/quote/JNJ/"
+    },
+    {
+      "symbol": "LOW",
+      "action": "BUY",
+      "current_position": 38.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=LOW) | [Yahoo](https://finance.yahoo.com/quote/LOW/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LOW",
+      "yahoo_url": "https://finance.yahoo.com/quote/LOW/"
+    },
+    {
+      "symbol": "MSFT",
+      "action": "BUY",
+      "current_position": 23.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=MSFT) | [Yahoo](https://finance.yahoo.com/quote/MSFT/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo_url": "https://finance.yahoo.com/quote/MSFT/"
+    },
+    {
+      "symbol": "MA",
+      "action": "BUY",
+      "current_position": 19.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=MA) | [Yahoo](https://finance.yahoo.com/quote/MA/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MA",
+      "yahoo_url": "https://finance.yahoo.com/quote/MA/"
+    },
+    {
+      "symbol": "MCD",
+      "action": "BUY",
+      "current_position": 35.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=MCD) | [Yahoo](https://finance.yahoo.com/quote/MCD/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MCD",
+      "yahoo_url": "https://finance.yahoo.com/quote/MCD/"
+    },
+    {
+      "symbol": "UNH",
+      "action": "BUY",
+      "current_position": 17.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=UNH) | [Yahoo](https://finance.yahoo.com/quote/UNH/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UNH",
+      "yahoo_url": "https://finance.yahoo.com/quote/UNH/"
+    },
+    {
+      "symbol": "V",
+      "action": "BUY",
+      "current_position": 32.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=V) | [Yahoo](https://finance.yahoo.com/quote/V/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo_url": "https://finance.yahoo.com/quote/V/"
+    },
+    {
+      "symbol": "SBUX",
+      "action": "BUY",
+      "current_position": 102.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=SBUX) | [Yahoo](https://finance.yahoo.com/quote/SBUX/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SBUX",
+      "yahoo_url": "https://finance.yahoo.com/quote/SBUX/"
+    },
+    {
+      "symbol": "AMZN",
+      "action": "BUY",
+      "current_position": 48.0,
+      "live_price": "[TradingView](https://www.tradingview.com/chart/?symbol=AMZN) | [Yahoo](https://finance.yahoo.com/quote/AMZN/)",
+      "entry_rule": "Limit order at 0.5% below current market price",
+      "stop_loss": "22.7% below entry price",
+      "take_profit": "5.0% above entry price",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "18.2% trailing stop after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo_url": "https://finance.yahoo.com/quote/AMZN/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "8.37%",
+    "sharpe_ratio": "-0.05",
+    "max_drawdown": "-18.91%",
+    "win_rate": "50.73%",
+    "alpha": "-6.07%"
+  }
+}
