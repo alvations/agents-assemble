@@ -1,20 +1,24 @@
-"""Cortex AI Custom Scanner — natural language stock screening.
+"""Cortex AI Custom Scanner — Claude-powered natural language stock screening.
 
-Users describe what they want in plain English, and the scanner
-translates it into technical filters and returns matching stocks.
+Uses claude_code_client to interpret natural language queries into
+technical screening criteria, then scans the universe for matches.
 
 Usage:
     from cortex_scanner import CortexScanner
     scanner = CortexScanner()
-    results = scanner.scan("stocks with RSI below 30 and price above SMA200")
-    results = scanner.scan("high dividend yield above 4% in S&P 500")
-    results = scanner.scan("tech stocks making new 52-week highs")
 
-Works without any API keys — uses yfinance + our data_fetcher.
+    # Claude interprets your query and screens stocks
+    results = scanner.scan("find me oversold tech stocks that are still above their 200-day average")
+    results = scanner.scan("which energy stocks have the best momentum right now?")
+    results = scanner.scan("show me cheap dividend stocks with low volatility")
+
+    # Also works without Claude (falls back to keyword matching)
+    results = scanner.scan("RSI below 30 above SMA200", use_claude=False)
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -24,129 +28,238 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from data_fetcher import fetch_ohlcv, UNIVERSE
 
 
-# ---------------------------------------------------------------------------
-# Natural language parser
-# ---------------------------------------------------------------------------
-FILTER_PATTERNS = {
-    # RSI filters
-    r"rsi\s*(?:below|under|<)\s*(\d+)": lambda m, d: d.get("rsi_14", 50) < float(m.group(1)),
-    r"rsi\s*(?:above|over|>)\s*(\d+)": lambda m, d: d.get("rsi_14", 50) > float(m.group(1)),
-    r"oversold": lambda m, d: d.get("rsi_14", 50) < 30,
-    r"overbought": lambda m, d: d.get("rsi_14", 50) > 70,
-
-    # Price vs SMA
-    r"(?:price\s*)?above\s*sma\s*200": lambda m, d: d["price"] > d.get("sma_200", 0) if d.get("sma_200") else False,
-    r"(?:price\s*)?below\s*sma\s*200": lambda m, d: d["price"] < d.get("sma_200", float("inf")) if d.get("sma_200") else False,
-    r"(?:price\s*)?above\s*sma\s*50": lambda m, d: d["price"] > d.get("sma_50", 0) if d.get("sma_50") else False,
-    r"golden\s*cross": lambda m, d: d.get("sma_50", 0) > d.get("sma_200", float("inf")) if d.get("sma_200") else False,
-    r"death\s*cross": lambda m, d: d.get("sma_50", float("inf")) < d.get("sma_200", 0) if d.get("sma_200") else False,
-
-    # 52-week
-    r"(?:new\s*)?52.?week\s*high": lambda m, d: d.get("near_52w_high", False),
-    r"near\s*52.?week\s*low": lambda m, d: d.get("near_52w_low", False),
-
-    # Volume
-    r"high\s*volume": lambda m, d: d.get("vol_ratio", 1) > 1.5,
-    r"volume\s*spike": lambda m, d: d.get("vol_ratio", 1) > 2.0,
-
-    # MACD
-    r"macd\s*(?:bullish|positive|above)": lambda m, d: d.get("macd", 0) > d.get("macd_signal", 0) if d.get("macd") is not None else False,
-    r"macd\s*(?:bearish|negative|below)": lambda m, d: d.get("macd", 0) < d.get("macd_signal", 0) if d.get("macd") is not None else False,
-
-    # Momentum
-    r"momentum": lambda m, d: d["price"] > d.get("sma_50", 0) and d.get("sma_50", 0) > d.get("sma_200", 0) if d.get("sma_200") else False,
-    r"uptrend": lambda m, d: d["price"] > d.get("sma_50", 0) if d.get("sma_50") else False,
-    r"downtrend": lambda m, d: d["price"] < d.get("sma_50", float("inf")) if d.get("sma_50") else False,
-
-    # Volatility
-    r"low\s*vol": lambda m, d: d.get("annual_vol", 0.20) < 0.20,
-    r"high\s*vol": lambda m, d: d.get("annual_vol", 0.20) > 0.35,
-}
-
-UNIVERSE_PATTERNS = {
-    r"s&?p\s*500|large\s*cap|mega\s*cap|blue\s*chip": "mega_cap",
-    r"tech|technology|software": "mega_cap",  # Mostly tech in mega_cap
-    r"small\s*cap": "small_cap",
-    r"mid\s*cap": "mid_cap",
-    r"dividend": "dividend_aristocrats",
-    r"energy|oil": "commodities",
-    r"china|chinese": "china_adr",
-    r"biotech|pharma": "glp1_obesity",
-    r"crypto": "crypto_adjacent",
-    r"defense|military": "defense_niche",
-    r"semiconductor|chip": "semiconductor",
-    r"gold|silver|precious": "precious_metals",
-}
-
-
 class CortexScanner:
-    """Natural language stock screener."""
+    """AI-powered stock screener using Claude + technical data."""
 
-    def scan(self, query: str, max_results: int = 20) -> List[Dict[str, Any]]:
-        """Scan stocks matching a natural language query.
+    def __init__(self):
+        self._claude = None
 
-        Examples:
-            "stocks with RSI below 30 and price above SMA200"
-            "tech stocks in uptrend with high volume"
-            "oversold dividend stocks"
-            "small cap stocks making new 52-week highs"
+    def _get_claude(self):
+        if self._claude is None:
+            try:
+                from claude_code_client import ClaudeClient
+                self._claude = ClaudeClient()
+            except Exception:
+                self._claude = False  # Mark as unavailable
+        return self._claude if self._claude else None
+
+    def scan(self, query: str, universe: str = "auto", max_results: int = 20,
+             use_claude: bool = True) -> Dict[str, Any]:
+        """Scan stocks using natural language.
+
+        1. If use_claude=True: Claude interprets the query into screening criteria
+        2. Fetches data for the appropriate universe
+        3. Screens and ranks results
+        4. Returns structured results with live price links
+
+        Returns:
+            Dict with 'query', 'interpretation', 'criteria', 'results', 'count'
         """
-        query_lower = query.lower()
+        # Step 1: Interpret query (Claude or fallback)
+        if use_claude:
+            interpretation = self._claude_interpret(query)
+        else:
+            interpretation = self._keyword_interpret(query)
 
-        # Determine universe
-        universe_syms = self._pick_universe(query_lower)
+        if not interpretation:
+            interpretation = self._keyword_interpret(query)
 
-        # Parse filters
-        filters = self._parse_filters(query_lower)
+        # Step 2: Pick universe
+        symbols = self._pick_universe(query, universe)
 
-        # Screen
+        # Step 3: Screen stocks
         results = []
-        for sym in universe_syms[:50]:  # Limit for speed
+        for sym in symbols[:60]:  # Limit for speed
             try:
                 data = self._get_stock_data(sym)
-                if data is None:
-                    continue
-
-                # Apply all filters
-                passes = True
-                for filt in filters:
-                    try:
-                        if not filt(data):
-                            passes = False
-                            break
-                    except (TypeError, KeyError):
-                        passes = False
-                        break
-
-                if passes:
+                if data and self._passes_criteria(data, interpretation.get("criteria", {})):
+                    data["match_reason"] = interpretation.get("description", query)
                     results.append(data)
             except Exception:
                 pass
 
-        results.sort(key=lambda x: x.get("rsi_14", 50))
-        return results[:max_results]
+        # Step 4: Rank by the interpretation's sort key
+        sort_key = interpretation.get("sort_by", "rsi_14")
+        sort_asc = interpretation.get("sort_ascending", True)
+        results.sort(key=lambda x: x.get(sort_key, 0), reverse=not sort_asc)
 
-    def _pick_universe(self, query: str) -> List[str]:
-        for pattern, cat in UNIVERSE_PATTERNS.items():
-            if re.search(pattern, query):
+        return {
+            "query": query,
+            "interpretation": interpretation.get("description", ""),
+            "criteria": interpretation.get("criteria", {}),
+            "results": results[:max_results],
+            "count": len(results),
+            "universe_scanned": len(symbols),
+        }
+
+    # ----- Claude interpretation -----
+
+    def _claude_interpret(self, query: str) -> Optional[Dict]:
+        """Use Claude to interpret a natural language screening query."""
+        claude = self._get_claude()
+        if not claude:
+            return None
+
+        prompt = f"""You are a stock screening assistant. Interpret this query into technical screening criteria.
+
+Query: "{query}"
+
+Return ONLY a JSON object (no other text) with these fields:
+{{
+    "description": "one-line description of what user wants",
+    "universe": "mega_cap|small_cap|dividend|energy|tech|china|all",
+    "criteria": {{
+        "rsi_max": null or number (e.g. 30 for oversold),
+        "rsi_min": null or number (e.g. 70 for overbought),
+        "above_sma200": true/false/null,
+        "above_sma50": true/false/null,
+        "golden_cross": true/false/null,
+        "min_vol_ratio": null or number (e.g. 1.5 for high volume),
+        "macd_bullish": true/false/null,
+        "near_52w_high": true/false/null,
+        "near_52w_low": true/false/null,
+        "max_annual_vol": null or number (e.g. 0.20 for low vol),
+        "min_annual_vol": null or number
+    }},
+    "sort_by": "rsi_14|price|annual_vol|vol_ratio|pct_from_high",
+    "sort_ascending": true/false
+}}"""
+
+        try:
+            result = claude.ask(prompt)
+            text = result.text.strip()
+            # Extract JSON from response
+            json_match = re.search(r'\{[\s\S]*\}', text)
+            if json_match:
+                return json.loads(json_match.group())
+        except Exception:
+            pass
+        return None
+
+    # ----- Keyword fallback interpretation -----
+
+    def _keyword_interpret(self, query: str) -> Dict:
+        q = query.lower()
+        criteria = {}
+        description = query
+
+        if any(w in q for w in ["oversold", "rsi below", "rsi under"]):
+            m = re.search(r"rsi\s*(?:below|under|<)\s*(\d+)", q)
+            criteria["rsi_max"] = int(m.group(1)) if m else 30
+
+        if any(w in q for w in ["overbought", "rsi above", "rsi over"]):
+            m = re.search(r"rsi\s*(?:above|over|>)\s*(\d+)", q)
+            criteria["rsi_min"] = int(m.group(1)) if m else 70
+
+        if "above sma200" in q or "above 200" in q:
+            criteria["above_sma200"] = True
+        if "below sma200" in q or "below 200" in q:
+            criteria["above_sma200"] = False
+
+        if "above sma50" in q or "uptrend" in q or "momentum" in q:
+            criteria["above_sma50"] = True
+
+        if "golden cross" in q:
+            criteria["golden_cross"] = True
+
+        if "high volume" in q or "volume spike" in q:
+            criteria["min_vol_ratio"] = 1.5
+
+        if "52 week high" in q or "52w high" in q or "new high" in q:
+            criteria["near_52w_high"] = True
+        if "52 week low" in q or "52w low" in q:
+            criteria["near_52w_low"] = True
+
+        if "low vol" in q:
+            criteria["max_annual_vol"] = 0.20
+        if "high vol" in q:
+            criteria["min_annual_vol"] = 0.35
+
+        if "macd bullish" in q or "macd positive" in q:
+            criteria["macd_bullish"] = True
+
+        sort_by = "rsi_14"
+        sort_asc = True
+        if "momentum" in q or "uptrend" in q:
+            sort_by = "pct_from_high"
+            sort_asc = False
+        if "vol" in q:
+            sort_by = "annual_vol"
+            sort_asc = "low" in q
+
+        return {
+            "description": description,
+            "criteria": criteria,
+            "sort_by": sort_by,
+            "sort_ascending": sort_asc,
+        }
+
+    # ----- Screening logic -----
+
+    def _passes_criteria(self, data: Dict, criteria: Dict) -> bool:
+        if not criteria:
+            return True
+        for key, val in criteria.items():
+            if val is None:
+                continue
+            if key == "rsi_max" and data.get("rsi_14", 50) > val:
+                return False
+            if key == "rsi_min" and data.get("rsi_14", 50) < val:
+                return False
+            if key == "above_sma200" and val:
+                if not data.get("sma_200") or data["price"] <= data["sma_200"]:
+                    return False
+            if key == "above_sma200" and not val:
+                if data.get("sma_200") and data["price"] > data["sma_200"]:
+                    return False
+            if key == "above_sma50" and val:
+                if not data.get("sma_50") or data["price"] <= data["sma_50"]:
+                    return False
+            if key == "golden_cross" and val:
+                if not data.get("sma_50") or not data.get("sma_200") or data["sma_50"] <= data["sma_200"]:
+                    return False
+            if key == "min_vol_ratio" and data.get("vol_ratio", 1) < val:
+                return False
+            if key == "macd_bullish" and val:
+                if data.get("macd") is None or data["macd"] <= data.get("macd_signal", 0):
+                    return False
+            if key == "near_52w_high" and val and not data.get("near_52w_high"):
+                return False
+            if key == "near_52w_low" and val and not data.get("near_52w_low"):
+                return False
+            if key == "max_annual_vol" and data.get("annual_vol", 0.20) > val:
+                return False
+            if key == "min_annual_vol" and data.get("annual_vol", 0.20) < val:
+                return False
+        return True
+
+    def _pick_universe(self, query: str, universe: str) -> List[str]:
+        if universe != "auto":
+            return UNIVERSE.get(universe, UNIVERSE["mega_cap"])
+
+        q = query.lower()
+        for pattern, cat in [
+            (r"s&?p|large|mega|blue.chip", "mega_cap"),
+            (r"small.cap", "small_cap"), (r"mid.cap", "mid_cap"),
+            (r"tech|software", "semiconductor"),
+            (r"dividend", "dividend_aristocrats"),
+            (r"energy|oil", "commodities"),
+            (r"china|chinese", "china_adr"),
+            (r"biotech|pharma", "glp1_obesity"),
+            (r"crypto", "crypto_adjacent"),
+            (r"defense", "defense_niche"),
+            (r"gold|silver", "precious_metals"),
+        ]:
+            if re.search(pattern, q):
                 return UNIVERSE.get(cat, UNIVERSE["mega_cap"])
-        # Default: combine mega + growth + value
-        return list(set(UNIVERSE["mega_cap"] + UNIVERSE["growth"] + UNIVERSE["value"]))
 
-    def _parse_filters(self, query: str) -> list:
-        filters = []
-        for pattern, fn in FILTER_PATTERNS.items():
-            match = re.search(pattern, query)
-            if match:
-                filters.append(lambda d, m=match, f=fn: f(m, d))
-        if not filters:
-            # Default: show uptrending stocks
-            filters.append(lambda d: d["price"] > d.get("sma_50", 0) if d.get("sma_50") else True)
-        return filters
+        return list(set(UNIVERSE["mega_cap"] + UNIVERSE["growth"] + UNIVERSE["value"] +
+                        UNIVERSE["dividend"]))
 
     def _get_stock_data(self, symbol: str) -> Optional[Dict]:
         try:
@@ -158,18 +271,19 @@ class CortexScanner:
 
             close = df["Close"]
             price = float(close.iloc[-1])
-            high_252 = float(df["High"].tail(252).max()) if len(df) >= 252 else float(df["High"].max())
-            low_252 = float(df["Low"].tail(252).min()) if len(df) >= 252 else float(df["Low"].min())
+            high_252 = float(df["High"].max())
+            low_252 = float(df["Low"].min())
 
-            # Indicators
             sma50 = float(close.rolling(50).mean().iloc[-1]) if len(close) >= 50 else None
             sma200 = float(close.rolling(200).mean().iloc[-1]) if len(close) >= 200 else None
+
             delta = close.diff()
             gain = delta.where(delta > 0, 0).rolling(14).mean()
             loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
             rs = gain / loss.replace(0, np.nan)
-            rsi_series = 100 - (100 / (1 + rs))
-            rsi = float(rsi_series.iloc[-1]) if not pd.isna(rsi_series.iloc[-1]) else 50
+            rsi = float((100 - (100 / (1 + rs))).iloc[-1])
+            if pd.isna(rsi):
+                rsi = 50
 
             ema12 = close.ewm(span=12).mean()
             ema26 = close.ewm(span=26).mean()
@@ -177,7 +291,7 @@ class CortexScanner:
             macd_signal = float((ema12 - ema26).ewm(span=9).mean().iloc[-1])
 
             vol_20 = float(close.pct_change().tail(20).std())
-            vol_avg = float(df["Volume"].rolling(20).mean().iloc[-1]) if "Volume" in df.columns else 0
+            vol_avg = float(df["Volume"].rolling(20).mean().iloc[-1])
             vol_ratio = float(df["Volume"].iloc[-1] / vol_avg) if vol_avg > 0 else 1
 
             return {
@@ -195,25 +309,23 @@ class CortexScanner:
                 "near_52w_high": price >= high_252 * 0.95,
                 "near_52w_low": price <= low_252 * 1.05,
                 "pct_from_high": (price - high_252) / high_252,
-                "pct_from_low": (price - low_252) / low_252,
                 "tradingview": f"https://www.tradingview.com/chart/?symbol={symbol}",
+                "yahoo": f"https://finance.yahoo.com/quote/{symbol}/",
             }
         except Exception:
             return None
 
 
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     query = " ".join(sys.argv[1:]) or "oversold stocks above SMA200"
     scanner = CortexScanner()
-    print(f"\n  Cortex Scan: \"{query}\"\n")
-    results = scanner.scan(query)
+    print(f"\n  Cortex AI Scan: \"{query}\"\n")
+    result = scanner.scan(query)
+    print(f"  Interpretation: {result['interpretation']}")
+    print(f"  Criteria: {result['criteria']}")
+    print(f"  Found: {result['count']} / {result['universe_scanned']} scanned\n")
     print(f"  {'Symbol':>6s} | {'Price':>8s} | {'RSI':>5s} | {'vs SMA50':>8s} | {'vs 52wH':>8s} | {'Vol':>5s}")
     print(f"  {'-'*55}")
-    for r in results:
+    for r in result["results"]:
         sma50_pct = f"{(r['price']/r['sma_50']-1)*100:+.1f}%" if r.get("sma_50") else "N/A"
-        high_pct = f"{r['pct_from_high']*100:+.1f}%"
-        print(f"  {r['symbol']:>6s} | ${r['price']:>7.2f} | {r['rsi_14']:>4.0f} | {sma50_pct:>8s} | {high_pct:>8s} | {r['annual_vol']*100:.0f}%")
-    print(f"\n  {len(results)} stocks found")
+        print(f"  {r['symbol']:>6s} | ${r['price']:>7.2f} | {r['rsi_14']:>4.0f} | {sma50_pct:>8s} | {r['pct_from_high']*100:+.1f}% | {r['annual_vol']*100:.0f}%")

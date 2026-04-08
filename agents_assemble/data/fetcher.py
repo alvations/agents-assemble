@@ -195,10 +195,12 @@ def fetch_multiple_ohlcv(
     results = {}
 
     # Check cache first to avoid unnecessary network calls
+    intraday = interval in ("1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h")
+    cache_ttl = 0.5 if intraday else 12
     uncached = []
     for sym in symbols:
         cache_key = f"ohlcv_{sym}_{start}_{end}_{interval}"
-        cached = _cache_get(cache_key)
+        cached = _cache_get(cache_key, max_age_hours=cache_ttl)
         if cached is not None:
             results[sym] = cached
         else:
@@ -250,7 +252,7 @@ def fetch_fundamentals(symbol: str) -> dict[str, Any]:
     ticker = yf.Ticker(symbol)
     info = ticker.info
 
-    return {
+    result = {
         "symbol": symbol,
         "name": info.get("longName", ""),
         "sector": info.get("sector", ""),
@@ -279,6 +281,10 @@ def fetch_fundamentals(symbol: str) -> dict[str, Any]:
         "shares_outstanding": info.get("sharesOutstanding"),
         "institutional_holders_pct": info.get("heldPercentInstitutions"),
     }
+    # yfinance .info can return NaN or Infinity for numeric fields;
+    # sanitize to None so downstream `is not None` checks work correctly
+    return {k: (None if isinstance(v, float) and not math.isfinite(v) else v)
+            for k, v in result.items()}
 
 
 def fetch_earnings(symbol: str) -> pd.DataFrame:
@@ -630,7 +636,7 @@ def fetch_earnings_calendar(symbol: str) -> dict[str, Any]:
         cal = ticker.earnings_dates
         if cal is not None and not cal.empty:
             result["earnings_dates"] = [
-                {"date": str(idx), **{col: row[col] for col in cal.columns}}
+                {"date": str(idx), **{col: (None if pd.isna(row[col]) else row[col]) for col in cal.columns}}
                 for idx, row in cal.head(8).iterrows()
             ]
     except Exception:
@@ -1211,29 +1217,43 @@ def screen_by_fundamentals(
     max_debt_to_equity: float | None = None,
 ) -> list[dict[str, Any]]:
     """Screen stocks by fundamental criteria."""
+    from concurrent.futures import ThreadPoolExecutor
+
     def _valid(v: Any) -> bool:
         """Check if a fundamental value is present and numeric (not None/NaN)."""
         return v is not None and not (isinstance(v, float) and v != v)
 
+    def _fetch_one(sym: str) -> dict[str, Any] | None:
+        try:
+            return fetch_fundamentals(sym)
+        except Exception:
+            return None
+
+    # Fetch fundamentals in parallel (each is a separate HTTP call)
+    fundamentals: dict[str, dict[str, Any]] = {}
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        for sym, f in zip(symbols, executor.map(_fetch_one, symbols)):
+            if f is not None:
+                fundamentals[sym] = f
+
     results = []
     for sym in symbols:
-        try:
-            f = fetch_fundamentals(sym)
-            if min_market_cap is not None:
-                if not _valid(f["market_cap"]) or f["market_cap"] < min_market_cap:
-                    continue
-            if max_pe is not None:
-                if not _valid(f["pe_ratio"]) or f["pe_ratio"] > max_pe:
-                    continue
-            if min_dividend_yield is not None:
-                if not _valid(f["dividend_yield"]) or f["dividend_yield"] < min_dividend_yield:
-                    continue
-            if max_debt_to_equity is not None:
-                if not _valid(f["debt_to_equity"]) or f["debt_to_equity"] > max_debt_to_equity:
-                    continue
-            results.append(f)
-        except Exception:
-            pass
+        f = fundamentals.get(sym)
+        if f is None:
+            continue
+        if min_market_cap is not None:
+            if not _valid(f["market_cap"]) or f["market_cap"] < min_market_cap:
+                continue
+        if max_pe is not None:
+            if not _valid(f["pe_ratio"]) or f["pe_ratio"] > max_pe:
+                continue
+        if min_dividend_yield is not None:
+            if not _valid(f["dividend_yield"]) or f["dividend_yield"] < min_dividend_yield:
+                continue
+        if max_debt_to_equity is not None:
+            if not _valid(f["debt_to_equity"]) or f["debt_to_equity"] > max_debt_to_equity:
+                continue
+        results.append(f)
     return results
 
 

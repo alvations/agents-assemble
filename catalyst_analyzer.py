@@ -326,7 +326,7 @@ class CatalystAnalyzer:
             if vr.iloc[i] > volume_threshold and abs(ret.iloc[i]) > return_threshold:
                 # Measure from next-day close (tradeable entry), consistent with backtest
                 entry_price = close.iloc[i + 1]
-                if pd.isna(entry_price) or entry_price == 0:
+                if pd.isna(entry_price) or entry_price <= 0:
                     continue
                 post = {}
                 skip = False
@@ -530,7 +530,7 @@ class CatalystAnalyzer:
                 recommended_action="BUY dips before known FDA dates, small position size (binary risk)",
                 confidence="low",
                 expected_return=ind_best.avg_return if ind_best else 0,
-                expected_holding_days=10,
+                expected_holding_days=ind_best.holding_days if ind_best else 10,
             ))
 
         elif self.industry == "tech_hardware":
@@ -556,7 +556,7 @@ class CatalystAnalyzer:
                 recommended_action="BUY dips around delivery number releases",
                 confidence="medium" if ind_best else "low",
                 expected_return=ind_best.avg_return if ind_best else 0,
-                expected_holding_days=5,
+                expected_holding_days=ind_best.holding_days if ind_best else 5,
             ))
 
         elif self.industry == "retail_seasonal":
