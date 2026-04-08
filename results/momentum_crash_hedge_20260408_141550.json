@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.7829618852127216,
+    "cagr": 0.2133930391817751,
+    "annual_volatility": 0.2044842283452582,
+    "sharpe_ratio": 0.8580528822215072,
+    "sortino_ratio": 1.3047983152842766,
+    "calmar_ratio": 1.011004052390344,
+    "max_drawdown": -0.2110704093393535,
+    "max_drawdown_date": "2022-06-30",
+    "win_rate": 0.46143617021276595,
+    "profit_factor": 1.2091583541255495,
+    "num_trading_days": 752,
+    "skewness": 0.25618008906896755,
+    "kurtosis": 2.170272180579898,
+    "best_day": 0.05959058514016968,
+    "worst_day": -0.050510322044165945,
+    "avg_daily_return": 0.0008519128846186026,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.12676846008201093,
+    "beta": 0.7241140726563099,
+    "information_ratio": 0.7565732015158924,
+    "tracking_error": 0.16755610670324286
+  },
+  "trade_metrics": {
+    "num_trades": 1103,
+    "num_buys": 536,
+    "num_sells": 567,
+    "total_commission": 0.0,
+    "total_slippage": 6103.694932004925,
+    "total_transaction_costs": 6103.694932004925,
+    "avg_trade_size": 5533.72160653212
+  },
+  "final_positions": {
+    "TSLA": {
+      "qty": 39.0,
+      "avg_cost": 282.8213330987866,
+      "realized_pnl": -3563.817282828965
+    },
+    "AVGO": {
+      "qty": 70.0,
+      "avg_cost": 178.71398226420084,
+      "realized_pnl": 5430.019556681315
+    },
+    "AAPL": {
+      "qty": 65.0,
+      "avg_cost": 228.29731023670783,
+      "realized_pnl": -686.6579431344987
+    },
+    "META": {
+      "qty": 28.0,
+      "avg_cost": 588.877197265625,
+      "realized_pnl": 9963.18753814698
+    },
+    "CRWD": {
+      "qty": 46.0,
+      "avg_cost": 387.0391421110734,
+      "realized_pnl": 3564.9625244140616
+    },
+    "GOOGL": {
+      "qty": 85.0,
+      "avg_cost": 170.55000523158483,
+      "realized_pnl": 1278.2408850533604
+    },
+    "AMZN": {
+      "qty": 73.0,
+      "avg_cost": 191.1985636331839,
+      "realized_pnl": 6524.88849391627
+    },
+    "CRM": {
+      "qty": 49.0,
+      "avg_cost": 348.9532252720424,
+      "realized_pnl": 935.4528961181682
+    },
+    "PLTR": {
+      "qty": 210.0,
+      "avg_cost": 80.6064309619722,
+      "realized_pnl": 18941.090334892266
+    },
+    "NFLX": {
+      "qty": 180.0,
+      "avg_cost": 73.72413519712784,
+      "realized_pnl": 5733.277261660982
+    }
+  },
+  "source": "research",
+  "description": "Momentum with vol-scaling: reduce exposure when volatility spikes"
+}

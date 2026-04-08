@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.12604203025727023,
+    "cagr": 0.04050430405587835,
+    "annual_volatility": 0.11744796806413074,
+    "sharpe_ratio": 0.06352428796289719,
+    "sortino_ratio": 0.08627811224927985,
+    "calmar_ratio": 0.16533612350309762,
+    "max_drawdown": -0.2449815756997562,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5279255319148937,
+    "profit_factor": 1.06957607520577,
+    "num_trading_days": 752,
+    "skewness": -0.41329069350135317,
+    "kurtosis": 1.548361614896192,
+    "best_day": 0.023047953195540094,
+    "worst_day": -0.033043105132553374,
+    "avg_daily_return": 0.0001852562062196874,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.04612027504388583,
+    "beta": 0.4842493602014128,
+    "information_ratio": -0.3796250908583849,
+    "tracking_error": 0.12148900627090137
+  },
+  "trade_metrics": {
+    "num_trades": 34,
+    "num_buys": 16,
+    "num_sells": 18,
+    "total_commission": 0.0,
+    "total_slippage": 862.7171905937192,
+    "total_transaction_costs": 862.7171905937192,
+    "avg_trade_size": 25374.035017462338
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 175.0,
+      "avg_cost": 428.90471633682847,
+      "realized_pnl": -15145.685810488596
+    }
+  },
+  "source": "research",
+  "description": "Absolute + relative momentum: stocks vs intl vs bonds"
+}

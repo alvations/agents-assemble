@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.10482469355954604,
+    "cagr": 0.03390510947789083,
+    "annual_volatility": 0.13997963791281154,
+    "sharpe_ratio": 0.028332785948152542,
+    "sortino_ratio": 0.04016632011578144,
+    "calmar_ratio": 0.15325945085145357,
+    "max_drawdown": -0.22122687566428312,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5039893617021277,
+    "profit_factor": 1.0544095546837302,
+    "num_trading_days": 752,
+    "skewness": 0.04105744328384284,
+    "kurtosis": 2.3702503109201802,
+    "best_day": 0.04686522988582298,
+    "worst_day": -0.03414410818196223,
+    "avg_daily_return": 0.0001713880100852453,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.05271946962187335,
+    "beta": 0.631312636119645,
+    "information_ratio": -0.49066302105043336,
+    "tracking_error": 0.10744536955120268
+  },
+  "trade_metrics": {
+    "num_trades": 316,
+    "num_buys": 159,
+    "num_sells": 157,
+    "total_commission": 0.0,
+    "total_slippage": 1862.6965954437255,
+    "total_transaction_costs": 1862.6965954437255,
+    "avg_trade_size": 5894.609479252296
+  },
+  "final_positions": {
+    "KHC": {
+      "qty": 568.0,
+      "avg_cost": 31.77377536548004,
+      "realized_pnl": 4074.0038144072414
+    },
+    "JNJ": {
+      "qty": 112.0,
+      "avg_cost": 153.18226187569755,
+      "realized_pnl": 195.82656860351244
+    },
+    "GOOGL": {
+      "qty": 98.0,
+      "avg_cost": 170.5054168701172,
+      "realized_pnl": -1708.2983093261746
+    },
+    "KO": {
+      "qty": 271.0,
+      "avg_cost": 62.225033693208026,
+      "realized_pnl": 898.9258079528804
+    },
+    "OXY": {
+      "qty": 341.0,
+      "avg_cost": 48.87871551513672,
+      "realized_pnl": -2220.4471549987798
+    }
+  },
+  "source": "famous",
+  "description": "Actual BRK holdings: AAPL, AXP, BAC, KO, CVX, GOOGL, CB, $274B"
+}

@@ -1,0 +1,84 @@
+{
+  "metrics": {
+    "total_return": 0.58853215165688,
+    "cagr": 0.16742435023404156,
+    "annual_volatility": 0.18071217588415747,
+    "sharpe_ratio": 0.7316220375181975,
+    "sortino_ratio": 1.064860312274336,
+    "calmar_ratio": 0.6351130869580263,
+    "max_drawdown": -0.2636134472302354,
+    "max_drawdown_date": "2022-12-28",
+    "win_rate": 0.538563829787234,
+    "profit_factor": 1.1753202037397905,
+    "num_trading_days": 752,
+    "skewness": 0.012427327250722485,
+    "kurtosis": 1.5226209456885758,
+    "best_day": 0.055260907758338806,
+    "worst_day": -0.04575200497000986,
+    "avg_daily_return": 0.0006803046656671126,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.08079977113427739,
+    "beta": 0.6917822195308865,
+    "information_ratio": 0.5589015259392619,
+    "tracking_error": 0.1445688862604004
+  },
+  "trade_metrics": {
+    "num_trades": 1339,
+    "num_buys": 630,
+    "num_sells": 709,
+    "total_commission": 0.0,
+    "total_slippage": 7692.295026410102,
+    "total_transaction_costs": 7692.295026410102,
+    "avg_trade_size": 5744.8058449664695
+  },
+  "final_positions": {
+    "META": {
+      "qty": 27.0,
+      "avg_cost": 592.2106811523437,
+      "realized_pnl": 8849.663259887699
+    },
+    "TEVA": {
+      "qty": 1026.0,
+      "avg_cost": 22.224043996710527,
+      "realized_pnl": -3269.9919819831857
+    },
+    "CRWD": {
+      "qty": 46.0,
+      "avg_cost": 362.11429989856225,
+      "realized_pnl": 9221.456808090215
+    },
+    "GOOGL": {
+      "qty": 84.0,
+      "avg_cost": 177.91329452366506,
+      "realized_pnl": 3136.202129697338
+    },
+    "AMZN": {
+      "qty": 72.0,
+      "avg_cost": 203.952481151666,
+      "realized_pnl": 6462.716048315457
+    },
+    "PLTR": {
+      "qty": 208.0,
+      "avg_cost": 52.1524983236574,
+      "realized_pnl": 11758.67952499704
+    },
+    "SE": {
+      "qty": 128.0,
+      "avg_cost": 96.26835402001605,
+      "realized_pnl": 2023.8101490652255
+    },
+    "NTRA": {
+      "qty": 87.0,
+      "avg_cost": 140.01322024992143,
+      "realized_pnl": 11635.480781555172
+    },
+    "SNOW": {
+      "qty": 89.0,
+      "avg_cost": 169.52056301845593,
+      "realized_pnl": -2524.8218536376953
+    }
+  },
+  "source": "famous",
+  "description": "Macro + high-conviction growth: aggressive repositioning, concentrated bets"
+}

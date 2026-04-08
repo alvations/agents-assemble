@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.07127795055185326,
+    "cagr": 0.023296803237823127,
+    "annual_volatility": 0.04774683483515632,
+    "sharpe_ratio": -0.31438734888144354,
+    "sortino_ratio": -0.4220340515670545,
+    "calmar_ratio": 0.31094326231925007,
+    "max_drawdown": -0.07492300384339556,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.5412234042553191,
+    "profit_factor": 1.0858968928771038,
+    "num_trading_days": 752,
+    "skewness": -0.2621004125521825,
+    "kurtosis": 0.9258456857619239,
+    "best_day": 0.01287824979546559,
+    "worst_day": -0.012690894804818775,
+    "avg_daily_return": 9.608239921465586e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.06332777586194105,
+    "beta": 0.1428158325910644,
+    "information_ratio": -0.407288042704977,
+    "tracking_error": 0.1554864597579486
+  },
+  "trade_metrics": {
+    "num_trades": 257,
+    "num_buys": 125,
+    "num_sells": 132,
+    "total_commission": 0.0,
+    "total_slippage": 1672.3814154701238,
+    "total_transaction_costs": 1672.3814154701238,
+    "avg_trade_size": 6507.320682763126
+  },
+  "final_positions": {
+    "SO": {
+      "qty": 103.0,
+      "avg_cost": 84.26606750488281,
+      "realized_pnl": -786.2640762329102
+    },
+    "KO": {
+      "qty": 141.0,
+      "avg_cost": 59.70731986837184,
+      "realized_pnl": -870.9085159301756
+    },
+    "JNJ": {
+      "qty": 58.0,
+      "avg_cost": 159.60073642073007,
+      "realized_pnl": 595.2030639648438
+    },
+    "ABT": {
+      "qty": 76.0,
+      "avg_cost": 114.06002807617188,
+      "realized_pnl": -494.10105895996094
+    },
+    "AAPL": {
+      "qty": 36.0,
+      "avg_cost": 238.28829956054688,
+      "realized_pnl": -683.3412780761719
+    }
+  },
+  "source": "research",
+  "description": "Buy lowest-vol stocks: anomaly where low risk = higher returns"
+}

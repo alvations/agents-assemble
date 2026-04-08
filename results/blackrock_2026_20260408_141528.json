@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.17775136995142726,
+    "cagr": 0.056247936777754415,
+    "annual_volatility": 0.1300614802268487,
+    "sharpe_ratio": 0.18507789490106383,
+    "sortino_ratio": 0.2537780541877162,
+    "calmar_ratio": 0.26692234134300513,
+    "max_drawdown": -0.21072772138422735,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5425531914893617,
+    "profit_factor": 1.0882453252984088,
+    "num_trading_days": 752,
+    "skewness": -0.38282795300614475,
+    "kurtosis": 2.1554254111211013,
+    "best_day": 0.027732368094694593,
+    "worst_day": -0.03515068736706273,
+    "avg_daily_return": 0.00025117170790277667,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03037664232200976,
+    "beta": 0.6563658274708256,
+    "information_ratio": -0.3547943539773168,
+    "tracking_error": 0.08561760349757945
+  },
+  "trade_metrics": {
+    "num_trades": 361,
+    "num_buys": 180,
+    "num_sells": 181,
+    "total_commission": 0.0,
+    "total_slippage": 1521.9875376310351,
+    "total_transaction_costs": 1521.9875376310351,
+    "avg_trade_size": 4216.031960196772
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 162.0,
+      "avg_cost": 88.66277182836123,
+      "realized_pnl": -2794.3308463128087
+    },
+    "EEM": {
+      "qty": 343.0,
+      "avg_cost": 42.429439544677734,
+      "realized_pnl": 194.63498687743868
+    },
+    "GLD": {
+      "qty": 59.0,
+      "avg_cost": 243.44000244140625,
+      "realized_pnl": 2680.019790649414
+    },
+    "INDA": {
+      "qty": 263.0,
+      "avg_cost": 56.874955006878636,
+      "realized_pnl": 1159.185749053955
+    },
+    "EWZ": {
+      "qty": 626.0,
+      "avg_cost": 26.55387645521121,
+      "realized_pnl": 5793.138676877135
+    },
+    "GOOGL": {
+      "qty": 84.0,
+      "avg_cost": 159.98297591436477,
+      "realized_pnl": 1385.3143463134766
+    },
+    "MSFT": {
+      "qty": 34.0,
+      "avg_cost": 414.99280402899615,
+      "realized_pnl": 605.3645136216103
+    }
+  },
+  "source": "famous",
+  "description": "Institutional consensus: AI leaders + cash-flow assets + EM"
+}

@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.2679666804405916,
+    "cagr": 0.08264807196743318,
+    "annual_volatility": 0.15368957789836069,
+    "sharpe_ratio": 0.3393513523205253,
+    "sortino_ratio": 0.47964266105561243,
+    "calmar_ratio": 0.37620287603956076,
+    "max_drawdown": -0.21969016515105555,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5345744680851063,
+    "profit_factor": 1.102618426495932,
+    "num_trading_days": 752,
+    "skewness": -0.18545827943426502,
+    "kurtosis": 2.007775557337664,
+    "best_day": 0.04424887989306758,
+    "worst_day": -0.04999754273658663,
+    "avg_daily_return": 0.00036261322032054617,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0039765071323309975,
+    "beta": 0.5192158783513301,
+    "information_ratio": -0.026543983510793432,
+    "tracking_error": 0.14980822794416115
+  },
+  "trade_metrics": {
+    "num_trades": 334,
+    "num_buys": 174,
+    "num_sells": 160,
+    "total_commission": 0.0,
+    "total_slippage": 1781.5728526155947,
+    "total_transaction_costs": 1781.5728526155947,
+    "avg_trade_size": 5334.050456932919
+  },
+  "final_positions": {
+    "CKHUY": {
+      "qty": 2825.0,
+      "avg_cost": 5.0499871864994015,
+      "realized_pnl": -483.6337747573827
+    },
+    "EWJ": {
+      "qty": 213.0,
+      "avg_cost": 63.49639953470006,
+      "realized_pnl": 1173.1072845458984
+    },
+    "ITOCY": {
+      "qty": 1432.0,
+      "avg_cost": 9.81657274874895,
+      "realized_pnl": 3262.9228467941293
+    },
+    "DXJ": {
+      "qty": 134.0,
+      "avg_cost": 101.14915035294749,
+      "realized_pnl": 3572.9445785388602
+    },
+    "SSUMY": {
+      "qty": 664.0,
+      "avg_cost": 23.428892497556756,
+      "realized_pnl": 5482.55798435211
+    },
+    "MITSY": {
+      "qty": 33.0,
+      "avg_cost": 426.45198779085496,
+      "realized_pnl": 5094.132302420479
+    },
+    "TM": {
+      "qty": 82.0,
+      "avg_cost": 196.90218535188245,
+      "realized_pnl": -362.7327762432948
+    },
+    "MARUY": {
+      "qty": 95.0,
+      "avg_cost": 160.0351716694079,
+      "realized_pnl": 4653.067909240721
+    }
+  },
+  "source": "famous",
+  "description": "Buffett's Japan bet: trading companies + Asian conglomerate value"
+}

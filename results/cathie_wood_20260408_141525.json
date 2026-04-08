@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": 0.46342271893362397,
+    "cagr": 0.13582797568568994,
+    "annual_volatility": 0.18096204677580155,
+    "sharpe_ratio": 0.5783766817985745,
+    "sortino_ratio": 0.9048120570512074,
+    "calmar_ratio": 0.6574153588783964,
+    "max_drawdown": -0.2066090696716052,
+    "max_drawdown_date": "2023-08-17",
+    "win_rate": 0.35106382978723405,
+    "profit_factor": 1.200946833029526,
+    "num_trading_days": 752,
+    "skewness": 0.7881598054904343,
+    "kurtosis": 6.80464272562215,
+    "best_day": 0.0699149953649727,
+    "worst_day": -0.04783577984219167,
+    "avg_daily_return": 0.0005709841014645426,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.04920339658592576,
+    "beta": 0.3967423993864469,
+    "information_ratio": 0.2489048201897233,
+    "tracking_error": 0.19767956501774994
+  },
+  "trade_metrics": {
+    "num_trades": 423,
+    "num_buys": 234,
+    "num_sells": 189,
+    "total_commission": 0.0,
+    "total_slippage": 4001.8486347503667,
+    "total_transaction_costs": 4001.8486347503667,
+    "avg_trade_size": 9460.635070331835
+  },
+  "final_positions": {
+    "DDOG": {
+      "qty": 154.0,
+      "avg_cost": 155.36435788637635,
+      "realized_pnl": 5131.760818481445
+    },
+    "SHOP": {
+      "qty": 209.0,
+      "avg_cost": 109.21325362356086,
+      "realized_pnl": 7410.180061340332
+    },
+    "HOOD": {
+      "qty": 581.0,
+      "avg_cost": 37.5,
+      "realized_pnl": 15825.32834815979
+    },
+    "COIN": {
+      "qty": 87.0,
+      "avg_cost": 267.7158560917295,
+      "realized_pnl": 16853.832309722904
+    },
+    "ARKK": {
+      "qty": 386.0,
+      "avg_cost": 57.61000061035156,
+      "realized_pnl": 1682.4738540649396
+    },
+    "ROKU": {
+      "qty": 297.0,
+      "avg_cost": 74.88999938964844,
+      "realized_pnl": 2552.0126647949273
+    }
+  },
+  "source": "famous",
+  "description": "Disruptive innovation: AI + genomics + robotics + crypto, 5-year horizon"
+}

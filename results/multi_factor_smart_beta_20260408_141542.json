@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.421018722030541,
+    "cagr": 0.12471187148175233,
+    "annual_volatility": 0.12843248537320262,
+    "sharpe_ratio": 0.6757626629438669,
+    "sortino_ratio": 0.969562782770064,
+    "calmar_ratio": 0.7878480993859193,
+    "max_drawdown": -0.15829431025975416,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5492021276595744,
+    "profit_factor": 1.181433881931548,
+    "num_trading_days": 752,
+    "skewness": -0.11077492671417094,
+    "kurtosis": 1.9110546891242906,
+    "best_day": 0.03907868800539016,
+    "worst_day": -0.03426263832791421,
+    "avg_daily_return": 0.0005000541418559241,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.03808729238198816,
+    "beta": 0.6268872479552637,
+    "information_ratio": 0.40795433107952694,
+    "tracking_error": 0.0933616571276538
+  },
+  "trade_metrics": {
+    "num_trades": 552,
+    "num_buys": 254,
+    "num_sells": 298,
+    "total_commission": 0.0,
+    "total_slippage": 3133.0531275253297,
+    "total_transaction_costs": 3133.0531275253297,
+    "avg_trade_size": 5675.820883198061
+  },
+  "final_positions": {
+    "META": {
+      "qty": 19.0,
+      "avg_cost": 589.9850463867188,
+      "realized_pnl": 3897.9157943725586
+    },
+    "MA": {
+      "qty": 21.0,
+      "avg_cost": 458.46923828125,
+      "realized_pnl": -401.98660278320256
+    },
+    "JNJ": {
+      "qty": 74.0,
+      "avg_cost": 153.05758419552365,
+      "realized_pnl": -70.05615234374932
+    },
+    "CVX": {
+      "qty": 72.0,
+      "avg_cost": 143.408447265625,
+      "realized_pnl": 1569.411361694337
+    },
+    "PG": {
+      "qty": 64.0,
+      "avg_cost": 173.84024047851562,
+      "realized_pnl": 227.13355255127013
+    },
+    "MSFT": {
+      "qty": 26.0,
+      "avg_cost": 426.8498229980469,
+      "realized_pnl": -428.83146667480514
+    },
+    "HD": {
+      "qty": 27.0,
+      "avg_cost": 413.8077087402344,
+      "realized_pnl": 1290.016021728516
+    },
+    "V": {
+      "qty": 35.0,
+      "avg_cost": 275.4826965332031,
+      "realized_pnl": 1957.7321777343748
+    },
+    "MRK": {
+      "qty": 116.0,
+      "avg_cost": 95.48741912841797,
+      "realized_pnl": 4216.116981506347
+    },
+    "UNH": {
+      "qty": 19.0,
+      "avg_cost": 587.061279296875,
+      "realized_pnl": -400.3759460449219
+    },
+    "COST": {
+      "qty": 11.0,
+      "avg_cost": 871.65869140625,
+      "realized_pnl": 3037.2827758789062
+    },
+    "AMZN": {
+      "qty": 53.0,
+      "avg_cost": 176.25,
+      "realized_pnl": 1192.1015701293945
+    }
+  },
+  "source": "research",
+  "description": "Value + momentum + quality composite factor ranking"
+}
