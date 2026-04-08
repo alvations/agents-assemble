@@ -91,6 +91,12 @@ GP: Price Graph. The most basic chart command; anchors use it to show the "key e
 
 
 
+## AI-Powered Features
+
+- **Cortex AI Custom Scans:** Users can write custom indicators or screeners using natural language prompts without needing to know "mnemonics" or coding. Example: "Find me all S&P 500 stocks with RSI below 30 and price above SMA200 that have beaten earnings 3 quarters in a row" → instant results.
+
+- **Options Profit/Loss Visualizer:** A beginner-friendly tool that simulates potential returns and risks for options trades before they are placed. Shows payoff diagrams, break-even points, max profit/loss, probability of profit, and Greeks — all with simple slider inputs (strike, expiry, direction). Then one-click to execute via Public.com API.
+
 ## Easter eggs
 
 -  Often called "Wall Street's Yelp," it provides reviews for high-end restaurants.
