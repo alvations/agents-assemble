@@ -86,9 +86,8 @@ class DualMomentum(BasePersona):
             winner, winner_mom = "EFA", efa_mom
 
         # Absolute momentum: is winner > 0 (above its SMA200)?
-        loser = "EFA" if winner == "SPY" else "SPY"
         if winner_mom > 0:
-            weights = {winner: 0.90, loser: 0.0}
+            weights = {winner: 0.90}
         else:
             # Both negative → safe haven
             weights = {}
@@ -308,7 +307,7 @@ class MomentumCrashHedge(BasePersona):
         # Measure market volatility regime
         spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
         if _is_missing(spy_vol):
-            vol_scale = 1.0
+            vol_scale = 0.75  # Unknown risk → assume elevated (not full exposure)
         else:
             annualized_vol = spy_vol * _SQRT_252
             if annualized_vol > 0.40:      # >40% = crisis
