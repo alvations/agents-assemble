@@ -54,7 +54,7 @@ Return ONLY a JSON with: {{"name": "signal_name", "buy_condition": "python expre
 Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (macd signal line), bb_upper/bb_lower, vol_ratio (volume/20d avg), ret (daily return)."""
 
             result = client.ask(prompt)
-            match = re.search(r'\{[\s\S]*\}', result.text)
+            match = re.search(r'\{[\s\S]*?\}', result.text)
             if match:
                 parsed = json.loads(match.group())
                 return {"name": parsed.get("name", "custom"), "desc": description,
@@ -64,17 +64,20 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
         return None
 
     def _match_builtin(self, description: str) -> dict | None:
-        d = description.lower()
+        words = set(re.findall(r'[a-z0-9]+', description.lower()))
         best, best_count = None, 0
         for name, sig in self.BUILTIN_SIGNALS.items():
-            keywords = name.replace("_", " ").split()
-            if all(k in d for k in keywords) and len(keywords) > best_count:
+            keywords = name.split("_")
+            if all(k in words for k in keywords) and len(keywords) > best_count:
                 best = {"name": name, "desc": sig["desc"], "builtin": name}
                 best_count = len(keywords)
         return best
 
     def _backtest_signal(self, signal: dict, symbol: str, start: str) -> dict:
-        df = fetch_ohlcv(symbol, start=start)
+        try:
+            df = fetch_ohlcv(symbol, start=start)
+        except Exception as e:
+            return {"error": f"Failed to fetch data for {symbol}: {e}"}
         if df.index.tz is not None: df.index = df.index.tz_localize(None)
         if len(df) < 200: return {"error": "Insufficient data (need 200+ rows for SMA200)"}
 
@@ -97,13 +100,22 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
 
         trades = []
         position = None
+        errors = 0
 
         if "builtin" in signal:
             buy_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["buy"]
             sell_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["sell"]
         elif "buy_expr" in signal:
-            buy_fn = lambda d, i, expr=signal["buy_expr"]: eval(expr, {"__builtins__": {}}, {k: float(d[k].iloc[i]) for k in d.columns})
-            sell_fn = lambda d, i, expr=signal["sell_expr"]: eval(expr, {"__builtins__": {}}, {k: float(d[k].iloc[i]) for k in d.columns})
+            buy_expr, sell_expr = signal["buy_expr"].strip(), signal["sell_expr"].strip()
+            if not buy_expr or not sell_expr:
+                return {"error": "Empty buy or sell expression", "signal": signal.get("name", "custom")}
+            _UNSAFE = re.compile(r'__|import|exec|eval|compile|open|getattr|setattr|delattr|globals|locals|\bos\b|\bsys\b')
+            for expr_name, expr in [("buy", buy_expr), ("sell", sell_expr)]:
+                if _UNSAFE.search(expr):
+                    return {"error": f"Unsafe pattern in {expr_name} expression", "signal": signal.get("name", "custom")}
+            _safe_globals = {"__builtins__": {}, "abs": abs, "min": min, "max": max, "round": round}
+            buy_fn = lambda d, i, expr=buy_expr: eval(expr, _safe_globals, {k: float(d[k].iloc[i]) for k in d.columns})
+            sell_fn = lambda d, i, expr=sell_expr: eval(expr, _safe_globals, {k: float(d[k].iloc[i]) for k in d.columns})
         else:
             return {"error": "No signal logic"}
 
@@ -114,10 +126,14 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
                 elif position is not None and sell_fn(data, i):
                     trades.append(float(c.iloc[i]) / position - 1)
                     position = None
-            except Exception: pass
+            except Exception:
+                errors += 1
 
         if position is not None: trades.append(float(c.iloc[-1]) / position - 1)
-        if not trades: return {"signal": signal["name"], "trades": 0, "note": "No signals triggered"}
+        if not trades:
+            result = {"signal": signal["name"], "trades": 0, "note": "No signals triggered"}
+            if errors: result["eval_errors"] = errors
+            return result
 
         winners = [t for t in trades if t > 0]
         losers = [t for t in trades if t < 0]
@@ -128,7 +144,8 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             "avg_return": float(np.mean(trades)),
             "total_return": float(np.prod([1+t for t in trades]) - 1),
             "best": float(max(trades)), "worst": float(min(trades)),
-            "profit_factor": abs(sum(winners)/sum(losers)) if losers else float("inf"),
+            "profit_factor": abs(sum(winners)/sum(losers)) if losers else None,
+            **({"eval_errors": errors} if errors else {}),
         }
 
     def list_signals(self) -> list[dict]:

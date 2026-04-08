@@ -296,6 +296,12 @@ function esc(s) {
     d.appendChild(document.createTextNode(s));
     return d.innerHTML;
 }
+function fetchJSON(url, opts) {
+    return fetch(url, opts).then(r => r.json().then(d => {
+        if (!r.ok) throw new Error(d.error || 'Server error ' + r.status);
+        return d;
+    }, () => { throw new Error('Server error ' + r.status); }));
+}
 function showSection(name, el) {
     document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
     document.getElementById('section-' + name).style.display = 'block';
@@ -344,7 +350,7 @@ function loadLeaderboard() {
     const horizon = document.getElementById('horizon-select').value;
     document.getElementById('leaderboard-status').textContent = 'Loading ' + horizon + '...';
     document.getElementById('leaderboard-table').innerHTML = '<p class="loading">Loading strategies for ' + horizon + '...</p>';
-    fetch('/api/leaderboard?horizon=' + horizon).then(r => r.json()).then(data => {
+    fetchJSON('/api/leaderboard?horizon=' + horizon).then(data => {
         leaderboardData = data;
         document.getElementById('leaderboard-status').textContent = data.length + ' strategies loaded';
         renderLeaderboard();
@@ -357,7 +363,7 @@ function loadLeaderboard() {
 loadLeaderboard();
 
 // Market overview
-fetch('/api/market').then(r => r.json()).then(data => {
+fetchJSON('/api/market').then(data => {
     let html = '<table><tr><th>Index</th><th>Price</th><th>Change</th></tr>';
     Object.entries(data).forEach(([sym, info]) => {
         const cls = info.change >= 0 ? 'positive' : 'negative';
@@ -373,7 +379,7 @@ fetch('/api/market').then(r => r.json()).then(data => {
 function scanTicker() {
     const sym = document.getElementById('scan-ticker').value.toUpperCase();
     document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + sym + '...</p>';
-    fetch('/api/scan/' + encodeURIComponent(sym)).then(r => r.json()).then(data => {
+    fetchJSON('/api/scan/' + encodeURIComponent(sym)).then(data => {
         let html = '<h3>' + sym + ' — ' + esc(data.industry || '') + '</h3>';
         if (data.best) {
             html += '<p><span class="tag tag-green">' + esc(data.best.strategy || '') + '</span> '
@@ -392,7 +398,7 @@ function scanTicker() {
 function runCatalyst() {
     const sym = document.getElementById('catalyst-ticker').value.toUpperCase();
     document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + sym + '... (this takes ~30s)</p>';
-    fetch('/api/catalyst/' + encodeURIComponent(sym)).then(r => r.json()).then(data => {
+    fetchJSON('/api/catalyst/' + encodeURIComponent(sym)).then(data => {
         let html = '<h3>' + sym + ' — ' + esc(data.industry || 'general') + '</h3>';
         // Patterns
         if (data.historical_patterns && data.historical_patterns.total_events) {
@@ -444,7 +450,7 @@ function loadChart() {
     const sym = document.getElementById('chart-ticker').value.toUpperCase();
     const start = document.getElementById('chart-start').value;
     document.getElementById('chart-container').innerHTML = '<p class="loading">Generating chart for ' + sym + '...</p>';
-    fetch('/api/chart/' + encodeURIComponent(sym) + '?start=' + encodeURIComponent(start)).then(r => r.json()).then(data => {
+    fetchJSON('/api/chart/' + encodeURIComponent(sym) + '?start=' + encodeURIComponent(start)).then(data => {
         if (data.image) {
             document.getElementById('chart-container').innerHTML = '<img class="chart-img" src="data:image/png;base64,' + data.image + '">';
         }
@@ -457,7 +463,7 @@ function generateTradePlan() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading">Generating trade plan for ' + strat + '...</p>';
-    fetch('/api/trade-plan/' + strat + '?amount=' + amt).then(r => r.json()).then(data => {
+    fetchJSON('/api/trade-plan/' + strat + '?amount=' + amt).then(data => {
         let html = '<h3>Trade Plan: ' + esc(data.strategy || '') + ' (DRY RUN)</h3>';
         const planAmt = data.amount || 100000;
         html += '<p style="color:#888;font-size:11px">Portfolio: $' + planAmt.toLocaleString() + ' | Slippage: 10bps | Positions: ' + (data.orders||[]).length + '</p>';
@@ -498,8 +504,8 @@ function executeTrades() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading" style="color:#ff4444">⚡ EXECUTING live trades for ' + strat + '...</p>';
-    fetch('/api/execute-trade/' + strat, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(r => r.json()).then(data => {
-        let html = '<h3 style="color:#ff4444">⚡ EXECUTION RESULT: ' + strat + '</h3>';
+    fetchJSON('/api/execute-trade/' + strat, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(data => {
+        let html = '<h3 style="color:#ff4444">⚡ EXECUTION RESULT: ' + esc(strat) + '</h3>';
         if (data.error) {
             html += '<p class="negative">' + esc(data.error) + '</p>';
         } else if (data.placed && data.placed.length > 0) {
@@ -677,7 +683,7 @@ function analyzeStockPick() {
     if (!syms) { document.getElementById('pick-results').innerHTML = '<p class="negative">Enter at least one ticker.</p>'; return; }
     document.getElementById('pick-results').innerHTML = '<p class="loading">Analyzing your picks... matching strategies, running backtests, asking Claude — ~30s</p>';
     fetch('/api/stock-pick?symbols=' + encodeURIComponent(syms) + '&amount=' + amt + '&horizon=' + horizon + '&top_n=5')
-    .then(r => r.json()).then(data => {
+    .then(r => { if (!r.ok) return r.json().catch(() => ({error:'Server error ' + r.status})).then(d => { throw new Error(d.error || 'Server error ' + r.status); }); return r.json(); }).then(data => {
         if (data.error) { document.getElementById('pick-results').innerHTML = '<p class="negative">' + esc(data.error) + '</p>'; return; }
         pickData = data;
         pickRecs = shuffleArray(data.recommendations || []);
@@ -692,7 +698,7 @@ function analyzeStockPick() {
 // Load all strategies list
 function loadStrategies() {
     document.getElementById('all-strategies').innerHTML = '<p class="loading">Loading...</p>';
-    fetch('/api/strategies').then(r => r.json()).then(data => {
+    fetchJSON('/api/strategies').then(data => {
         let html = '<table><tr><th>Strategy</th><th>Category</th><th>Universe Size</th><th>Rebalance</th><th>Risk</th></tr>';
         const filter = document.getElementById('cat-filter').value;
         data.forEach(s => {
@@ -769,6 +775,7 @@ def api_leaderboard():
         for r in results:
             seen[r["name"]] = r
         results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)[:30]
+        results = _sanitize_for_json(results)
         _leaderboard_cache[horizon] = (time.monotonic(), results)
         return jsonify(results)
 
@@ -800,9 +807,14 @@ def api_leaderboard():
     _leaderboard_cache[horizon] = (time.monotonic(), results)
     return jsonify(results)
 
+_strategies_cache = {}  # {"data": [...], "ts": monotonic_time}
+_CACHE_TTL_STRATEGIES = 600  # 10 min — strategy metadata doesn't change at runtime
+
 @app.route("/api/strategies")
 def api_strategies():
     """List all strategies with metadata — no backtesting, instant response."""
+    if _strategies_cache and time.monotonic() - _strategies_cache.get("ts", 0) < _CACHE_TTL_STRATEGIES:
+        return jsonify(_strategies_cache["data"])
     from run_multi_horizon import _get_all_strategies
     results = []
     for s in _get_all_strategies():
@@ -820,6 +832,8 @@ def api_strategies():
         except Exception:
             results.append({"name": s["key"], "source": s["source"],
                             "universe_size": 0, "rebalance": "?", "risk": "?"})
+    _strategies_cache["data"] = results
+    _strategies_cache["ts"] = time.monotonic()
     return jsonify(results)
 
 _market_cache = {}  # {"data": {...}, "ts": monotonic_time}
@@ -1015,7 +1029,7 @@ def api_trade_plan(strategy):
             remaining -= qty * prices[sym]
             orders.append({"side": "BUY", "symbol": sym, "quantity": qty, "price": prices[sym]})
 
-    return jsonify({"strategy": strategy, "orders": orders, "amount": amount})
+    return jsonify(_sanitize_for_json({"strategy": strategy, "orders": orders, "amount": amount}))
 
 
 @app.route("/api/stock-pick")
@@ -1027,7 +1041,7 @@ def api_stock_pick():
         return jsonify({"error": "No symbols provided. Enter tickers separated by commas."}), 400
     # Validate each symbol
     for s in symbols:
-        if not re.match(r'^[A-Z0-9.\-^=]{1,15}$', s):
+        if not _SYMBOL_RE.match(s):
             return jsonify({"error": f"Invalid ticker: {s}"}), 400
     if len(symbols) > 20:
         return jsonify({"error": "Maximum 20 tickers at once"}), 400
@@ -1035,9 +1049,9 @@ def api_stock_pick():
     try:
         amount = float(request.args.get("amount", 100000))
     except (ValueError, TypeError):
-        amount = 100000
+        return jsonify({"error": "Invalid amount parameter"}), 400
     if amount <= 0 or not math.isfinite(amount):
-        amount = 100000
+        return jsonify({"error": "Amount must be a positive number"}), 400
 
     horizon = request.args.get("horizon", "3y")
     if horizon not in ("1y", "3y", "5y"):
@@ -1076,9 +1090,11 @@ def api_execute_trade(strategy):
     if not os.environ.get("PUBLIC_API_SECRET"):
         return jsonify({"error": "PUBLIC_API_SECRET not set. Go to public.com/settings/security/api to get your key, then: export PUBLIC_API_SECRET=your_key"}), 403
 
-    body = request.get_json(silent=True) or {}
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return jsonify({"error": "Request body must be JSON"}), 400
     try:
-        amount = float(body.get("amount", request.args.get("amount", 100000)))
+        amount = float(body.get("amount", 100000))
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid amount parameter"}), 400
     if amount <= 0 or not math.isfinite(amount):

@@ -216,11 +216,14 @@ Return ONLY a JSON object (no other text) with these fields:
             if key == "above_sma200" and val:
                 if data.get("sma_200") is None or data["price"] <= data["sma_200"]:
                     return False
-            if key == "above_sma200" and not val:
-                if data.get("sma_200") is not None and data["price"] > data["sma_200"]:
+            if key == "above_sma200" and val is False:
+                if data.get("sma_200") is None or data["price"] >= data["sma_200"]:
                     return False
             if key == "above_sma50" and val:
                 if data.get("sma_50") is None or data["price"] <= data["sma_50"]:
+                    return False
+            if key == "above_sma50" and val is False:
+                if data.get("sma_50") is None or data["price"] >= data["sma_50"]:
                     return False
             if key == "golden_cross" and val:
                 if data.get("sma_50") is None or data.get("sma_200") is None or data["sma_50"] <= data["sma_200"]:
@@ -275,6 +278,8 @@ Return ONLY a JSON object (no other text) with these fields:
 
             close = df["Close"]
             price = float(close.iloc[-1])
+            if price <= 0 or pd.isna(price):
+                return None
             df_52w = df.iloc[-252:]
             high_252 = df_52w["High"].max()
             low_252 = df_52w["Low"].min()
@@ -300,8 +305,10 @@ Return ONLY a JSON object (no other text) with these fields:
 
             ema12 = close.ewm(span=12).mean()
             ema26 = close.ewm(span=26).mean()
-            macd = float((ema12 - ema26).iloc[-1])
-            macd_signal = float((ema12 - ema26).ewm(span=9).mean().iloc[-1])
+            macd_raw = (ema12 - ema26).iloc[-1]
+            macd_signal_raw = (ema12 - ema26).ewm(span=9).mean().iloc[-1]
+            macd = 0.0 if pd.isna(macd_raw) else float(macd_raw)
+            macd_signal = 0.0 if pd.isna(macd_signal_raw) else float(macd_signal_raw)
 
             vol_20 = close.pct_change().tail(20).std()
             if pd.isna(vol_20):
