@@ -59,7 +59,13 @@ def _sanitize_for_json(obj):
     if isinstance(obj, float) and not math.isfinite(obj):
         return None
     if hasattr(obj, 'item'):
-        val = obj.item()
+        try:
+            val = obj.item()
+        except (ValueError, TypeError):
+            # Multi-element numpy array — convert to list and recurse
+            if hasattr(obj, 'tolist'):
+                return _sanitize_for_json(obj.tolist())
+            return None
         if isinstance(val, float) and not math.isfinite(val):
             return None
         return val
@@ -69,7 +75,10 @@ def _safe_metric(val, ndigits=4):
     if isinstance(val, bool):
         return 0
     if hasattr(val, 'item'):
-        val = val.item()
+        try:
+            val = val.item()
+        except (ValueError, TypeError):
+            return 0
     if not isinstance(val, (int, float)) or not math.isfinite(val):
         return 0
     return round(val, ndigits)
@@ -813,8 +822,7 @@ def api_leaderboard():
         seen[r["name"]] = r
     results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)
     results = _sanitize_for_json(results[:30])
-    if results:
-        _leaderboard_cache[horizon] = (time.monotonic(), results)
+    _leaderboard_cache[horizon] = (time.monotonic(), results)
     return jsonify(results)
 
 _strategies_cache = {}  # {"data": [...], "ts": monotonic_time}
@@ -869,11 +877,9 @@ def api_market():
         except Exception:
             pass
     if data:
-        merged = _market_cache.get("data", {}).copy()
-        merged.update(data)
-        _market_cache["data"] = merged
+        _market_cache["data"] = data
         _market_cache["ts"] = time.monotonic()
-        return jsonify(merged)
+        return jsonify(data)
     elif _market_cache.get("data"):
         return jsonify(_market_cache["data"])
     return jsonify(data)
@@ -909,7 +915,7 @@ def api_scan(symbol):
                      if isinstance(v.total_return, (int, float)) and math.isfinite(v.total_return)}
         if valid_bts:
             best_key = max(valid_bts, key=lambda k: valid_bts[k].total_return)
-            best_dict = bts[best_key].to_dict()
+            best_dict = valid_bts[best_key].to_dict()
             best_dict.setdefault("strategy", best_key)
             best_entry = best_dict
     except Exception:

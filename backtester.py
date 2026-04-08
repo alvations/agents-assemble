@@ -466,6 +466,9 @@ class Backtester:
 
         if self._external_data:
             all_data = dict(self._external_data)  # Shallow copy — don't mutate caller's dict
+            for sym, df in all_data.items():
+                if "Close" not in df.columns:
+                    raise ValueError(f"External data for {sym!r} missing required 'Close' column")
         else:
             # Pre-load 1 year before start for indicator warmup
             warmup_start = (pd.Timestamp(self.start) - pd.DateOffset(days=365)).strftime("%Y-%m-%d")
@@ -557,7 +560,8 @@ class Backtester:
         for sym, df in all_data.items():
             enriched = df.copy()
             close = enriched["Close"]
-            enriched["sma_20"] = close.rolling(20).mean()
+            sma_20 = close.rolling(20).mean()
+            enriched["sma_20"] = sma_20
             enriched["sma_50"] = close.rolling(50).mean()
             enriched["sma_200"] = close.rolling(200).mean()
             enriched["ema_12"] = close.ewm(span=12).mean()
@@ -565,7 +569,7 @@ class Backtester:
             enriched["macd"] = enriched["ema_12"] - enriched["ema_26"]
             enriched["macd_signal"] = enriched["macd"].ewm(span=9).mean()
             enriched["rsi_14"] = _compute_rsi(close, 14)
-            enriched["bb_upper"], enriched["bb_lower"] = _compute_bollinger(close, 20, 2)
+            enriched["bb_upper"], enriched["bb_lower"] = _compute_bollinger(close, 20, 2, sma=sma_20)
             if "High" in enriched.columns and "Low" in enriched.columns:
                 enriched["atr_14"] = _compute_atr(enriched, 14)
             enriched["daily_return"] = close.pct_change()
@@ -627,7 +631,7 @@ class Backtester:
 
         bench_returns = None
         if bench_data is not None and not bench_data.empty:
-            bench_close = bench_data["Close"]
+            bench_close = bench_data["Close"].dropna()
             if bench_close.index.has_duplicates:
                 bench_close = bench_close[~bench_close.index.duplicated(keep='last')]
             bench_returns = bench_close.pct_change().dropna()
@@ -757,8 +761,10 @@ def _compute_rsi(prices: pd.Series, period: int = 14) -> pd.Series:
 
 
 def _compute_bollinger(prices: pd.Series, period: int = 20,
-                       num_std: float = 2) -> tuple[pd.Series, pd.Series]:
-    sma = prices.rolling(period).mean()
+                       num_std: float = 2, *,
+                       sma: pd.Series | None = None) -> tuple[pd.Series, pd.Series]:
+    if sma is None:
+        sma = prices.rolling(period).mean()
     std = prices.rolling(period).std()
     return sma + num_std * std, sma - num_std * std
 
@@ -810,7 +816,7 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
         f"  Calmar Ratio:       {_fmt_ratio(m.get('calmar_ratio', 0))}",
         f"  Max Drawdown:       {_fmt_pct(m.get('max_drawdown', 0))}",
         f"  Max DD Date:        {m.get('max_drawdown_date') or '       N/A':>10s}",
-        f"  Trading Days:       {m.get('num_trading_days', 0):>10d}",
+        f"  Trading Days:       {int(m.get('num_trading_days', 0)):>10d}",
         f"  Win Rate:           {_fmt_pct(m.get('win_rate', 0))}",
         f"  Profit Factor:      {_fmt_ratio(m.get('profit_factor', 0))}",
         "",

@@ -58,11 +58,14 @@ Return ONLY a JSON with: {{"name": "signal_name", "buy_condition": "python expre
 Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (macd signal line), bb_upper/bb_lower, vol_ratio (volume/20d avg), ret (daily return)."""
 
             result = client.ask(prompt)
-            match = re.search(r'\{[\s\S]*\}', result.text)
-            if match:
-                parsed = json.loads(match.group().strip())
-                return {"name": parsed.get("name", "custom"), "desc": description,
-                        "buy_expr": parsed.get("buy_condition", ""), "sell_expr": parsed.get("sell_condition", "")}
+            for m in re.finditer(r'\{[^{}]*\}', result.text):
+                try:
+                    parsed = json.loads(m.group())
+                except json.JSONDecodeError:
+                    continue
+                if "buy_condition" in parsed and "sell_condition" in parsed:
+                    return {"name": parsed.get("name", "custom"), "desc": description,
+                            "buy_expr": parsed.get("buy_condition", ""), "sell_expr": parsed.get("sell_condition", "")}
         except Exception:
             pass
         return None
@@ -107,6 +110,7 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
         trades = []
         position = None
         errors = 0
+        first_error = None
 
         if "builtin" in signal:
             buy_fn = self.BUILTIN_SIGNALS[signal["builtin"]]["buy"]
@@ -120,15 +124,20 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
                     return {"error": f"Unsafe pattern in {expr_name} expression", "signal": signal.get("name", "custom")}
             sg = self._SAFE_GLOBALS
             vals = {k: data[k].values for k in data.columns}
-            buy_fn = lambda d, i, expr=buy_expr, v=vals: eval(expr, sg, {k: float(v[k][i]) for k in v})
-            sell_fn = lambda d, i, expr=sell_expr, v=vals: eval(expr, sg, {k: float(v[k][i]) for k in v})
+            try:
+                buy_code = compile(buy_expr, "<buy_signal>", "eval")
+                sell_code = compile(sell_expr, "<sell_signal>", "eval")
+            except SyntaxError as e:
+                return {"error": f"Invalid expression syntax: {e}", "signal": signal.get("name", "custom")}
+            buy_fn = lambda d, i, code=buy_code, v=vals: eval(code, sg, {k: float(v[k][i]) for k in v})
+            sell_fn = lambda d, i, code=sell_code, v=vals: eval(code, sg, {k: float(v[k][i]) for k in v})
         else:
             return {"error": "No signal logic"}
 
         close_arr = c.values
         for i in range(200, len(data)):
             price = float(close_arr[i])
-            if price != price:  # NaN guard
+            if price != price or price <= 0:  # NaN and zero/negative guard
                 continue
             try:
                 if position is None and buy_fn(data, i):
@@ -136,17 +145,23 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
                 elif position is not None and sell_fn(data, i):
                     trades.append(price / position - 1)
                     position = None
-            except Exception:
+            except Exception as e:
                 errors += 1
+                if first_error is None:
+                    first_error = str(e)
+                if errors > 50:
+                    break
 
-        if position is not None:
+        if position is not None and position > 0:
             last = float(close_arr[-1])
-            if last == last:  # NaN guard
+            if last == last and last > 0:  # NaN and zero guard
                 trades.append(last / position - 1)
         trades = [t for t in trades if t == t]  # filter NaN
         if not trades:
             result = {"signal": signal["name"], "trades": 0, "note": "No signals triggered"}
-            if errors: result["eval_errors"] = errors
+            if errors:
+                result["eval_errors"] = errors
+                result["first_error"] = first_error
             return result
 
         winners = [t for t in trades if t > 0]
@@ -159,7 +174,7 @@ Variables available: close (price), sma20/50/200, rsi (0-100), macd, signal (mac
             "total_return": math.prod(1 + t for t in trades) - 1,
             "best": float(max(trades)), "worst": float(min(trades)),
             "profit_factor": abs(sum(winners)/sum(losers)) if losers else None,
-            **({"eval_errors": errors} if errors else {}),
+            **({"eval_errors": errors, "first_error": first_error} if errors else {}),
         }
 
     def list_signals(self) -> list[dict]:

@@ -68,8 +68,12 @@ class InsightEngine:
         if not interpretation:
             interpretation = self._keyword_interpret(query)
 
-        # Step 2: Pick universe
-        symbols = self._pick_universe(query, universe)
+        # Step 2: Pick universe (prefer Claude's suggestion when in auto mode)
+        claude_universe = interpretation.get("universe") if interpretation else None
+        if universe == "auto" and claude_universe and claude_universe in UNIVERSE:
+            symbols = UNIVERSE[claude_universe]
+        else:
+            symbols = self._pick_universe(query, universe)
 
         # Step 3: Screen stocks
         results = []
@@ -161,11 +165,11 @@ Return ONLY a JSON object (no other text) with these fields:
         criteria = {}
         description = query
 
-        if any(w in q for w in ["oversold", "rsi below", "rsi under"]):
+        if any(w in q for w in ["oversold", "rsi below", "rsi under", "rsi <"]):
             m = re.search(r"rsi\s*(?:below|under|<)\s*(\d+)", q)
             criteria["rsi_max"] = int(m.group(1)) if m else 30
 
-        if any(w in q for w in ["overbought", "rsi above", "rsi over"]):
+        if any(w in q for w in ["overbought", "rsi above", "rsi over", "rsi >"]):
             m = re.search(r"rsi\s*(?:above|over|>)\s*(\d+)", q)
             criteria["rsi_min"] = int(m.group(1)) if m else 70
 
@@ -230,22 +234,24 @@ Return ONLY a JSON object (no other text) with these fields:
             if key == "rsi_min" and data.get("rsi_14", 50) < val:
                 return False
             if key == "above_sma200" and val:
-                if data.get("sma_200") is None or data["price"] <= data["sma_200"]:
+                if data.get("sma_200") is None or data["price"] < data["sma_200"]:
                     return False
             if key == "above_sma200" and val is False:
-                if data.get("sma_200") is None or data["price"] >= data["sma_200"]:
+                if data.get("sma_200") is None or data["price"] > data["sma_200"]:
                     return False
             if key == "above_sma50" and val:
-                if data.get("sma_50") is None or data["price"] <= data["sma_50"]:
+                if data.get("sma_50") is None or data["price"] < data["sma_50"]:
                     return False
             if key == "above_sma50" and val is False:
-                if data.get("sma_50") is None or data["price"] >= data["sma_50"]:
+                if data.get("sma_50") is None or data["price"] > data["sma_50"]:
                     return False
             if key == "golden_cross" and val:
                 if data.get("sma_50") is None or data.get("sma_200") is None or data["sma_50"] <= data["sma_200"]:
                     return False
-            if key == "min_vol_ratio" and data.get("vol_ratio", 1) < val:
-                return False
+            if key == "min_vol_ratio":
+                vr = data.get("vol_ratio")
+                if vr is None or vr < val:
+                    return False
             if key == "macd_bullish" and val:
                 if data.get("macd") is None or data["macd"] <= data.get("macd_signal", 0):
                     return False
@@ -253,10 +259,14 @@ Return ONLY a JSON object (no other text) with these fields:
                 return False
             if key == "near_52w_low" and val and not data.get("near_52w_low"):
                 return False
-            if key == "max_annual_vol" and data.get("annual_vol", 0.20) > val:
-                return False
-            if key == "min_annual_vol" and data.get("annual_vol", 0.20) < val:
-                return False
+            if key == "max_annual_vol":
+                av = data.get("annual_vol")
+                if av is None or av > val:
+                    return False
+            if key == "min_annual_vol":
+                av = data.get("annual_vol")
+                if av is None or av < val:
+                    return False
         return True
 
     def _pick_universe(self, query: str, universe: str) -> list[str]:
