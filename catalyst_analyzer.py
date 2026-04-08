@@ -408,33 +408,36 @@ class CatalystAnalyzer:
         return results
 
     def _run_single_backtest(self, df: pd.DataFrame, strategy: str, holding_days: int) -> BacktestResult:
-        close = df["Close"]
-        ret = df["daily_return"]
-        vr = df["vol_ratio"]
+        close_arr = df["Close"].values
+        ret_arr = df["daily_return"].values
+        vr_arr = df["vol_ratio"].values
+        n = len(close_arr)
 
         trades = []
         position = None
         last_valid_price = None
 
-        for i in range(25, len(df)):
-            price = close.iloc[i]
-            if not pd.isna(price):
+        for i in range(25, n):
+            price = close_arr[i]
+            if price == price:  # not NaN
                 last_valid_price = price
-            if pd.isna(price):
+            else:
                 continue
 
             if position is not None:
                 if i - position[1] >= holding_days:
-                    trades.append(price / position[0] - 1)
+                    trades.append(float(price / position[0] - 1))
                     position = None
                 else:
                     continue  # Still holding — skip entry check
 
-            if position is None and i + 1 < len(df):
-                r = ret.iloc[i] if not pd.isna(ret.iloc[i]) else 0
-                v = vr.iloc[i] if not pd.isna(vr.iloc[i]) else 1
-                entry_price = close.iloc[i + 1]
-                if not pd.isna(entry_price) and entry_price > 0:
+            if position is None and i + 1 < n:
+                r = ret_arr[i]
+                v = vr_arr[i]
+                if r != r: r = 0.0  # NaN → neutral
+                if v != v: v = 1.0  # NaN → neutral
+                entry_price = close_arr[i + 1]
+                if entry_price == entry_price and entry_price > 0:
                     if strategy == "buy_spike" and r > 0.03 and v > 2.0:
                         position = (entry_price, i + 1)
                     elif strategy == "buy_dip" and r < -0.03 and v > 2.0:
@@ -445,8 +448,8 @@ class CatalystAnalyzer:
         # Close position at last valid price if holding period completed but
         # NaN close prices prevented exit (e.g., delisted stock)
         if position is not None:
-            if len(df) - 1 - position[1] >= holding_days and last_valid_price is not None:
-                trades.append(last_valid_price / position[0] - 1)
+            if n - 1 - position[1] >= holding_days and last_valid_price is not None:
+                trades.append(float(last_valid_price / position[0] - 1))
 
         if not trades:
             return BacktestResult(strategy, holding_days, 0, 0, 0, 0, 0, 0, 0)
@@ -496,7 +499,7 @@ class CatalystAnalyzer:
                 historical_pattern=f"After UP events: avg +{patterns.get('after_up', {}).get('20d', {}).get('avg_return', 0):.1%} in 20d"
                                    if "after_up" in patterns else "No clear pattern",
                 recommended_action="BUY 3-6 months before announced release, SELL within days of launch",
-                confidence="medium",
+                confidence="medium" if best_bt else "low",
                 expected_return=best_bt.avg_return if best_bt else 0,
                 expected_holding_days=best_bt.holding_days if best_bt else 20,
             ))
@@ -535,7 +538,7 @@ class CatalystAnalyzer:
                 historical_pattern=f"After DOWN events: bounce +{patterns.get('after_down', {}).get('5d', {}).get('avg_return', 0):.1%} in 5d"
                                    if "after_down" in patterns else "Buy dip on delivery miss",
                 recommended_action="BUY dips around delivery number releases",
-                confidence="medium",
+                confidence="medium" if best_bt else "low",
                 expected_return=best_bt.avg_return if best_bt else 0,
                 expected_holding_days=5,
             ))
@@ -663,7 +666,7 @@ class CatalystAnalyzer:
             print(f"\n  Backtests ({len(bts)} strategies):")
             print(f"  {'Strategy':20s} | {'Trades':>6s} | {'Win%':>5s} | {'Avg Ret':>8s} | {'Total Ret':>10s}")
             print(f"  {'-'*60}")
-            for key, bt in sorted(bts.items(), key=lambda x: -(x[1]["total_return"] or 0)):
+            for key, bt in sorted(bts.items(), key=lambda x: float("inf") if x[1]["total_return"] is None else -x[1]["total_return"]):
                 print(f"  {key:20s} | {bt['total_trades']:6d} | {bt['win_rate']:4.0%} | "
                       f"{bt['avg_return']:+7.1%} | {bt['total_return']:+9.1%}")
 
@@ -694,10 +697,10 @@ class CatalystAnalyzer:
             return "capital_return"
         if any(w in t for w in ["delivery", "production", "sales figure"]):
             return "delivery_numbers"
-        if any(w in t for w in ["guidance", "outlook", "forecast", "raises guidance", "lowers guidance"]):
-            return "guidance"
         if any(w in t for w in ["subscriber", "streaming", "user growth", "monthly active"]):
             return "subscriber_numbers"
+        if any(w in t for w in ["guidance", "outlook", "forecast"]):
+            return "guidance"
         if any(w in t for w in ["patent", "intellectual property", "ip ruling"]):
             return "patent"
         return "general"

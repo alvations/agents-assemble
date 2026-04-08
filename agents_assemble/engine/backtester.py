@@ -226,10 +226,7 @@ def compute_metrics(
     # total_return (here) and drawdown analysis (below)
     cum_returns = (1 + returns).cumprod()
     total_return = cum_returns.iloc[-1] - 1
-    try:
-        n_years = (returns.index[-1] - returns.index[0]).days / 365.25
-    except (AttributeError, TypeError):
-        n_years = len(returns) / periods_per_year
+    n_years = (returns.index[-1] - returns.index[0]).days / 365.25
     growth = 1 + total_return
     if growth > 0:
         try:
@@ -244,14 +241,15 @@ def compute_metrics(
     sqrt_periods = math.sqrt(periods_per_year)
     annual_vol = daily_vol * sqrt_periods
 
-    # Sharpe ratio — std(X - c) == std(X), so reuse daily_vol directly
+    # Sharpe ratio
     daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
-    excess_mean = returns.mean() - daily_rf
-    if daily_vol > 0:
-        sharpe = excess_mean / daily_vol * sqrt_periods
-    elif excess_mean > 0:
+    excess = returns - daily_rf
+    excess_std = excess.std()
+    if excess_std > 0:
+        sharpe = excess.mean() / excess_std * sqrt_periods
+    elif excess.mean() > 0:
         sharpe = float("inf")
-    elif excess_mean < 0:
+    elif excess.mean() < 0:
         sharpe = float("-inf")
     else:
         sharpe = 0.0
@@ -850,7 +848,7 @@ def save_results(results: dict[str, Any], path: str) -> None:
                 for t in v
             ]
         elif isinstance(v, list):
-            serializable[k] = _sanitize_for_json(v)
+            serializable[k] = json.loads(json.dumps(_sanitize_for_json(v), default=str))
         elif isinstance(v, dict):
             serializable[k] = {str(kk): vv for kk, vv in v.items()
                                 if not isinstance(vv, (pd.Series, pd.DataFrame))}

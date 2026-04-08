@@ -134,8 +134,13 @@ class Terminal:
                       labelcolor="white")
             ax.tick_params(colors="white", labelsize=8)
             ax.grid(True, alpha=0.15, color="white")
-            pct_change = ((close.iloc[-1] / close.iloc[0] - 1) * 100) if close.iloc[0] != 0 else 0.0
-            ax.set_title(f"  {symbol}  |  {close.iloc[-1]:.2f}  |  "
+            first, last = close.iloc[0], close.iloc[-1]
+            if math.isfinite(first) and first != 0 and math.isfinite(last):
+                pct_change = (last / first - 1) * 100
+            else:
+                pct_change = 0.0
+            price_str = f"{last:.2f}" if math.isfinite(last) else "N/A"
+            ax.set_title(f"  {symbol}  |  {price_str}  |  "
                          f"{pct_change:+.1f}%  |  "
                          f"{df.index[0].strftime('%Y-%m-%d')} → {df.index[-1].strftime('%Y-%m-%d')}",
                          color="#00ff88", fontsize=12, loc="left", fontweight="bold")
@@ -429,7 +434,7 @@ class Terminal:
             ax.grid(True, alpha=0.15, color="white")
 
             # Legend for sources actually present in data
-            seen_sources = {p["source"] for p in points}
+            seen_sources = sorted({p["source"] for p in points})
             for src in seen_sources:
                 color = source_colors.get(src, "#ffffff")
                 ax.scatter([], [], c=color, label=src, s=40)
@@ -471,8 +476,9 @@ class Terminal:
 
             events = patterns.get("events", [])
             for e in events:
-                date = pd.Timestamp(e["date"])
-                color = "#00ff88" if e["direction"] == "up" else "#ff4444"
+                date = pd.Timestamp(e.get("date"))
+                direction = e.get("direction", "up")
+                color = "#00ff88" if direction == "up" else "#ff4444"
                 try:
                     idx = df.index.get_indexer([date], method="nearest")[0]
                     if idx < 0:
@@ -481,7 +487,7 @@ class Terminal:
                     if abs((df.index[idx] - date).days) > 10:
                         continue
                     price = df["Close"].iloc[idx]
-                    marker = "^" if e["direction"] == "up" else "v"
+                    marker = "^" if direction == "up" else "v"
                     ax1.scatter(df.index[idx], price, c=color, marker=marker, s=60, zorder=5, alpha=0.8)
                 except (IndexError, KeyError):
                     pass
@@ -548,8 +554,9 @@ class Terminal:
         for name, etf in sectors.items():
             try:
                 df = fetch_ohlcv(etf, start=ytd_start, cache=True)
-                if len(df) > 5 and df["Close"].iloc[0] != 0:
-                    rets[name] = (df["Close"].iloc[-1] / df["Close"].iloc[0] - 1) * 100
+                first, last = df["Close"].iloc[0], df["Close"].iloc[-1]
+                if len(df) > 5 and math.isfinite(first) and first != 0 and math.isfinite(last):
+                    rets[name] = (last / first - 1) * 100
             except Exception:
                 pass
 

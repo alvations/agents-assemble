@@ -40,6 +40,11 @@ def _sanitize_for_json(obj):
         return None
     return obj
 
+def _safe_metric(val, ndigits=4):
+    if not isinstance(val, (int, float)) or isinstance(val, bool) or not math.isfinite(val):
+        return 0
+    return round(val, ndigits)
+
 # ---------------------------------------------------------------------------
 # HTML Template (single-page app with Bloomberg dark theme)
 # ---------------------------------------------------------------------------
@@ -303,6 +308,9 @@ function loadLeaderboard() {
         leaderboardData = data;
         document.getElementById('leaderboard-status').textContent = data.length + ' strategies loaded';
         renderLeaderboard();
+    }).catch(e => {
+        document.getElementById('leaderboard-status').textContent = '';
+        document.getElementById('leaderboard-table').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 // Load on start
@@ -318,6 +326,8 @@ fetch('/api/market').then(r => r.json()).then(data => {
     });
     html += '</table>';
     document.getElementById('market-overview').innerHTML = html;
+}).catch(e => {
+    document.getElementById('market-overview').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
 });
 
 function scanTicker() {
@@ -335,7 +345,7 @@ function scanTicker() {
         }
         document.getElementById('scan-results').innerHTML = html;
     }).catch(e => {
-        document.getElementById('scan-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
+        document.getElementById('scan-results').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 
@@ -386,7 +396,7 @@ function runCatalyst() {
         }
         document.getElementById('catalyst-results').innerHTML = html;
     }).catch(e => {
-        document.getElementById('catalyst-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
+        document.getElementById('catalyst-results').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 
@@ -399,7 +409,7 @@ function loadChart() {
             document.getElementById('chart-container').innerHTML = '<img class="chart-img" src="data:image/png;base64,' + data.image + '">';
         }
     }).catch(e => {
-        document.getElementById('chart-container').innerHTML = '<p class="negative">Error: ' + e + '</p>';
+        document.getElementById('chart-container').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 
@@ -439,7 +449,7 @@ function generateTradePlan() {
         }
         document.getElementById('trade-results').innerHTML = html;
     }).catch(e => {
-        document.getElementById('trade-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
+        document.getElementById('trade-results').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 
@@ -462,7 +472,7 @@ function executeTrades() {
         }
         document.getElementById('trade-results').innerHTML = html;
     }).catch(e => {
-        document.getElementById('trade-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
+        document.getElementById('trade-results').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 
@@ -482,6 +492,8 @@ function loadStrategies() {
         });
         html += '</table>';
         document.getElementById('all-strategies').innerHTML = html;
+    }).catch(e => {
+        document.getElementById('all-strategies').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
 function filterStrategies() { loadStrategies(); }
@@ -520,14 +532,12 @@ def api_leaderboard():
                 metrics = data.get("metrics", data)
                 name = _DATE_SUFFIX_RE.sub('', f.stem)
                 ret = metrics.get("total_return", 0)
-                sharpe = metrics.get("sharpe_ratio", 0)
-                max_dd = metrics.get("max_drawdown", 0)
-                if isinstance(ret, (int, float)):
+                if isinstance(ret, (int, float)) and not isinstance(ret, bool):
                     results.append({
                         "name": name, "source": "backtest",
-                        "return": round(ret, 4),
-                        "sharpe": round(sharpe, 2) if isinstance(sharpe, (int, float)) else 0,
-                        "max_dd": round(max_dd, 4) if isinstance(max_dd, (int, float)) else 0,
+                        "return": _safe_metric(ret),
+                        "sharpe": _safe_metric(metrics.get("sharpe_ratio", 0), 2),
+                        "max_dd": _safe_metric(metrics.get("max_drawdown", 0)),
                     })
             except Exception:
                 pass
@@ -545,11 +555,6 @@ def api_leaderboard():
         return jsonify([])
     start, end = h_map[horizon]
     results = []
-    def _safe_metric(val, ndigits=4):
-        if not isinstance(val, (int, float)) or isinstance(val, bool) or not math.isfinite(val):
-            return 0
-        return round(val, ndigits)
-
     for s in _get_all_strategies():
         r = run_single(s, horizon, start, end, verbose=False)
         if r["status"] == "success":
@@ -665,7 +670,10 @@ def api_trade_plan(strategy):
     if amount <= 0 or not math.isfinite(amount):
         return jsonify({"error": "Amount must be a positive number"}), 400
     symbols = persona.config.universe[:15]
-    all_data = fetch_multiple_ohlcv(symbols, start="2024-01-01")
+    try:
+        all_data = fetch_multiple_ohlcv(symbols, start="2024-01-01")
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch market data: {e}"}), 500
 
     enriched = {}
     prices = {}
