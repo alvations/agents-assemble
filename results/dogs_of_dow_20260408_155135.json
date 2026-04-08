@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.03777443172725059,
+    "cagr": 0.012479149634197606,
+    "annual_volatility": 0.1766109941539064,
+    "sharpe_ratio": -0.06350070694122349,
+    "sortino_ratio": -0.08895925257949483,
+    "calmar_ratio": 0.042347145190562374,
+    "max_drawdown": -0.29468691639168043,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5013297872340425,
+    "profit_factor": 1.0279822047352352,
+    "num_trading_days": 752,
+    "skewness": -0.04651295458982965,
+    "kurtosis": 2.4208509217831637,
+    "best_day": 0.05979128987250637,
+    "worst_day": -0.04591953567921303,
+    "avg_daily_return": 0.0001111462001628289,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07414542946556657,
+    "beta": 0.8741991318535481,
+    "information_ratio": -0.8162102080614628,
+    "tracking_error": 0.09084109550855216
+  },
+  "trade_metrics": {
+    "num_trades": 384,
+    "num_buys": 232,
+    "num_sells": 152,
+    "total_commission": 0.0,
+    "total_slippage": 1256.8639380111695,
+    "total_transaction_costs": 1256.8639380111695,
+    "avg_trade_size": 3273.083171904087
+  },
+  "final_positions": {
+    "BA": {
+      "qty": 62.0,
+      "avg_cost": 195.7368884232376,
+      "realized_pnl": 1508.117013881356
+    },
+    "DOW": {
+      "qty": 237.0,
+      "avg_cost": 46.1210975968888,
+      "realized_pnl": 4575.617370605469
+    },
+    "INTC": {
+      "qty": 405.0,
+      "avg_cost": 27.126129319585647,
+      "realized_pnl": -1658.4179574464738
+    },
+    "NKE": {
+      "qty": 126.0,
+      "avg_cost": 91.75015911106122,
+      "realized_pnl": -907.5856648969142
+    },
+    "MSFT": {
+      "qty": 23.0,
+      "avg_cost": 405.18956059994906,
+      "realized_pnl": 601.365692138672
+    },
+    "JNJ": {
+      "qty": 65.0,
+      "avg_cost": 149.40792846679688,
+      "realized_pnl": 307.88175964355594
+    },
+    "KO": {
+      "qty": 158.0,
+      "avg_cost": 62.201102437852306,
+      "realized_pnl": 497.25963973999006
+    },
+    "CVX": {
+      "qty": 63.0,
+      "avg_cost": 141.3009116228889,
+      "realized_pnl": 1880.144581289852
+    },
+    "MRK": {
+      "qty": 101.0,
+      "avg_cost": 105.85091717408436,
+      "realized_pnl": 1841.0437850952148
+    },
+    "MCD": {
+      "qty": 34.0,
+      "avg_cost": 284.1868896484375,
+      "realized_pnl": 1115.0826110839848
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy worst-performing blue chips yearly, contrarian equal-weight"
+}

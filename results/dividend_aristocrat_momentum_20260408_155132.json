@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": -0.008027737480637787,
+    "cagr": -0.002692306653279908,
+    "annual_volatility": 0.10832511590697078,
+    "sharpe_ratio": -0.3329059550144056,
+    "sortino_ratio": -0.457048601750977,
+    "calmar_ratio": -0.017392464855163253,
+    "max_drawdown": -0.15479730306775064,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5199468085106383,
+    "profit_factor": 1.00498347214516,
+    "num_trading_days": 752,
+    "skewness": -0.10047552355939332,
+    "kurtosis": 2.7585469027140213,
+    "best_day": 0.032663724867392,
+    "worst_day": -0.03927492954726086,
+    "avg_daily_return": 1.2546385953737892e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08931688575304408,
+    "beta": 0.39691526451705555,
+    "information_ratio": -0.6647382677357032,
+    "tracking_error": 0.1343639896906854
+  },
+  "trade_metrics": {
+    "num_trades": 464,
+    "num_buys": 216,
+    "num_sells": 248,
+    "total_commission": 0.0,
+    "total_slippage": 2646.6008781166047,
+    "total_transaction_costs": 2646.6008781166047,
+    "avg_trade_size": 5703.881202837517
+  },
+  "final_positions": {
+    "SHW": {
+      "qty": 20.0,
+      "avg_cost": 391.2221374511719,
+      "realized_pnl": 117.120361328125
+    },
+    "ABT": {
+      "qty": 70.0,
+      "avg_cost": 111.42966759341887,
+      "realized_pnl": -1937.08007540648
+    },
+    "ADP": {
+      "qty": 27.0,
+      "avg_cost": 271.8807864718967,
+      "realized_pnl": -1198.9117736816409
+    },
+    "AFL": {
+      "qty": 74.0,
+      "avg_cost": 108.42937469482422,
+      "realized_pnl": 2675.0306243896475
+    },
+    "CVX": {
+      "qty": 52.0,
+      "avg_cost": 143.408447265625,
+      "realized_pnl": 654.1395645141608
+    },
+    "ITW": {
+      "qty": 30.0,
+      "avg_cost": 253.52488708496094,
+      "realized_pnl": -441.9079589843748
+    },
+    "KMB": {
+      "qty": 61.0,
+      "avg_cost": 131.26564025878906,
+      "realized_pnl": -1265.0252532958984
+    },
+    "PG": {
+      "qty": 46.0,
+      "avg_cost": 173.84024047851562,
+      "realized_pnl": -1631.5155029296882
+    },
+    "SYY": {
+      "qty": 109.0,
+      "avg_cost": 73.14087677001953,
+      "realized_pnl": -967.1750030517579
+    },
+    "APD": {
+      "qty": 25.0,
+      "avg_cost": 297.47698974609375,
+      "realized_pnl": 1042.4508819580078
+    },
+    "EMR": {
+      "qty": 61.0,
+      "avg_cost": 105.8003921508789,
+      "realized_pnl": 573.0816955566402
+    },
+    "LOW": {
+      "qty": 30.0,
+      "avg_cost": 255.64825439453125,
+      "realized_pnl": 785.3690338134766
+    }
+  },
+  "source": "unconventional",
+  "description": "Quality dividends + momentum: only buy Aristocrats in uptrends"
+}

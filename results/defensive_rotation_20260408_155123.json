@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": 0.3187349268425341,
+    "cagr": 0.09695811637267582,
+    "annual_volatility": 0.14023397127804882,
+    "sharpe_ratio": 0.4516149325780995,
+    "sortino_ratio": 0.6409184055502035,
+    "calmar_ratio": 0.5264673004355777,
+    "max_drawdown": -0.1841674046848809,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.535904255319149,
+    "profit_factor": 1.1266712601844733,
+    "num_trading_days": 752,
+    "skewness": -0.11735772506961828,
+    "kurtosis": 0.4764236437917688,
+    "best_day": 0.03203981255594979,
+    "worst_day": -0.030671644883265348,
+    "avg_daily_return": 0.00040696635280671974,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.010333537272911641,
+    "beta": 0.6968254235547342,
+    "information_ratio": 0.11853631221691013,
+    "tracking_error": 0.08717613260991497
+  },
+  "trade_metrics": {
+    "num_trades": 774,
+    "num_buys": 391,
+    "num_sells": 383,
+    "total_commission": 0.0,
+    "total_slippage": 1470.2982024116523,
+    "total_transaction_costs": 1470.2982024116523,
+    "avg_trade_size": 1899.6100806352088
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 68.0,
+      "avg_cost": 424.7740473477783,
+      "realized_pnl": -1082.7033728803663
+    },
+    "QQQ": {
+      "qty": 65.0,
+      "avg_cost": 378.6588641885464,
+      "realized_pnl": 1874.3325199117617
+    },
+    "XLK": {
+      "qty": 171.0,
+      "avg_cost": 90.43219909084551,
+      "realized_pnl": 1516.628197244546
+    },
+    "XLP": {
+      "qty": 174.0,
+      "avg_cost": 69.84697794979898,
+      "realized_pnl": 178.52978383998135
+    },
+    "XLV": {
+      "qty": 98.0,
+      "avg_cost": 130.9741439511396,
+      "realized_pnl": 54.199787936779686
+    },
+    "XLU": {
+      "qty": 181.0,
+      "avg_cost": 30.54890414680011,
+      "realized_pnl": 507.7994197358584
+    }
+  },
+  "source": "recession",
+  "description": "Rotate to staples/utilities/healthcare when recession signals fire"
+}

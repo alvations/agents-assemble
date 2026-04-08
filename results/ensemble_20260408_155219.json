@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "total_return": 0.007677215290765371,
+    "cagr": 0.0025613275484466236,
+    "annual_volatility": 0.008594341810404083,
+    "sharpe_ratio": -4.2614140401261436,
+    "sortino_ratio": -6.13205818940415,
+    "calmar_ratio": 0.2462396141575712,
+    "max_drawdown": -0.010401768851081794,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.014627659574468085,
+    "profit_factor": 1.4062225663775534,
+    "num_trading_days": 752,
+    "skewness": 2.824240862793479,
+    "kurtosis": 107.08544630163725,
+    "best_day": 0.006752859562422886,
+    "worst_day": -0.006412296116705685,
+    "avg_daily_return": 1.0316335582933062e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08406325155131755,
+    "beta": 0.005537015724040702,
+    "information_ratio": -0.48224944936322434,
+    "tracking_error": 0.17431487306479462
+  },
+  "trade_metrics": {
+    "num_trades": 10,
+    "num_buys": 5,
+    "num_sells": 5,
+    "total_commission": 0.0,
+    "total_slippage": 73.79296772670746,
+    "total_transaction_costs": 73.79296772670746,
+    "avg_trade_size": 7379.296772670746
+  },
+  "final_positions": {},
+  "source": "generic",
+  "description": "Multi-strategy consensus: momentum + value + growth + dividend"
+}

@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.4448053155770775,
+    "cagr": 0.1309742287095199,
+    "annual_volatility": 0.45943731162110096,
+    "sharpe_ratio": 0.4136814780313241,
+    "sortino_ratio": 0.6707637890157571,
+    "calmar_ratio": 0.2647892111896634,
+    "max_drawdown": -0.49463582039868537,
+    "max_drawdown_date": "2023-05-04",
+    "win_rate": 0.5146276595744681,
+    "profit_factor": 1.167146416238693,
+    "num_trading_days": 752,
+    "skewness": 3.0092673831496115,
+    "kurtosis": 146.67825102965318,
+    "best_day": 0.4128111193397421,
+    "worst_day": -0.4104698650751458,
+    "avg_daily_return": 0.000909859014117275,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.04434964960975574,
+    "beta": 0.7438869125159744,
+    "information_ratio": 0.1001419908634929,
+    "tracking_error": 0.4428676644766361
+  },
+  "trade_metrics": {
+    "num_trades": 392,
+    "num_buys": 197,
+    "num_sells": 195,
+    "total_commission": 0.0,
+    "total_slippage": 3076.008470386981,
+    "total_transaction_costs": 3076.008470386981,
+    "avg_trade_size": 7846.96038364026
+  },
+  "final_positions": {
+    "BA": {
+      "qty": 121.0,
+      "avg_cost": 179.2183866116108,
+      "realized_pnl": -3643.7455843749735
+    },
+    "LHX": {
+      "qty": 80.0,
+      "avg_cost": 237.4288787841797,
+      "realized_pnl": 1023.6484069824226
+    },
+    "LMT": {
+      "qty": 38.0,
+      "avg_cost": 502.791015625,
+      "realized_pnl": 3267.241943359374
+    },
+    "RTX": {
+      "qty": 163.0,
+      "avg_cost": 116.12214660644531,
+      "realized_pnl": 2847.8936843872057
+    },
+    "NOC": {
+      "qty": 40.0,
+      "avg_cost": 490.68443603515624,
+      "realized_pnl": 3136.3855590820312
+    },
+    "TDG": {
+      "qty": 16.0,
+      "avg_cost": 1212.84765625,
+      "realized_pnl": 2411.7763977050768
+    },
+    "GD": {
+      "qty": 70.0,
+      "avg_cost": 282.23672560600386,
+      "realized_pnl": 556.9176399544506
+    }
+  },
+  "source": "theme",
+  "description": "Defense spending boom: contractors, space, cybersecurity"
+}
