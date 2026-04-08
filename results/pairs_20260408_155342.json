@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.16928070639787118,
+    "cagr": 0.05370087436271387,
+    "annual_volatility": 0.08813042420161789,
+    "sharpe_ratio": 0.19361946116538364,
+    "sortino_ratio": 0.2794024294741204,
+    "calmar_ratio": 0.5044938294184877,
+    "max_drawdown": -0.10644505686940309,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5226063829787234,
+    "profit_factor": 1.1156846639478324,
+    "num_trading_days": 752,
+    "skewness": 0.17748577656153272,
+    "kurtosis": 2.3663231595858796,
+    "best_day": 0.03186088397245612,
+    "worst_day": -0.02021037575381046,
+    "avg_daily_return": 0.00022336321694282606,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03292370473705031,
+    "beta": 0.43553275567014693,
+    "information_ratio": -0.3041332462907779,
+    "tracking_error": 0.1082542113977647
+  },
+  "trade_metrics": {
+    "num_trades": 1098,
+    "num_buys": 562,
+    "num_sells": 536,
+    "total_commission": 0.0,
+    "total_slippage": 2806.138340538028,
+    "total_transaction_costs": 2806.138340538028,
+    "avg_trade_size": 2555.6815487595854
+  },
+  "final_positions": {
+    "XOM": {
+      "qty": 69.0,
+      "avg_cost": 114.0324082305466,
+      "realized_pnl": 4084.632545471188
+    },
+    "CVX": {
+      "qty": 52.0,
+      "avg_cost": 150.61803964468152,
+      "realized_pnl": 2617.052505493166
+    },
+    "KO": {
+      "qty": 117.0,
+      "avg_cost": 66.6577718628941,
+      "realized_pnl": 925.6644623775534
+    },
+    "PEP": {
+      "qty": 48.0,
+      "avg_cost": 162.16555376026756,
+      "realized_pnl": 193.04582365690217
+    },
+    "JPM": {
+      "qty": 30.0,
+      "avg_cost": 238.8400421142578,
+      "realized_pnl": 3556.663475036623
+    },
+    "BAC": {
+      "qty": 164.0,
+      "avg_cost": 45.360769884514085,
+      "realized_pnl": 550.6173337531792
+    },
+    "AAPL": {
+      "qty": 35.0,
+      "avg_cost": 250.82977294921875,
+      "realized_pnl": 3700.9495544433607
+    },
+    "MSFT": {
+      "qty": 42.0,
+      "avg_cost": 420.7586669921875,
+      "realized_pnl": 2681.0843963623042
+    }
+  },
+  "source": "generic",
+  "description": "Relative value: long laggard vs leader in correlated pairs"
+}

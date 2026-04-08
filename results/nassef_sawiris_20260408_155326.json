@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.272852292672328,
+    "cagr": 0.08404158181352761,
+    "annual_volatility": 0.13768305285948473,
+    "sharpe_ratio": 0.37086547300895123,
+    "sortino_ratio": 0.576267984271943,
+    "calmar_ratio": 0.5686633572652715,
+    "max_drawdown": -0.1477879324204877,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.2978723404255319,
+    "profit_factor": 1.1650499992372216,
+    "num_trading_days": 752,
+    "skewness": 0.7408966223723542,
+    "kurtosis": 5.883244007787544,
+    "best_day": 0.04724575003600373,
+    "worst_day": -0.037847972142937,
+    "avg_daily_return": 0.00035827641248987086,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0025829972862365658,
+    "beta": 0.4341545239804315,
+    "information_ratio": -0.01703432963243144,
+    "tracking_error": 0.15163480700284385
+  },
+  "trade_metrics": {
+    "num_trades": 114,
+    "num_buys": 64,
+    "num_sells": 50,
+    "total_commission": 0.0,
+    "total_slippage": 1813.8218606777207,
+    "total_transaction_costs": 1813.8218606777207,
+    "avg_trade_size": 15910.718076120344
+  },
+  "final_positions": {
+    "FCX": {
+      "qty": 633.0,
+      "avg_cost": 42.87776184082031,
+      "realized_pnl": 3019.8622131347665
+    },
+    "DOW": {
+      "qty": 665.0,
+      "avg_cost": 44.08134212063668,
+      "realized_pnl": 1172.737884521485
+    },
+    "VALE": {
+      "qty": 3167.0,
+      "avg_cost": 9.230964568800305,
+      "realized_pnl": 6039.215317726135
+    }
+  },
+  "source": "famous",
+  "description": "Emerging market industrials: materials, construction, global value"
+}

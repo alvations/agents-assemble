@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "total_return": -0.09560086814922375,
+    "cagr": -0.033051320004397367,
+    "annual_volatility": 0.1333920116089004,
+    "sharpe_ratio": -0.4797340853558446,
+    "sortino_ratio": -0.658804037703969,
+    "calmar_ratio": -0.13071741051536998,
+    "max_drawdown": -0.25284558402808277,
+    "max_drawdown_date": "2022-10-11",
+    "win_rate": 0.31382978723404253,
+    "profit_factor": 0.9574274937187218,
+    "num_trading_days": 752,
+    "skewness": -0.26124247905283693,
+    "kurtosis": 7.327918391308552,
+    "best_day": 0.043834296538392215,
+    "worst_day": -0.05211593508372414,
+    "avg_daily_return": -9.828940182370558e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11967589910416154,
+    "beta": 0.49660851167502634,
+    "information_ratio": -0.891978397706726,
+    "tracking_error": 0.1341690554522934
+  },
+  "trade_metrics": {
+    "num_trades": 96,
+    "num_buys": 49,
+    "num_sells": 47,
+    "total_commission": 0.0,
+    "total_slippage": 1275.9712868156432,
+    "total_transaction_costs": 1275.9712868156432,
+    "avg_trade_size": 13291.367570996284
+  },
+  "final_positions": {},
+  "source": "famous",
+  "description": "Deep value contrarian: buy capitulation, bet against consensus"
+}

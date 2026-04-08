@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": -0.08141613254100843,
+    "cagr": -0.028004948685813158,
+    "annual_volatility": 0.03890893399076543,
+    "sharpe_ratio": -1.7200329960010918,
+    "sortino_ratio": -2.3551388041293713,
+    "calmar_ratio": -0.2832490212712766,
+    "max_drawdown": -0.09887041642764205,
+    "max_drawdown_date": "2024-12-19",
+    "win_rate": 0.12234042553191489,
+    "profit_factor": 0.7811069315991181,
+    "num_trading_days": 752,
+    "skewness": 0.5153478206765676,
+    "kurtosis": 16.074384447835097,
+    "best_day": 0.015309295848000115,
+    "worst_day": -0.014298585510164052,
+    "avg_daily_return": -0.00010992414634899499,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11462952778557733,
+    "beta": 0.08752568307138497,
+    "information_ratio": -0.7002164077895817,
+    "tracking_error": 0.16370585794673928
+  },
+  "trade_metrics": {
+    "num_trades": 535,
+    "num_buys": 317,
+    "num_sells": 218,
+    "total_commission": 0.0,
+    "total_slippage": 5922.87375596237,
+    "total_transaction_costs": 5922.87375596237,
+    "avg_trade_size": 11070.792067219387
+  },
+  "final_positions": {
+    "MSFT": {
+      "qty": 33.0,
+      "avg_cost": 417.4605712890625,
+      "realized_pnl": 1634.5418548583975
+    }
+  },
+  "source": "generic",
+  "description": "Mean-reversion: buy oversold, sell overbought, size by vol"
+}

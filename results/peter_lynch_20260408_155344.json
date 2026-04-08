@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.08262882835648089,
+    "cagr": 0.026910664812399343,
+    "annual_volatility": 0.11592530348830779,
+    "sharpe_ratio": -0.05082050884500402,
+    "sortino_ratio": -0.0692938783328288,
+    "calmar_ratio": 0.14115943796361877,
+    "max_drawdown": -0.19064020940162052,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.5066489361702128,
+    "profit_factor": 1.0507480393965758,
+    "num_trading_days": 752,
+    "skewness": -0.4772169477932269,
+    "kurtosis": 3.513305769679872,
+    "best_day": 0.02560058151240807,
+    "worst_day": -0.049909847830797105,
+    "avg_daily_return": 0.00013227135917504327,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.05971391428736483,
+    "beta": 0.4783972435355509,
+    "information_ratio": -0.4914604149635565,
+    "tracking_error": 0.12150299895830435
+  },
+  "trade_metrics": {
+    "num_trades": 363,
+    "num_buys": 198,
+    "num_sells": 165,
+    "total_commission": 0.0,
+    "total_slippage": 2731.6104075469957,
+    "total_transaction_costs": 2731.6104075469957,
+    "avg_trade_size": 7525.0975414517825
+  },
+  "final_positions": {
+    "LOW": {
+      "qty": 38.0,
+      "avg_cost": 255.90791642038445,
+      "realized_pnl": -2393.3795166015625
+    },
+    "MSFT": {
+      "qty": 23.0,
+      "avg_cost": 426.8498229980469,
+      "realized_pnl": 2628.0438537597656
+    },
+    "GOOGL": {
+      "qty": 59.0,
+      "avg_cost": 170.5054168701172,
+      "realized_pnl": 5092.895591735837
+    },
+    "JNJ": {
+      "qty": 67.0,
+      "avg_cost": 154.67796348457907,
+      "realized_pnl": -1670.695175170898
+    },
+    "MCD": {
+      "qty": 35.0,
+      "avg_cost": 285.10750470842635,
+      "realized_pnl": -2268.60006713867
+    },
+    "UNH": {
+      "qty": 17.0,
+      "avg_cost": 562.73046875,
+      "realized_pnl": 929.2338562011723
+    },
+    "MA": {
+      "qty": 19.0,
+      "avg_cost": 492.14971923828125,
+      "realized_pnl": 1054.837585449219
+    },
+    "V": {
+      "qty": 32.0,
+      "avg_cost": 287.548828125,
+      "realized_pnl": 1037.6407318115248
+    },
+    "SBUX": {
+      "qty": 102.0,
+      "avg_cost": 98.25106811523438,
+      "realized_pnl": 4145.405548095703
+    },
+    "AMZN": {
+      "qty": 48.0,
+      "avg_cost": 210.7100067138672,
+      "realized_pnl": 4063.6500701904306
+    }
+  },
+  "source": "famous",
+  "description": "Growth at reasonable price: moderate momentum, low vol, buy what you know"
+}

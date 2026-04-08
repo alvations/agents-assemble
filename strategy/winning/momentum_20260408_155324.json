@@ -1,0 +1,93 @@
+{
+  "strategy_name": "momentum",
+  "is_winning": true,
+  "generated_at": "2026-04-08T15:53:24.505875",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.7%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "9.8%",
+    "max_drawdown_tolerance": "31.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "TSLA",
+      "action": "BUY",
+      "current_position": 75.0,
+      "annual_volatility": "62%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "25.7% above entry",
+      "position_size": "2.6% of portfolio",
+      "trailing_stop": "28.0% trailing after 10.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
+      "yahoo_url": "https://finance.yahoo.com/quote/TSLA/"
+    },
+    {
+      "symbol": "AVGO",
+      "action": "BUY",
+      "current_position": 134.0,
+      "annual_volatility": "55%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "22.7% above entry",
+      "position_size": "2.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 9.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AVGO",
+      "yahoo_url": "https://finance.yahoo.com/quote/AVGO/"
+    },
+    {
+      "symbol": "AAPL",
+      "action": "BUY",
+      "current_position": 125.0,
+      "annual_volatility": "29%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "30.1% below entry",
+      "take_profit": "11.8% above entry",
+      "position_size": "5.6% of portfolio",
+      "trailing_stop": "21.1% trailing after 4.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "GOOGL",
+      "action": "BUY",
+      "current_position": 164.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "31.4% below entry",
+      "take_profit": "12.3% above entry",
+      "position_size": "5.4% of portfolio",
+      "trailing_stop": "22.0% trailing after 4.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "PLTR",
+      "action": "BUY",
+      "current_position": 405.0,
+      "annual_volatility": "64%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "26.2% above entry",
+      "position_size": "2.5% of portfolio",
+      "trailing_stop": "28.0% trailing after 10.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PLTR",
+      "yahoo_url": "https://finance.yahoo.com/quote/PLTR/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "71.01%",
+    "sharpe_ratio": "0.74",
+    "max_drawdown": "-31.40%",
+    "win_rate": "44.68%",
+    "alpha": "11.00%"
+  }
+}

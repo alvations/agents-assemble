@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "total_return": -0.3715279714731764,
+    "cagr": -0.14388701415872285,
+    "annual_volatility": 0.25040300551574135,
+    "sharpe_ratio": -0.6501525219979812,
+    "sortino_ratio": -0.844368344661188,
+    "calmar_ratio": -0.38549362055038033,
+    "max_drawdown": -0.37325394374436394,
+    "max_drawdown_date": "2022-05-11",
+    "win_rate": 0.0678191489361702,
+    "profit_factor": 0.7914008212061394,
+    "num_trading_days": 752,
+    "skewness": -1.6173540752714832,
+    "kurtosis": 37.31175500383519,
+    "best_day": 0.11281343015723944,
+    "worst_day": -0.1467887376998952,
+    "avg_daily_return": -0.0004903824608275215,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.23051159325848702,
+    "beta": 0.22522551861407755,
+    "information_ratio": -0.8173038241316355,
+    "tracking_error": 0.28203904894657716
+  },
+  "trade_metrics": {
+    "num_trades": 249,
+    "num_buys": 125,
+    "num_sells": 124,
+    "total_commission": 0.0,
+    "total_slippage": 4905.406068130254,
+    "total_transaction_costs": 4905.406068130254,
+    "avg_trade_size": 19700.425976426726
+  },
+  "final_positions": {},
+  "source": "generic",
+  "description": "YOLO: volume spikes, dip buys, short squeezes"
+}

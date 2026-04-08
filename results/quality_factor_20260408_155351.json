@@ -1,0 +1,114 @@
+{
+  "metrics": {
+    "total_return": 0.21533564680757067,
+    "cagr": 0.06740450050359459,
+    "annual_volatility": 0.11066993064374792,
+    "sharpe_ratio": 0.2914964079899311,
+    "sortino_ratio": 0.4088229255346624,
+    "calmar_ratio": 0.4280427580475459,
+    "max_drawdown": -0.15747141900274242,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.5172872340425532,
+    "profit_factor": 1.1150120776186783,
+    "num_trading_days": 752,
+    "skewness": -0.27797078798397856,
+    "kurtosis": 2.317040624984003,
+    "best_day": 0.02714975515742113,
+    "worst_day": -0.0408715877000384,
+    "avg_daily_return": 0.00028366528840692676,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.019220078596169587,
+    "beta": 0.4898572940310286,
+    "information_ratio": -0.16942306028701765,
+    "tracking_error": 0.11344428889201431
+  },
+  "trade_metrics": {
+    "num_trades": 525,
+    "num_buys": 274,
+    "num_sells": 251,
+    "total_commission": 0.0,
+    "total_slippage": 2559.430860801695,
+    "total_transaction_costs": 2559.430860801695,
+    "avg_trade_size": 4875.106401527041
+  },
+  "final_positions": {
+    "DUK": {
+      "qty": 69.0,
+      "avg_cost": 110.22081756591797,
+      "realized_pnl": -1692.3203048706057
+    },
+    "MCD": {
+      "qty": 27.0,
+      "avg_cost": 284.1868896484375,
+      "realized_pnl": -1808.042938232421
+    },
+    "BRK-B": {
+      "qty": 16.0,
+      "avg_cost": 457.4100036621094,
+      "realized_pnl": 3373.471160888672
+    },
+    "JNJ": {
+      "qty": 51.0,
+      "avg_cost": 154.7679640826057,
+      "realized_pnl": -818.0799713134766
+    },
+    "LIN": {
+      "qty": 17.0,
+      "avg_cost": 464.8430804084329,
+      "realized_pnl": 1812.524932861328
+    },
+    "NEE": {
+      "qty": 102.0,
+      "avg_cost": 74.23247528076172,
+      "realized_pnl": -1091.9237213134757
+    },
+    "ABT": {
+      "qty": 66.0,
+      "avg_cost": 110.53427921641956,
+      "realized_pnl": -1374.273475646973
+    },
+    "HD": {
+      "qty": 18.0,
+      "avg_cost": 378.5032653808594,
+      "realized_pnl": 221.646209716798
+    },
+    "GOOGL": {
+      "qty": 44.0,
+      "avg_cost": 170.31106879494408,
+      "realized_pnl": 2141.769554138185
+    },
+    "MSFT": {
+      "qty": 18.0,
+      "avg_cost": 426.8498229980469,
+      "realized_pnl": 2379.6973876953116
+    },
+    "UNH": {
+      "qty": 13.0,
+      "avg_cost": 587.061279296875,
+      "realized_pnl": 420.9512329101549
+    },
+    "COST": {
+      "qty": 8.0,
+      "avg_cost": 849.9083121163504,
+      "realized_pnl": 2496.261644635882
+    },
+    "MA": {
+      "qty": 14.0,
+      "avg_cost": 492.14971923828125,
+      "realized_pnl": 1939.8251037597654
+    },
+    "V": {
+      "qty": 24.0,
+      "avg_cost": 287.548828125,
+      "realized_pnl": 733.999359130861
+    },
+    "ACN": {
+      "qty": 21.0,
+      "avg_cost": 340.8043212890625,
+      "realized_pnl": 1286.7398376464848
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy low-vol stocks in uptrends \u2014 quality minus junk"
+}
