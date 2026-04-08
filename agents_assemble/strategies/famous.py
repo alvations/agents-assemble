@@ -199,7 +199,7 @@ class RayDalio(BasePersona):
             scale = 0.95 / total
             raw = {k: v * scale for k, v in weights.items()}
             cap = self.config.max_position_size
-            while True:
+            for _cap_round in range(5):  # Cap redistribution rounds (avoid infinite loop)
                 over = {s: w for s, w in raw.items() if w > cap}
                 if not over:
                     break
@@ -315,7 +315,7 @@ class GeorgeSoros(BasePersona):
             cap = self.config.max_position_size
             raw = {sym: (score / total_score) * 0.95 for sym, score in top}
             # Iterative cap redistribution: keep redistributing until no entry exceeds cap
-            while True:
+            for _cap_round in range(5):  # Cap redistribution rounds (avoid infinite loop)
                 over = {s: w for s, w in raw.items() if w > cap}
                 if not over:
                     break
@@ -1193,7 +1193,7 @@ class SupportResistanceCommodity(BasePersona):
             cap = self.config.max_position_size
             raw = {sym: (score / total_score) * 0.90 for sym, score in top}
             # Iterative cap redistribution
-            while True:
+            for _cap_round in range(5):  # Cap redistribution rounds (avoid infinite loop)
                 over = {s: w for s, w in raw.items() if w > cap}
                 if not over:
                     break
@@ -1372,7 +1372,7 @@ class StanleyDruckenmiller(BasePersona):
             total_score = sum(s for _, s in top)
             cap = self.config.max_position_size
             raw = {sym: (score / total_score) * 0.90 for sym, score in top}
-            while True:
+            for _cap_round in range(5):  # Cap redistribution rounds (avoid infinite loop)
                 over = {s: w for s, w in raw.items() if w > cap}
                 if not over:
                     break
