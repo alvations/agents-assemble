@@ -11,8 +11,6 @@ All backtested — never trust blindly.
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
 from personas import BasePersona, PersonaConfig
 
 
@@ -48,7 +46,7 @@ class GeopoliticalCrisis(BasePersona):
 
     def generate_signals(self, date, prices, portfolio, data):
         spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
-        ann_vol = spy_vol * (252 ** 0.5) if spy_vol else 0.15
+        ann_vol = spy_vol * (252 ** 0.5) if spy_vol is not None else 0.15
 
         weights = {}
         energy = ["XLE", "XOP", "OXY", "DVN", "HAL", "SLB"]
@@ -59,7 +57,7 @@ class GeopoliticalCrisis(BasePersona):
             for sym in energy:
                 if sym in prices:
                     sma50 = self._get_indicator(data, sym, "sma_50", date)
-                    if sma50 and prices[sym] > sma50:
+                    if sma50 is not None and prices[sym] > sma50:
                         weights[sym] = 0.10
             for sym in defense:
                 if sym in prices:
@@ -73,13 +71,17 @@ class GeopoliticalCrisis(BasePersona):
                     continue
                 sma50 = self._get_indicator(data, sym, "sma_50", date)
                 sma200 = self._get_indicator(data, sym, "sma_200", date)
-                if sma50 and sma200 and prices[sym] > sma50 > sma200:
+                if sma50 is not None and sma200 is not None and prices[sym] > sma50 > sma200:
                     scored.append((sym, (prices[sym] - sma200) / sma200))
             scored.sort(key=lambda x: x[1], reverse=True)
             for sym, _ in scored[:6]:
                 weights[sym] = 0.12
             weights["GLD"] = 0.05
 
+        # Close stale positions for symbols not in current weights
+        for sym in self.config.universe:
+            if sym in prices and sym != "SPY" and sym not in weights:
+                weights[sym] = 0.0
         return {k: v for k, v in weights.items() if k in prices and k != "SPY"}
 
 
@@ -126,7 +128,7 @@ class AgricultureFoodSecurity(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             score = 0.0
-            if sma200 and price > sma50 > sma200:
+            if sma200 is not None and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
@@ -140,6 +142,9 @@ class AgricultureFoodSecurity(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -191,10 +196,10 @@ class GamingContentCatalyst(BasePersona):
             vol_avg = self._get_indicator(data, sym, "volume_sma_20", date)
             if any(v is None for v in [sma50, rsi]):
                 continue
-            vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
             # Buy momentum + volume confirmation (pre-launch buildup)
             score = 0.0
-            if sma200 and price > sma50 > sma200:
+            if sma200 is not None and price > sma50 > sma200:
                 score += 2.5
             elif price > sma50:
                 score += 1.5
@@ -203,7 +208,7 @@ class GamingContentCatalyst(BasePersona):
             if 40 < rsi < 70:
                 score += 0.5
             # Sell on extreme overbought (post-release selloff)
-            if rsi and rsi > 80:
+            if rsi > 80:
                 weights[sym] = 0.0
                 continue
             if score >= 2.5:
@@ -214,6 +219,9 @@ class GamingContentCatalyst(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -261,14 +269,14 @@ class SmallCapValueRotation(BasePersona):
             if any(v is None for v in [sma50, rsi]):
                 continue
             score = 0.0
-            if sma200 and price > sma50 > sma200:
+            if sma200 is not None and price > sma50 > sma200:
                 score += 3.0
             elif price > sma50:
                 score += 1.5
             if 35 < rsi < 70:
                 score += 0.5
             # Small cap value premium: buy dips
-            if sma200 and price < sma200 * 1.05 and rsi < 40:
+            if sma200 is not None and price < sma200 * 1.05 and rsi < 40:
                 score += 1.0  # Near SMA200 support
             if score >= 2.0:
                 scored.append((sym, score))
@@ -278,6 +286,9 @@ class SmallCapValueRotation(BasePersona):
             per_stock = min(0.90 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 
@@ -325,13 +336,13 @@ class ContrarianFallenAngels(BasePersona):
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
             # Buy deep discount + recovery signal
             if discount > 0.05 and rsi < 45:
-                vol_ratio = volume / vol_avg if volume and vol_avg and vol_avg > 0 else 1
+                vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
                 score = discount * 5 + max(0, 45 - rsi) / 45
                 if vol_ratio > 1.5:
                     score *= 1.3  # Volume = institutional interest
                 candidates.append((sym, score))
             # Take profits on recovery
-            if rsi and rsi > 65 and discount < -0.10:
+            if rsi > 65 and discount < -0.10:
                 weights[sym] = 0.0
         candidates.sort(key=lambda x: x[1], reverse=True)
         top = candidates[:self.config.max_positions]
@@ -339,6 +350,9 @@ class ContrarianFallenAngels(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
         return weights
 
 

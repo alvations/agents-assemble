@@ -13,7 +13,7 @@ Usage:
 
     analyzer = CatalystAnalyzer("NTDOY")
     news = analyzer.get_news()
-    events = analyzer.get_upcoming_catalysts()
+    events = analyzer.predict_next_catalyst()
     historical = analyzer.analyze_historical_patterns()
     backtest = analyzer.backtest_event_strategy()
     prediction = analyzer.predict_next_catalyst()
@@ -414,9 +414,12 @@ class CatalystAnalyzer:
 
         trades = []
         position = None
+        last_valid_price = None
 
         for i in range(25, len(df)):
             price = close.iloc[i]
+            if not pd.isna(price):
+                last_valid_price = price
             if pd.isna(price):
                 continue
 
@@ -439,8 +442,11 @@ class CatalystAnalyzer:
                     elif strategy == "momentum" and r > 0.02 and v > 1.5:
                         position = (entry_price, i + 1)
 
-        # Drop incomplete position — it hasn't held for holding_days
-        # so including it would bias avg_return and win_rate
+        # Close position at last valid price if holding period completed but
+        # NaN close prices prevented exit (e.g., delisted stock)
+        if position is not None:
+            if len(df) - 1 - position[1] >= holding_days and last_valid_price is not None:
+                trades.append(last_valid_price / position[0] - 1)
 
         if not trades:
             return BacktestResult(strategy, holding_days, 0, 0, 0, 0, 0, 0, 0)
@@ -475,7 +481,7 @@ class CatalystAnalyzer:
         best_bt = None
         best_key = None
         for key, bt in backtests.items():
-            if bt.total_trades < 3 or bt.win_rate <= 0.5:
+            if bt.total_trades < 3 or bt.win_rate <= 0.5 or bt.profit_factor < 1.0:
                 continue
             if best_bt is None or bt.total_return > best_bt.total_return:
                 best_bt = bt
@@ -657,7 +663,7 @@ class CatalystAnalyzer:
             print(f"\n  Backtests ({len(bts)} strategies):")
             print(f"  {'Strategy':20s} | {'Trades':>6s} | {'Win%':>5s} | {'Avg Ret':>8s} | {'Total Ret':>10s}")
             print(f"  {'-'*60}")
-            for key, bt in sorted(bts.items(), key=lambda x: -x[1]["total_return"]):
+            for key, bt in sorted(bts.items(), key=lambda x: -(x[1]["total_return"] or 0)):
                 print(f"  {key:20s} | {bt['total_trades']:6d} | {bt['win_rate']:4.0%} | "
                       f"{bt['avg_return']:+7.1%} | {bt['total_return']:+9.1%}")
 

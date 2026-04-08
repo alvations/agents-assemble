@@ -71,7 +71,10 @@ class DualMomentum(BasePersona):
         efa_price = prices.get("EFA")
 
         if spy_price is None or _is_missing(spy_sma200):
-            return {"AGG": 0.90} if "AGG" in prices else {}
+            weights = {sym: 0.0 for sym in self.config.universe if sym in prices}
+            if "AGG" in prices:
+                weights["AGG"] = 0.90
+            return weights
 
         # Relative momentum: SPY vs EFA
         spy_mom = (spy_price - spy_sma200) / spy_sma200 if spy_sma200 > 0 else 0
@@ -661,9 +664,10 @@ class FactorETFRotation(BasePersona):
         super().__init__(config)
 
     def generate_signals(self, date, prices, portfolio, data):
+        _SAFE_HAVENS = ("TLT", "GLD")
         scored = []
         for sym in self.config.universe:
-            if sym not in prices:
+            if sym in _SAFE_HAVENS or sym not in prices:
                 continue
             price = prices[sym]
             inds = self._get_indicators(data, sym, ["sma_50", "sma_200"], date)
@@ -684,8 +688,19 @@ class FactorETFRotation(BasePersona):
         weights = {}
         if top:
             per_etf = min(0.90 / len(top), self.config.max_position_size)
+            total_alloc = per_etf * len(top)
             for sym, _ in top:
                 weights[sym] = per_etf
+            # Allocate remainder to safe havens (matching FaberSectorRotation pattern)
+            remainder = 0.90 - total_alloc
+            if remainder > 0.05:
+                havens = [s for s in _SAFE_HAVENS
+                          if s in self.config.universe and s in prices]
+                if havens:
+                    per_haven = min(remainder / len(havens),
+                                    self.config.max_position_size)
+                    for s in havens:
+                        weights[s] = per_haven
         else:
             # All negative momentum → safe haven (only if in universe and prices)
             cap = self.config.max_position_size

@@ -16,6 +16,8 @@ Features:
 from __future__ import annotations
 
 import json
+import math
+import re
 import base64
 import sys
 from datetime import date, timedelta
@@ -26,6 +28,17 @@ from flask import Flask, render_template_string, request, jsonify
 sys.path.insert(0, str(Path(__file__).parent))
 
 app = Flask(__name__)
+
+_DATE_SUFFIX_RE = re.compile(r'_\d{4}(-\d{2}(-\d{2})?)?$')
+
+def _sanitize_for_json(obj):
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    if isinstance(obj, float) and not math.isfinite(obj):
+        return None
+    return obj
 
 # ---------------------------------------------------------------------------
 # HTML Template (single-page app with Bloomberg dark theme)
@@ -266,12 +279,13 @@ function renderLeaderboard() {
     });
     html += '</tr>';
     sorted.forEach((s, i) => {
-        const retClass = s.return > 0 ? 'positive' : 'negative';
+        const ret = s.return || 0, sharpe = s.sharpe || 0, max_dd = s.max_dd || 0;
+        const retClass = ret > 0 ? 'positive' : 'negative';
         html += '<tr><td>' + (i+1) + '</td><td><b>' + esc(s.name) + '</b></td>'
             + '<td><span class="tag tag-blue">' + esc(s.source) + '</span></td>'
-            + '<td class="' + retClass + '">' + (s.return*100).toFixed(1) + '%</td>'
-            + '<td>' + (s.sharpe||0).toFixed(2) + '</td>'
-            + '<td class="negative">' + (s.max_dd*100).toFixed(1) + '%</td></tr>';
+            + '<td class="' + retClass + '">' + (ret*100).toFixed(1) + '%</td>'
+            + '<td>' + sharpe.toFixed(2) + '</td>'
+            + '<td class="negative">' + (max_dd*100).toFixed(1) + '%</td></tr>';
     });
     html += '</table>';
     document.getElementById('leaderboard-table').innerHTML = html;
@@ -371,6 +385,8 @@ function runCatalyst() {
             });
         }
         document.getElementById('catalyst-results').innerHTML = html;
+    }).catch(e => {
+        document.getElementById('catalyst-results').innerHTML = '<p class="negative">Error: ' + e + '</p>';
     });
 }
 
@@ -382,6 +398,8 @@ function loadChart() {
         if (data.image) {
             document.getElementById('chart-container').innerHTML = '<img class="chart-img" src="data:image/png;base64,' + data.image + '">';
         }
+    }).catch(e => {
+        document.getElementById('chart-container').innerHTML = '<p class="negative">Error: ' + e + '</p>';
     });
 }
 
@@ -500,7 +518,7 @@ def api_leaderboard():
             try:
                 data = json.loads(f.read_text())
                 metrics = data.get("metrics", data)
-                name = f.stem.rsplit("_2026", 1)[0]
+                name = _DATE_SUFFIX_RE.sub('', f.stem)
                 ret = metrics.get("total_return", 0)
                 sharpe = metrics.get("sharpe_ratio", 0)
                 max_dd = metrics.get("max_drawdown", 0)
@@ -527,19 +545,25 @@ def api_leaderboard():
         return jsonify([])
     start, end = h_map[horizon]
     results = []
+    def _safe_metric(val, ndigits=4):
+        if not isinstance(val, (int, float)) or isinstance(val, bool) or not math.isfinite(val):
+            return 0
+        return round(val, ndigits)
+
     for s in _get_all_strategies():
         r = run_single(s, horizon, start, end, verbose=False)
         if r["status"] == "success":
             m = r["metrics"]
             results.append({
                 "name": s["key"], "source": s["source"],
-                "return": round(m.get("total_return", 0), 4),
-                "sharpe": round(m.get("sharpe_ratio", 0), 2),
-                "max_dd": round(m.get("max_drawdown", 0), 4),
+                "return": _safe_metric(m.get("total_return", 0)),
+                "sharpe": _safe_metric(m.get("sharpe_ratio", 0), 2),
+                "max_dd": _safe_metric(m.get("max_drawdown", 0)),
             })
     results.sort(key=lambda x: x["return"], reverse=True)
-    _leaderboard_cache[horizon] = results[:30]
-    return jsonify(results[:30])
+    results = _sanitize_for_json(results[:30])
+    _leaderboard_cache[horizon] = results
+    return jsonify(results)
 
 @app.route("/api/strategies")
 def api_strategies():
@@ -573,10 +597,13 @@ def api_market():
         try:
             df = fetch_ohlcv(sym, start=str(date.today() - timedelta(days=60)), cache=True)
             if len(df) > 1:
-                data[sym] = {
-                    "price": float(df["Close"].iloc[-1]),
-                    "change": float(df["Close"].iloc[-1] / df["Close"].iloc[-20] - 1) if len(df) > 20 else 0,
-                }
+                last = float(df["Close"].iloc[-1])
+                if len(df) > 20:
+                    ref = float(df["Close"].iloc[-20])
+                    change = (last / ref - 1) if ref > 0 else 0
+                else:
+                    change = 0
+                data[sym] = {"price": last, "change": change}
         except Exception:
             pass
     return jsonify(data)
@@ -595,19 +622,19 @@ def api_scan(symbol):
             if r.total_trades > 0:
                 bts[f'{strat}_10d'] = r
     best = max(bts.values(), key=lambda b: b.total_return) if bts else None
-    return jsonify({
+    return jsonify(_sanitize_for_json({
         "symbol": symbol.upper(),
         "industry": a.industry,
         "patterns": {k: v for k, v in patterns.items() if k != "events"},
         "best": best.to_dict() if best else None,
-    })
+    }))
 
 @app.route("/api/catalyst/<symbol>")
 def api_catalyst(symbol):
     from catalyst_analyzer import CatalystAnalyzer
     a = CatalystAnalyzer(symbol.upper())
     report = a.full_report()
-    return jsonify(report)
+    return jsonify(_sanitize_for_json(report))
 
 @app.route("/api/chart/<symbol>")
 def api_chart(symbol):
@@ -631,7 +658,12 @@ def api_trade_plan(strategy):
     from backtester import _compute_rsi, _compute_bollinger, _compute_atr
     import pandas as pd
 
-    amount = float(request.args.get("amount", 100000))
+    try:
+        amount = float(request.args.get("amount", 100000))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount parameter"}), 400
+    if amount <= 0 or not math.isfinite(amount):
+        return jsonify({"error": "Amount must be a positive number"}), 400
     symbols = persona.config.universe[:15]
     all_data = fetch_multiple_ohlcv(symbols, start="2024-01-01")
 
@@ -661,7 +693,10 @@ def api_trade_plan(strategy):
     from backtester import Portfolio
     portfolio = Portfolio(initial_cash=amount, cash=amount)
     today = pd.Timestamp.now().normalize()
-    weights = persona.generate_signals(today, prices, portfolio, enriched)
+    try:
+        weights = persona.generate_signals(today, prices, portfolio, enriched)
+    except Exception as e:
+        return jsonify({"error": f"Strategy signal generation failed: {e}"}), 500
 
     orders = []
     for sym, w in sorted(weights.items(), key=lambda x: -x[1]):
@@ -681,14 +716,19 @@ def api_execute_trade(strategy):
         return jsonify({"error": "PUBLIC_API_SECRET not set. Go to public.com/settings/security/api to get your key, then: export PUBLIC_API_SECRET=your_key"}), 403
 
     body = request.get_json(silent=True) or {}
-    amount = float(body.get("amount", request.args.get("amount", 100000)))
+    try:
+        amount = float(body.get("amount", request.args.get("amount", 100000)))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount parameter"}), 400
+    if amount <= 0 or not math.isfinite(amount):
+        return jsonify({"error": "Amount must be a positive number"}), 400
     from public_trader import PublicTrader
     trader = PublicTrader(dry_run=False)
     try:
         results = trader.execute_strategy(strategy, portfolio_value=amount)
         return jsonify(results)
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

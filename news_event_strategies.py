@@ -153,6 +153,10 @@ class EarningsSurpriseDrift(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        else:
+            for sym in self.config.universe:
+                if sym in prices:
+                    weights.setdefault(sym, 0.0)
         return weights
 
 

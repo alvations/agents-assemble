@@ -1,0 +1,138 @@
+{
+  "WBD": {
+    "category": "merger_arb",
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.8,
+    "total_return": 0.471,
+    "profit_factor": Infinity,
+    "trades": 5
+  },
+  "AGNC": {
+    "category": "dividend_capture",
+    "strategy": "momentum_20d",
+    "win_rate": 0.67,
+    "total_return": 0.418,
+    "profit_factor": 10.5,
+    "trades": 6
+  },
+  "O": {
+    "category": "dividend_capture",
+    "strategy": "momentum_20d",
+    "win_rate": 0.8,
+    "total_return": 0.21,
+    "profit_factor": 18.3,
+    "trades": 5
+  },
+  "HQH": {
+    "category": "cef_discount",
+    "strategy": "momentum_10d",
+    "win_rate": 0.6,
+    "total_return": 0.164,
+    "profit_factor": 5.0,
+    "trades": 5
+  },
+  "TYG": {
+    "category": "cef_discount",
+    "strategy": "momentum_20d",
+    "win_rate": 0.9,
+    "total_return": 0.439,
+    "profit_factor": 9.8,
+    "trades": 10
+  },
+  "KOS": {
+    "category": "energy_crisis",
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.73,
+    "total_return": 1.487,
+    "profit_factor": 5.5,
+    "trades": 15
+  },
+  "HOOD": {
+    "category": "retail_boom",
+    "strategy": "momentum_20d",
+    "win_rate": 0.62,
+    "total_return": 4.99,
+    "profit_factor": 4.1,
+    "trades": 16
+  },
+  "MARA": {
+    "category": "crypto",
+    "strategy": "momentum_10d",
+    "win_rate": 0.65,
+    "total_return": 2.308,
+    "profit_factor": 2.7,
+    "trades": 23
+  },
+  "LEU": {
+    "category": "nuclear",
+    "strategy": "momentum_20d",
+    "win_rate": 0.56,
+    "total_return": 1.775,
+    "profit_factor": 2.8,
+    "trades": 18
+  },
+  "NWPX": {
+    "category": "infrastructure",
+    "strategy": "momentum_20d",
+    "win_rate": 0.64,
+    "total_return": 0.726,
+    "profit_factor": 4.2,
+    "trades": 14
+  },
+  "ORN": {
+    "category": "infrastructure",
+    "strategy": "buy_spike_20d",
+    "win_rate": 0.8,
+    "total_return": 4.015,
+    "profit_factor": 7.0,
+    "trades": 15
+  },
+  "FIX": {
+    "category": "breakout",
+    "strategy": "buy_dip_10d",
+    "win_rate": 1.0,
+    "total_return": 0.743,
+    "profit_factor": Infinity,
+    "trades": 5
+  },
+  "STRL": {
+    "category": "breakout",
+    "strategy": "momentum_20d",
+    "win_rate": 0.71,
+    "total_return": 2.686,
+    "profit_factor": 4.5,
+    "trades": 17
+  },
+  "ROAD": {
+    "category": "breakout",
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.57,
+    "total_return": 0.339,
+    "profit_factor": 3.1,
+    "trades": 7
+  },
+  "FSLY": {
+    "category": "tech_rebound",
+    "strategy": "buy_spike_20d",
+    "win_rate": 0.54,
+    "total_return": 0.563,
+    "profit_factor": 2.2,
+    "trades": 13
+  },
+  "MRVL": {
+    "category": "smart_money",
+    "strategy": "buy_dip_10d",
+    "win_rate": 0.67,
+    "total_return": 0.67,
+    "profit_factor": 5.7,
+    "trades": 12
+  },
+  "CM": {
+    "category": "smart_money",
+    "strategy": "momentum_20d",
+    "win_rate": 0.73,
+    "total_return": 0.417,
+    "profit_factor": 5.2,
+    "trades": 11
+  }
+}

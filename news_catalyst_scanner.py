@@ -24,9 +24,8 @@ import os
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+import math
 
-import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -37,7 +36,7 @@ from data_fetcher import fetch_ohlcv, get_api_key
 # ---------------------------------------------------------------------------
 # News fetching (free + premium)
 # ---------------------------------------------------------------------------
-def fetch_news_yfinance(symbol: str, max_items: int = 20) -> List[Dict]:
+def fetch_news_yfinance(symbol: str, max_items: int = 20) -> list[dict]:
     """Fetch news from yfinance (free, no API key needed)."""
     import yfinance as yf
     ticker = yf.Ticker(symbol)
@@ -59,7 +58,7 @@ def fetch_news_yfinance(symbol: str, max_items: int = 20) -> List[Dict]:
     return []
 
 
-def fetch_news_finnhub(symbol: str, days_back: int = 30) -> List[Dict]:
+def fetch_news_finnhub(symbol: str, days_back: int = 30) -> list[dict]:
     """Fetch company news from Finnhub (requires FINNHUB_API_KEY)."""
     import requests
     key = get_api_key("FINNHUB_API_KEY")
@@ -112,10 +111,10 @@ def _classify_headline(title: str) -> str:
 def analyze_event_patterns(
     symbol: str,
     start: str = "2023-01-01",
-    end: Optional[str] = None,
+    end: str | None = None,
     volume_threshold: float = 2.0,
     return_threshold: float = 0.03,
-) -> Dict[str, Any]:
+) -> dict:
     """Analyze historical price/volume patterns that look like news events.
 
     Detects "event days" = days with unusual volume (>2x average) AND
@@ -139,18 +138,18 @@ def analyze_event_patterns(
 
     # Find event days: unusual volume + significant move
     events = []
-    for i in range(25, len(df) - 10):
+    for i in range(25, len(df) - 20):
         if vol_ratio.iloc[i] > volume_threshold and abs(daily_ret.iloc[i]) > return_threshold:
             date = df.index[i]
             ret = daily_ret.iloc[i]
             direction = "up" if ret > 0 else "down"
 
             # Pre-event: 5 days before
-            pre_ret = (close.iloc[i] / close.iloc[max(0, i-5)] - 1) if i >= 5 else 0
-            # Post-event: 5, 10, 20 days after
-            post_5 = (close.iloc[min(i+5, len(df)-1)] / close.iloc[i] - 1)
-            post_10 = (close.iloc[min(i+10, len(df)-1)] / close.iloc[i] - 1)
-            post_20 = (close.iloc[min(i+20, len(df)-1)] / close.iloc[i] - 1)
+            pre_ret = close.iloc[i] / close.iloc[i - 5] - 1
+            # Post-event: 5, 10, 20 days after (full windows guaranteed by loop bound)
+            post_5 = close.iloc[i + 5] / close.iloc[i] - 1
+            post_10 = close.iloc[i + 10] / close.iloc[i] - 1
+            post_20 = close.iloc[i + 20] / close.iloc[i] - 1
 
             events.append({
                 "date": str(date.date()),
@@ -178,19 +177,21 @@ def analyze_event_patterns(
     }
 
     if up_events:
+        n_up = len(up_events)
         summary["after_up_event"] = {
-            "avg_post_5d": np.mean([e["post_5d_return"] for e in up_events]),
-            "avg_post_10d": np.mean([e["post_10d_return"] for e in up_events]),
-            "avg_post_20d": np.mean([e["post_20d_return"] for e in up_events]),
-            "win_rate_5d": np.mean([1 if e["post_5d_return"] > 0 else 0 for e in up_events]),
+            "avg_post_5d": sum(e["post_5d_return"] for e in up_events) / n_up,
+            "avg_post_10d": sum(e["post_10d_return"] for e in up_events) / n_up,
+            "avg_post_20d": sum(e["post_20d_return"] for e in up_events) / n_up,
+            "win_rate_5d": sum(1 for e in up_events if e["post_5d_return"] > 0) / n_up,
         }
 
     if down_events:
+        n_down = len(down_events)
         summary["after_down_event"] = {
-            "avg_post_5d": np.mean([e["post_5d_return"] for e in down_events]),
-            "avg_post_10d": np.mean([e["post_10d_return"] for e in down_events]),
-            "avg_post_20d": np.mean([e["post_20d_return"] for e in down_events]),
-            "bounce_rate_5d": np.mean([1 if e["post_5d_return"] > 0 else 0 for e in down_events]),
+            "avg_post_5d": sum(e["post_5d_return"] for e in down_events) / n_down,
+            "avg_post_10d": sum(e["post_10d_return"] for e in down_events) / n_down,
+            "avg_post_20d": sum(e["post_20d_return"] for e in down_events) / n_down,
+            "bounce_rate_5d": sum(1 for e in down_events if e["post_5d_return"] > 0) / n_down,
         }
 
     summary["events"] = events[:20]  # Limit for display
@@ -203,10 +204,10 @@ def analyze_event_patterns(
 def event_driven_backtest(
     symbol: str,
     start: str = "2022-01-01",
-    end: Optional[str] = None,
+    end: str | None = None,
     strategy: str = "buy_spike",  # buy_spike, buy_dip, momentum
     holding_days: int = 10,
-) -> Dict[str, Any]:
+) -> dict:
     """Backtest an event-driven strategy on a single stock.
 
     Strategies:
@@ -276,6 +277,8 @@ def event_driven_backtest(
     returns = [t["return"] for t in trades]
     winners = [r for r in returns if r > 0]
     losers = [r for r in returns if r < 0]
+    sum_winners = sum(winners)
+    sum_losers = sum(losers)
 
     return {
         "symbol": symbol,
@@ -283,13 +286,13 @@ def event_driven_backtest(
         "holding_days": holding_days,
         "total_trades": len(trades),
         "win_rate": len(winners) / len(trades),
-        "avg_return": np.mean(returns),
-        "total_return": np.prod([1 + r for r in returns]) - 1,
+        "avg_return": sum(returns) / len(returns),
+        "total_return": math.prod(1 + r for r in returns) - 1,
         "best_trade": max(returns),
         "worst_trade": min(returns),
-        "avg_winner": np.mean(winners) if winners else 0,
-        "avg_loser": np.mean(losers) if losers else 0,
-        "profit_factor": abs(sum(winners) / sum(losers)) if losers else float("inf"),
+        "avg_winner": sum_winners / len(winners) if winners else 0,
+        "avg_loser": sum_losers / len(losers) if losers else 0,
+        "profit_factor": abs(sum_winners / sum_losers) if sum_losers else 0.0,
         "trades": trades[-10:],  # Last 10 trades
     }
 
@@ -297,7 +300,7 @@ def event_driven_backtest(
 # ---------------------------------------------------------------------------
 # Full scanner: news + events + backtest
 # ---------------------------------------------------------------------------
-def scan_ticker(symbol: str, horizons: List[str] = None) -> Dict[str, Any]:
+def scan_ticker(symbol: str, horizons: list[str] | None = None, start: str = "2022-01-01") -> dict:
     """Full catalyst scan for a ticker.
 
     1. Fetch news (yfinance + Finnhub if available)
@@ -322,7 +325,7 @@ def scan_ticker(symbol: str, horizons: List[str] = None) -> Dict[str, Any]:
 
     # 2. Event pattern analysis
     print("\n  Analyzing historical event patterns...")
-    patterns = analyze_event_patterns(symbol, start="2022-01-01")
+    patterns = analyze_event_patterns(symbol, start=start)
     if "total_events" in patterns:
         print(f"  Found {patterns['total_events']} significant events "
               f"({patterns['up_events']} up, {patterns['down_events']} down)")
@@ -340,7 +343,7 @@ def scan_ticker(symbol: str, horizons: List[str] = None) -> Dict[str, Any]:
     backtest_results = {}
     for strat in ["buy_spike", "buy_dip", "momentum"]:
         for hold in [5, 10, 20]:
-            result = event_driven_backtest(symbol, strategy=strat, holding_days=hold)
+            result = event_driven_backtest(symbol, start=start, strategy=strat, holding_days=hold)
             key = f"{strat}_{hold}d"
             backtest_results[key] = result
             if result.get("total_trades", 0) > 0:
@@ -363,11 +366,10 @@ def scan_ticker(symbol: str, horizons: List[str] = None) -> Dict[str, Any]:
 def main():
     parser = argparse.ArgumentParser(description="News catalyst scanner + short-horizon backtester")
     parser.add_argument("symbol", help="Ticker symbol (e.g., NTDOY, DIS, TTWO)")
-    parser.add_argument("--analyze-events", action="store_true", help="Show detailed event analysis")
     parser.add_argument("--start", default="2022-01-01", help="Backtest start date")
     args = parser.parse_args()
 
-    results = scan_ticker(args.symbol)
+    results = scan_ticker(args.symbol, start=args.start)
 
     # Save results
     out_dir = Path(__file__).parent / "knowledge" / "catalyst_scans"
