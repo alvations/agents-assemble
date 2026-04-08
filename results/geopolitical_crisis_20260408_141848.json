@@ -1,0 +1,49 @@
+{
+  "metrics": {
+    "total_return": -0.013460774455181235,
+    "cagr": -0.004522652232196278,
+    "annual_volatility": 0.1496474143927029,
+    "sharpe_ratio": -0.21760358101190452,
+    "sortino_ratio": -0.2995529396139532,
+    "calmar_ratio": -0.016102314290647103,
+    "max_drawdown": -0.2808697029856897,
+    "max_drawdown_date": "2024-01-23",
+    "win_rate": 0.5066489361702128,
+    "profit_factor": 1.0085898162243705,
+    "num_trading_days": 752,
+    "skewness": -0.23136700846364963,
+    "kurtosis": 3.80176669771827,
+    "best_day": 0.04361964907587024,
+    "worst_day": -0.048189477333757114,
+    "avg_daily_return": 2.642838159672086e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.09114723133196045,
+    "beta": 0.37508030858596325,
+    "information_ratio": -0.5257812324242569,
+    "tracking_error": 0.17335580981409596
+  },
+  "trade_metrics": {
+    "num_trades": 1026,
+    "num_buys": 516,
+    "num_sells": 510,
+    "total_commission": 0.0,
+    "total_slippage": 4547.094621431353,
+    "total_transaction_costs": 4547.094621431353,
+    "avg_trade_size": 4431.866102759601
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 20.0,
+      "avg_cost": 224.97927549881973,
+      "realized_pnl": 1247.3837277498355
+    },
+    "SLV": {
+      "qty": 186.0,
+      "avg_cost": 27.618365129072323,
+      "realized_pnl": 1182.4940290892382
+    }
+  },
+  "source": "crisis",
+  "description": "War/crisis beneficiaries: energy + defense spike when vol rises"
+}

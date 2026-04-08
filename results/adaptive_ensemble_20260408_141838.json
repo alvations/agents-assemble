@@ -1,0 +1,84 @@
+{
+  "metrics": {
+    "total_return": 0.4805621489934482,
+    "cagr": 0.14026020099731618,
+    "annual_volatility": 0.14001648189363605,
+    "sharpe_ratio": 0.7291359736922765,
+    "sortino_ratio": 1.080848981235741,
+    "calmar_ratio": 0.6850757158134461,
+    "max_drawdown": -0.20473678713129373,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5292553191489362,
+    "profit_factor": 1.1892294188107657,
+    "num_trading_days": 752,
+    "skewness": 0.14292937736245329,
+    "kurtosis": 2.4197188136956584,
+    "best_day": 0.04519025233990459,
+    "worst_day": -0.03208627712791556,
+    "avg_daily_return": 0.0005607730923884188,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.053635621897552,
+    "beta": 0.49344416624145543,
+    "information_ratio": 0.3791994654516466,
+    "tracking_error": 0.14144434996412544
+  },
+  "trade_metrics": {
+    "num_trades": 950,
+    "num_buys": 497,
+    "num_sells": 453,
+    "total_commission": 0.0,
+    "total_slippage": 3052.7306917572023,
+    "total_transaction_costs": 3052.7306917572023,
+    "avg_trade_size": 3213.400728165476
+  },
+  "final_positions": {
+    "QQQ": {
+      "qty": 29.0,
+      "avg_cost": 459.7629618776174,
+      "realized_pnl": 7523.122445964562
+    },
+    "VIG": {
+      "qty": 116.0,
+      "avg_cost": 180.41216501057664,
+      "realized_pnl": 1169.137191031582
+    },
+    "GLD": {
+      "qty": 62.0,
+      "avg_cost": 232.5893673129714,
+      "realized_pnl": 2999.9798298007104
+    },
+    "SCHD": {
+      "qty": 570.0,
+      "avg_cost": 25.98271369934082,
+      "realized_pnl": 421.9846420288086
+    },
+    "XLP": {
+      "qty": 195.0,
+      "avg_cost": 75.8592300415039,
+      "realized_pnl": 1386.1819419860826
+    },
+    "XLV": {
+      "qty": 110.0,
+      "avg_cost": 134.31565856933594,
+      "realized_pnl": 1558.5559921264648
+    },
+    "TLT": {
+      "qty": 178.0,
+      "avg_cost": 83.12893676757812,
+      "realized_pnl": -3313.088882446295
+    },
+    "IEF": {
+      "qty": 168.0,
+      "avg_cost": 88.33330535888672,
+      "realized_pnl": -843.9103775024385
+    },
+    "DVY": {
+      "qty": 59.0,
+      "avg_cost": 125.15757751464844,
+      "realized_pnl": 647.5418243408197
+    }
+  },
+  "source": "portfolio",
+  "description": "Regime-switching: momentum in bulls, defensive in bears, quality in transitions"
+}

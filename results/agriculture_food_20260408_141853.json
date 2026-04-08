@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": -0.22462171400514097,
+    "cagr": -0.0815727961297893,
+    "annual_volatility": 0.14435231743361937,
+    "sharpe_ratio": -0.7898351669049744,
+    "sortino_ratio": -1.0346638399451247,
+    "calmar_ratio": -0.19133984898522274,
+    "max_drawdown": -0.42632413771837563,
+    "max_drawdown_date": "2024-12-19",
+    "win_rate": 0.4640957446808511,
+    "profit_factor": 0.9063526785044601,
+    "num_trading_days": 752,
+    "skewness": -0.5795444618153655,
+    "kurtosis": 3.9002857893842724,
+    "best_day": 0.03048684823114134,
+    "worst_day": -0.05292574548971418,
+    "avg_daily_return": -0.00029678877503930306,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.16819737522955347,
+    "beta": 0.3438278250787811,
+    "information_ratio": -0.9644983148514332,
+    "tracking_error": 0.17438845940903672
+  },
+  "trade_metrics": {
+    "num_trades": 847,
+    "num_buys": 403,
+    "num_sells": 444,
+    "total_commission": 0.0,
+    "total_slippage": 6376.279160036094,
+    "total_transaction_costs": 6376.279160036094,
+    "avg_trade_size": 7528.074569109902
+  },
+  "final_positions": {
+    "DBA": {
+      "qty": 457.0,
+      "avg_cost": 25.370894601099863,
+      "realized_pnl": -31.622272491459313
+    }
+  },
+  "source": "crisis",
+  "description": "Fertilizer + agriculture: food crisis beneficiaries"
+}

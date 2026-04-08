@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.021150832023590027,
+    "cagr": 0.007025273549355671,
+    "annual_volatility": 0.03746226438499845,
+    "sharpe_ratio": -0.8410891374429942,
+    "sortino_ratio": -1.1366665462130034,
+    "calmar_ratio": 0.09824496441262931,
+    "max_drawdown": -0.07150772145277073,
+    "max_drawdown_date": "2022-11-03",
+    "win_rate": 0.5053191489361702,
+    "profit_factor": 1.0351105196606754,
+    "num_trading_days": 752,
+    "skewness": 0.05730689346797638,
+    "kurtosis": 1.6821857995309855,
+    "best_day": 0.011517140108606716,
+    "worst_day": -0.007529035479460489,
+    "avg_daily_return": 3.061373724269239e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0795993055504085,
+    "beta": 0.09908885557526725,
+    "information_ratio": -0.4938413209543921,
+    "tracking_error": 0.16118397180004257
+  },
+  "trade_metrics": {
+    "num_trades": 252,
+    "num_buys": 123,
+    "num_sells": 129,
+    "total_commission": 0.0,
+    "total_slippage": 802.3201121521001,
+    "total_transaction_costs": 802.3201121521001,
+    "avg_trade_size": 3183.809968857538
+  },
+  "final_positions": {
+    "SHY": {
+      "qty": 332.0,
+      "avg_cost": 75.00535209228859,
+      "realized_pnl": -56.97646229378964
+    },
+    "TIP": {
+      "qty": 177.0,
+      "avg_cost": 100.56858769222806,
+      "realized_pnl": -820.4219673061916
+    },
+    "VTI": {
+      "qty": 20.0,
+      "avg_cost": 263.9416621128718,
+      "realized_pnl": 719.1644953091936
+    },
+    "XLE": {
+      "qty": 92.0,
+      "avg_cost": 45.05757141113281,
+      "realized_pnl": 923.1574401855469
+    },
+    "IEF": {
+      "qty": 117.0,
+      "avg_cost": 90.20084381103516,
+      "realized_pnl": -1142.6135025024423
+    },
+    "COIN": {
+      "qty": 2.0,
+      "avg_cost": 182.8800048828125,
+      "realized_pnl": 1667.0798950195312
+    },
+    "TLT": {
+      "qty": 48.0,
+      "avg_cost": 88.5318374633789,
+      "realized_pnl": -826.32975769043
+    }
+  },
+  "source": "portfolio",
+  "description": "Updated Dalio All-Weather: reduced bonds, added TIPS + crypto exposure"
+}

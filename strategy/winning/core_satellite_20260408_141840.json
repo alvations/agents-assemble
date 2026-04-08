@@ -1,0 +1,93 @@
+{
+  "strategy_name": "core_satellite",
+  "is_winning": true,
+  "generated_at": "2026-04-08T14:18:40.484627",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "7.7%",
+    "stop_loss": "18.8%",
+    "take_profit_target": "6.4%",
+    "max_drawdown_tolerance": "15.7%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "SPY",
+      "action": "BUY",
+      "current_position": 98.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.5% below entry",
+      "take_profit": "4.6% above entry",
+      "position_size": "10.7% of portfolio",
+      "trailing_stop": "9.4% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SPY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SPY/"
+    },
+    {
+      "symbol": "BND",
+      "action": "BUY",
+      "current_position": 415.0,
+      "annual_volatility": "5%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.4% below entry",
+      "take_profit": "3.2% above entry",
+      "position_size": "15.3% of portfolio",
+      "trailing_stop": "6.6% trailing after 1.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BND",
+      "yahoo_url": "https://finance.yahoo.com/quote/BND/"
+    },
+    {
+      "symbol": "NVDA",
+      "action": "BUY",
+      "current_position": 122.0,
+      "annual_volatility": "49%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "38.5% below entry",
+      "take_profit": "13.0% above entry",
+      "position_size": "3.8% of portfolio",
+      "trailing_stop": "27.0% trailing after 5.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
+      "yahoo_url": "https://finance.yahoo.com/quote/NVDA/"
+    },
+    {
+      "symbol": "XLE",
+      "action": "BUY",
+      "current_position": 374.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "17.9% below entry",
+      "take_profit": "6.1% above entry",
+      "position_size": "8.1% of portfolio",
+      "trailing_stop": "12.5% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XLE",
+      "yahoo_url": "https://finance.yahoo.com/quote/XLE/"
+    },
+    {
+      "symbol": "PLTR",
+      "action": "BUY",
+      "current_position": 254.0,
+      "annual_volatility": "64%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "17.0% above entry",
+      "position_size": "2.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 6.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PLTR",
+      "yahoo_url": "https://finance.yahoo.com/quote/PLTR/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "43.13%",
+    "sharpe_ratio": "0.64",
+    "max_drawdown": "-15.69%",
+    "win_rate": "53.46%",
+    "alpha": "4.08%"
+  }
+}

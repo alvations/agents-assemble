@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.48991533765974915,
+    "cagr": 0.14266452993403633,
+    "annual_volatility": 0.12801784852380427,
+    "sharpe_ratio": 0.8014457815338052,
+    "sortino_ratio": 1.188744522438943,
+    "calmar_ratio": 0.7944179140943436,
+    "max_drawdown": -0.17958372715786186,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5345744680851063,
+    "profit_factor": 1.2111480718503786,
+    "num_trading_days": 752,
+    "skewness": 0.13720007945857646,
+    "kurtosis": 3.3984159346418967,
+    "best_day": 0.04448791418348619,
+    "worst_day": -0.04102155819416897,
+    "avg_daily_return": 0.0005627901987453764,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.056039950834272156,
+    "beta": 0.5989350987500363,
+    "information_ratio": 0.5515464925388496,
+    "tracking_error": 0.10160512593654984
+  },
+  "trade_metrics": {
+    "num_trades": 1362,
+    "num_buys": 696,
+    "num_sells": 666,
+    "total_commission": 0.0,
+    "total_slippage": 2842.9059078216574,
+    "total_transaction_costs": 2842.9059078216574,
+    "avg_trade_size": 2087.302428650261
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 60.0,
+      "avg_cost": 253.8322285970052,
+      "realized_pnl": 3198.1004486083993
+    },
+    "META": {
+      "qty": 25.0,
+      "avg_cost": 621.7454223632812,
+      "realized_pnl": 10894.38659667969
+    },
+    "GLD": {
+      "qty": 31.0,
+      "avg_cost": 191.88573709907655,
+      "realized_pnl": 1131.7274118389535
+    },
+    "SHY": {
+      "qty": 96.0,
+      "avg_cost": 74.45604221538501,
+      "realized_pnl": -81.9394297449128
+    },
+    "XLP": {
+      "qty": 79.0,
+      "avg_cost": 68.1315419226691,
+      "realized_pnl": 125.52325109985073
+    },
+    "PG": {
+      "qty": 37.0,
+      "avg_cost": 145.05467095022496,
+      "realized_pnl": 165.8127040035433
+    },
+    "KO": {
+      "qty": 100.0,
+      "avg_cost": 56.33220898088176,
+      "realized_pnl": 596.9036182725017
+    },
+    "WMT": {
+      "qty": 67.0,
+      "avg_cost": 53.72794585896872,
+      "realized_pnl": 1851.0254166793256
+    },
+    "COST": {
+      "qty": 7.0,
+      "avg_cost": 669.778487614922,
+      "realized_pnl": 1655.9057731677349
+    },
+    "PEP": {
+      "qty": 41.0,
+      "avg_cost": 154.88950921288108,
+      "realized_pnl": 411.1658463560524
+    },
+    "GOOGL": {
+      "qty": 78.0,
+      "avg_cost": 193.7343292236328,
+      "realized_pnl": 3677.412269592287
+    },
+    "AMZN": {
+      "qty": 67.0,
+      "avg_cost": 225.05999755859375,
+      "realized_pnl": 6518.000297546386
+    }
+  },
+  "source": "portfolio",
+  "description": "Growth core + consumer staples/dividend hedge + gold/bond buffer"
+}
