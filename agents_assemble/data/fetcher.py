@@ -354,24 +354,39 @@ def fetch_ohlcv(
         covers_end = cached_max >= req_end - timedelta(days=3)  # 3-day grace for weekends
         is_fresh = cached_max >= today - timedelta(days=1)  # Has yesterday's data
 
-        if covers_start and covers_end and is_fresh:
-            # Cache fully covers request and is fresh — no fetch needed
-            need_fetch = False
-        elif covers_start and is_fresh:
-            # Covers start but not end (shouldn't happen if fresh) — no fetch
-            need_fetch = False
-        elif covers_start and not is_fresh:
-            # Has historical data but needs update — fetch only new days
-            fetch_start = (cached_max + timedelta(days=1)).strftime("%Y-%m-%d")
-            fetch_end = end
-        elif not covers_start:
-            # Need earlier data — fetch from requested start to cached start
-            # Then also check if we need newer data
-            fetch_start = start
-            if is_fresh:
-                fetch_end = (cached_min - timedelta(days=1)).strftime("%Y-%m-%d")
+        if covers_start and covers_end:
+            # Cache covers both start and end — no fetch needed for this range
+            # Only fetch new data if cache is stale AND end is "today"
+            if is_fresh or req_end <= cached_max:
+                need_fetch = False
             else:
-                fetch_end = end  # Need both earlier and newer — just refetch all
+                # Cache covers range but we want newer data too
+                new_start = (cached_max + timedelta(days=1)).strftime("%Y-%m-%d")
+                new_end = today.strftime("%Y-%m-%d")
+                if pd.Timestamp(new_start) < pd.Timestamp(new_end):
+                    fetch_start = new_start
+                    fetch_end = new_end
+                else:
+                    need_fetch = False
+        elif covers_start and not covers_end:
+            # Covers start but not end — fetch only the gap
+            new_start = (cached_max + timedelta(days=1)).strftime("%Y-%m-%d")
+            if pd.Timestamp(new_start) < req_end:
+                fetch_start = new_start
+                fetch_end = end
+            else:
+                # cached_max is past req_end — no fetch needed
+                need_fetch = False
+        elif not covers_start and covers_end:
+            # Need earlier data only
+            fetch_start = start
+            fetch_end = (cached_min - timedelta(days=1)).strftime("%Y-%m-%d")
+            if pd.Timestamp(fetch_start) >= pd.Timestamp(fetch_end):
+                need_fetch = False
+        else:
+            # Need both earlier and newer — full refetch
+            fetch_start = start
+            fetch_end = end
 
     if need_fetch:
         try:
