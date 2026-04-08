@@ -54,14 +54,23 @@ def _valid_date(s):
 def _sanitize_for_json(obj):
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
-    if isinstance(obj, list):
+    if isinstance(obj, (list, tuple)):
         return [_sanitize_for_json(v) for v in obj]
     if isinstance(obj, float) and not math.isfinite(obj):
         return None
+    if hasattr(obj, 'item'):
+        val = obj.item()
+        if isinstance(val, float) and not math.isfinite(val):
+            return None
+        return val
     return obj
 
 def _safe_metric(val, ndigits=4):
-    if not isinstance(val, (int, float)) or isinstance(val, bool) or not math.isfinite(val):
+    if isinstance(val, bool):
+        return 0
+    if hasattr(val, 'item'):
+        val = val.item()
+    if not isinstance(val, (int, float)) or not math.isfinite(val):
         return 0
     return round(val, ndigits)
 
@@ -599,8 +608,10 @@ function renderPickRecommendation(rec, idx, total) {
             const rowStyle = p.is_user_pick ? ' style="background:#00ff8811"' : '';
             const pickTag = p.is_user_pick ? '<span class="tag tag-green">YOUR PICK</span>' : '<span class="tag tag-yellow">SUGGESTED</span>';
             const actionClass = p.action === 'BUY' ? 'tag-green' : p.action === 'HOLD' ? 'tag-yellow' : p.action === 'WATCH' ? 'tag-blue' : 'tag-red';
-            const links = (p.tradingview_url ? '<a href="' + encodeURI(p.tradingview_url) + '" target="_blank">TV</a>' : '')
-                + (p.yahoo_url ? ' <a href="' + encodeURI(p.yahoo_url) + '" target="_blank">YF</a>' : '');
+            const tvOk = p.tradingview_url && /^https?:\/\//i.test(p.tradingview_url);
+            const yfOk = p.yahoo_url && /^https?:\/\//i.test(p.yahoo_url);
+            const links = (tvOk ? '<a href="' + encodeURI(p.tradingview_url) + '" target="_blank">TV</a>' : '')
+                + (yfOk ? ' <a href="' + encodeURI(p.yahoo_url) + '" target="_blank">YF</a>' : '');
             html += '<tr' + rowStyle + '>'
                 + '<td>' + pickTag + '</td>'
                 + '<td><b>' + esc(p.symbol) + '</b></td>'
@@ -895,8 +906,10 @@ def api_scan(symbol):
                         bts[f'{strat}_10d'] = r
                 except Exception:
                     pass
-        if bts:
-            best_key = max(bts, key=lambda k: bts[k].total_return)
+        valid_bts = {k: v for k, v in bts.items()
+                     if isinstance(v.total_return, (int, float)) and math.isfinite(v.total_return)}
+        if valid_bts:
+            best_key = max(valid_bts, key=lambda k: valid_bts[k].total_return)
             best_dict = bts[best_key].to_dict()
             best_dict.setdefault("strategy", best_key)
             best_entry = best_dict

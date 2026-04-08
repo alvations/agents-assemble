@@ -22,9 +22,10 @@ from data_fetcher import fetch_ohlcv, UNIVERSE
 class FlowRadar:
     """Detect unusual market flow patterns."""
 
-    def scan_volume_spikes(self, universe: str = "mega_cap", threshold: float = 2.5) -> list[dict]:
+    def scan_volume_spikes(self, universe: str = "mega_cap", threshold: float = 2.5,
+                           symbols: list[str] | None = None) -> list[dict]:
         """Find stocks with volume > threshold * 20-day average."""
-        symbols = UNIVERSE.get(universe, UNIVERSE["mega_cap"])
+        symbols = symbols or UNIVERSE.get(universe, UNIVERSE["mega_cap"])
         alerts = []
         start = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
         for sym in symbols:
@@ -32,13 +33,16 @@ class FlowRadar:
                 df = fetch_ohlcv(sym, start=start, cache=True)
                 if len(df) < 25: continue
                 if df.index.tz is not None: df.index = df.index.tz_localize(None)
-                vol_avg = float(df["Volume"].rolling(20).mean().iloc[-2])
+                vol_avg = float(df["Volume"].iloc[-21:-1].mean())
                 vol_today = float(df["Volume"].iloc[-1])
                 if not math.isfinite(vol_avg) or not math.isfinite(vol_today) or vol_avg <= 0:
                     continue
                 ratio = vol_today / vol_avg
                 if ratio > threshold:
-                    ret = float(df["Close"].pct_change().iloc[-1])
+                    close_prev = float(df["Close"].iloc[-2])
+                    if close_prev == 0:
+                        continue
+                    ret = float(df["Close"].iloc[-1]) / close_prev - 1
                     if not math.isfinite(ret):
                         continue
                     alerts.append({
@@ -52,9 +56,10 @@ class FlowRadar:
         alerts.sort(key=lambda x: x["volume_ratio"], reverse=True)
         return alerts
 
-    def scan_momentum_shifts(self, universe: str = "mega_cap") -> list[dict]:
+    def scan_momentum_shifts(self, universe: str = "mega_cap",
+                             symbols: list[str] | None = None) -> list[dict]:
         """Find stocks where MACD just crossed (momentum shift)."""
-        symbols = UNIVERSE.get(universe, UNIVERSE["mega_cap"])
+        symbols = symbols or UNIVERSE.get(universe, UNIVERSE["mega_cap"])
         shifts = []
         start = (datetime.now() - timedelta(days=120)).strftime("%Y-%m-%d")
         for sym in symbols:
@@ -82,10 +87,11 @@ class FlowRadar:
         shifts.sort(key=lambda x: abs(x["histogram"]), reverse=True)
         return shifts
 
-    def scan_all(self, universe: str = "mega_cap", threshold: float = 2.5) -> dict[str, list]:
+    def scan_all(self, universe: str = "mega_cap", threshold: float = 2.5,
+                  symbols: list[str] | None = None) -> dict[str, list]:
         return {
-            "volume_spikes": self.scan_volume_spikes(universe=universe, threshold=threshold),
-            "momentum_shifts": self.scan_momentum_shifts(universe=universe),
+            "volume_spikes": self.scan_volume_spikes(universe=universe, threshold=threshold, symbols=symbols),
+            "momentum_shifts": self.scan_momentum_shifts(universe=universe, symbols=symbols),
         }
 
 if __name__ == "__main__":
