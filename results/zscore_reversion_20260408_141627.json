@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.006187861945118556,
+    "cagr": 0.0020654567201074947,
+    "annual_volatility": 0.060618050391152596,
+    "sharpe_ratio": -0.5824711081955686,
+    "sortino_ratio": -0.7530004910016912,
+    "calmar_ratio": 0.03682729437465558,
+    "max_drawdown": -0.056084943387232244,
+    "max_drawdown_date": "2022-03-08",
+    "win_rate": 0.4162234042553192,
+    "profit_factor": 1.0171669680633981,
+    "num_trading_days": 752,
+    "skewness": -2.7458843007389264,
+    "kurtosis": 48.38445270075154,
+    "best_day": 0.024132855468111503,
+    "worst_day": -0.05018135951860603,
+    "avg_daily_return": 1.553770807701887e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08455912237965668,
+    "beta": 0.15147297577761265,
+    "information_ratio": -0.5343702135519268,
+    "tracking_error": 0.15824071071925447
+  },
+  "trade_metrics": {
+    "num_trades": 517,
+    "num_buys": 304,
+    "num_sells": 213,
+    "total_commission": 0.0,
+    "total_slippage": 3471.196570686343,
+    "total_transaction_costs": 3471.196570686343,
+    "avg_trade_size": 6714.113289528705
+  },
+  "final_positions": {
+    "XOM": {
+      "qty": 119.0,
+      "avg_cost": 106.99065258176168,
+      "realized_pnl": 1173.8438034698747
+    }
+  },
+  "source": "math",
+  "description": "Buy at Z < -2 (statistically oversold), sell at Z > 0"
+}

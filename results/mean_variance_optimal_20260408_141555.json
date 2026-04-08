@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.28463050847911364,
+    "cagr": 0.08738647723655824,
+    "annual_volatility": 0.11337640826346308,
+    "sharpe_ratio": 0.45106575773861024,
+    "sortino_ratio": 0.6537776147129017,
+    "calmar_ratio": 0.7220254743504452,
+    "max_drawdown": -0.1210296316970999,
+    "max_drawdown_date": "2022-11-03",
+    "win_rate": 0.5172872340425532,
+    "profit_factor": 1.1496843816386677,
+    "num_trading_days": 752,
+    "skewness": 0.051193340397775455,
+    "kurtosis": 2.591942214297353,
+    "best_day": 0.032772524204008,
+    "worst_day": -0.033727665488978764,
+    "avg_daily_return": 0.00035858722589856835,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.0007618981367940592,
+    "beta": 0.4242002556611977,
+    "information_ratio": 0.005759256671265817,
+    "tracking_error": 0.13229105425971627
+  },
+  "trade_metrics": {
+    "num_trades": 440,
+    "num_buys": 204,
+    "num_sells": 236,
+    "total_commission": 0.0,
+    "total_slippage": 2836.597686588288,
+    "total_transaction_costs": 2836.597686588288,
+    "avg_trade_size": 6446.812924064289
+  },
+  "final_positions": {
+    "PG": {
+      "qty": 87.0,
+      "avg_cost": 173.84024047851562,
+      "realized_pnl": -2509.6546936035143
+    },
+    "UNH": {
+      "qty": 10.0,
+      "avg_cost": 587.061279296875,
+      "realized_pnl": 66.38665771484375
+    },
+    "AAPL": {
+      "qty": 66.0,
+      "avg_cost": 238.28829956054688,
+      "realized_pnl": 1139.4435577392578
+    },
+    "HD": {
+      "qty": 26.0,
+      "avg_cost": 413.8077087402344,
+      "realized_pnl": -892.4053649902344
+    },
+    "META": {
+      "qty": 9.0,
+      "avg_cost": 573.7034912109375,
+      "realized_pnl": 10195.58837890625
+    },
+    "WMT": {
+      "qty": 172.0,
+      "avg_cost": 73.6033194215919,
+      "realized_pnl": -969.572660712998
+    },
+    "V": {
+      "qty": 50.0,
+      "avg_cost": 287.5581512451172,
+      "realized_pnl": -1791.0522613525388
+    },
+    "MSFT": {
+      "qty": 15.0,
+      "avg_cost": 426.8498229980469,
+      "realized_pnl": 459.99688720703034
+    },
+    "GOOGL": {
+      "qty": 16.0,
+      "avg_cost": 168.9289527045356,
+      "realized_pnl": 442.0723726060632
+    },
+    "JPM": {
+      "qty": 37.0,
+      "avg_cost": 216.23146057128906,
+      "realized_pnl": 4627.823196411135
+    },
+    "TLT": {
+      "qty": 31.0,
+      "avg_cost": 88.5318374633789,
+      "realized_pnl": -856.4667282104496
+    },
+    "AMZN": {
+      "qty": 60.0,
+      "avg_cost": 193.49266357421874,
+      "realized_pnl": 1877.7212677001946
+    }
+  },
+  "source": "research",
+  "description": "Markowitz-inspired: rank by return/risk ratio, weight proportionally"
+}

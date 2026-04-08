@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": -0.004832859780503629,
+    "cagr": -0.0016190919884797594,
+    "annual_volatility": 0.12872401902341749,
+    "sharpe_ratio": -0.25300290974197276,
+    "sortino_ratio": -0.3489017522802542,
+    "calmar_ratio": -0.005904658890476141,
+    "max_drawdown": -0.27420584635147294,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.4946808510638298,
+    "profit_factor": 1.008622933609554,
+    "num_trading_days": 752,
+    "skewness": -0.11009337847210379,
+    "kurtosis": 1.3601006229015593,
+    "best_day": 0.0350096433409568,
+    "worst_day": -0.03252331432770805,
+    "avg_daily_return": 2.6413547844414883e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08824367108824394,
+    "beta": 0.5800900759603809,
+    "information_ratio": -0.817205840325409,
+    "tracking_error": 0.10798218359906185
+  },
+  "trade_metrics": {
+    "num_trades": 129,
+    "num_buys": 64,
+    "num_sells": 65,
+    "total_commission": 0.0,
+    "total_slippage": 2009.9863304252622,
+    "total_transaction_costs": 2009.9863304252622,
+    "avg_trade_size": 15581.28938314157
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 53.0,
+      "avg_cost": 478.71433214347934,
+      "realized_pnl": -2131.938217440521
+    },
+    "MTUM": {
+      "qty": 147.0,
+      "avg_cost": 198.8120574951172,
+      "realized_pnl": 1952.5575561523438
+    },
+    "IWM": {
+      "qty": 131.0,
+      "avg_cost": 215.52037048339844,
+      "realized_pnl": -2290.2104187011732
+    }
+  },
+  "source": "research",
+  "description": "Rotate between factor ETFs (momentum, quality, value, low vol) based on trend"
+}

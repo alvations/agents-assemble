@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.3296849110756692,
+    "cagr": 0.09999632432714067,
+    "annual_volatility": 0.14824834243377769,
+    "sharpe_ratio": 0.45353743167947413,
+    "sortino_ratio": 0.6659160061712617,
+    "calmar_ratio": 0.42535814451239196,
+    "max_drawdown": -0.2350873625372124,
+    "max_drawdown_date": "2022-10-11",
+    "win_rate": 0.5252659574468085,
+    "profit_factor": 1.1364673604670739,
+    "num_trading_days": 752,
+    "skewness": 0.2478945788426538,
+    "kurtosis": 4.534365374693367,
+    "best_day": 0.061020933677793154,
+    "worst_day": -0.046103821927516275,
+    "avg_daily_return": 0.0004224600710379085,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.013371745227376497,
+    "beta": 0.5840270239937068,
+    "information_ratio": 0.10308396886826013,
+    "tracking_error": 0.1297170197673064
+  },
+  "trade_metrics": {
+    "num_trades": 1133,
+    "num_buys": 580,
+    "num_sells": 553,
+    "total_commission": 0.0,
+    "total_slippage": 5188.812323639873,
+    "total_transaction_costs": 5188.812323639873,
+    "avg_trade_size": 4579.710788737749
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 83.0,
+      "avg_cost": 246.85955001647213,
+      "realized_pnl": 501.950408935543
+    },
+    "QQQ": {
+      "qty": 33.0,
+      "avg_cost": 502.58397373910447,
+      "realized_pnl": 1789.761917081851
+    },
+    "META": {
+      "qty": 10.0,
+      "avg_cost": 594.2498673872514,
+      "realized_pnl": 14956.0870070024
+    },
+    "JPM": {
+      "qty": 84.0,
+      "avg_cost": 225.23391726254002,
+      "realized_pnl": 3641.7288992965277
+    },
+    "V": {
+      "qty": 85.0,
+      "avg_cost": 304.99154860475215,
+      "realized_pnl": -3088.5424042405875
+    },
+    "GOOGL": {
+      "qty": 84.0,
+      "avg_cost": 179.2552530115301,
+      "realized_pnl": -1659.995995261451
+    },
+    "AMZN": {
+      "qty": 94.0,
+      "avg_cost": 207.72343522422702,
+      "realized_pnl": 1795.0429653986296
+    }
+  },
+  "source": "math",
+  "description": "Position sizing via Kelly criterion from rolling win rate and payoff ratio"
+}

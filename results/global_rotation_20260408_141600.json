@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.26026225186901875,
+    "cagr": 0.08044327969884435,
+    "annual_volatility": 0.13692911264705535,
+    "sharpe_ratio": 0.34807813815962924,
+    "sortino_ratio": 0.5088874881553499,
+    "calmar_ratio": 0.30764556116727654,
+    "max_drawdown": -0.2614803847441336,
+    "max_drawdown_date": "2022-10-24",
+    "win_rate": 0.4946808510638298,
+    "profit_factor": 1.110496065135555,
+    "num_trading_days": 752,
+    "skewness": 0.05867734506605482,
+    "kurtosis": 0.8767008684754987,
+    "best_day": 0.02857181270724274,
+    "worst_day": -0.035056997821596214,
+    "avg_daily_return": 0.0003447849048152198,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.006181299400919826,
+    "beta": 0.4967241908685639,
+    "information_ratio": -0.044902510369795305,
+    "tracking_error": 0.13766044147673798
+  },
+  "trade_metrics": {
+    "num_trades": 384,
+    "num_buys": 183,
+    "num_sells": 201,
+    "total_commission": 0.0,
+    "total_slippage": 2975.17383913994,
+    "total_transaction_costs": 2975.17383913994,
+    "avg_trade_size": 7747.848539426923
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 27.0,
+      "avg_cost": 537.1550832140654,
+      "realized_pnl": -199.80167533937583
+    },
+    "SONY": {
+      "qty": 807.0,
+      "avg_cost": 19.954172134399414,
+      "realized_pnl": -4062.330612182618
+    },
+    "TM": {
+      "qty": 93.0,
+      "avg_cost": 172.4159393310547,
+      "realized_pnl": 839.3858032226572
+    },
+    "INFY": {
+      "qty": 746.0,
+      "avg_cost": 21.56657600402832,
+      "realized_pnl": -3717.0148563385
+    },
+    "SAP": {
+      "qty": 67.0,
+      "avg_cost": 211.22481645761536,
+      "realized_pnl": 2208.621227745678
+    },
+    "EWJ": {
+      "qty": 242.0,
+      "avg_cost": 66.4124526977539,
+      "realized_pnl": -496.3957138061519
+    },
+    "SE": {
+      "qty": 142.0,
+      "avg_cost": 95.37999725341797,
+      "realized_pnl": 1608.7899703979492
+    }
+  },
+  "source": "research",
+  "description": "Rotate into strongest regions: US, Europe, Asia, EM, LatAm"
+}

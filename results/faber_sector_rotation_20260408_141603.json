@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.16795261820760765,
+    "cagr": 0.053300416085869884,
+    "annual_volatility": 0.14809053681180573,
+    "sharpe_ratio": 0.16058785602758155,
+    "sortino_ratio": 0.21955309175047752,
+    "calmar_ratio": 0.32504821193311817,
+    "max_drawdown": -0.16397695519960886,
+    "max_drawdown_date": "2023-03-17",
+    "win_rate": 0.5172872340425532,
+    "profit_factor": 1.0729488927142494,
+    "num_trading_days": 752,
+    "skewness": -0.3546847086065005,
+    "kurtosis": 1.1193426474667354,
+    "best_day": 0.03183813149127945,
+    "worst_day": -0.04116340351765746,
+    "avg_daily_return": 0.00025002106042849105,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.03332416301389429,
+    "beta": 0.6482202178265704,
+    "information_ratio": -0.2940356543280211,
+    "tracking_error": 0.11333374889535822
+  },
+  "trade_metrics": {
+    "num_trades": 141,
+    "num_buys": 59,
+    "num_sells": 82,
+    "total_commission": 0.0,
+    "total_slippage": 2050.5145097637173,
+    "total_transaction_costs": 2050.5145097637173,
+    "avg_trade_size": 14542.65609761502
+  },
+  "final_positions": {
+    "XLY": {
+      "qty": 322.0,
+      "avg_cost": 110.72557830810547,
+      "realized_pnl": -1897.0688476562502
+    },
+    "XLF": {
+      "qty": 719.0,
+      "avg_cost": 45.57017517089844,
+      "realized_pnl": 3498.7943382263143
+    },
+    "XLC": {
+      "qty": 367.0,
+      "avg_cost": 90.76300048828125,
+      "realized_pnl": 8245.678627014162
+    }
+  },
+  "source": "research",
+  "description": "Proven 12-month sector momentum: top 3 + absolute momentum filter"
+}
