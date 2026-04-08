@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.24174445164538616,
+    "cagr": 0.07517842737137648,
+    "annual_volatility": 0.18870792171578513,
+    "sharpe_ratio": 0.2718963154103953,
+    "sortino_ratio": 0.3708023015421698,
+    "calmar_ratio": 0.36160024128413637,
+    "max_drawdown": -0.2079048042235767,
+    "max_drawdown_date": "2022-07-06",
+    "win_rate": 0.5352862849533955,
+    "profit_factor": 1.0899544682379625,
+    "num_trading_days": 751,
+    "skewness": -0.6136079308376321,
+    "kurtosis": 3.702305081841372,
+    "best_day": 0.050980504644881686,
+    "worst_day": -0.07067690962794215,
+    "avg_daily_return": 0.0003592569604233076,
+    "benchmark_total_return": 0.2866221187402662,
+    "benchmark_cagr": 0.08803411767458291,
+    "alpha": -0.012855690303206435,
+    "beta": 0.39003876458276,
+    "information_ratio": -0.062462690448401616,
+    "tracking_error": 0.20581390604405841
+  },
+  "trade_metrics": {
+    "num_trades": 934,
+    "num_buys": 448,
+    "num_sells": 486,
+    "total_commission": 0.0,
+    "total_slippage": 5713.436933341024,
+    "total_transaction_costs": 5713.436933341024,
+    "avg_trade_size": 6117.170164176688
+  },
+  "final_positions": {
+    "ZIM": {
+      "qty": 912.0,
+      "avg_cost": 15.076002294106134,
+      "realized_pnl": 12607.205121582709
+    }
+  },
+  "source": "crisis",
+  "description": "Global shipping cycle: container/bulk shippers + freight ETFs"
+}

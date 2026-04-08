@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": -0.0175560513896994,
+    "cagr": -0.005906756365898436,
+    "annual_volatility": 0.16567471149388607,
+    "sharpe_ratio": -0.18974207365637208,
+    "sortino_ratio": -0.2651839142645813,
+    "calmar_ratio": -0.03252822474866389,
+    "max_drawdown": -0.1815886483673247,
+    "max_drawdown_date": "2023-05-30",
+    "win_rate": 0.4401595744680851,
+    "profit_factor": 1.0092063757543466,
+    "num_trading_days": 752,
+    "skewness": -0.13168099921592938,
+    "kurtosis": 5.134689762193748,
+    "best_day": 0.050295628913207935,
+    "worst_day": -0.06702839876391731,
+    "avg_daily_return": 3.0905960762409154e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.09253133546566261,
+    "beta": 0.4050197212509166,
+    "information_ratio": -0.5072922972949777,
+    "tracking_error": 0.18240240579063627
+  },
+  "trade_metrics": {
+    "num_trades": 746,
+    "num_buys": 332,
+    "num_sells": 414,
+    "total_commission": 0.0,
+    "total_slippage": 4571.042525204659,
+    "total_transaction_costs": 4571.042525204659,
+    "avg_trade_size": 6127.40284879981
+  },
+  "final_positions": {
+    "MP": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ALB": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SQM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LTHM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CCJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "URA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "FCX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SCCO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XME": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "crisis",
+  "description": "Critical minerals supply chain: rare earth miners + battery metals"
+}

@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": -0.1984163359876281,
+    "cagr": -0.07130522109467496,
+    "annual_volatility": 0.08129076210149003,
+    "sharpe_ratio": -1.3533967860434446,
+    "sortino_ratio": -1.7049373684197326,
+    "calmar_ratio": -0.347702332498405,
+    "max_drawdown": -0.20507547528460157,
+    "max_drawdown_date": "2024-01-24",
+    "win_rate": 0.3470744680851064,
+    "profit_factor": 0.8338768727875828,
+    "num_trading_days": 752,
+    "skewness": -0.6608725559899609,
+    "kurtosis": 3.7103056382379687,
+    "best_day": 0.018596220265300945,
+    "worst_day": -0.028896159136859167,
+    "avg_daily_return": -0.00028093210611024056,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.15792980019443914,
+    "beta": 0.20050827722358344,
+    "information_ratio": -0.9994801024749009,
+    "tracking_error": 0.15801195021629266
+  },
+  "trade_metrics": {
+    "num_trades": 185,
+    "num_buys": 82,
+    "num_sells": 103,
+    "total_commission": 0.0,
+    "total_slippage": 1253.944768398285,
+    "total_transaction_costs": 1253.944768398285,
+    "avg_trade_size": 6778.079829179918
+  },
+  "final_positions": {
+    "PHO": {
+      "qty": 141.0,
+      "avg_cost": 71.0125732421875,
+      "realized_pnl": -720.3483810424807
+    },
+    "FIW": {
+      "qty": 92.0,
+      "avg_cost": 109.16541290283203,
+      "realized_pnl": -1512.6466064453136
+    },
+    "CGW": {
+      "qty": 175.0,
+      "avg_cost": 57.30022430419922,
+      "realized_pnl": -814.8817176818841
+    },
+    "A": {
+      "qty": 73.0,
+      "avg_cost": 137.89524841308594,
+      "realized_pnl": -1961.0460357666013
+    },
+    "WTRG": {
+      "qty": 261.0,
+      "avg_cost": 38.4426155090332,
+      "realized_pnl": -5071.118217468261
+    }
+  },
+  "source": "crisis",
+  "description": "Water infrastructure and technology: secular scarcity mega-trend"
+}

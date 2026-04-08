@@ -25,12 +25,15 @@ This file tracks strategies discovered by research agents that need to be:
 - [x] unemployment_momentum (recession) — Jobless claims trend-following
 
 ### Pending Implementation
-- [ ] rare_earth_minerals (crisis_commodity) — Critical minerals supply chain
-- [ ] water_scarcity (crisis_commodity) — Water infrastructure + utilities
-- [ ] shipping_cycle (crisis_commodity) — Freight rate cycle momentum
-- [ ] entropy_regime (math) — Shannon entropy for market regime detection
-- [ ] cointegration_pairs (math) — Statistical arbitrage via cointegrated pairs
-- [ ] optimal_stopping (math) — Optimal exit timing using math models
+(none — all current research has been implemented and backtested)
+
+### Completed 2026-04-08 batch 2
+- [x] rare_earth_minerals (crisis_commodity) — -1.8% ret, LOSE
+- [x] water_scarcity (crisis_commodity) — -19.8% ret, LOSE
+- [x] shipping_freight_cycle (crisis_commodity) — +24.2% ret, WIN
+- [x] entropy_regime (math) — +10.7% ret, LOSE (negative Sharpe)
+- [x] cointegration_pairs (math) — -6.9% ret, LOSE
+- [x] optimal_stopping (math) — -34.0% ret, LOSE
 
 ## Process for Converting Research to Strategies
 

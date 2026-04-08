@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": 0.10721852324169179,
+    "cagr": 0.03465385680032296,
+    "annual_volatility": 0.0935352072878843,
+    "sharpe_ratio": -0.007770052773493689,
+    "sortino_ratio": -0.01123440653454392,
+    "calmar_ratio": 0.19567466380587673,
+    "max_drawdown": -0.1770993552578788,
+    "max_drawdown_date": "2022-12-28",
+    "win_rate": 0.5053191489361702,
+    "profit_factor": 1.073686265083553,
+    "num_trading_days": 752,
+    "skewness": 0.2678188943905213,
+    "kurtosis": 2.819928646343279,
+    "best_day": 0.034717385990578054,
+    "worst_day": -0.0213273147345191,
+    "avg_daily_return": 0.00015276584097853848,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.05197072229944122,
+    "beta": 0.3096874274317997,
+    "information_ratio": -0.36372995217334375,
+    "tracking_error": 0.14288271281731946
+  },
+  "trade_metrics": {
+    "num_trades": 961,
+    "num_buys": 457,
+    "num_sells": 504,
+    "total_commission": 0.0,
+    "total_slippage": 5726.61641285229,
+    "total_transaction_costs": 5726.61641285229,
+    "avg_trade_size": 5959.018119513306
+  },
+  "final_positions": {
+    "V": {
+      "qty": 43.0,
+      "avg_cost": 310.0088750665838,
+      "realized_pnl": -1999.4275609796707
+    },
+    "QQQ": {
+      "qty": 26.0,
+      "avg_cost": 519.576416015625,
+      "realized_pnl": 1860.150421142577
+    },
+    "JPM": {
+      "qty": 58.0,
+      "avg_cost": 237.65781663868526,
+      "realized_pnl": 555.2393940964803
+    },
+    "AAPL": {
+      "qty": 54.0,
+      "avg_cost": 250.82977294921875,
+      "realized_pnl": 1988.31498718262
+    },
+    "GOOGL": {
+      "qty": 71.0,
+      "avg_cost": 190.3599395751953,
+      "realized_pnl": 2512.320816040043
+    },
+    "META": {
+      "qty": 23.0,
+      "avg_cost": 597.452880859375,
+      "realized_pnl": 5533.487701416014
+    },
+    "AMZN": {
+      "qty": 61.0,
+      "avg_cost": 225.05999755859375,
+      "realized_pnl": 4723.581054687497
+    }
+  },
+  "source": "math",
+  "description": "Shannon entropy of returns: momentum in low-entropy, defensive in high"
+}

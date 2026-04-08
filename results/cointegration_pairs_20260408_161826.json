@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": -0.06872925492344273,
+    "cagr": -0.023535208834597587,
+    "annual_volatility": 0.045531459475146134,
+    "sharpe_ratio": -1.3626228998284582,
+    "sortino_ratio": -1.6282471334714004,
+    "calmar_ratio": -0.1676824309167285,
+    "max_drawdown": -0.1403558423260528,
+    "max_drawdown_date": "2023-09-26",
+    "win_rate": 0.4920212765957447,
+    "profit_factor": 0.9022968093304101,
+    "num_trading_days": 752,
+    "skewness": -3.1967109133844303,
+    "kurtosis": 36.7546648808629,
+    "best_day": 0.011010231813365579,
+    "worst_day": -0.03634386459802108,
+    "avg_daily_return": -9.054938063510844e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11015978793436176,
+    "beta": 0.13575228750785928,
+    "information_ratio": -0.7051910149376697,
+    "tracking_error": 0.15621269358359388
+  },
+  "trade_metrics": {
+    "num_trades": 821,
+    "num_buys": 417,
+    "num_sells": 404,
+    "total_commission": 0.0,
+    "total_slippage": 4339.829972324376,
+    "total_transaction_costs": 4339.829972324376,
+    "avg_trade_size": 5286.029198933461
+  },
+  "final_positions": {
+    "BAC": {
+      "qty": 262.0,
+      "avg_cost": 42.65716351807573,
+      "realized_pnl": -3132.7867469787625
+    }
+  },
+  "source": "math",
+  "description": "Long laggard in cointegrated pairs when spread Z > 2"
+}

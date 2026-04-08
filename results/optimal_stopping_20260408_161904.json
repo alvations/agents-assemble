@@ -1,0 +1,59 @@
+{
+  "metrics": {
+    "total_return": -0.33957071030928165,
+    "cagr": -0.12956596157238587,
+    "annual_volatility": 0.09858877874496737,
+    "sharpe_ratio": -1.7582743069731093,
+    "sortino_ratio": -2.2572641491504553,
+    "calmar_ratio": -0.37505011679747763,
+    "max_drawdown": -0.3454630615202551,
+    "max_drawdown_date": "2024-09-06",
+    "win_rate": 0.41356382978723405,
+    "profit_factor": 0.7724254297199463,
+    "num_trading_days": 752,
+    "skewness": -0.33457278037420035,
+    "kurtosis": 3.6978928135822158,
+    "best_day": 0.022794490621868446,
+    "worst_day": -0.03196855387249098,
+    "avg_daily_return": -0.0005322315523798987,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.21619054067215004,
+    "beta": 0.35938381326353186,
+    "information_ratio": -1.5963884048038048,
+    "tracking_error": 0.1354247750870627
+  },
+  "trade_metrics": {
+    "num_trades": 4972,
+    "num_buys": 2488,
+    "num_sells": 2484,
+    "total_commission": 0.0,
+    "total_slippage": 44549.37957490632,
+    "total_transaction_costs": 44549.37957490632,
+    "avg_trade_size": 8960.052207342387
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 32.0,
+      "avg_cost": 249.05946350097656,
+      "realized_pnl": -964.5243682861328
+    },
+    "JPM": {
+      "qty": 34.0,
+      "avg_cost": 232.49684143066406,
+      "realized_pnl": 1409.0404739379883
+    },
+    "GOOGL": {
+      "qty": 42.0,
+      "avg_cost": 188.42886352539062,
+      "realized_pnl": 383.21234130859375
+    },
+    "AMZN": {
+      "qty": 36.0,
+      "avg_cost": 219.38999938964844,
+      "realized_pnl": 6306.353988647461
+    }
+  },
+  "source": "math",
+  "description": "Secretary problem applied to exits: sell after peak exceeds 37th pctile"
+}

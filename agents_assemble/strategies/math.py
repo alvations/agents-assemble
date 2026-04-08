@@ -449,6 +449,415 @@ class EqualRiskContrib(BasePersona):
 
 
 # ---------------------------------------------------------------------------
+# 6. Entropy-Based Regime Detection
+# ---------------------------------------------------------------------------
+class EntropyRegime(BasePersona):
+    """Shannon entropy-based market regime detection.
+
+    Hypothesis: Market entropy (disorder of return distribution)
+    indicates regime type. Low entropy = orderly trends (momentum
+    works). High entropy = chaotic/random (mean reversion works or
+    stay out). By measuring the entropy of the return distribution,
+    we adapt strategy selection to the current regime.
+
+    We discretize returns into bins and compute Shannon entropy:
+    H = -sum(p_i * log2(p_i))
+    Max entropy = log2(n_bins) for uniform distribution (random walk).
+    Low entropy = concentrated returns (trending).
+
+    Source: Bandt & Pompe (2002) "Permutation Entropy" for complexity.
+    Pincus (1991) "Approximate Entropy" for time series regularity.
+    Granger & Lin (1994) show entropy measures predict volatility
+    regimes. Real quant funds use entropy in their regime models
+    (AQR, Two Sigma).
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Entropy Regime Detector",
+            description="Shannon entropy of returns: momentum in low-entropy, defensive in high",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META",
+                "JPM", "V", "UNH", "HD",
+                "SPY", "QQQ",
+                "TLT", "GLD",  # Defensive assets
+            ],
+        )
+        super().__init__(config)
+        self._n_bins = 10  # Discretization bins for entropy
+
+    def _compute_entropy(self, returns: pd.Series) -> float:
+        """Compute Shannon entropy of return distribution."""
+        import math
+        if len(returns) < 20:
+            return float('inf')  # Unknown
+        # Discretize returns into bins and compute probabilities
+        binned = pd.cut(returns, bins=self._n_bins, labels=False, duplicates='drop')
+        counts = binned.value_counts()
+        total = counts.sum()
+        if total == 0:
+            return float('inf')
+        probs = counts / total
+        entropy = 0.0
+        for p in probs:
+            if p > 0:
+                entropy -= p * math.log2(p)
+        return entropy
+
+    def generate_signals(self, date, prices, portfolio, data):
+        import math
+        weights = {}
+        max_entropy = math.log2(self._n_bins)  # Max possible entropy
+
+        # Compute market-wide entropy from SPY
+        market_entropy_ratio = 0.5  # Default: unknown
+        if "SPY" in data:
+            df = data["SPY"]
+            if "daily_return" in df.columns and date in df.index:
+                loc = df.index.get_loc(date)
+                if loc >= 60:
+                    returns = df["daily_return"].iloc[loc - 60:loc].dropna()
+                    if len(returns) >= 30:
+                        ent = self._compute_entropy(returns)
+                        market_entropy_ratio = ent / max_entropy if max_entropy > 0 else 0.5
+
+        mom_candidates = []
+        defensive_candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices or sym not in data:
+                continue
+            price = prices[sym]
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            vol20 = self._get_indicator(data, sym, "vol_20", date)
+
+            if sma50 is None or rsi is None:
+                continue
+
+            if market_entropy_ratio < 0.65:
+                # LOW ENTROPY: orderly trends -- use momentum
+                if price > sma50 and rsi < 75:
+                    score = 2.0
+                    if sma200 is not None and sma50 > sma200:
+                        score += 1.5
+                    if 40 < rsi < 70:
+                        score += 0.5
+                    mom_candidates.append((sym, score))
+            elif market_entropy_ratio > 0.85:
+                # HIGH ENTROPY: chaotic -- go defensive
+                if sym in ("TLT", "GLD"):
+                    defensive_candidates.append((sym, 3.0))
+                elif vol20 is not None and vol20 < 0.015 and price > sma50:
+                    # Only very low-vol stocks in chaos regime
+                    defensive_candidates.append((sym, 1.0))
+            else:
+                # MEDIUM ENTROPY: mixed signals -- reduced exposure
+                if price > sma50 and rsi < 65:
+                    score = 1.0
+                    if sma200 is not None and sma50 > sma200:
+                        score += 1.0
+                    mom_candidates.append((sym, score * 0.6))
+
+        # Select based on regime
+        if market_entropy_ratio < 0.65:
+            candidates = mom_candidates
+        elif market_entropy_ratio > 0.85:
+            candidates = defensive_candidates
+        else:
+            candidates = mom_candidates + defensive_candidates
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 7. Cointegration Pairs Trading
+# ---------------------------------------------------------------------------
+class CointegrationPairs(BasePersona):
+    """Cointegration-based pairs trading (statistical arbitrage).
+
+    Hypothesis: Certain stock pairs have a long-run equilibrium
+    relationship (cointegration). When the spread deviates, it
+    reverts. This is more rigorous than correlation -- cointegrated
+    pairs have a stationary spread even if individual prices are
+    non-stationary (I(1)).
+
+    We approximate cointegration testing via the spread Z-score of
+    known economic pairs (same sector, similar business model).
+    When the spread Z-score exceeds +/-2, we go long the laggard
+    and short the leader (or just long the laggard since we're
+    long-only).
+
+    Source: Engle & Granger (1987) "Co-Integration and Error
+    Correction". Gatev et al. (2006) show pairs trading returns
+    ~11% annualized. Vidyamurthy (2004) "Pairs Trading" textbook.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Cointegration Pairs Trading",
+            description="Long laggard in cointegrated pairs when spread Z > 2",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=8,
+            rebalance_frequency="daily",
+            universe=universe or [
+                # Classic cointegrated pairs (same-sector economic substitutes)
+                "KO", "PEP",      # Coke vs Pepsi
+                "V", "MA",        # Visa vs Mastercard
+                "HD", "LOW",      # Home Depot vs Lowe's
+                "XOM", "CVX",     # Exxon vs Chevron
+                "JPM", "BAC",     # JP Morgan vs Bank of America
+                "GOOGL", "META",  # Google vs Meta (ad revenue)
+                "UPS", "FDX",     # UPS vs FedEx
+                "PG", "CL",      # Procter & Gamble vs Colgate
+            ],
+        )
+        super().__init__(config)
+        # Define pairs (each pair is a tuple)
+        self._pairs = [
+            ("KO", "PEP"),
+            ("V", "MA"),
+            ("HD", "LOW"),
+            ("XOM", "CVX"),
+            ("JPM", "BAC"),
+            ("GOOGL", "META"),
+            ("UPS", "FDX"),
+            ("PG", "CL"),
+        ]
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym_a, sym_b in self._pairs:
+            if (sym_a not in data or sym_b not in data or
+                    sym_a not in prices or sym_b not in prices):
+                continue
+
+            df_a, df_b = data[sym_a], data[sym_b]
+            if ("Close" not in df_a.columns or "Close" not in df_b.columns or
+                    date not in df_a.index or date not in df_b.index):
+                continue
+
+            loc_a = df_a.index.get_loc(date)
+            loc_b = df_b.index.get_loc(date)
+            if loc_a < 60 or loc_b < 60:
+                continue
+
+            # Compute log price ratio (spread) over 60 days
+            window_a = df_a["Close"].iloc[loc_a - 60:loc_a + 1]
+            window_b = df_b["Close"].iloc[loc_b - 60:loc_b + 1]
+
+            # Align by position (both should be same trading days)
+            min_len = min(len(window_a), len(window_b))
+            if min_len < 30:
+                continue
+            window_a = window_a.iloc[-min_len:]
+            window_b = window_b.iloc[-min_len:]
+
+            import numpy as np
+            ratio = np.log(window_a.values / window_b.values)
+            mean_ratio = ratio[:-1].mean()
+            std_ratio = ratio[:-1].std()
+            if not (std_ratio > 0):
+                continue
+
+            current_z = (ratio[-1] - mean_ratio) / std_ratio
+
+            # Long the laggard when spread is extreme
+            if current_z > 2.0:
+                # A is expensive, B is cheap -> buy B
+                sma200_b = self._get_indicator(data, sym_b, "sma_200", date)
+                if sma200_b is not None and prices[sym_b] > sma200_b * 0.85:
+                    candidates.append((sym_b, abs(current_z) - 2.0))
+                # Exit A if held
+                pos_a = portfolio.get_position(sym_a)
+                if pos_a and pos_a.quantity > 0:
+                    weights[sym_a] = 0.0
+
+            elif current_z < -2.0:
+                # B is expensive, A is cheap -> buy A
+                sma200_a = self._get_indicator(data, sym_a, "sma_200", date)
+                if sma200_a is not None and prices[sym_a] > sma200_a * 0.85:
+                    candidates.append((sym_a, abs(current_z) - 2.0))
+                # Exit B if held
+                pos_b = portfolio.get_position(sym_b)
+                if pos_b and pos_b.quantity > 0:
+                    weights[sym_b] = 0.0
+
+            else:
+                # Spread near mean: exit positions (take profit on convergence)
+                if abs(current_z) < 0.5:
+                    for sym in (sym_a, sym_b):
+                        pos = portfolio.get_position(sym)
+                        if pos and pos.quantity > 0:
+                            weights[sym] = 0.0
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 8. Optimal Stopping (Exit Timing)
+# ---------------------------------------------------------------------------
+class OptimalStopping(BasePersona):
+    """Optimal stopping theory applied to exit timing.
+
+    Hypothesis: The "secretary problem" / optimal stopping rule says
+    to observe for 1/e (~37%) of the period, then pick the first
+    option that exceeds the best seen so far. Applied to trading:
+    observe the stock for a lookback window, track the running max,
+    and sell when the price starts declining from a level that
+    exceeded the 37th percentile of recent highs.
+
+    Combined with momentum entry (buy in uptrends), the optimal
+    stopping rule improves exit timing by avoiding the common trap
+    of selling too early or too late.
+
+    Source: Ferguson (1989) "Who Solved the Secretary Problem?"
+    Shiryaev et al. (2008) "Optimal Stopping and Free-Boundary
+    Problems" applied to financial mathematics. The 1/e rule is
+    provably optimal for maximizing the probability of selecting
+    the best option.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Optimal Stopping (Exit Timer)",
+            description="Secretary problem applied to exits: sell after peak exceeds 37th pctile",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="daily",
+            universe=universe or [
+                "AAPL", "MSFT", "NVDA", "GOOGL", "AMZN", "META", "TSLA",
+                "JPM", "V", "UNH", "HD", "MCD",
+                "SPY", "QQQ",
+            ],
+        )
+        super().__init__(config)
+        self._lookback = 60  # Observation window
+        self._observe_fraction = 0.37  # 1/e rule
+
+    def generate_signals(self, date, prices, portfolio, data):
+        import math
+        weights = {}
+        buy_candidates = []
+        observe_days = int(self._lookback * self._observe_fraction)  # ~22 days
+
+        for sym in self.config.universe:
+            if sym not in prices or sym not in data:
+                continue
+
+            df = data[sym]
+            if "Close" not in df.columns or date not in df.index:
+                continue
+
+            price = prices[sym]
+            loc = df.index.get_loc(date)
+            if loc < self._lookback:
+                continue
+
+            window = df["Close"].iloc[loc - self._lookback:loc + 1]
+            if len(window) < self._lookback:
+                continue
+
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+
+            if sma50 is None or rsi is None:
+                continue
+
+            # Observation phase: track the max in first 37% of window
+            observe_window = window.iloc[:observe_days]
+            observe_max = observe_window.max()
+
+            # Decision phase: the remaining window
+            decision_window = window.iloc[observe_days:]
+            current_price = window.iloc[-1]
+
+            # Check if we hold this position
+            pos = portfolio.get_position(sym)
+            holding = pos is not None and pos.quantity > 0
+
+            if holding:
+                # EXIT LOGIC (optimal stopping for selling)
+                # Has price exceeded the observation max? (the "best seen so far")
+                exceeded_threshold = any(decision_window > observe_max)
+
+                if exceeded_threshold:
+                    # We're in the "stop if declining" zone
+                    # Recent peak in decision window
+                    recent_peak = decision_window.max()
+                    drawdown_from_peak = (recent_peak - current_price) / recent_peak if recent_peak > 0 else 0
+
+                    # Sell if we've drawn down >5% from the post-threshold peak
+                    if drawdown_from_peak > 0.05:
+                        weights[sym] = 0.0
+                        continue
+
+                    # Also sell if RSI overbought (momentum exhaustion)
+                    if rsi > 78:
+                        weights[sym] = 0.0
+                        continue
+
+                # If we haven't exceeded threshold yet, keep holding
+                # (we're still in observation equivalent)
+
+            else:
+                # ENTRY LOGIC: standard momentum entry
+                if price > sma50 and rsi < 72:
+                    score = 0.0
+                    if sma200 is not None and sma50 > sma200:
+                        score += 2.0
+                    else:
+                        score += 1.0
+
+                    # Prefer stocks near the start of a move (not extended)
+                    if sma200 is not None and sma200 > 0:
+                        extension = (price - sma200) / sma200
+                        if extension < 0.10:
+                            score += 1.5  # Early in move
+                        elif extension < 0.20:
+                            score += 0.5
+
+                    if rsi < 60:
+                        score += 0.5
+
+                    if score >= 2.0:
+                        buy_candidates.append((sym, score))
+
+        buy_candidates.sort(key=lambda x: x[1], reverse=True)
+        top = buy_candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
 MATH_STRATEGIES = {
@@ -457,6 +866,9 @@ MATH_STRATEGIES = {
     "hurst_regime": HurstExponent,
     "volatility_breakout": VolatilityBreakout,
     "equal_risk_contrib": EqualRiskContrib,
+    "entropy_regime": EntropyRegime,
+    "cointegration_pairs": CointegrationPairs,
+    "optimal_stopping": OptimalStopping,
 }
 
 
