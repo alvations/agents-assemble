@@ -127,9 +127,9 @@ Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-sha
 - **US:** mega/mid/small/micro cap, Dividend Aristocrats, Dividend Kings
 - **China:** 65+ ADRs (BABA, JD, PDD, NIO, CPNG, etc.)
 - **Europe:** 40+ ADRs (UK, Germany, France, Nordic, Spain, Italy)
-- **Japan:** 15+ ADRs (TM, SONY, MUFG, Makita, sogo shoshas)
-- **Korea:** Chaebols (Samsung, SK Telecom, Kookmin, Shinhan, POSCO)
-- **India:** ADRs + ETFs (INFY, IBN, HDB, INDA, EPI)
+- **Japan:** 15+ ADRs (TM, SONY, MUFG, Makita, trading houses)
+- **Korea:** 8+ ADRs (Samsung, SK Telecom, Kookmin, Shinhan, POSCO, Coupang, Hyundai)
+- **India:** 8+ ADRs + ETFs (INFY, IBN, HDB, INDA, EPI)
 - **Singapore (SGX):** 50+ stocks (DBS, UOB, OCBC, CapitaLand REITs, SingTel, Haw Par)
 - **LatAm:** 30+ (Brazil, Mexico, Argentina, Chile, Colombia)
 - **Sectors:** AI infrastructure, cybersecurity, gaming, nuclear/uranium, cannabis, EVs, shipping
@@ -139,8 +139,8 @@ Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-sha
 
 ## Data Sources (25+)
 
-| Source | Type | API Key |
-|--------|------|---------|
+| Source | Type | API Key Required |
+|--------|------|-----------------|
 | yfinance | OHLCV, fundamentals | None |
 | Yahoo Finance RSS | News headlines | None |
 | Google News RSS | Aggregated news | None |
@@ -151,9 +151,10 @@ Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-sha
 | Steam | Gaming player counts | None |
 | DeFi Llama | Crypto TVL | None |
 | OpenSky | Flight tracking | None |
-| FRED | Macro data, rates | Free key |
-| Finnhub | Social sentiment, insiders | Free key |
-| Alpha Vantage | Real-time quotes | Free key |
+| FRED | Macro data, rates | Free: `FRED_API_KEY` |
+| Finnhub | Social sentiment, insiders | Free: `FINNHUB_API_KEY` (60/min) |
+| Alpha Vantage | Real-time quotes | Free: `ALPHA_VANTAGE_KEY` (5/min) |
+| NOAA | Weather data | Free: `NOAA_TOKEN` |
 
 ## Project Structure
 
@@ -189,15 +190,6 @@ agents-assemble/
 - **Supply chain risk is real** — NVIDIA's $110B financing book echoes Cisco 2000
 - **Always backtest** — 72 of 173 strategies lost money despite sounding good
 - See `knowledge/` for detailed findings
-
-## API Keys (optional, set as env vars)
-
-| Key | Source | Free Tier |
-|-----|--------|-----------|
-| `FRED_API_KEY` | FRED macro data | Unlimited |
-| `FINNHUB_API_KEY` | Social sentiment, insider trades | 60 calls/min |
-| `ALPHA_VANTAGE_KEY` | Real-time quotes | 5 calls/min |
-| `NOAA_TOKEN` | Weather data | Free registration |
 
 ## Tax Note (K-1 Warning)
 
