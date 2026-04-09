@@ -1644,6 +1644,9 @@ def fetch_tsa_checkpoint(cache: bool = True) -> pd.DataFrame:
     Scrapes the HTML table at https://www.tsa.gov/travel/passenger-volumes.
     Updated Mon-Fri by 9am. No API key needed.
 
+    NOTE: TSA uses Akamai CDN protection which may block programmatic access.
+    If blocked, use fetch_air_travel_index() as a FRED-based fallback.
+
     Returns:
         DataFrame with DatetimeIndex and columns for current year and
         comparison years. Empty DataFrame on failure.
@@ -1669,7 +1672,9 @@ def fetch_tsa_checkpoint(cache: bool = True) -> pd.DataFrame:
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
                 "Chrome/120.0.0.0 Safari/537.36"
-            )
+            ),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9",
+            "Accept-Language": "en-US,en;q=0.9",
         }
         resp = requests.get(url, headers=headers, timeout=30)
         resp.raise_for_status()
@@ -1700,24 +1705,94 @@ def fetch_tsa_checkpoint(cache: bool = True) -> pd.DataFrame:
         return pd.DataFrame()
 
 
+def fetch_air_travel_index(
+    start: str = "2020-01-01",
+    cache: bool = True,
+) -> pd.DataFrame:
+    """Fetch air travel indicators from FRED (always accessible fallback for TSA data).
+
+    Returns DataFrame with monthly airline load factor and freight transport index.
+    These are reliable proxies for air travel demand when TSA.gov is blocked.
+
+    FRED Series:
+        LOADFACTOR — Airline industry domestic load factor (% seats filled)
+        TSIFRGHT — Transportation Services Index: Freight
+
+    No API key needed (uses FRED CSV fallback).
+
+    Trading signal: Rising load factor = strong travel demand, bullish airlines.
+        Load factor > 85% = capacity constraints, pricing power.
+    """
+    cache_key = f"air_travel_index_{start}"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=24)
+        if cached is not None:
+            return cached
+
+    from io import StringIO
+
+    series_map = {
+        "LOADFACTOR": "airline_load_factor_pct",
+        "TSIFRGHT": "freight_transport_index",
+    }
+
+    frames = []
+    for series_id, col_name in series_map.items():
+        url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}&cosd={start}"
+        try:
+            resp = requests.get(url, timeout=15)
+            if resp.status_code == 200:
+                df = pd.read_csv(StringIO(resp.text), parse_dates=["observation_date"])
+                df = df.rename(columns={"observation_date": "date", series_id: col_name})
+                df = df.set_index("date")
+                df[col_name] = pd.to_numeric(df[col_name], errors="coerce")
+                frames.append(df)
+        except Exception:
+            pass
+
+    if not frames:
+        return pd.DataFrame()
+
+    result = pd.concat(frames, axis=1)
+    result.index.name = "date"
+    result = result.dropna(how="all").sort_index()
+
+    if cache and not result.empty:
+        _cache_set(cache_key, result)
+    return result
+
+
 def fetch_tsa_yoy_change(cache: bool = True) -> pd.DataFrame:
     """Compute year-over-year change in TSA passenger volumes.
 
-    Returns DataFrame with 'date', 'current', 'prior_year', 'yoy_change' columns.
-    yoy_change > 0 means more travelers than same day last year.
+    Falls back to air travel index if TSA direct scraping is blocked.
+    Returns DataFrame with yoy_change column.
     """
     df = fetch_tsa_checkpoint(cache=cache)
-    if df.empty or len(df.columns) < 2:
+    if not df.empty and len(df.columns) >= 2:
+        current_col = df.columns[0]
+        prior_col = df.columns[1]
+        result = pd.DataFrame({
+            "current": df[current_col],
+            "prior_year": df[prior_col],
+        })
+        result["yoy_change"] = (
+            (result["current"] - result["prior_year"]) / result["prior_year"]
+        )
+        return result.dropna()
+
+    # Fallback: use FRED load factor for YoY comparison
+    air = fetch_air_travel_index(
+        start=(datetime.now() - timedelta(days=730)).strftime("%Y-%m-%d"),
+        cache=cache,
+    )
+    if air.empty or "airline_load_factor_pct" not in air.columns:
         return pd.DataFrame()
 
-    current_col = df.columns[0]
-    prior_col = df.columns[1]
-    result = pd.DataFrame({
-        "current": df[current_col],
-        "prior_year": df[prior_col],
-    })
-    result["yoy_change"] = (result["current"] - result["prior_year"]) / result["prior_year"]
-    return result.dropna()
+    lf = air[["airline_load_factor_pct"]].dropna()
+    lf["prior_year"] = lf["airline_load_factor_pct"].shift(12)
+    lf["yoy_change"] = (lf["airline_load_factor_pct"] - lf["prior_year"]) / lf["prior_year"]
+    return lf.dropna()
 
 
 # ---------------------------------------------------------------------------

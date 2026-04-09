@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "total_return": 0.03962587217122571,
+    "cagr": 0.013082963120917057,
+    "annual_volatility": 0.12733675951286938,
+    "sharpe_ratio": -0.14241830316617402,
+    "sortino_ratio": -0.20180589865148787,
+    "calmar_ratio": 0.04511136998173102,
+    "max_drawdown": -0.29001475960972434,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.523936170212766,
+    "profit_factor": 1.0323521813026293,
+    "num_trading_days": 752,
+    "skewness": 0.7967057366587876,
+    "kurtosis": 14.978773639696485,
+    "best_day": 0.07953608953993885,
+    "worst_day": -0.0398629082151305,
+    "avg_daily_return": 8.368523890038176e-05,
+    "black_swan_resilience": 82.4,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07354161597884712,
+    "beta": 0.4196977016491431,
+    "information_ratio": -0.5058334893703026,
+    "tracking_error": 0.14538700486279968
+  },
+  "trade_metrics": {
+    "num_trades": 939,
+    "num_buys": 429,
+    "num_sells": 510,
+    "total_commission": 0.0,
+    "total_slippage": 3269.1927561245,
+    "total_transaction_costs": 3269.1927561245,
+    "avg_trade_size": 3481.5684303775256
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 44.0,
+      "avg_cost": 202.68995896896925,
+      "realized_pnl": 3950.5785162899188
+    },
+    "WFC": {
+      "qty": 148.0,
+      "avg_cost": 69.81381783834318,
+      "realized_pnl": 602.1380637564305
+    },
+    "GS": {
+      "qty": 18.0,
+      "avg_cost": 474.6473044259514,
+      "realized_pnl": -5.360574776231147
+    },
+    "CB": {
+      "qty": 37.0,
+      "avg_cost": 273.07282483899917,
+      "realized_pnl": -235.43325805663815
+    },
+    "MS": {
+      "qty": 83.0,
+      "avg_cost": 120.39647674560547,
+      "realized_pnl": -594.572418212887
+    },
+    "BAC": {
+      "qty": 178.0,
+      "avg_cost": 44.19089889526367,
+      "realized_pnl": -1159.8905925750748
+    },
+    "PGR": {
+      "qty": 46.0,
+      "avg_cost": 228.7706066629161,
+      "realized_pnl": 5381.932746887209
+    },
+    "MET": {
+      "qty": 129.0,
+      "avg_cost": 79.64234444144722,
+      "realized_pnl": -2157.222383032314
+    },
+    "ALL": {
+      "qty": 54.0,
+      "avg_cost": 189.90113067626953,
+      "realized_pnl": -35.19798278808969
+    },
+    "C": {
+      "qty": 149.0,
+      "avg_cost": 69.19947052001953,
+      "realized_pnl": 1490.8437004089326
+    }
+  },
+  "source": "unconventional",
+  "description": "Rising rates crush bonds but boost banks (wider NIM) + insurance (float income). TLT\u2193 = XLF\u2191."
+}

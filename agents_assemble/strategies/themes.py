@@ -39,6 +39,7 @@ Themes:
     + GigEconomySaaSDisruptors   — Gig economy + SaaS growth disruptors
     + KoreanChaebols             — Korean chaebol conglomerates + fintech
     + RideshareMobility          — Rideshare & mobility platforms
+    + NvidiaSupplyChain          — NVIDIA peripheral supply chain (non-megacap)
 """
 
 from __future__ import annotations

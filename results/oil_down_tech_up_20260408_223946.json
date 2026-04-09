@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.5501562034122691,
+    "cagr": 0.1579142753447551,
+    "annual_volatility": 0.10183554300894718,
+    "sharpe_ratio": 1.1085835774426211,
+    "sortino_ratio": 1.668927889287965,
+    "calmar_ratio": 1.7013568114550426,
+    "max_drawdown": -0.09281667095434432,
+    "max_drawdown_date": "2023-01-05",
+    "win_rate": 0.5412234042553191,
+    "profit_factor": 1.31538235808241,
+    "num_trading_days": 752,
+    "skewness": -0.11077971687801727,
+    "kurtosis": 4.0321129438029,
+    "best_day": 0.026298291203534108,
+    "worst_day": -0.03479427449873784,
+    "avg_daily_return": 0.0006036387936629714,
+    "black_swan_resilience": 81.1,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.07128969624499093,
+    "beta": 0.4047651459043433,
+    "information_ratio": 0.5599559417804131,
+    "tracking_error": 0.12731304541268215
+  },
+  "trade_metrics": {
+    "num_trades": 568,
+    "num_buys": 267,
+    "num_sells": 301,
+    "total_commission": 0.0,
+    "total_slippage": 1906.9128598079694,
+    "total_transaction_costs": 1906.9128598079694,
+    "avg_trade_size": 3357.240950366141
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 75.0,
+      "avg_cost": 227.58518750242288,
+      "realized_pnl": 3886.766717711009
+    },
+    "MSFT": {
+      "qty": 34.0,
+      "avg_cost": 429.4108081211054,
+      "realized_pnl": 3100.220176923247
+    },
+    "GOOGL": {
+      "qty": 98.0,
+      "avg_cost": 170.00256529875287,
+      "realized_pnl": 2699.0954010478076
+    },
+    "META": {
+      "qty": 32.0,
+      "avg_cost": 609.8021430969238,
+      "realized_pnl": 10362.928207397461
+    },
+    "NFLX": {
+      "qty": 208.0,
+      "avg_cost": 91.36042887856516,
+      "realized_pnl": 14848.226006439425
+    },
+    "CRM": {
+      "qty": 56.0,
+      "avg_cost": 348.8452246529715,
+      "realized_pnl": 7908.501708984371
+    },
+    "NOW": {
+      "qty": 88.0,
+      "avg_cost": 223.60990212180397,
+      "realized_pnl": 9673.393310546871
+    },
+    "AMZN": {
+      "qty": 85.0,
+      "avg_cost": 226.01729054170497,
+      "realized_pnl": 5228.832038879395
+    }
+  },
+  "source": "unconventional",
+  "description": "When energy crashes, capital rotates to tech. Lower oil = lower costs + Fed easing expectations."
+}

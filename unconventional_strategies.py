@@ -2361,12 +2361,12 @@ class JobLossTechBoom(BasePersona):
             description="Unemployment rises → companies automate → tech/SaaS/AI booms. Inverse staffing-to-tech signal.",
             risk_tolerance=0.6, max_position_size=0.12, max_positions=12, rebalance_frequency="weekly",
             universe=universe or [
-                # Staffing companies (INVERSE indicators — weakness = signal)
+                # Employment indicators (INVERSE — weakness = automation signal)
                 "MAN",    # ManpowerGroup — global staffing bellwether
                 "RHI",    # Robert Half — white-collar staffing
                 "ASGN",   # ASGN — IT staffing
-                "HAYS",   # Hays plc (if available)
-                # Tech productivity beneficiaries (LONG these when staffing drops)
+                "ADP",    # ADP — payroll volume = direct employment proxy (40M employees)
+                # Tech productivity beneficiaries (LONG these when employment drops)
                 "CRM",    # Salesforce — replaces salespeople
                 "NOW",    # ServiceNow — IT automation
                 "WDAY",   # Workday — HR/finance automation
@@ -2386,9 +2386,9 @@ class JobLossTechBoom(BasePersona):
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
 
-        # Check staffing company health (inverse signal)
+        # Check employment indicators (inverse signal)
         staffing_weak = 0
-        staffing_tickers = ["MAN", "RHI", "ASGN"]
+        staffing_tickers = ["MAN", "RHI", "ASGN", "ADP"]
         for sym in staffing_tickers:
             if sym not in data or sym not in prices:
                 continue
@@ -2445,9 +2445,180 @@ class JobLossTechBoom(BasePersona):
 
 
 # Add strategies defined after the registry dict
+# ---------------------------------------------------------------------------
+# Cross-Category Inverse Strategies
+# ---------------------------------------------------------------------------
+class OilDownTechUp(BasePersona):
+    """When oil crashes, tech benefits from lower costs + growth rotation.
+
+    Inverse: XLE (energy) drops → XLK (tech) gets inflows.
+    Mechanism: Lower oil = lower costs for data centers, shipping, manufacturing.
+    Growth stocks benefit from lower discount rates (oil crash → Fed easing).
+    Energy layoffs → capital flows to growth. Every oil crash since 2014 led to tech rally.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Oil Down → Tech Up (Inverse Rotation)",
+            description="When energy crashes, capital rotates to tech. Lower oil = lower costs + Fed easing expectations.",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                "XLE", "XOP", "OIH",  # Energy indicators (INVERSE)
+                "AAPL", "MSFT", "GOOGL", "AMZN", "META",  # Tech beneficiaries
+                "NFLX", "CRM", "NOW",  # Cloud/SaaS (lower costs)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        energy_weak = 0
+        for sym in ["XLE", "XOP", "OIH"]:
+            if sym not in data or sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_200"], date)
+            if not _is_missing(inds["sma_200"]) and prices[sym] < inds["sma_200"]:
+                energy_weak += 1
+        if energy_weak >= 2:
+            scored = []
+            for sym in ["AAPL","MSFT","GOOGL","AMZN","META","NFLX","CRM","NOW"]:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_50","sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                sc = 0.0
+                if prices[sym] > inds["sma_200"]: sc += 2.0
+                if inds["sma_50"] is not None and inds["sma_50"] > inds["sma_200"]: sc += 1.0
+                if 35 < inds["rsi_14"] < 65: sc += 1.0
+                if sc >= 2: scored.append((sym, sc))
+            scored.sort(key=lambda x: -x[1])
+            if scored:
+                total = sum(s for _,s in scored[:self.config.max_positions])
+                for sym, sc in scored[:self.config.max_positions]:
+                    weights[sym] = min((sc/total)*0.95, self.config.max_position_size)
+        else:
+            for sym in ["AAPL","MSFT","GOOGL"]:
+                if sym in prices: weights[sym] = 0.08
+        return weights
+
+
+class DollarWeakEMStrong(BasePersona):
+    """When USD weakens, emerging markets + commodities outperform.
+
+    Inverse: UUP (dollar ETF) drops → EEM, VWO, GLD, commodity exporters rise.
+    Mechanism: Weak dollar = cheaper debt for EM, higher commodity prices in USD,
+    EM earnings worth more when converted back. Every USD bear cycle = EM outperformance.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Dollar Weak → EM Strong (Currency Rotation)",
+            description="USD weakens → EM stocks + commodities + gold outperform. Inverse dollar-to-EM signal.",
+            risk_tolerance=0.6, max_position_size=0.10, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                "UUP",    # Dollar index ETF (INVERSE indicator)
+                "EEM",    # EM equities
+                "VWO",    # Vanguard EM
+                "GLD",    # Gold (inverse dollar)
+                "BABA",   # China
+                "VALE",   # Brazil commodities
+                "PBR",    # Petrobras Brazil
+                "EWZ",    # Brazil ETF
+                "INDA",   # India
+                "EWY",    # Korea
+                "FXI",    # China large cap
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        dollar_weak = False
+        if "UUP" in data and "UUP" in prices:
+            inds = self._get_indicators(data, "UUP", ["sma_50","sma_200"], date)
+            s50, s200 = inds["sma_50"], inds["sma_200"]
+            if not _is_missing(s200) and prices["UUP"] < s200:
+                dollar_weak = True
+                if s50 is not None and s50 < s200: dollar_weak = True  # Strong signal
+        if dollar_weak:
+            targets = ["EEM","VWO","GLD","BABA","VALE","PBR","EWZ","INDA","EWY","FXI"]
+            scored = []
+            for sym in targets:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                sc = 0.0
+                if prices[sym] > inds["sma_200"]: sc += 2.0
+                if 30 < inds["rsi_14"] < 65: sc += 1.0
+                if sc >= 1: scored.append((sym, sc))
+            scored.sort(key=lambda x: -x[1])
+            if scored:
+                total = sum(s for _,s in scored[:self.config.max_positions])
+                for sym, sc in scored[:self.config.max_positions]:
+                    weights[sym] = min((sc/total)*0.95, self.config.max_position_size)
+        else:
+            for sym in ["GLD","EEM"]:
+                if sym in prices: weights[sym] = 0.10
+        return weights
+
+
+class BondsDownBanksUp(BasePersona):
+    """When bonds sell off (rates rise), banks profit from wider net interest margins.
+
+    Inverse: TLT drops → XLF rises. Banks make money on the spread between
+    deposit rates and lending rates. Rising rates widen this spread massively.
+    Also: higher rates → insurance float earns more → insurance stocks benefit.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Bonds Down → Banks Up (Rate Rotation)",
+            description="Rising rates crush bonds but boost banks (wider NIM) + insurance (float income). TLT↓ = XLF↑.",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                "TLT", "IEF",  # Bond indicators (INVERSE)
+                "JPM", "BAC", "WFC", "C", "GS",  # Banks
+                "PGR", "ALL", "CB", "MET",  # Insurance
+                "SCHW", "MS",  # Brokers/wealth mgmt
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        bonds_falling = 0
+        for sym in ["TLT", "IEF"]:
+            if sym not in data or sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_200"], date)
+            if not _is_missing(inds["sma_200"]) and prices[sym] < inds["sma_200"]:
+                bonds_falling += 1
+        if bonds_falling >= 1:
+            targets = ["JPM","BAC","WFC","C","GS","PGR","ALL","CB","MET","SCHW","MS"]
+            scored = []
+            for sym in targets:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_50","sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                sc = 0.0
+                if prices[sym] > inds["sma_200"]: sc += 2.0
+                s50 = inds["sma_50"]
+                if s50 is not None and s50 > inds["sma_200"]: sc += 1.0
+                if 35 < inds["rsi_14"] < 65: sc += 1.0
+                if sc >= 2: scored.append((sym, sc))
+            scored.sort(key=lambda x: -x[1])
+            if scored:
+                total = sum(s for _,s in scored[:self.config.max_positions])
+                for sym, sc in scored[:self.config.max_positions]:
+                    weights[sym] = min((sc/total)*0.95, self.config.max_position_size)
+        else:
+            # Bonds strong → hold some bonds + balanced banks
+            for sym in ["TLT","JPM","GS"]:
+                if sym in prices: weights[sym] = 0.10
+        return weights
+
+
+# Add all strategies defined after the registry dict
 UNCONVENTIONAL_STRATEGIES["economic_indicators"] = EconomicIndicatorProxy
 UNCONVENTIONAL_STRATEGIES["ai_token_economy"] = AITokenEconomy
 UNCONVENTIONAL_STRATEGIES["job_loss_tech_boom"] = JobLossTechBoom
+UNCONVENTIONAL_STRATEGIES["oil_down_tech_up"] = OilDownTechUp
+UNCONVENTIONAL_STRATEGIES["dollar_weak_em_strong"] = DollarWeakEMStrong
+UNCONVENTIONAL_STRATEGIES["bonds_down_banks_up"] = BondsDownBanksUp
 
 
 def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
