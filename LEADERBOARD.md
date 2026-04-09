@@ -16,6 +16,20 @@ Composite Score = Avg Return x Consistency x (1 - Avg |Max Drawdown|)
 
 **Windows:** 1Y (2020-2025, 6 windows) + 3Y (4 windows) + 5Y (2 windows) = 12 total
 
+## How to Read This
+
+| Metric | What It Means | Good | Bad |
+|--------|--------------|------|-----|
+| **Return** | Total cumulative return over the period | >50% | <0% |
+| **Sharpe** | Return per unit of risk. Higher = better risk-adjusted | >1.0 | <0 |
+| **Max DD** | Worst peak-to-trough drop during the period | >-15% | <-30% |
+| **Win Rate** | % of trading days that were profitable | >55% | <40% |
+| **Positions** | Number of stocks held at end of backtest | varies | 0 = exited all |
+| **Composite** | Overall score combining return, consistency, and drawdown protection | >0.5 | <0 |
+| **Consistency** | % of rolling windows where strategy had positive Sharpe | 100% | <50% |
+
+Always look at Return + Sharpe + Max DD **together**. A high return with terrible Sharpe is gambling.
+
 ---
 
 ## Top 10 Strategies
