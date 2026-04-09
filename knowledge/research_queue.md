@@ -24,8 +24,17 @@ This file tracks strategies discovered by research agents that need to be:
 - [x] consumer_credit_stress (recession) — Consumer credit deterioration signal
 - [x] unemployment_momentum (recession) — Jobless claims trend-following
 
-### Pending Implementation
-(none — all current research has been implemented and backtested)
+### Pending Implementation — User Ticker Requests (2026-04-08)
+User requested strategies incorporating these tickers. Group into thematic strategies:
+
+- [ ] **Utility & Infrastructure Income**: SO, D, DUK, PPL, EQIX, PG, COST, TMUS, SCHW
+- [ ] **Japan Industrial ADR**: MKTAY (Makita), construction ADRs, NMR (Nomura), SMFG, MUFG
+- [ ] **Global Bond & Fixed Income**: FBND, SPBO, SCHI, VWOB, VTEB
+- [ ] **News & Media Monopoly**: NYT, CMCSA (Comcast), WBD
+- [ ] **Defense Prime Contractors**: LMT, NOC, RTX, BA, BAESY
+- [ ] **Global Consumer Brands**: UL, MKC, DE, NVO, PG, COST, EL
+- [ ] **Emerging Market Value**: NU, VNM, EWY, EWS, EPI
+- [ ] **Pharma & Biotech Pipeline**: RHHBY (Roche), MRK, BAYRY (Bayer), NVS, UBS
 
 ### Completed 2026-04-08 batch 2
 - [x] rare_earth_minerals (crisis_commodity) — -1.8% ret, LOSE
