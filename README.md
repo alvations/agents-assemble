@@ -1,6 +1,6 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **173 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
+Trading agents and algorithms for publicly tradable instruments. **175 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
