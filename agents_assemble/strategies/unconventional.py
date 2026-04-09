@@ -2208,6 +2208,140 @@ UNCONVENTIONAL_STRATEGIES = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Economic Indicator Proxies (Hemline, Underwear, Big Mac, Lipstick)
+# ---------------------------------------------------------------------------
+class EconomicIndicatorProxy(BasePersona):
+    """Trade based on famous non-traditional economic indicators.
+
+    Hemline Index: fashion confidence → risk-on. Underwear Index: drops → recession.
+    Big Mac Index: MCD health = global consumer. Lipstick Index: rises in recession.
+    Dr. Copper: copper momentum = industrial health. Cardboard Box: packaging = GDP lead.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Economic Indicator Proxy (Hemline/BigMac/Lipstick)",
+            description="Non-traditional indicators: fashion=confidence, underwear=recession, copper=industrial",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=12, rebalance_frequency="weekly",
+            universe=universe or [
+                "MCD", "RL", "LULU", "PVH",  # Consumer confidence
+                "EL", "ULTA", "HBI",          # Recession detectors
+                "FCX", "COPX", "PKG",         # Industrial health
+                "TLT", "GLD",                 # Defensive
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        consumer = 0; recession = 0
+        for sym, role in [("MCD","c"),("RL","c"),("LULU","c"),("FCX","i"),("COPX","i"),("PKG","i"),("EL","r"),("HBI","rn")]:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_200"], date)
+            s200 = inds["sma_200"]
+            if _is_missing(s200): continue
+            up = prices[sym] > s200
+            if role in ("c","i") and up: consumer += 1
+            elif role in ("c","i") and not up: recession += 1
+            elif role == "rn" and not up: recession += 2  # Underwear dropping
+
+        if consumer > recession + 1:
+            for sym in ["MCD","RL","LULU","PVH","FCX","PKG"]:
+                if sym in prices:
+                    inds = self._get_indicators(data, sym, ["sma_200"], date)
+                    if not _is_missing(inds["sma_200"]) and prices[sym] > inds["sma_200"]:
+                        weights[sym] = 0.10
+        elif recession > consumer:
+            for sym in ["TLT","GLD"]: weights[sym] = 0.25 if sym in prices else 0
+            for sym in ["EL","ULTA"]: weights[sym] = 0.10 if sym in prices else 0
+        else:
+            for sym in ["MCD","TLT","GLD","FCX"]: weights[sym] = 0.12 if sym in prices else 0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# AI Token Economy — trade AI infrastructure based on compute demand
+# ---------------------------------------------------------------------------
+class AITokenEconomy(BasePersona):
+    """AI token/compute demand as economic indicator for AI infrastructure stocks.
+
+    As AI usage grows (OpenAI, Anthropic, Google), the companies providing
+    compute infrastructure benefit directly. Track GPU makers (NVDA, AMD),
+    cloud providers (AMZN, MSFT, GOOGL), data center REITs (EQIX, DLR),
+    power for data centers (VST, CEG, NRG), and cooling (VRT).
+
+    Proxy for "AI token spend index": NVDA revenue growth = direct measure
+    of industry-wide AI compute spending. When NVDA accelerates, the whole
+    AI infrastructure stack benefits.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="AI Token Economy (Compute Demand Indicator)",
+            description="AI compute demand signals: GPU makers, cloud, data center REITs, power, cooling",
+            risk_tolerance=0.6, max_position_size=0.12, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                "NVDA",   # GPU monopoly — direct token compute proxy
+                "AMD",    # GPU #2
+                "AVGO",   # Custom AI chips (Google TPU, etc.)
+                "SMCI",   # AI server assembly
+                "VRT",    # Data center cooling (Vertiv)
+                "EQIX",   # Data center REIT
+                "DLR",    # Digital Realty — data center REIT
+                "VST",    # Vistra — nuclear power for data centers
+                "CEG",    # Constellation Energy — nuclear fleet
+                "NRG",    # NRG Energy — power for AI
+                "ANET",   # Arista Networks — data center networking
+                "MRVL",   # Marvell — AI custom silicon
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        # Use NVDA as the "token spend index" — if NVDA is accelerating,
+        # the whole stack benefits
+        nvda_signal = 0
+        if "NVDA" in data:
+            inds = self._get_indicators(data, "NVDA", ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            s50, s200 = inds["sma_50"], inds["sma_200"]
+            if not _is_missing(s200) and "NVDA" in prices:
+                if prices["NVDA"] > s200: nvda_signal += 2
+                if s50 is not None and s50 > s200: nvda_signal += 1
+                macd, ms = inds["macd"], inds["macd_signal"]
+                if macd is not None and ms is not None and macd > ms: nvda_signal += 1
+
+        for sym in self.config.universe:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            s200, rsi = inds["sma_200"], inds["rsi_14"]
+            if _is_missing(s200) or _is_missing(rsi): continue
+            price = prices[sym]
+            score = 0.0
+            if price > s200: score += 2.0
+            s50 = inds["sma_50"]
+            if s50 is not None and s50 > s200: score += 1.0
+            if 35 < rsi < 55: score += 1.5
+            # Boost if NVDA (token spend proxy) is strong
+            score += nvda_signal * 0.5
+            if score >= 4:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# Add strategies defined after the registry dict
+UNCONVENTIONAL_STRATEGIES["economic_indicators"] = EconomicIndicatorProxy
+UNCONVENTIONAL_STRATEGIES["ai_token_economy"] = AITokenEconomy
+
+
 def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
     cls = UNCONVENTIONAL_STRATEGIES.get(name)
     if cls is None:

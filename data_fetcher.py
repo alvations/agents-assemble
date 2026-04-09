@@ -69,6 +69,11 @@ API_KEYS = {
         "url": "https://fred.stlouisfed.org/docs/api/api_key.html",
         "free_tier": "Unlimited (free registration required)",
     },
+    "NOAA_CDO_TOKEN": {
+        "desc": "NOAA Climate Data Online — weather, temperature, precipitation",
+        "url": "https://www.ncdc.noaa.gov/cdo-web/token",
+        "free_tier": "5 req/sec, 10,000 req/day (free registration)",
+    },
 }
 
 
@@ -1533,6 +1538,673 @@ def screen_by_fundamentals(
                 continue
         results.append(f)
     return results
+
+
+# ===========================================================================
+# ALTERNATIVE DATA: Free non-traditional signals
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# ALT DATA: Google Trends (pytrends — free, no key)
+# ---------------------------------------------------------------------------
+def fetch_google_trends(
+    keywords: list[str],
+    timeframe: str = "today 3-m",
+    geo: str = "",
+    cache: bool = True,
+) -> pd.DataFrame:
+    """Fetch Google Trends interest-over-time for keywords.
+
+    Uses the pytrends library (pip install pytrends). No API key needed.
+
+    Args:
+        keywords: Up to 5 search terms (Google Trends limit).
+        timeframe: Time range. Options:
+            'now 1-H'  (past hour), 'now 4-H'  (past 4 hours),
+            'now 1-d'  (past day),  'now 7-d'  (past 7 days),
+            'today 1-m' (past 30 days), 'today 3-m' (past 90 days),
+            'today 12-m' (past 12 months),
+            'YYYY-MM-DD YYYY-MM-DD' (custom range, daily if <9mo, weekly otherwise)
+        geo: Country code ('' = worldwide, 'US', 'GB', 'CN', etc.)
+        cache: Use cached results (12h TTL).
+
+    Returns:
+        DataFrame with DatetimeIndex and one column per keyword (0-100 scale),
+        plus 'isPartial' column. Empty DataFrame on failure.
+
+    Trading signal: Rising search interest for a brand/product → demand growth.
+        Compare current vs 30-day-ago interest for momentum.
+    Sectors: Consumer retail, tech adoption, pharma awareness, travel demand.
+    """
+    cache_key = f"gtrends_{'_'.join(keywords)}_{timeframe}_{geo}"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=12)
+        if cached is not None:
+            return cached
+
+    try:
+        from pytrends.request import TrendReq
+    except ImportError:
+        raise ImportError(
+            "pytrends is required: pip install pytrends\n"
+            "For better rate limiting: pip install pytrends-modern"
+        )
+
+    try:
+        # Initialize with retry/backoff for rate limiting
+        pytrends = TrendReq(hl="en-US", tz=360, retries=3, backoff_factor=1.0)
+        pytrends.build_payload(keywords[:5], cat=0, timeframe=timeframe, geo=geo)
+        df = pytrends.interest_over_time()
+
+        if df is not None and not df.empty:
+            if cache:
+                _cache_set(cache_key, df)
+            return df
+    except Exception:
+        pass
+
+    return pd.DataFrame()
+
+
+def fetch_google_trends_related(
+    keyword: str,
+    timeframe: str = "today 3-m",
+    geo: str = "",
+) -> dict[str, pd.DataFrame]:
+    """Fetch related queries and topics for a keyword from Google Trends.
+
+    Returns dict with keys 'rising' and 'top', each a DataFrame.
+    Useful for discovering emerging trends and related stock plays.
+    """
+    try:
+        from pytrends.request import TrendReq
+    except ImportError:
+        raise ImportError("pytrends is required: pip install pytrends")
+
+    try:
+        pytrends = TrendReq(hl="en-US", tz=360, retries=3, backoff_factor=1.0)
+        pytrends.build_payload([keyword], cat=0, timeframe=timeframe, geo=geo)
+        related = pytrends.related_queries()
+        result = {}
+        if keyword in related:
+            for key in ("top", "rising"):
+                val = related[keyword].get(key)
+                result[key] = val if val is not None else pd.DataFrame()
+        return result
+    except Exception:
+        return {"top": pd.DataFrame(), "rising": pd.DataFrame()}
+
+
+# ---------------------------------------------------------------------------
+# ALT DATA: TSA Checkpoint Passenger Data (free, no key)
+# ---------------------------------------------------------------------------
+def fetch_tsa_checkpoint(cache: bool = True) -> pd.DataFrame:
+    """Fetch daily TSA checkpoint passenger data from tsa.gov.
+
+    Scrapes the HTML table at https://www.tsa.gov/travel/passenger-volumes.
+    Updated Mon-Fri by 9am. No API key needed.
+
+    Returns:
+        DataFrame with DatetimeIndex and columns for current year and
+        comparison years. Empty DataFrame on failure.
+
+    Trading signal: Compare current traveler counts to prior year.
+        Sustained growth → bullish airlines/travel. Sharp drops → bearish.
+    Sectors: Airlines (DAL, UAL, LUV, AAL), hotels (MAR, HLT, H),
+        travel platforms (BKNG, EXPE, ABNB), airports.
+    """
+    cache_key = "tsa_checkpoint_current"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=12)
+        if cached is not None:
+            return cached
+
+    url = "https://www.tsa.gov/travel/passenger-volumes"
+    try:
+        tables = pd.read_html(url, header=0)
+        if not tables:
+            return pd.DataFrame()
+
+        df = tables[0]
+        # First column is the date
+        date_col = df.columns[0]
+        df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+        df = df.dropna(subset=[date_col])
+        df = df.set_index(date_col)
+        df.index.name = "date"
+
+        # Convert numeric columns
+        for col in df.columns:
+            df[col] = pd.to_numeric(
+                df[col].astype(str).str.replace(",", ""), errors="coerce"
+            )
+
+        df = df.sort_index()
+
+        if cache and not df.empty:
+            _cache_set(cache_key, df)
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
+def fetch_tsa_yoy_change(cache: bool = True) -> pd.DataFrame:
+    """Compute year-over-year change in TSA passenger volumes.
+
+    Returns DataFrame with 'date', 'current', 'prior_year', 'yoy_change' columns.
+    yoy_change > 0 means more travelers than same day last year.
+    """
+    df = fetch_tsa_checkpoint(cache=cache)
+    if df.empty or len(df.columns) < 2:
+        return pd.DataFrame()
+
+    current_col = df.columns[0]
+    prior_col = df.columns[1]
+    result = pd.DataFrame({
+        "current": df[current_col],
+        "prior_year": df[prior_col],
+    })
+    result["yoy_change"] = (result["current"] - result["prior_year"]) / result["prior_year"]
+    return result.dropna()
+
+
+# ---------------------------------------------------------------------------
+# ALT DATA: NOAA Climate Data (free, token required)
+# ---------------------------------------------------------------------------
+NOAA_CDO_BASE = "https://www.ncei.noaa.gov/cdo-web/api/v2"
+
+
+def fetch_noaa_weather(
+    dataset: str = "GHCND",
+    station_id: str = "GHCND:USW00094728",
+    start: str | None = None,
+    end: str | None = None,
+    data_types: list[str] | None = None,
+    token: str | None = None,
+    cache: bool = True,
+) -> pd.DataFrame:
+    """Fetch weather data from NOAA Climate Data Online API.
+
+    Requires a free token from https://www.ncdc.noaa.gov/cdo-web/token.
+    Set NOAA_CDO_TOKEN env var or pass token directly.
+
+    Args:
+        dataset: Dataset ID. Common: 'GHCND' (daily), 'GSOM' (monthly).
+        station_id: Weather station. Default: Central Park, NYC.
+            Find stations at: https://www.ncdc.noaa.gov/cdo-web/datatools/findstation
+        start: Start date 'YYYY-MM-DD' (default: 1 year ago).
+        end: End date 'YYYY-MM-DD' (default: today).
+        data_types: List of data type IDs to fetch. Common GHCND types:
+            TMAX (max temp, tenths of C), TMIN (min temp), TAVG (avg temp),
+            PRCP (precipitation, tenths of mm), SNOW (snowfall, mm),
+            AWND (avg wind speed, tenths of m/s).
+        token: NOAA CDO API token (or set NOAA_CDO_TOKEN env var).
+        cache: Cache results for 12 hours.
+
+    Returns:
+        DataFrame with DatetimeIndex and one column per data type.
+
+    Trading signal: Extreme weather events → energy demand spikes, crop damage.
+        Mild winters → lower nat gas demand (UNG). Heat waves → higher electricity.
+    Sectors: Energy (XLE, UNG, USO), agriculture (DBA, WEAT), utilities, insurance.
+    """
+    token = token or get_api_key("NOAA_CDO_TOKEN")
+    if not token:
+        raise ValueError(
+            "NOAA CDO token required. Get free token: https://www.ncdc.noaa.gov/cdo-web/token\n"
+            "Set NOAA_CDO_TOKEN env var."
+        )
+
+    end = end or datetime.now().strftime("%Y-%m-%d")
+    start = start or (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
+
+    cache_key = f"noaa_{dataset}_{station_id}_{start}_{end}"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=12)
+        if cached is not None:
+            return cached
+
+    headers = {"token": token}
+    params: dict[str, Any] = {
+        "datasetid": dataset,
+        "stationid": station_id,
+        "startdate": start,
+        "enddate": end,
+        "limit": 1000,
+        "units": "metric",
+    }
+    if data_types:
+        params["datatypeid"] = ",".join(data_types)
+
+    all_records: list[dict] = []
+    offset = 1
+    for _ in range(20):  # Max 20 pages to avoid infinite loop
+        params["offset"] = offset
+        try:
+            resp = requests.get(
+                f"{NOAA_CDO_BASE}/data", headers=headers, params=params, timeout=30
+            )
+            resp.raise_for_status()
+            body = resp.json()
+            results = body.get("results", [])
+            if not results:
+                break
+            all_records.extend(results)
+            metadata = body.get("metadata", {}).get("resultset", {})
+            total = metadata.get("count", 0)
+            if offset + len(results) > total:
+                break
+            offset += len(results)
+            time.sleep(0.25)  # Respect 5 req/sec limit
+        except Exception:
+            break
+
+    if not all_records:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(all_records)
+    df["date"] = pd.to_datetime(df["date"])
+
+    # Pivot so each data type is a column
+    if "datatype" in df.columns and "value" in df.columns:
+        pivoted = df.pivot_table(
+            index="date", columns="datatype", values="value", aggfunc="first"
+        )
+        pivoted.index.name = "date"
+        if cache and not pivoted.empty:
+            _cache_set(cache_key, pivoted)
+        return pivoted
+
+    return pd.DataFrame()
+
+
+# Common NOAA weather stations for major US cities
+NOAA_STATIONS = {
+    "NYC": "GHCND:USW00094728",       # Central Park
+    "LAX": "GHCND:USW00023174",       # LA International Airport
+    "ORD": "GHCND:USW00094846",       # Chicago O'Hare
+    "DFW": "GHCND:USW00003927",       # Dallas/Fort Worth
+    "ATL": "GHCND:USW00013874",       # Atlanta Hartsfield
+    "MIA": "GHCND:USW00012839",       # Miami International
+    "SEA": "GHCND:USW00024233",       # Seattle-Tacoma
+    "DEN": "GHCND:USW00003017",       # Denver International
+    "IAH": "GHCND:USW00012960",       # Houston Intercontinental
+    "BOS": "GHCND:USW00014739",       # Boston Logan
+}
+
+
+# ---------------------------------------------------------------------------
+# ALT DATA: Steam Player Counts (free, no key)
+# ---------------------------------------------------------------------------
+# Major game App IDs on Steam (for tracking gaming engagement)
+STEAM_GAME_IDS = {
+    "CS2": 730,              # Counter-Strike 2 (Valve)
+    "Dota2": 570,            # Dota 2 (Valve)
+    "PUBG": 578080,          # PUBG (Krafton)
+    "Apex": 1172470,         # Apex Legends (EA)
+    "GTA5": 271590,          # GTA V (TTWO)
+    "Elden_Ring": 1245620,   # Elden Ring (Bandai Namco)
+    "Rust": 252490,          # Rust (Facepunch)
+    "TF2": 440,              # Team Fortress 2 (Valve)
+    "Civ6": 289070,          # Civilization VI (TTWO)
+    "Destiny2": 1085660,     # Destiny 2 (Bungie/Sony)
+    "Baldurs_Gate3": 1086940,  # BG3 (Hasbro/Larian)
+    "Palworld": 1623730,     # Palworld
+    "Helldivers2": 553850,   # Helldivers 2 (Sony)
+    "Path_of_Exile2": 2694490,  # PoE 2 (Tencent/GGG)
+}
+
+# Map game publishers to stock tickers
+STEAM_GAME_TICKERS = {
+    "CS2": None,        # Valve (private)
+    "Dota2": None,      # Valve (private)
+    "PUBG": None,       # Krafton (Korean-listed)
+    "Apex": "EA",       # Electronic Arts
+    "GTA5": "TTWO",     # Take-Two Interactive
+    "Elden_Ring": None,  # Bandai Namco (Japanese-listed)
+    "Rust": None,       # Facepunch (private)
+    "TF2": None,        # Valve (private)
+    "Civ6": "TTWO",     # Take-Two Interactive
+    "Destiny2": "SONY", # Bungie owned by Sony
+    "Baldurs_Gate3": "HAS",  # Hasbro (D&D IP owner)
+    "Palworld": None,   # Pocketpair (private)
+    "Helldivers2": "SONY",  # Sony
+    "Path_of_Exile2": None,  # Tencent/GGG
+}
+
+
+def fetch_steam_player_count(app_id: int) -> int | None:
+    """Fetch current player count for a Steam game.
+
+    No API key needed. Free endpoint.
+
+    Args:
+        app_id: Steam application ID (e.g., 730 for CS2).
+
+    Returns:
+        Current number of players, or None on failure.
+    """
+    url = f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/"
+    try:
+        resp = requests.get(url, params={"appid": app_id}, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        return data.get("response", {}).get("player_count")
+    except Exception:
+        return None
+
+
+def fetch_steam_all_players(cache: bool = True) -> dict[str, int]:
+    """Fetch current player counts for all tracked Steam games.
+
+    No API key needed. Returns {game_name: player_count}.
+
+    Trading signal: Aggregate Steam players = overall gaming engagement.
+        Compare week-over-week. Rising = bullish gaming sector.
+        Track specific games for publisher stock signals (EA, TTWO, SONY).
+    Sectors: Gaming (EA, TTWO, RBLX, SONY, NTDOY), GPU demand (NVDA, AMD).
+    """
+    cache_key = "steam_players_all"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=1)
+        if cached is not None:
+            return cached.to_dict().get("players", {})
+
+    results = {}
+    for name, app_id in STEAM_GAME_IDS.items():
+        count = fetch_steam_player_count(app_id)
+        if count is not None:
+            results[name] = count
+        time.sleep(0.1)  # Be polite
+
+    if cache and results:
+        df = pd.DataFrame({"players": results})
+        _cache_set(cache_key, df)
+
+    return results
+
+
+def fetch_steam_gaming_index(cache: bool = True) -> dict[str, Any]:
+    """Compute a gaming engagement index from Steam player data.
+
+    Returns dict with total players, per-ticker aggregation, and
+    comparison to help assess gaming sector health.
+    """
+    players = fetch_steam_all_players(cache=cache)
+    if not players:
+        return {"total_players": 0, "by_ticker": {}, "games": {}}
+
+    total = sum(players.values())
+
+    # Aggregate by stock ticker
+    by_ticker: dict[str, int] = {}
+    for game, count in players.items():
+        ticker = STEAM_GAME_TICKERS.get(game)
+        if ticker:
+            by_ticker[ticker] = by_ticker.get(ticker, 0) + count
+
+    return {
+        "total_players": total,
+        "by_ticker": by_ticker,
+        "games": players,
+        "timestamp": datetime.now().isoformat(),
+    }
+
+
+# ---------------------------------------------------------------------------
+# ALT DATA: DeFi Llama — TVL & Protocol Data (free, no key)
+# ---------------------------------------------------------------------------
+DEFILLAMA_BASE = "https://api.llama.fi"
+
+
+def fetch_defi_tvl_all(cache: bool = True) -> pd.DataFrame:
+    """Fetch current TVL for all DeFi protocols from DeFi Llama.
+
+    Free API, no key needed. Returns DataFrame with protocol name, chain,
+    TVL, and 24h/7d changes.
+
+    Trading signal: Total DeFi TVL = crypto risk appetite indicator.
+        Rising TVL = bullish crypto. Rapid TVL decline = potential contagion.
+    Sectors: Crypto (COIN, MARA, RIOT, MSTR), DeFi tokens.
+    """
+    cache_key = "defillama_protocols"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=4)
+        if cached is not None:
+            return cached
+
+    try:
+        resp = requests.get(f"{DEFILLAMA_BASE}/protocols", timeout=30)
+        resp.raise_for_status()
+        protocols = resp.json()
+
+        rows = []
+        for p in protocols:
+            rows.append({
+                "name": p.get("name", ""),
+                "symbol": p.get("symbol", ""),
+                "chain": p.get("chain", ""),
+                "tvl": p.get("tvl", 0),
+                "change_1d": p.get("change_1d", 0),
+                "change_7d": p.get("change_7d", 0),
+                "category": p.get("category", ""),
+                "chains": ",".join(p.get("chains", [])),
+            })
+
+        df = pd.DataFrame(rows)
+        if cache and not df.empty:
+            _cache_set(cache_key, df)
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
+def fetch_defi_chain_tvl(chain: str = "Ethereum", cache: bool = True) -> pd.DataFrame:
+    """Fetch historical TVL for a specific blockchain from DeFi Llama.
+
+    Args:
+        chain: Chain name (Ethereum, BSC, Solana, Avalanche, Polygon, etc.)
+
+    Returns:
+        DataFrame with DatetimeIndex and 'tvl' column.
+    """
+    cache_key = f"defillama_chain_{chain}"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=12)
+        if cached is not None:
+            return cached
+
+    try:
+        resp = requests.get(
+            f"{DEFILLAMA_BASE}/v2/historicalChainTvl/{chain}", timeout=30
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        if not data:
+            return pd.DataFrame()
+
+        df = pd.DataFrame(data)
+        df["date"] = pd.to_datetime(df["date"], unit="s")
+        df = df.set_index("date")
+        df.index.name = "date"
+
+        if cache and not df.empty:
+            _cache_set(cache_key, df)
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
+def fetch_defi_total_tvl(cache: bool = True) -> pd.DataFrame:
+    """Fetch historical total DeFi TVL across all chains.
+
+    Returns DataFrame with DatetimeIndex and 'tvl' column.
+    Great for crypto market health dashboard.
+    """
+    cache_key = "defillama_total_tvl"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=12)
+        if cached is not None:
+            return cached
+
+    try:
+        resp = requests.get(
+            f"{DEFILLAMA_BASE}/v2/historicalChainTvl", timeout=30
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        if not data:
+            return pd.DataFrame()
+
+        df = pd.DataFrame(data)
+        df["date"] = pd.to_datetime(df["date"], unit="s")
+        df = df.set_index("date")
+        df.index.name = "date"
+
+        if cache and not df.empty:
+            _cache_set(cache_key, df)
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
+# ---------------------------------------------------------------------------
+# ALT DATA: Reddit/WSB Sentiment — ApeWisdom (free, no key)
+# ---------------------------------------------------------------------------
+def fetch_reddit_trending_stocks(
+    filter_name: str = "all-stocks",
+    pages: int = 1,
+    cache: bool = True,
+) -> pd.DataFrame:
+    """Fetch trending stock mentions from Reddit via ApeWisdom API.
+
+    Free API, no key needed. Tracks mentions across r/wallstreetbets,
+    r/stocks, r/investing, and other finance subreddits.
+
+    Args:
+        filter_name: Filter type. Options:
+            'all-stocks' — all stock-focused subreddits
+            'all-crypto' — crypto subreddits
+            'wallstreetbets' — WSB only
+            'stocks' — r/stocks only
+            'investing' — r/investing only
+        pages: Number of pages (100 results per page).
+        cache: Cache results for 1 hour.
+
+    Returns:
+        DataFrame with columns: rank, ticker, name, mentions, upvotes,
+        rank_24h_ago, mentions_24h_ago.
+
+    Trading signal: Spike in mentions = retail attention. High upvotes/mention
+        ratio = strong conviction. Compare rank_24h_ago for momentum.
+    Sectors: Meme stocks, small/mid caps, whatever Reddit is excited about.
+    """
+    cache_key = f"reddit_trending_{filter_name}_p{pages}"
+    if cache:
+        cached = _cache_get(cache_key, max_age_hours=1)
+        if cached is not None:
+            return cached
+
+    all_results = []
+    for page in range(1, pages + 1):
+        try:
+            url = f"https://apewisdom.io/api/v1.0/filter/{filter_name}/page/{page}"
+            resp = requests.get(url, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+            results = data.get("results", [])
+            if not results:
+                break
+            all_results.extend(results)
+            time.sleep(0.5)  # Be polite
+        except Exception:
+            break
+
+    if not all_results:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(all_results)
+    # Keep useful columns
+    keep_cols = ["rank", "ticker", "name", "mentions", "upvotes",
+                 "rank_24h_ago", "mentions_24h_ago"]
+    available = [c for c in keep_cols if c in df.columns]
+    df = df[available]
+
+    if cache and not df.empty:
+        _cache_set(cache_key, df)
+    return df
+
+
+def fetch_reddit_stock_sentiment(ticker: str) -> dict[str, Any]:
+    """Get Reddit sentiment summary for a specific stock ticker.
+
+    Searches current trending data for the ticker.
+    Returns dict with mentions, rank, upvotes, and 24h changes.
+    """
+    df = fetch_reddit_trending_stocks(filter_name="all-stocks", pages=3)
+    if df.empty:
+        return {"ticker": ticker, "found": False}
+
+    match = df[df["ticker"].str.upper() == ticker.upper()]
+    if match.empty:
+        return {"ticker": ticker, "found": False, "note": "Not in top 300 trending"}
+
+    row = match.iloc[0].to_dict()
+    row["found"] = True
+    return row
+
+
+# ---------------------------------------------------------------------------
+# ALT DATA: OpenSky Network — Flight Tracking (free, no key for anonymous)
+# ---------------------------------------------------------------------------
+OPENSKY_BASE = "https://opensky-network.org/api"
+
+
+def fetch_opensky_flights(
+    airport: str,
+    direction: str = "departure",
+    hours_back: int = 24,
+) -> list[dict[str, Any]]:
+    """Fetch recent flights from/to an airport via OpenSky Network.
+
+    Free API (anonymous: 400 credits/day). No key needed.
+
+    Args:
+        airport: ICAO airport code (e.g., 'KJFK', 'KLAX', 'EGLL', 'RJTT').
+        direction: 'departure' or 'arrival'.
+        hours_back: Look back this many hours (max 48 for anonymous).
+
+    Returns:
+        List of flight dicts with icao24, callsign, departure/arrival airports,
+        and timestamps.
+
+    Trading signal: Flight counts at major airports = air travel demand proxy.
+    Sectors: Airlines, travel, aerospace.
+    """
+    end_ts = int(time.time())
+    begin_ts = end_ts - (hours_back * 3600)
+
+    endpoint = "departure" if direction == "departure" else "arrival"
+    url = f"{OPENSKY_BASE}/flights/{endpoint}"
+    params = {"airport": airport, "begin": begin_ts, "end": end_ts}
+
+    try:
+        resp = requests.get(url, params=params, timeout=30)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception:
+        return []
+
+
+# Common ICAO airport codes for tracking
+AIRPORTS = {
+    "JFK": "KJFK", "LAX": "KLAX", "ORD": "KORD", "ATL": "KATL",
+    "DFW": "KDFW", "SFO": "KSFO", "MIA": "KMIA", "SEA": "KSEA",
+    "LHR": "EGLL", "CDG": "LFPG", "FRA": "EDDF", "NRT": "RJAA",
+    "HND": "RJTT", "PEK": "ZBAA", "SIN": "WSSS", "DXB": "OMDB",
+}
 
 
 # ---------------------------------------------------------------------------
