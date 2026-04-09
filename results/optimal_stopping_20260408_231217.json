@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": -0.4253750231748106,
+    "cagr": -0.12967595877685112,
+    "annual_volatility": 0.09470667170096735,
+    "sharpe_ratio": -1.8376103470486298,
+    "sortino_ratio": -2.3422049494758816,
+    "calmar_ratio": -0.30485090029265766,
+    "max_drawdown": -0.4253750231748106,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.4181636726546906,
+    "profit_factor": 0.7637456763682526,
+    "num_trading_days": 1002,
+    "skewness": -0.3921307561147192,
+    "kurtosis": 4.045145132585616,
+    "best_day": 0.022794490621868446,
+    "worst_day": -0.03196855387249098,
+    "avg_daily_return": -0.0005349610890033215,
+    "black_swan_resilience": 60.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.23834365597522555,
+    "beta": 0.3117377456087343,
+    "information_ratio": -1.6374696910826545,
+    "tracking_error": 0.14555607183033636
+  },
+  "trade_metrics": {
+    "num_trades": 6706,
+    "num_buys": 3355,
+    "num_sells": 3351,
+    "total_commission": 0.0,
+    "total_slippage": 57386.623063385974,
+    "total_transaction_costs": 57386.623063385974,
+    "avg_trade_size": 8557.504184817471
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 10.0,
+      "avg_cost": 680.062744140625,
+      "realized_pnl": 743.3950500488281
+    },
+    "META": {
+      "qty": 10.0,
+      "avg_cost": 659.5253295898438,
+      "realized_pnl": 1371.7313766479492
+    },
+    "JPM": {
+      "qty": 22.0,
+      "avg_cost": 319.1398010253906,
+      "realized_pnl": 1917.8658981323242
+    },
+    "GOOGL": {
+      "qty": 22.0,
+      "avg_cost": 312.7798156738281,
+      "realized_pnl": 2397.006591796875
+    }
+  },
+  "source": "math",
+  "description": "Secretary problem applied to exits: sell after peak exceeds 37th pctile",
+  "horizon": "4Y (2022-2025)"
+}

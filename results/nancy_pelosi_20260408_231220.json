@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.8329575629252557,
+    "cagr": 0.16404217313397518,
+    "annual_volatility": 0.15326944044501192,
+    "sharpe_ratio": 0.8152539307501296,
+    "sortino_ratio": 1.1667781786457871,
+    "calmar_ratio": 0.7939359968932865,
+    "max_drawdown": -0.20661888839387665,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.5489021956087824,
+    "profit_factor": 1.2068239398901013,
+    "num_trading_days": 1002,
+    "skewness": -0.17035441244375488,
+    "kurtosis": 1.5138901211331381,
+    "best_day": 0.044054909880954396,
+    "worst_day": -0.03388797852829839,
+    "avg_daily_return": 0.0006514971397224885,
+    "black_swan_resilience": 74.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.05537447593560074,
+    "beta": 0.5990094840478839,
+    "information_ratio": 0.42387666697494025,
+    "tracking_error": 0.13063817909768197
+  },
+  "trade_metrics": {
+    "num_trades": 416,
+    "num_buys": 195,
+    "num_sells": 221,
+    "total_commission": 0.0,
+    "total_slippage": 2931.9632646389005,
+    "total_transaction_costs": 2931.9632646389005,
+    "avg_trade_size": 7047.988616920435
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 78.0,
+      "avg_cost": 234.7755400828826,
+      "realized_pnl": -880.4053192138664
+    },
+    "AVGO": {
+      "qty": 57.0,
+      "avg_cost": 295.5503336588542,
+      "realized_pnl": 7116.219543457031
+    },
+    "GS": {
+      "qty": 27.0,
+      "avg_cost": 630.6060403602181,
+      "realized_pnl": 7044.515372440733
+    },
+    "JPM": {
+      "qty": 72.0,
+      "avg_cost": 267.1013043076174,
+      "realized_pnl": 5274.479243400402
+    },
+    "GOOGL": {
+      "qty": 70.0,
+      "avg_cost": 195.89081638881137,
+      "realized_pnl": 4131.71939086914
+    },
+    "AMZN": {
+      "qty": 94.0,
+      "avg_cost": 249.5051074738198,
+      "realized_pnl": 3220.171493530275
+    }
+  },
+  "source": "political",
+  "description": "Congressional Dem trading: tech-heavy quality momentum, +74% since 2023",
+  "horizon": "4Y (2022-2025)"
+}

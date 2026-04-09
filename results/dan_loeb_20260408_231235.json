@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.5421400923307746,
+    "cagr": 0.11470532109046538,
+    "annual_volatility": 0.14129698770200153,
+    "sharpe_ratio": 0.5642888943990146,
+    "sortino_ratio": 0.8142184453375335,
+    "calmar_ratio": 0.7447433041921117,
+    "max_drawdown": -0.15401994277061182,
+    "max_drawdown_date": "2023-01-30",
+    "win_rate": 0.5159680638722555,
+    "profit_factor": 1.1703413298463805,
+    "num_trading_days": 1002,
+    "skewness": -0.3314930483347919,
+    "kurtosis": 7.445903577091964,
+    "best_day": 0.049197643817904035,
+    "worst_day": -0.06725476042862599,
+    "avg_daily_return": 0.0004720479618875866,
+    "black_swan_resilience": 75.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.006037623892090949,
+    "beta": 0.4135527648044357,
+    "information_ratio": 0.0377537333751697,
+    "tracking_error": 0.15992124095631405
+  },
+  "trade_metrics": {
+    "num_trades": 276,
+    "num_buys": 133,
+    "num_sells": 143,
+    "total_commission": 0.0,
+    "total_slippage": 3224.246330986027,
+    "total_transaction_costs": 3224.246330986027,
+    "avg_trade_size": 11682.051923862402
+  },
+  "final_positions": {
+    "NEE": {
+      "qty": 278.0,
+      "avg_cost": 72.92275886942907,
+      "realized_pnl": -3008.749233639539
+    },
+    "GOOGL": {
+      "qty": 74.0,
+      "avg_cost": 314.4627990722656,
+      "realized_pnl": 8579.925117492672
+    },
+    "AMZN": {
+      "qty": 100.0,
+      "avg_cost": 251.78680053710937,
+      "realized_pnl": 7090.981353759766
+    }
+  },
+  "source": "political",
+  "description": "Event-driven activist: catalyst plays + quality momentum, +24% in 2025",
+  "horizon": "4Y (2022-2025)"
+}

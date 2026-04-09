@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": -0.034778306145061944,
+    "cagr": -0.008834407385823306,
+    "annual_volatility": 0.04420345583005455,
+    "sharpe_ratio": -1.0665506843281611,
+    "sortino_ratio": -1.3252817403686739,
+    "calmar_ratio": -0.06294292591896951,
+    "max_drawdown": -0.1403558423260528,
+    "max_drawdown_date": "2023-09-26",
+    "win_rate": 0.4820359281437126,
+    "profit_factor": 0.9647618996755262,
+    "num_trading_days": 1002,
+    "skewness": -2.532204734225905,
+    "kurtosis": 31.769212425678536,
+    "best_day": 0.011010231813365579,
+    "worst_day": -0.03634386459802108,
+    "avg_daily_return": -3.14343676262543e-05,
+    "black_swan_resilience": 67.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.11750210458419774,
+    "beta": 0.11765854050060834,
+    "information_ratio": -0.7182158491907017,
+    "tracking_error": 0.16360277306133134
+  },
+  "trade_metrics": {
+    "num_trades": 1070,
+    "num_buys": 544,
+    "num_sells": 526,
+    "total_commission": 0.0,
+    "total_slippage": 5878.420313297274,
+    "total_transaction_costs": 5878.420313297274,
+    "avg_trade_size": 5493.850760090908
+  },
+  "final_positions": {
+    "UPS": {
+      "qty": 117.0,
+      "avg_cost": 98.81201171875,
+      "realized_pnl": -746.2392807006848
+    },
+    "PG": {
+      "qty": 82.0,
+      "avg_cost": 142.1705780029297,
+      "realized_pnl": 576.2568359375023
+    }
+  },
+  "source": "math",
+  "description": "Long laggard in cointegrated pairs when spread Z > 2",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.05060541656456086,
+    "cagr": 0.012452422381184824,
+    "annual_volatility": 0.09925723742000273,
+    "sharpe_ratio": -0.2205369412257106,
+    "sortino_ratio": -0.3072662536949203,
+    "calmar_ratio": 0.048458804936955986,
+    "max_drawdown": -0.2569692421714732,
+    "max_drawdown_date": "2022-10-24",
+    "win_rate": 0.5249500998003992,
+    "profit_factor": 1.0301836975557292,
+    "num_trading_days": 1002,
+    "skewness": 0.15845499176293998,
+    "kurtosis": 3.023563046631068,
+    "best_day": 0.04301282089621172,
+    "worst_day": -0.023630839099280654,
+    "avg_daily_return": 6.878522971538368e-05,
+    "black_swan_resilience": 76.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.09621527481718961,
+    "beta": 0.3163880449275195,
+    "information_ratio": -0.6521393213590826,
+    "tracking_error": 0.147537913549935
+  },
+  "trade_metrics": {
+    "num_trades": 303,
+    "num_buys": 151,
+    "num_sells": 152,
+    "total_commission": 0.0,
+    "total_slippage": 2705.159854854583,
+    "total_transaction_costs": 2705.159854854583,
+    "avg_trade_size": 8927.92031305143
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 16.0,
+      "avg_cost": 598.3451441123733,
+      "realized_pnl": 1563.7633031124299
+    },
+    "EFA": {
+      "qty": 119.0,
+      "avg_cost": 89.72147424272497,
+      "realized_pnl": 2702.9665150539545
+    },
+    "QQQ": {
+      "qty": 12.0,
+      "avg_cost": 538.2750314752114,
+      "realized_pnl": 2244.2593925951146
+    },
+    "EEM": {
+      "qty": 212.0,
+      "avg_cost": 48.98019448932654,
+      "realized_pnl": 1723.5191119862516
+    },
+    "GLD": {
+      "qty": 23.0,
+      "avg_cost": 331.56143462692484,
+      "realized_pnl": 4960.394853719077
+    },
+    "IEF": {
+      "qty": 273.0,
+      "avg_cost": 93.10865963328969,
+      "realized_pnl": -2640.2016732857483
+    },
+    "IWM": {
+      "qty": 27.0,
+      "avg_cost": 233.2863653894843,
+      "realized_pnl": -1033.4470743032648
+    }
+  },
+  "source": "math",
+  "description": "Each asset contributes equal risk, with momentum filter",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.43409350526464974,
+    "cagr": 0.0945908990861497,
+    "annual_volatility": 0.19347269618182944,
+    "sharpe_ratio": 0.3624687537073878,
+    "sortino_ratio": 0.5284674735865001,
+    "calmar_ratio": 0.26117677826947067,
+    "max_drawdown": -0.36217193470605946,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.5149700598802395,
+    "profit_factor": 1.103366781910521,
+    "num_trading_days": 1002,
+    "skewness": 0.2224544553675197,
+    "kurtosis": 2.6091060542023543,
+    "best_day": 0.07381089592309498,
+    "worst_day": -0.047518207296796344,
+    "avg_daily_return": 0.00043393481144775407,
+    "black_swan_resilience": 71.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.014076798112224731,
+    "beta": 0.7904231837603122,
+    "information_ratio": -0.10325837997087618,
+    "tracking_error": 0.13632596324090174
+  },
+  "trade_metrics": {
+    "num_trades": 354,
+    "num_buys": 175,
+    "num_sells": 179,
+    "total_commission": 0.0,
+    "total_slippage": 3139.2985175113677,
+    "total_transaction_costs": 3139.2985175113677,
+    "avg_trade_size": 8868.074908224204
+  },
+  "final_positions": {
+    "AVGO": {
+      "qty": 61.0,
+      "avg_cost": 289.7275844219604,
+      "realized_pnl": 2377.976952870687
+    },
+    "SPY": {
+      "qty": 34.0,
+      "avg_cost": 634.548629154272,
+      "realized_pnl": 2619.4366248878264
+    },
+    "QQQ": {
+      "qty": 38.0,
+      "avg_cost": 566.4170082493832,
+      "realized_pnl": 1263.15283203125
+    },
+    "AAPL": {
+      "qty": 82.0,
+      "avg_cost": 262.4417069597942,
+      "realized_pnl": -2273.182235717771
+    },
+    "GOOGL": {
+      "qty": 74.0,
+      "avg_cost": 222.28866924221109,
+      "realized_pnl": -1131.3912455465947
+    },
+    "AMZN": {
+      "qty": 67.0,
+      "avg_cost": 252.79880626166045,
+      "realized_pnl": 1535.232887268065
+    }
+  },
+  "source": "political",
+  "description": "Mega-cap AI concentration: $4B NVDA + $3.2B AMZN, $67B AUM",
+  "horizon": "4Y (2022-2025)"
+}

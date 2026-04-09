@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.15109385409834197,
+    "cagr": 0.03590427811614205,
+    "annual_volatility": 0.05310136469584982,
+    "sharpe_ratio": -0.04567457081022147,
+    "sortino_ratio": -0.068840403908293,
+    "calmar_ratio": 0.6087124693037761,
+    "max_drawdown": -0.05898397014473533,
+    "max_drawdown_date": "2023-10-26",
+    "win_rate": 0.20459081836327345,
+    "profit_factor": 1.2362482708509357,
+    "num_trading_days": 1002,
+    "skewness": 0.41276194873877214,
+    "kurtosis": 11.86198463272294,
+    "best_day": 0.01787470651755485,
+    "worst_day": -0.019795276152322017,
+    "avg_daily_return": 0.0001460253308788819,
+    "black_swan_resilience": 89.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.07276341908223238,
+    "beta": 0.10682533984098534,
+    "information_ratio": -0.43226874636878265,
+    "tracking_error": 0.1683291232444446
+  },
+  "trade_metrics": {
+    "num_trades": 1000,
+    "num_buys": 503,
+    "num_sells": 497,
+    "total_commission": 0.0,
+    "total_slippage": 14547.368319032668,
+    "total_transaction_costs": 14547.368319032668,
+    "avg_trade_size": 14547.368319032668
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 25.0,
+      "avg_cost": 680.062744140625,
+      "realized_pnl": 3320.720916748047
+    },
+    "QQQ": {
+      "qty": 28.0,
+      "avg_cost": 613.536376953125,
+      "realized_pnl": 2464.658203125
+    },
+    "DIA": {
+      "qty": 36.0,
+      "avg_cost": 478.7659912109375,
+      "realized_pnl": 2476.839385986328
+    },
+    "MSFT": {
+      "qty": 36.0,
+      "avg_cost": 482.5186767578125,
+      "realized_pnl": 2416.9188232421875
+    },
+    "NVDA": {
+      "qty": 93.0,
+      "avg_cost": 186.4899139404297,
+      "realized_pnl": 6409.689268112183
+    },
+    "AAPL": {
+      "qty": 64.0,
+      "avg_cost": 271.6058349609375,
+      "realized_pnl": 2220.2724609375
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy %R<-90 above SMA200, exit close>prev high. 77% win SPY, 22% invested",
+  "horizon": "4Y (2022-2025)"
+}

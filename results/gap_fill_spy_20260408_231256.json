@@ -1,0 +1,45 @@
+{
+  "metrics": {
+    "total_return": -0.196290606563417,
+    "cagr": -0.053305995798927586,
+    "annual_volatility": 0.07205146697573314,
+    "sharpe_ratio": -1.271090000665103,
+    "sortino_ratio": -1.738141157958117,
+    "calmar_ratio": -0.26478595925049814,
+    "max_drawdown": -0.20131730530506708,
+    "max_drawdown_date": "2025-12-30",
+    "win_rate": 0.0968063872255489,
+    "profit_factor": 0.7769232273275162,
+    "num_trading_days": 1002,
+    "skewness": 0.5051308761523344,
+    "kurtosis": 23.466976059069477,
+    "best_day": 0.04846689940981874,
+    "worst_day": -0.027746970019411066,
+    "avg_daily_return": -0.0002077783086615399,
+    "black_swan_resilience": 83.3,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.16197369299730202,
+    "beta": 0.1813759337888732,
+    "information_ratio": -1.007069771341781,
+    "tracking_error": 0.16083661490652676
+  },
+  "trade_metrics": {
+    "num_trades": 328,
+    "num_buys": 162,
+    "num_sells": 166,
+    "total_commission": 0.0,
+    "total_slippage": 26544.27760580446,
+    "total_transaction_costs": 26544.27760580446,
+    "avg_trade_size": 80927.67562745257
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy SPY on -0.15% to -0.6% gap down, exit on fill or close. 89% win",
+  "horizon": "4Y (2022-2025)"
+}

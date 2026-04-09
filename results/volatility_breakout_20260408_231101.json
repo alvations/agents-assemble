@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.02776478295969198,
+    "cagr": -0.0070338492828019294,
+    "annual_volatility": 0.023411302784010837,
+    "sharpe_ratio": -1.966195646402818,
+    "sortino_ratio": -2.5300610628368316,
+    "calmar_ratio": -0.13238555488409678,
+    "max_drawdown": -0.05313154663256159,
+    "max_drawdown_date": "2024-05-17",
+    "win_rate": 0.18163672654690619,
+    "profit_factor": 0.9173667457998644,
+    "num_trading_days": 1002,
+    "skewness": -0.780187106286312,
+    "kurtosis": 17.62093411653732,
+    "best_day": 0.00933847558137857,
+    "worst_day": -0.01216448804566228,
+    "avg_daily_return": -2.7013635663262096e-05,
+    "black_swan_resilience": 75.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.11570154648117636,
+    "beta": 0.020344402419539758,
+    "information_ratio": -0.6500991841655456,
+    "tracking_error": 0.17797522178048658
+  },
+  "trade_metrics": {
+    "num_trades": 830,
+    "num_buys": 394,
+    "num_sells": 436,
+    "total_commission": 0.0,
+    "total_slippage": 6971.379295467381,
+    "total_transaction_costs": 6971.379295467381,
+    "avg_trade_size": 8399.252163213707
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GLD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TLT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "QQQ": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "math",
+  "description": "Donchian breakout with ATR position sizing (Turtle Trading)",
+  "horizon": "4Y (2022-2025)"
+}

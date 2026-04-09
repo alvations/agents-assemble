@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 1.0814873087680907,
+    "cagr": 0.20174397939114552,
+    "annual_volatility": 0.20185136389105493,
+    "sharpe_ratio": 0.8194185249360593,
+    "sortino_ratio": 1.283154507344938,
+    "calmar_ratio": 0.9526501677698054,
+    "max_drawdown": -0.21177131565875518,
+    "max_drawdown_date": "2022-03-14",
+    "win_rate": 0.5119760479041916,
+    "profit_factor": 1.2084120936040035,
+    "num_trading_days": 1002,
+    "skewness": 0.9550767507104067,
+    "kurtosis": 9.091026485420205,
+    "best_day": 0.11352117240780646,
+    "worst_day": -0.05405131572650168,
+    "avg_daily_return": 0.0008120020328545166,
+    "black_swan_resilience": 88.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.09307628219277109,
+    "beta": 0.7057835233488216,
+    "information_ratio": 0.562399897608403,
+    "tracking_error": 0.1654983981835284
+  },
+  "trade_metrics": {
+    "num_trades": 370,
+    "num_buys": 180,
+    "num_sells": 190,
+    "total_commission": 0.0,
+    "total_slippage": 5209.629869517323,
+    "total_transaction_costs": 5209.629869517323,
+    "avg_trade_size": 14080.080728425206
+  },
+  "final_positions": {
+    "F": {
+      "qty": 2236.0,
+      "avg_cost": 11.646731469679851,
+      "realized_pnl": 9360.593159793933
+    },
+    "GM": {
+      "qty": 401.0,
+      "avg_cost": 72.63267517089844,
+      "realized_pnl": 627.016637802124
+    },
+    "XLF": {
+      "qty": 555.0,
+      "avg_cost": 52.436248779296875,
+      "realized_pnl": 22.221361160277866
+    },
+    "JD": {
+      "qty": 973.0,
+      "avg_cost": 29.889999389648438,
+      "realized_pnl": 2002.6284389495877
+    },
+    "AMZN": {
+      "qty": 124.0,
+      "avg_cost": 233.8800048828125,
+      "realized_pnl": 8087.440200805666
+    },
+    "GOOGL": {
+      "qty": 93.0,
+      "avg_cost": 314.4627990722656,
+      "realized_pnl": 11161.0609664917
+    }
+  },
+  "source": "political",
+  "description": "Macro mean-reversion: cyclicals + China, +24% in 2025",
+  "horizon": "4Y (2022-2025)"
+}

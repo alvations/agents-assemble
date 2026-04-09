@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.6649393295805086,
+    "cagr": 0.13632237437616856,
+    "annual_volatility": 0.151092955322926,
+    "sharpe_ratio": 0.664501038020655,
+    "sortino_ratio": 0.9830491603085691,
+    "calmar_ratio": 0.6341198775212803,
+    "max_drawdown": -0.21497886946714384,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5319361277445109,
+    "profit_factor": 1.183402763846426,
+    "num_trading_days": 1002,
+    "skewness": 0.26610602863102095,
+    "kurtosis": 6.624042317558277,
+    "best_day": 0.07465021938410477,
+    "worst_day": -0.05199347335302851,
+    "avg_daily_return": 0.0005540682185440118,
+    "black_swan_resilience": 79.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.02765467717779413,
+    "beta": 0.7147302204411294,
+    "information_ratio": 0.2932339801967268,
+    "tracking_error": 0.09430925146956357
+  },
+  "trade_metrics": {
+    "num_trades": 611,
+    "num_buys": 308,
+    "num_sells": 303,
+    "total_commission": 0.0,
+    "total_slippage": 2061.1393909883504,
+    "total_transaction_costs": 2061.1393909883504,
+    "avg_trade_size": 3373.386891961293
+  },
+  "final_positions": {
+    "HON": {
+      "qty": 86.0,
+      "avg_cost": 201.43434402448923,
+      "realized_pnl": 2036.1169070289252
+    },
+    "V": {
+      "qty": 49.0,
+      "avg_cost": 351.1903418716119,
+      "realized_pnl": 3821.622573852538
+    },
+    "LMT": {
+      "qty": 37.0,
+      "avg_cost": 469.7058616485775,
+      "realized_pnl": 4361.664305313772
+    },
+    "BRK-B": {
+      "qty": 32.0,
+      "avg_cost": 499.1571619370404,
+      "realized_pnl": 5448.79877427045
+    },
+    "XOM": {
+      "qty": 140.0,
+      "avg_cost": 109.92227541355268,
+      "realized_pnl": 4472.248799291416
+    },
+    "MSFT": {
+      "qty": 33.0,
+      "avg_cost": 485.6315612792969,
+      "realized_pnl": 2217.4758453369104
+    },
+    "UNH": {
+      "qty": 51.0,
+      "avg_cost": 357.6553838973177,
+      "realized_pnl": 2295.7703276645675
+    },
+    "UNP": {
+      "qty": 71.0,
+      "avg_cost": 226.6930052916623,
+      "realized_pnl": 985.2116459716925
+    },
+    "CVX": {
+      "qty": 108.0,
+      "avg_cost": 141.37783745815264,
+      "realized_pnl": 1811.6079210053877
+    }
+  },
+  "source": "political",
+  "description": "Republican congressional trades: diversified sectors, financials + industrials",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": 0.1660633512191958,
+    "cagr": 0.03926506977697164,
+    "annual_volatility": 0.035749464239278536,
+    "sharpe_ratio": 0.0015080146631152775,
+    "sortino_ratio": 0.0023367816731033717,
+    "calmar_ratio": 1.0900778226849213,
+    "max_drawdown": -0.036020428046375286,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.45808383233532934,
+    "profit_factor": 1.251677859163651,
+    "num_trading_days": 1002,
+    "skewness": 2.0417473463971847,
+    "kurtosis": 26.937615616426463,
+    "best_day": 0.028020263533646395,
+    "worst_day": -0.011130727915071859,
+    "avg_daily_return": 0.00015586379420503798,
+    "black_swan_resilience": 98.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0694026274214028,
+    "beta": 0.07599911982763706,
+    "information_ratio": -0.4090056278519435,
+    "tracking_error": 0.16968624071482447
+  },
+  "trade_metrics": {
+    "num_trades": 220,
+    "num_buys": 95,
+    "num_sells": 125,
+    "total_commission": 0.0,
+    "total_slippage": 2530.6756298046107,
+    "total_transaction_costs": 2530.6756298046107,
+    "avg_trade_size": 11503.071044566415
+  },
+  "final_positions": {
+    "GOOGL": {
+      "qty": 43.0,
+      "avg_cost": 292.4127502441406,
+      "realized_pnl": 313.3837585449219
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy new 52-week highs on 1.5x volume. 72% continuation, +11.4%/31d",
+  "horizon": "4Y (2022-2025)"
+}

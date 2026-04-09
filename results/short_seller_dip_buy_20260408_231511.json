@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": 0.6487464506767358,
+    "cagr": 0.1335417231952467,
+    "annual_volatility": 0.14083045804948266,
+    "sharpe_ratio": 0.6847736613341747,
+    "sortino_ratio": 1.04754318121337,
+    "calmar_ratio": 1.173658628830586,
+    "max_drawdown": -0.11378242353852541,
+    "max_drawdown_date": "2023-05-02",
+    "win_rate": 0.5079840319361277,
+    "profit_factor": 1.2152227945050298,
+    "num_trading_days": 1002,
+    "skewness": 0.5223953009761885,
+    "kurtosis": 13.462501980088089,
+    "best_day": 0.0631487456981561,
+    "worst_day": -0.07071450140011182,
+    "avg_daily_return": 0.0005383363246401245,
+    "black_swan_resilience": 87.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.024874025996872273,
+    "beta": 0.30828911951788335,
+    "information_ratio": 0.13845802338381186,
+    "tracking_error": 0.17965030403417184
+  },
+  "trade_metrics": {
+    "num_trades": 39,
+    "num_buys": 20,
+    "num_sells": 19,
+    "total_commission": 0.0,
+    "total_slippage": 736.7931370916367,
+    "total_transaction_costs": 736.7931370916367,
+    "avg_trade_size": 18892.131720298377
+  },
+  "final_positions": {
+    "META": {
+      "qty": 37.0,
+      "avg_cost": 665.3572387695312,
+      "realized_pnl": -1087.37890625
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy >5% drops on 3x volume (short report proxy). MSTR +226%, HOOD +168%",
+  "horizon": "4Y (2022-2025)"
+}
