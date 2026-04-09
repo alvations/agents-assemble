@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.00440084697230092,
+    "cagr": 0.0011014178646744366,
+    "annual_volatility": 0.09634221410096955,
+    "sharpe_ratio": -0.3474370455612192,
+    "sortino_ratio": -0.4593972905698626,
+    "calmar_ratio": 0.007794553801801,
+    "max_drawdown": -0.14130608277024714,
+    "max_drawdown_date": "2022-01-27",
+    "win_rate": 0.5429141716566867,
+    "profit_factor": 1.0113778405650753,
+    "num_trading_days": 1002,
+    "skewness": -0.49834152524349823,
+    "kurtosis": 9.645058593436367,
+    "best_day": 0.04770336683356291,
+    "worst_day": -0.046902275689031714,
+    "avg_daily_return": 2.2821076164011662e-05,
+    "black_swan_resilience": 73.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1075662793337,
+    "beta": 0.31097937834713507,
+    "information_ratio": -0.7327741122083715,
+    "tracking_error": 0.1467932307399971
+  },
+  "trade_metrics": {
+    "num_trades": 200,
+    "num_buys": 94,
+    "num_sells": 106,
+    "total_commission": 0.0,
+    "total_slippage": 1183.2365009727484,
+    "total_transaction_costs": 1183.2365009727484,
+    "avg_trade_size": 5916.182504863739
+  },
+  "final_positions": {
+    "MCO": {
+      "qty": 24.0,
+      "avg_cost": 483.94140625,
+      "realized_pnl": 2770.4342041015634
+    },
+    "MSCI": {
+      "qty": 21.0,
+      "avg_cost": 576.0712367466518,
+      "realized_pnl": -3338.225769042968
+    },
+    "NDAQ": {
+      "qty": 133.0,
+      "avg_cost": 92.47435192470132,
+      "realized_pnl": 2446.2971533058317
+    }
+  },
+  "source": "theme",
+  "description": "VRSK/SPGI/MSCI: regulatory-required data monopolies, 85-95% subscription, 100%+ NRR",
+  "horizon": "4Y (2022-2025)"
+}

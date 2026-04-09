@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.3266540626935024,
+    "cagr": 0.07342987116037891,
+    "annual_volatility": 0.0974182263398853,
+    "sharpe_ratio": 0.37517632519230215,
+    "sortino_ratio": 0.6697886286352213,
+    "calmar_ratio": 0.7008270601793852,
+    "max_drawdown": -0.10477602155028609,
+    "max_drawdown_date": "2022-01-27",
+    "win_rate": 0.1906187624750499,
+    "profit_factor": 1.3211726641137107,
+    "num_trading_days": 1002,
+    "skewness": 3.531126702740591,
+    "kurtosis": 43.4545289243306,
+    "best_day": 0.07576079856653828,
+    "worst_day": -0.04037189640660277,
+    "avg_daily_return": 0.0003006856253505886,
+    "black_swan_resilience": 94.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.03523782603799552,
+    "beta": 0.21881437377896293,
+    "information_ratio": -0.2115794217122424,
+    "tracking_error": 0.1665465656008861
+  },
+  "trade_metrics": {
+    "num_trades": 333,
+    "num_buys": 167,
+    "num_sells": 166,
+    "total_commission": 0.0,
+    "total_slippage": 4226.234476051093,
+    "total_transaction_costs": 4226.234476051093,
+    "avg_trade_size": 12691.394822976252
+  },
+  "final_positions": {
+    "SMCI": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CELH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CAVA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DUOL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RELY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CWAN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HUBS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SAIA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RCL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BURL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DECK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LULU": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "theme",
+  "description": "Small cap inefficiency: buy deeply oversold with volume spikes",
+  "horizon": "4Y (2022-2025)"
+}

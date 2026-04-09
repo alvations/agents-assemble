@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": -0.054189717498601464,
+    "cagr": -0.013869477737977864,
+    "annual_volatility": 0.3375500687688976,
+    "sharpe_ratio": 0.0034987291605905095,
+    "sortino_ratio": 0.0056771135766333315,
+    "calmar_ratio": -0.03537544493675009,
+    "max_drawdown": -0.3920651107788452,
+    "max_drawdown_date": "2022-03-14",
+    "win_rate": 0.4241516966067864,
+    "profit_factor": 1.0269906469862957,
+    "num_trading_days": 1002,
+    "skewness": 3.9632054343444216,
+    "kurtosis": 65.8865774840977,
+    "best_day": 0.33821984676927275,
+    "worst_day": -0.10646469467196673,
+    "avg_daily_return": 0.00016033635592126706,
+    "black_swan_resilience": 79.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1225371749363523,
+    "beta": 0.675712924804973,
+    "information_ratio": -0.38267236494582335,
+    "tracking_error": 0.3202143299626573
+  },
+  "trade_metrics": {
+    "num_trades": 1412,
+    "num_buys": 701,
+    "num_sells": 711,
+    "total_commission": 0.0,
+    "total_slippage": 13528.29224810243,
+    "total_transaction_costs": 13528.29224810243,
+    "avg_trade_size": 9580.943518486138
+  },
+  "final_positions": {
+    "ZTO": {
+      "qty": 667.0,
+      "avg_cost": 21.149999618530273,
+      "realized_pnl": -5971.333860397335
+    },
+    "BIDU": {
+      "qty": 111.0,
+      "avg_cost": 124.41000366210938,
+      "realized_pnl": 4663.141860961912
+    },
+    "FXI": {
+      "qty": 367.0,
+      "avg_cost": 38.62912913434187,
+      "realized_pnl": 4591.021295547484
+    },
+    "TME": {
+      "qty": 820.0,
+      "avg_cost": 17.208541870117188,
+      "realized_pnl": 5708.278847455976
+    }
+  },
+  "source": "theme",
+  "description": "China tech ADR recovery: deep value after regulatory crackdown",
+  "horizon": "4Y (2022-2025)"
+}

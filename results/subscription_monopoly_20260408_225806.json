@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": 0.48403356335431647,
+    "cagr": 0.10402421688223495,
+    "annual_volatility": 0.1571377342483081,
+    "sharpe_ratio": 0.46101047324093103,
+    "sortino_ratio": 0.6401021205976194,
+    "calmar_ratio": 0.5159537026236992,
+    "max_drawdown": -0.2016154091990362,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.5349301397205589,
+    "profit_factor": 1.1325914489662712,
+    "num_trading_days": 1002,
+    "skewness": -0.4090863140678522,
+    "kurtosis": 2.2516219800941633,
+    "best_day": 0.03806348800722015,
+    "worst_day": -0.049215967183332876,
+    "avg_daily_return": 0.00044311867719531105,
+    "black_swan_resilience": 71.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.004643480316139481,
+    "beta": 0.5333043250799229,
+    "information_ratio": -0.03093523566555218,
+    "tracking_error": 0.15010327919726216
+  },
+  "trade_metrics": {
+    "num_trades": 1305,
+    "num_buys": 632,
+    "num_sells": 673,
+    "total_commission": 0.0,
+    "total_slippage": 5809.6600650520395,
+    "total_transaction_costs": 5809.6600650520395,
+    "avg_trade_size": 4451.84679314332
+  },
+  "final_positions": {
+    "CRM": {
+      "qty": 67.0,
+      "avg_cost": 264.6300048828125,
+      "realized_pnl": 6555.433715820309
+    },
+    "ZM": {
+      "qty": 206.0,
+      "avg_cost": 81.6566648000257,
+      "realized_pnl": -892.6579021773642
+    }
+  },
+  "source": "theme",
+  "description": "Sticky subscriptions nobody cancels: CRM, ADP, NFLX, SPOT \u2014 predictable cash flow machines",
+  "horizon": "4Y (2022-2025)"
+}

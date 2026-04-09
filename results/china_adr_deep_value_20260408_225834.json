@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.4154104445454845,
+    "cagr": 0.09099850606679549,
+    "annual_volatility": 0.29179453071160244,
+    "sharpe_ratio": 0.30565413617833675,
+    "sortino_ratio": 0.513163813014976,
+    "calmar_ratio": 0.29517579044743364,
+    "max_drawdown": -0.30828580463478406,
+    "max_drawdown_date": "2022-03-14",
+    "win_rate": 0.47105788423153694,
+    "profit_factor": 1.1124846003772335,
+    "num_trading_days": 1002,
+    "skewness": 3.5119982716975127,
+    "kurtosis": 53.80461932923372,
+    "best_day": 0.2742642977669525,
+    "worst_day": -0.09150365606585709,
+    "avg_daily_return": 0.0005095713121016516,
+    "black_swan_resilience": 83.3,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.017669191131578943,
+    "beta": 0.5973650333806495,
+    "information_ratio": -0.06293367459553918,
+    "tracking_error": 0.28075892985964873
+  },
+  "trade_metrics": {
+    "num_trades": 988,
+    "num_buys": 531,
+    "num_sells": 457,
+    "total_commission": 0.0,
+    "total_slippage": 3772.7675232043275,
+    "total_transaction_costs": 3772.7675232043275,
+    "avg_trade_size": 3818.590610530695
+  },
+  "final_positions": {
+    "PDD": {
+      "qty": 100.0,
+      "avg_cost": 111.91000366210938,
+      "realized_pnl": 10159.459247589111
+    },
+    "TME": {
+      "qty": 661.0,
+      "avg_cost": 17.41058209083084,
+      "realized_pnl": 3516.850888490678
+    },
+    "MNSO": {
+      "qty": 590.0,
+      "avg_cost": 19.280000686645508,
+      "realized_pnl": -947.1397705078125
+    },
+    "LI": {
+      "qty": 663.0,
+      "avg_cost": 22.596828127397494,
+      "realized_pnl": 3454.2866042048913
+    },
+    "JD": {
+      "qty": 389.0,
+      "avg_cost": 29.09000015258789,
+      "realized_pnl": 2331.843652725223
+    }
+  },
+  "source": "theme",
+  "description": "JD/PDD 9x P/E, BABA below intrinsic \u2014 delisting resolved, stimulus pivot, geopolitical discount",
+  "horizon": "4Y (2022-2025)"
+}

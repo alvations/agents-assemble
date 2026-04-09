@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "total_return": 0.33621983000880684,
+    "cagr": 0.0753649407286614,
+    "annual_volatility": 0.15411274219411172,
+    "sharpe_ratio": 0.2954836761391952,
+    "sortino_ratio": 0.4253026889954753,
+    "calmar_ratio": 0.3398415361817285,
+    "max_drawdown": -0.22176494837982486,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.501996007984032,
+    "profit_factor": 1.0976097732060455,
+    "num_trading_days": 1002,
+    "skewness": 0.08052385531103692,
+    "kurtosis": 2.2234605000864773,
+    "best_day": 0.0524501719892112,
+    "worst_day": -0.038971651579093325,
+    "avg_daily_return": 0.0003363554167730413,
+    "black_swan_resilience": 76.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.033302756469713035,
+    "beta": 0.5810834859744735,
+    "information_ratio": -0.24492054376614852,
+    "tracking_error": 0.13597371603711075
+  },
+  "trade_metrics": {
+    "num_trades": 529,
+    "num_buys": 282,
+    "num_sells": 247,
+    "total_commission": 0.0,
+    "total_slippage": 3728.9269773168558,
+    "total_transaction_costs": 3728.9269773168558,
+    "avg_trade_size": 7049.011299275721
+  },
+  "final_positions": {
+    "TMUS": {
+      "qty": 59.0,
+      "avg_cost": 233.88946455949508,
+      "realized_pnl": -765.6159284531702
+    },
+    "DE": {
+      "qty": 26.0,
+      "avg_cost": 471.2719759259905,
+      "realized_pnl": 9187.379296439034
+    },
+    "DUK": {
+      "qty": 101.0,
+      "avg_cost": 115.79560884431037,
+      "realized_pnl": 3425.9628622939044
+    },
+    "EQIX": {
+      "qty": 17.0,
+      "avg_cost": 847.5465078914867,
+      "realized_pnl": 1801.8866424560556
+    },
+    "AMT": {
+      "qty": 69.0,
+      "avg_cost": 205.22227787625962,
+      "realized_pnl": 2243.9129333496094
+    },
+    "SO": {
+      "qty": 136.0,
+      "avg_cost": 90.558770348044,
+      "realized_pnl": 7997.093601226805
+    },
+    "T": {
+      "qty": 473.0,
+      "avg_cost": 26.75707615640216,
+      "realized_pnl": -512.8784714528692
+    },
+    "DLR": {
+      "qty": 78.0,
+      "avg_cost": 154.09884643554688,
+      "realized_pnl": 1261.8906936645515
+    },
+    "CCI": {
+      "qty": 139.0,
+      "avg_cost": 94.40852350468258,
+      "realized_pnl": -1785.948417663577
+    },
+    "VZ": {
+      "qty": 301.0,
+      "avg_cost": 41.396347493465875,
+      "realized_pnl": 2067.543421995022
+    }
+  },
+  "source": "theme",
+  "description": "Infrastructure spending: construction, 5G, data centers, utilities",
+  "horizon": "4Y (2022-2025)"
+}

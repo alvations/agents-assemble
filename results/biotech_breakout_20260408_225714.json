@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.5345235514646818,
+    "cagr": 0.11332261494461604,
+    "annual_volatility": 0.17476555069977184,
+    "sharpe_ratio": 0.4791947785307542,
+    "sortino_ratio": 0.6874053202549204,
+    "calmar_ratio": 0.6104267707792673,
+    "max_drawdown": -0.18564489692997743,
+    "max_drawdown_date": "2025-05-09",
+    "win_rate": 0.5319361277445109,
+    "profit_factor": 1.1254960451551916,
+    "num_trading_days": 1002,
+    "skewness": 0.02544136598828879,
+    "kurtosis": 3.5122162251740727,
+    "best_day": 0.07438554761090166,
+    "worst_day": -0.06061241581198562,
+    "avg_daily_return": 0.0004879781935943678,
+    "black_swan_resilience": 77.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.004654917746241605,
+    "beta": 0.5445790076819732,
+    "information_ratio": 0.027993937538764984,
+    "tracking_error": 0.1662830653885558
+  },
+  "trade_metrics": {
+    "num_trades": 2119,
+    "num_buys": 1035,
+    "num_sells": 1084,
+    "total_commission": 0.0,
+    "total_slippage": 9274.711293286318,
+    "total_transaction_costs": 9274.711293286318,
+    "avg_trade_size": 4376.928406458859
+  },
+  "final_positions": {
+    "ISRG": {
+      "qty": 20.0,
+      "avg_cost": 566.8900146484375,
+      "realized_pnl": 1431.7190093994118
+    },
+    "LLY": {
+      "qty": 11.0,
+      "avg_cost": 893.7236938476562,
+      "realized_pnl": 8190.221679687498
+    },
+    "GILD": {
+      "qty": 93.0,
+      "avg_cost": 123.45886993408203,
+      "realized_pnl": 6580.901573181146
+    },
+    "ABBV": {
+      "qty": 51.0,
+      "avg_cost": 225.6345977783203,
+      "realized_pnl": 4062.3619537353547
+    },
+    "REGN": {
+      "qty": 15.0,
+      "avg_cost": 583.2969245910645,
+      "realized_pnl": -1980.521717071534
+    },
+    "IONS": {
+      "qty": 145.0,
+      "avg_cost": 42.35523303224392,
+      "realized_pnl": 3991.7871500421884
+    },
+    "AMGN": {
+      "qty": 35.0,
+      "avg_cost": 331.27839830186633,
+      "realized_pnl": 4466.864347669809
+    },
+    "MRK": {
+      "qty": 110.0,
+      "avg_cost": 85.58734619923128,
+      "realized_pnl": -1343.5836218809486
+    },
+    "BBH": {
+      "qty": 61.0,
+      "avg_cost": 158.37080208220652,
+      "realized_pnl": 363.81750489545425
+    },
+    "IBB": {
+      "qty": 68.0,
+      "avg_cost": 130.6398629412462,
+      "realized_pnl": -339.92131157240226
+    },
+    "BIIB": {
+      "qty": 66.0,
+      "avg_cost": 139.5170050522988,
+      "realized_pnl": 589.8224372114878
+    },
+    "XBI": {
+      "qty": 94.0,
+      "avg_cost": 86.31565290238552,
+      "realized_pnl": -2575.2541490263447
+    }
+  },
+  "source": "theme",
+  "description": "Biotech innovation: diversified basket, momentum leaders, cut losers",
+  "horizon": "4Y (2022-2025)"
+}

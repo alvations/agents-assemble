@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.9408439660882721,
+    "cagr": 0.18085158111973998,
+    "annual_volatility": 0.2584053648918675,
+    "sharpe_ratio": 0.6225993488545013,
+    "sortino_ratio": 0.9273404884346034,
+    "calmar_ratio": 0.5313515201089096,
+    "max_drawdown": -0.3403614636929454,
+    "max_drawdown_date": "2022-10-24",
+    "win_rate": 0.4600798403193613,
+    "profit_factor": 1.151276188012892,
+    "num_trading_days": 1002,
+    "skewness": 0.2125777181940646,
+    "kurtosis": 3.899076917753871,
+    "best_day": 0.08959313624918597,
+    "worst_day": -0.09530221517602633,
+    "avg_daily_return": 0.0007940745132761298,
+    "black_swan_resilience": 72.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.07218388392136554,
+    "beta": 0.7829968236940237,
+    "information_ratio": 0.3280802714491087,
+    "tracking_error": 0.22001897158440567
+  },
+  "trade_metrics": {
+    "num_trades": 1581,
+    "num_buys": 762,
+    "num_sells": 819,
+    "total_commission": 0.0,
+    "total_slippage": 16991.87883226703,
+    "total_transaction_costs": 16991.87883226703,
+    "avg_trade_size": 10747.551443559169
+  },
+  "final_positions": {
+    "TSM": {
+      "qty": 73.0,
+      "avg_cost": 292.4559020996094,
+      "realized_pnl": 5123.443550109863
+    },
+    "SMH": {
+      "qty": 60.0,
+      "avg_cost": 351.8584031655755,
+      "realized_pnl": -827.6821580268938
+    },
+    "SOXX": {
+      "qty": 72.0,
+      "avg_cost": 296.43253217424666,
+      "realized_pnl": 3850.870168413431
+    },
+    "HPE": {
+      "qty": 911.0,
+      "avg_cost": 23.759530189924522,
+      "realized_pnl": 2362.273488998412
+    },
+    "NVDA": {
+      "qty": 117.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 14435.35946273803
+    },
+    "GOOGL": {
+      "qty": 70.0,
+      "avg_cost": 308.003173828125,
+      "realized_pnl": 14631.43510437012
+    },
+    "AMZN": {
+      "qty": 95.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 6625.021842956541
+    },
+    "PLTR": {
+      "qty": 120.0,
+      "avg_cost": 193.4083288828532,
+      "realized_pnl": 23230.117202758793
+    }
+  },
+  "source": "theme",
+  "description": "AI megatrend: GPUs, cloud, data centers, AI applications",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": -0.34695512204868806,
+    "cagr": -0.10131241002428881,
+    "annual_volatility": 0.22172129397595092,
+    "sharpe_ratio": -0.549823500180139,
+    "sortino_ratio": -0.7890286318265879,
+    "calmar_ratio": -0.1713992198358335,
+    "max_drawdown": -0.5910902635456919,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.4001996007984032,
+    "profit_factor": 0.9287478525566609,
+    "num_trading_days": 1002,
+    "skewness": 0.5429727251031858,
+    "kurtosis": 5.669599937701112,
+    "best_day": 0.09800424228597726,
+    "worst_day": -0.058034792435795235,
+    "avg_daily_return": -0.00032811036704336776,
+    "black_swan_resilience": 63.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.20998010722266325,
+    "beta": 0.548871645832187,
+    "information_ratio": -0.9791562621590351,
+    "tracking_error": 0.2144500477989673
+  },
+  "trade_metrics": {
+    "num_trades": 979,
+    "num_buys": 516,
+    "num_sells": 463,
+    "total_commission": 0.0,
+    "total_slippage": 5255.0890315980905,
+    "total_transaction_costs": 5255.0890315980905,
+    "avg_trade_size": 5367.813106841768
+  },
+  "final_positions": {
+    "NEE": {
+      "qty": 124.0,
+      "avg_cost": 82.37122204589843,
+      "realized_pnl": -1567.485903289794
+    },
+    "SEDG": {
+      "qty": 337.0,
+      "avg_cost": 32.00216660089238,
+      "realized_pnl": 6919.946664810179
+    },
+    "QCLN": {
+      "qty": 216.0,
+      "avg_cost": 45.573402404785156,
+      "realized_pnl": -3038.1621704101562
+    },
+    "BEP": {
+      "qty": 365.0,
+      "avg_cost": 27.983160868934963,
+      "realized_pnl": -5336.2922732104425
+    },
+    "ICLN": {
+      "qty": 596.0,
+      "avg_cost": 16.649781499133013,
+      "realized_pnl": -2731.307755470277
+    }
+  },
+  "source": "theme",
+  "description": "Renewables, EVs, batteries: buy the green transition",
+  "horizon": "4Y (2022-2025)"
+}

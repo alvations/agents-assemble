@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.3405002998551092,
+    "cagr": 0.07622748124174539,
+    "annual_volatility": 0.15702076313199506,
+    "sharpe_ratio": 0.29806355658680284,
+    "sortino_ratio": 0.42897733980206054,
+    "calmar_ratio": 0.42191611444261007,
+    "max_drawdown": -0.1806697555092175,
+    "max_drawdown_date": "2025-08-06",
+    "win_rate": 0.49001996007984033,
+    "profit_factor": 1.1010221266110694,
+    "num_trading_days": 1002,
+    "skewness": -0.01797059149854419,
+    "kurtosis": 2.5440142787768165,
+    "best_day": 0.04834107337675353,
+    "worst_day": -0.054234370480981675,
+    "avg_daily_return": 0.00034137274817656584,
+    "black_swan_resilience": 77.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.03244021595662905,
+    "beta": 0.3281493195474629,
+    "information_ratio": -0.1714334029147662,
+    "tracking_error": 0.189229259905421
+  },
+  "trade_metrics": {
+    "num_trades": 1063,
+    "num_buys": 486,
+    "num_sells": 577,
+    "total_commission": 0.0,
+    "total_slippage": 8112.2540850145815,
+    "total_transaction_costs": 8112.2540850145815,
+    "avg_trade_size": 7631.4713875960315
+  },
+  "final_positions": {
+    "LLY": {
+      "qty": 14.0,
+      "avg_cost": 1055.3486844231102,
+      "realized_pnl": 6053.419103285845
+    },
+    "PFE": {
+      "qty": 620.0,
+      "avg_cost": 24.130011702157685,
+      "realized_pnl": -5551.3416639584975
+    },
+    "PLNT": {
+      "qty": 139.0,
+      "avg_cost": 105.80921798845212,
+      "realized_pnl": -4347.450408894699
+    },
+    "ISRG": {
+      "qty": 26.0,
+      "avg_cost": 550.022021484375,
+      "realized_pnl": 11980.812747192387
+    },
+    "ABBV": {
+      "qty": 67.0,
+      "avg_cost": 225.69386132971033,
+      "realized_pnl": 2164.040108321551
+    },
+    "AMGN": {
+      "qty": 47.0,
+      "avg_cost": 331.0328692230289,
+      "realized_pnl": 8802.363304410093
+    },
+    "MRK": {
+      "qty": 144.0,
+      "avg_cost": 100.52079862949653,
+      "realized_pnl": 588.5743712388069
+    },
+    "VKTX": {
+      "qty": 418.0,
+      "avg_cost": 36.459999084472656,
+      "realized_pnl": 1573.097285032266
+    }
+  },
+  "source": "theme",
+  "description": "Weight loss drug megatrend: $73-87B market, LLY/NVO leaders",
+  "horizon": "4Y (2022-2025)"
+}

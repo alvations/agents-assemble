@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.22728949179238223,
+    "cagr": 0.052683466632672094,
+    "annual_volatility": 0.13781237934406593,
+    "sharpe_ratio": 0.15812810790075052,
+    "sortino_ratio": 0.21980456488916933,
+    "calmar_ratio": 0.37526437164923016,
+    "max_drawdown": -0.14039027046755392,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5279441117764471,
+    "profit_factor": 1.0756531799673181,
+    "num_trading_days": 1002,
+    "skewness": -0.2891097295152434,
+    "kurtosis": 2.242793144668868,
+    "best_day": 0.042202717018202884,
+    "worst_day": -0.05273952456658537,
+    "avg_daily_return": 0.00024212609608879302,
+    "black_swan_resilience": 76.3,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.05598423056570234,
+    "beta": 0.4526605353053214,
+    "information_ratio": -0.37689496401031614,
+    "tracking_error": 0.14854067024405765
+  },
+  "trade_metrics": {
+    "num_trades": 568,
+    "num_buys": 284,
+    "num_sells": 284,
+    "total_commission": 0.0,
+    "total_slippage": 2928.435396898267,
+    "total_transaction_costs": 2928.435396898267,
+    "avg_trade_size": 5155.69612129977
+  },
+  "final_positions": {
+    "SYK": {
+      "qty": 39.0,
+      "avg_cost": 376.79969583029276,
+      "realized_pnl": 2187.121792166575
+    },
+    "HUM": {
+      "qty": 61.0,
+      "avg_cost": 242.4709885393987,
+      "realized_pnl": -6375.6803436279315
+    },
+    "CI": {
+      "qty": 54.0,
+      "avg_cost": 279.38984058521413,
+      "realized_pnl": 5574.2952575683585
+    },
+    "ABT": {
+      "qty": 114.0,
+      "avg_cost": 127.37729700800769,
+      "realized_pnl": 662.2881955827986
+    },
+    "PFE": {
+      "qty": 587.0,
+      "avg_cost": 24.21966136172033,
+      "realized_pnl": -1735.7251873016403
+    },
+    "UNH": {
+      "qty": 46.0,
+      "avg_cost": 332.2417449951172,
+      "realized_pnl": 3629.1864929199232
+    },
+    "ELV": {
+      "qty": 45.0,
+      "avg_cost": 326.95784844292535,
+      "realized_pnl": -3092.5472106933576
+    }
+  },
+  "source": "theme",
+  "description": "Demographic megatrend: healthcare, pharma, senior care",
+  "horizon": "4Y (2022-2025)"
+}

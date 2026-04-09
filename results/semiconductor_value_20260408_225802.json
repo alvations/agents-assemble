@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "total_return": 0.7953436883405456,
+    "cagr": 0.15800739270607234,
+    "annual_volatility": 0.3221033012944055,
+    "sharpe_ratio": 0.49593613997803687,
+    "sortino_ratio": 0.724253236756402,
+    "calmar_ratio": 0.412055197137604,
+    "max_drawdown": -0.38346171533253703,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5149700598802395,
+    "profit_factor": 1.1123037694224625,
+    "num_trading_days": 1002,
+    "skewness": 0.14394777861893518,
+    "kurtosis": 3.87432214274396,
+    "best_day": 0.13882569157867652,
+    "worst_day": -0.10889518760268824,
+    "avg_daily_return": 0.0007895493386568583,
+    "black_swan_resilience": 68.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.0493396955076979,
+    "beta": 1.459090674020332,
+    "information_ratio": 0.24216792032757128,
+    "tracking_error": 0.2037416658695255
+  },
+  "trade_metrics": {
+    "num_trades": 1934,
+    "num_buys": 969,
+    "num_sells": 965,
+    "total_commission": 0.0,
+    "total_slippage": 7797.123214562397,
+    "total_transaction_costs": 7797.123214562397,
+    "avg_trade_size": 4031.604557684807
+  },
+  "final_positions": {
+    "CRSR": {
+      "qty": 3650.0,
+      "avg_cost": 7.566873403518452,
+      "realized_pnl": -4730.508803575191
+    },
+    "TSM": {
+      "qty": 63.0,
+      "avg_cost": 300.074462890625,
+      "realized_pnl": 6848.9461822509775
+    },
+    "ASML": {
+      "qty": 13.0,
+      "avg_cost": 1027.6664794921876,
+      "realized_pnl": 6993.731738281249
+    },
+    "AVGO": {
+      "qty": 62.0,
+      "avg_cost": 347.048853539573,
+      "realized_pnl": 14832.394012684721
+    },
+    "MU": {
+      "qty": 46.0,
+      "avg_cost": 276.3622131347656,
+      "realized_pnl": 16086.174617767343
+    },
+    "LRCX": {
+      "qty": 76.0,
+      "avg_cost": 156.9313872686707,
+      "realized_pnl": 11838.62598379531
+    },
+    "KLAC": {
+      "qty": 11.0,
+      "avg_cost": 1147.1244158063616,
+      "realized_pnl": 11440.823102678574
+    },
+    "AMAT": {
+      "qty": 51.0,
+      "avg_cost": 258.6873779296875,
+      "realized_pnl": 7031.931930541982
+    },
+    "ON": {
+      "qty": 249.0,
+      "avg_cost": 56.27321291285635,
+      "realized_pnl": 6090.748761486524
+    },
+    "SSNLF": {
+      "qty": 330.0,
+      "avg_cost": 65.20999908447266,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Semi supply chain at value prices: TSMC, ASML, memory at cyclical lows, equipment recurring revenue",
+  "horizon": "4Y (2022-2025)"
+}
