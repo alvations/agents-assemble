@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "Strategy has low win rate \u2014 enter only on strong setup days. Be patient.",
+    "timing": "TRIGGER: Enter when VIX spikes >25 (VXX >1.3x SMA200). Buy fear in quality names.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

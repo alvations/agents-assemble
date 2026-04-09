@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** Enter on any weekly rebalance day. No specific timing edge detected.
+- **timing:** TRIGGER: Enter when UUP (dollar ETF) breaks below SMA200. Exit when dollar strengthens.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

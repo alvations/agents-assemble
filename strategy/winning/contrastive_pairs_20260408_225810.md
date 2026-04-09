@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** market
 - **limit_offset:** use market orders in volatile names
-- **timing:** Enter on any weekly rebalance day. No specific timing edge detected.
+- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)
