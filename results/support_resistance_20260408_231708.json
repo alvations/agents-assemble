@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.043725148449544005,
+    "cagr": 0.010786175421100497,
+    "annual_volatility": 0.15928575195227088,
+    "sharpe_ratio": -0.09896264251996759,
+    "sortino_ratio": -0.13736628530741246,
+    "calmar_ratio": 0.03340994918394876,
+    "max_drawdown": -0.32284321540610217,
+    "max_drawdown_date": "2024-02-14",
+    "win_rate": 0.47904191616766467,
+    "profit_factor": 1.0276004042118805,
+    "num_trading_days": 1002,
+    "skewness": -0.2459272952060413,
+    "kurtosis": 3.9469128636747604,
+    "best_day": 0.04442059379664687,
+    "worst_day": -0.05773506536176365,
+    "avg_daily_return": 9.309693053341832e-05,
+    "black_swan_resilience": 67.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.09788152177727394,
+    "beta": 0.2737656144855743,
+    "information_ratio": -0.4890815248112336,
+    "tracking_error": 0.20013334548887812
+  },
+  "trade_metrics": {
+    "num_trades": 4260,
+    "num_buys": 2059,
+    "num_sells": 2201,
+    "total_commission": 0.0,
+    "total_slippage": 38956.575548088076,
+    "total_transaction_costs": 38956.575548088076,
+    "avg_trade_size": 9144.73604415213
+  },
+  "final_positions": {
+    "XLE": {
+      "qty": 470.0,
+      "avg_cost": 44.132874524365576,
+      "realized_pnl": -3593.3209328529747
+    },
+    "GLD": {
+      "qty": 46.0,
+      "avg_cost": 398.65674690578294,
+      "realized_pnl": 10836.563995361343
+    },
+    "CPER": {
+      "qty": 518.0,
+      "avg_cost": 33.565589446241724,
+      "realized_pnl": -3234.433247626796
+    },
+    "SLV": {
+      "qty": 283.0,
+      "avg_cost": 64.41999816894531,
+      "realized_pnl": 12321.818483352657
+    },
+    "NEM": {
+      "qty": 183.0,
+      "avg_cost": 100.0001347025887,
+      "realized_pnl": 16984.45622253418
+    }
+  },
+  "source": "famous",
+  "description": "Breakout trading on commodity ETFs with defined S/R levels and ATR stops",
+  "horizon": "4Y (2022-2025)"
+}

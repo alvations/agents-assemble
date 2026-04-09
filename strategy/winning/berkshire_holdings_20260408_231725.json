@@ -1,0 +1,158 @@
+{
+  "strategy_name": "berkshire_holdings",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:17:25.369285",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "4.7%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "22.1%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "KHC",
+      "action": "BUY",
+      "current_position": 465.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "25.4% below entry",
+      "take_profit": "5.1% above entry",
+      "position_size": "4.6% of portfolio",
+      "trailing_stop": "17.7% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KHC",
+      "yahoo_url": "https://finance.yahoo.com/quote/KHC/"
+    },
+    {
+      "symbol": "V",
+      "action": "BUY",
+      "current_position": 35.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.8% below entry",
+      "take_profit": "4.6% above entry",
+      "position_size": "5.2% of portfolio",
+      "trailing_stop": "15.9% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo_url": "https://finance.yahoo.com/quote/V/"
+    },
+    {
+      "symbol": "MA",
+      "action": "BUY",
+      "current_position": 21.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.6% below entry",
+      "take_profit": "4.5% above entry",
+      "position_size": "5.2% of portfolio",
+      "trailing_stop": "15.8% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MA",
+      "yahoo_url": "https://finance.yahoo.com/quote/MA/"
+    },
+    {
+      "symbol": "MCO",
+      "action": "BUY",
+      "current_position": 24.0,
+      "annual_volatility": "26%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "27.8% below entry",
+      "take_profit": "5.6% above entry",
+      "position_size": "4.2% of portfolio",
+      "trailing_stop": "19.4% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MCO",
+      "yahoo_url": "https://finance.yahoo.com/quote/MCO/"
+    },
+    {
+      "symbol": "BRK-B",
+      "action": "BUY",
+      "current_position": 23.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "18.5% below entry",
+      "take_profit": "3.7% above entry",
+      "position_size": "6.3% of portfolio",
+      "trailing_stop": "13.0% trailing after 1.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BRK-B",
+      "yahoo_url": "https://finance.yahoo.com/quote/BRK-B/"
+    },
+    {
+      "symbol": "PG",
+      "action": "BUY",
+      "current_position": 79.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "19.3% below entry",
+      "take_profit": "3.9% above entry",
+      "position_size": "6.1% of portfolio",
+      "trailing_stop": "13.5% trailing after 1.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PG",
+      "yahoo_url": "https://finance.yahoo.com/quote/PG/"
+    },
+    {
+      "symbol": "CB",
+      "action": "BUY",
+      "current_position": 40.0,
+      "annual_volatility": "19%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "20.0% below entry",
+      "take_profit": "4.0% above entry",
+      "position_size": "5.9% of portfolio",
+      "trailing_stop": "14.0% trailing after 1.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CB",
+      "yahoo_url": "https://finance.yahoo.com/quote/CB/"
+    },
+    {
+      "symbol": "KO",
+      "action": "BUY",
+      "current_position": 162.0,
+      "annual_volatility": "16%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "17.2% below entry",
+      "take_profit": "3.4% above entry",
+      "position_size": "6.8% of portfolio",
+      "trailing_stop": "12.0% trailing after 1.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KO",
+      "yahoo_url": "https://finance.yahoo.com/quote/KO/"
+    },
+    {
+      "symbol": "CVX",
+      "action": "BUY",
+      "current_position": 77.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.4% below entry",
+      "take_profit": "4.9% above entry",
+      "position_size": "4.8% of portfolio",
+      "trailing_stop": "17.1% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CVX",
+      "yahoo_url": "https://finance.yahoo.com/quote/CVX/"
+    },
+    {
+      "symbol": "OXY",
+      "action": "BUY",
+      "current_position": 277.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "35.0% below entry",
+      "take_profit": "7.0% above entry",
+      "position_size": "3.3% of portfolio",
+      "trailing_stop": "24.5% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=OXY",
+      "yahoo_url": "https://finance.yahoo.com/quote/OXY/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "29.97%",
+    "sharpe_ratio": "0.26",
+    "max_drawdown": "-22.12%",
+    "win_rate": "51.90%",
+    "alpha": "-4.08%"
+  }
+}

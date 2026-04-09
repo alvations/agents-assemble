@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.06706995859535314,
+    "cagr": 0.01640682660656778,
+    "annual_volatility": 0.03497872696320532,
+    "sharpe_ratio": -0.6370707235450573,
+    "sortino_ratio": -0.8837366550444332,
+    "calmar_ratio": 0.32803017065177226,
+    "max_drawdown": -0.05001621214892704,
+    "max_drawdown_date": "2024-11-15",
+    "win_rate": 0.10079840319361277,
+    "profit_factor": 1.2351614447815487,
+    "num_trading_days": 1002,
+    "skewness": -2.0191941701111813,
+    "kurtosis": 54.997960040268204,
+    "best_day": 0.014886037476989689,
+    "worst_day": -0.031257043853361255,
+    "avg_daily_return": 6.722159733438099e-05,
+    "black_swan_resilience": 72.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.09226087059180665,
+    "beta": 0.07544372538954199,
+    "information_ratio": -0.5438889841678419,
+    "tracking_error": 0.16963180589687274
+  },
+  "trade_metrics": {
+    "num_trades": 28,
+    "num_buys": 14,
+    "num_sells": 14,
+    "total_commission": 0.0,
+    "total_slippage": 353.76024016571046,
+    "total_transaction_costs": 353.76024016571046,
+    "avg_trade_size": 12634.294291632516
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "C": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WFC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PFE": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Father of value investing: buy extreme oversold with capitulation volume",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.5271115366035557,
+    "cagr": 0.11197209233937389,
+    "annual_volatility": 0.1594897744747936,
+    "sharpe_ratio": 0.5013742939383642,
+    "sortino_ratio": 0.7325678948150087,
+    "calmar_ratio": 0.5096818615543559,
+    "max_drawdown": -0.21969016515105555,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5349301397205589,
+    "profit_factor": 1.138783850436211,
+    "num_trading_days": 1002,
+    "skewness": 0.2078790339199078,
+    "kurtosis": 5.244404795837194,
+    "best_day": 0.07244359983151627,
+    "worst_day": -0.04999754273658663,
+    "avg_daily_return": 0.00047296761305986825,
+    "black_swan_resilience": 78.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.00330439514099945,
+    "beta": 0.5546653381694842,
+    "information_ratio": 0.02233438826993527,
+    "tracking_error": 0.14795100277931306
+  },
+  "trade_metrics": {
+    "num_trades": 414,
+    "num_buys": 216,
+    "num_sells": 198,
+    "total_commission": 0.0,
+    "total_slippage": 2301.231192744494,
+    "total_transaction_costs": 2301.231192744494,
+    "avg_trade_size": 5558.529451073656
+  },
+  "final_positions": {
+    "EWJ": {
+      "qty": 291.0,
+      "avg_cost": 79.55339050292969,
+      "realized_pnl": 4005.21287536621
+    },
+    "TM": {
+      "qty": 116.0,
+      "avg_cost": 199.22000122070312,
+      "realized_pnl": 1299.6312103271466
+    },
+    "SONY": {
+      "qty": 805.0,
+      "avg_cost": 27.950000762939453,
+      "realized_pnl": 2142.1625108718863
+    },
+    "SE": {
+      "qty": 171.0,
+      "avg_cost": 154.69228376422012,
+      "realized_pnl": -1624.5786437988277
+    }
+  },
+  "source": "famous",
+  "description": "Buffett's Japan bet: trading companies + Asian conglomerate value",
+  "horizon": "4Y (2022-2025)"
+}

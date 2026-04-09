@@ -1,0 +1,80 @@
+{
+  "strategy_name": "japanese_sogo_shosha",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:17:27.298809",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.5%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.6%",
+    "max_drawdown_tolerance": "22.0%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "EWJ",
+      "action": "BUY",
+      "current_position": 291.0,
+      "annual_volatility": "21%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "21.6% below entry",
+      "take_profit": "4.8% above entry",
+      "position_size": "7.5% of portfolio",
+      "trailing_stop": "15.1% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=EWJ",
+      "yahoo_url": "https://finance.yahoo.com/quote/EWJ/"
+    },
+    {
+      "symbol": "TM",
+      "action": "BUY",
+      "current_position": 116.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "31.2% below entry",
+      "take_profit": "7.0% above entry",
+      "position_size": "5.2% of portfolio",
+      "trailing_stop": "21.9% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TM",
+      "yahoo_url": "https://finance.yahoo.com/quote/TM/"
+    },
+    {
+      "symbol": "SONY",
+      "action": "BUY",
+      "current_position": 805.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "31.5% below entry",
+      "take_profit": "7.1% above entry",
+      "position_size": "5.2% of portfolio",
+      "trailing_stop": "22.1% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SONY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SONY/"
+    },
+    {
+      "symbol": "SE",
+      "action": "BUY",
+      "current_position": 171.0,
+      "annual_volatility": "47%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.0% above entry",
+      "position_size": "3.3% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SE",
+      "yahoo_url": "https://finance.yahoo.com/quote/SE/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "52.71%",
+    "sharpe_ratio": "0.50",
+    "max_drawdown": "-21.97%",
+    "win_rate": "53.49%",
+    "alpha": "0.33%"
+  }
+}

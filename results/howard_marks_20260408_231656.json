@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.015016583047904208,
+    "cagr": -0.0037858187099469864,
+    "annual_volatility": 0.039272105744819624,
+    "sharpe_ratio": -1.076075042380005,
+    "sortino_ratio": -1.5293329545668533,
+    "calmar_ratio": -0.04613776105091738,
+    "max_drawdown": -0.08205466896776759,
+    "max_drawdown_date": "2025-04-16",
+    "win_rate": 0.3582834331337325,
+    "profit_factor": 0.9828495602953811,
+    "num_trading_days": 1002,
+    "skewness": 0.9114216312902487,
+    "kurtosis": 14.479009111090626,
+    "best_day": 0.017904169897244193,
+    "worst_day": -0.01540665957456655,
+    "avg_daily_return": -1.2047489802819787e-05,
+    "black_swan_resilience": 94.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.11245351590832142,
+    "beta": 0.09533260719037001,
+    "information_ratio": -0.6744143237400227,
+    "tracking_error": 0.16674247854746138
+  },
+  "trade_metrics": {
+    "num_trades": 38,
+    "num_buys": 19,
+    "num_sells": 19,
+    "total_commission": 0.0,
+    "total_slippage": 439.1320405998231,
+    "total_transaction_costs": 439.1320405998231,
+    "avg_trade_size": 11556.106331574289
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BRK-B": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ABBV": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Second-level thinking: buy quality when others panic, control risk",
+  "horizon": "4Y (2022-2025)"
+}

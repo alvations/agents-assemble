@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "total_return": 0.7547632398710393,
+    "cagr": 0.15138945952172955,
+    "annual_volatility": 0.14516805629621798,
+    "sharpe_ratio": 0.7766706493375201,
+    "sortino_ratio": 1.131944050146417,
+    "calmar_ratio": 0.7916711511013758,
+    "max_drawdown": -0.19122770775607523,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5459081836327345,
+    "profit_factor": 1.196707842824555,
+    "num_trading_days": 1002,
+    "skewness": 0.261985754242882,
+    "kurtosis": 5.234105757302699,
+    "best_day": 0.07619896909041857,
+    "worst_day": -0.032847048823363534,
+    "avg_daily_return": 0.0006030616427382837,
+    "black_swan_resilience": 80.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.04272176232335512,
+    "beta": 0.6097986692468925,
+    "information_ratio": 0.36173181452882364,
+    "tracking_error": 0.11810341420757434
+  },
+  "trade_metrics": {
+    "num_trades": 2114,
+    "num_buys": 1070,
+    "num_sells": 1044,
+    "total_commission": 0.0,
+    "total_slippage": 5436.538693935394,
+    "total_transaction_costs": 5436.538693935394,
+    "avg_trade_size": 2571.6833935361374
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 112.0,
+      "avg_cost": 177.53018213758233,
+      "realized_pnl": 15053.257617655685
+    },
+    "AAPL": {
+      "qty": 77.0,
+      "avg_cost": 251.56899964589132,
+      "realized_pnl": 4601.582198807845
+    },
+    "MSFT": {
+      "qty": 43.0,
+      "avg_cost": 489.5354685945936,
+      "realized_pnl": 1453.4752075509227
+    },
+    "GOOGL": {
+      "qty": 67.0,
+      "avg_cost": 250.10601394750023,
+      "realized_pnl": 7335.328550937594
+    },
+    "AMZN": {
+      "qty": 91.0,
+      "avg_cost": 222.4262741297963,
+      "realized_pnl": 2798.417609019474
+    },
+    "CRM": {
+      "qty": 60.0,
+      "avg_cost": 265.0566731770833,
+      "realized_pnl": 1007.5717010498047
+    },
+    "EPD": {
+      "qty": 392.0,
+      "avg_cost": 29.6269504473402,
+      "realized_pnl": 5532.5705007266215
+    },
+    "ET": {
+      "qty": 770.0,
+      "avg_cost": 16.93119239249719,
+      "realized_pnl": 6097.556678294617
+    },
+    "MPLX": {
+      "qty": 232.0,
+      "avg_cost": 48.56511260636837,
+      "realized_pnl": 7246.020293988988
+    },
+    "GLD": {
+      "qty": 22.0,
+      "avg_cost": 316.52940994802145,
+      "realized_pnl": 5390.86709637113
+    }
+  },
+  "source": "orchestrator",
+  "description": "Meta-strategy: detects bull/bear/rotation/crisis/K-shape regime, activates best sub-strategies",
+  "horizon": "4Y (2022-2025)"
+}

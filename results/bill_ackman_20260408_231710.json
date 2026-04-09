@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.5964048042525494,
+    "cagr": 0.12441124973067663,
+    "annual_volatility": 0.15208023720129277,
+    "sharpe_ratio": 0.5918181305259675,
+    "sortino_ratio": 0.8440136323639277,
+    "calmar_ratio": 0.6098200667325838,
+    "max_drawdown": -0.20401304666353826,
+    "max_drawdown_date": "2022-12-28",
+    "win_rate": 0.5079840319361277,
+    "profit_factor": 1.1618408006007597,
+    "num_trading_days": 1002,
+    "skewness": -0.16780513653557752,
+    "kurtosis": 1.8606745309451274,
+    "best_day": 0.04043159921812434,
+    "worst_day": -0.04422240425369739,
+    "avg_daily_return": 0.0005128079646579881,
+    "black_swan_resilience": 74.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.015743552532302196,
+    "beta": 0.6229608885731333,
+    "information_ratio": 0.12791229602657725,
+    "tracking_error": 0.12308083758445745
+  },
+  "trade_metrics": {
+    "num_trades": 366,
+    "num_buys": 186,
+    "num_sells": 180,
+    "total_commission": 0.0,
+    "total_slippage": 3110.4803156814587,
+    "total_transaction_costs": 3110.4803156814587,
+    "avg_trade_size": 8498.580097490321
+  },
+  "final_positions": {
+    "BN": {
+      "qty": 448.0,
+      "avg_cost": 39.42100935257541,
+      "realized_pnl": 653.6198384218026
+    },
+    "MSFT": {
+      "qty": 43.0,
+      "avg_cost": 514.9579858114553,
+      "realized_pnl": 1968.650604248047
+    },
+    "AAPL": {
+      "qty": 73.0,
+      "avg_cost": 256.374332378437,
+      "realized_pnl": -1579.725616256911
+    },
+    "HLT": {
+      "qty": 73.0,
+      "avg_cost": 258.82073974609375,
+      "realized_pnl": 1476.3635406494159
+    },
+    "BRK-B": {
+      "qty": 41.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 3827.861877441407
+    },
+    "AMZN": {
+      "qty": 88.0,
+      "avg_cost": 226.46658810702237,
+      "realized_pnl": 2741.424758911133
+    },
+    "GOOGL": {
+      "qty": 66.0,
+      "avg_cost": 190.00094311857876,
+      "realized_pnl": 2296.1799216074483
+    }
+  },
+  "source": "famous",
+  "description": "Ultra-concentrated compounders: 11 positions, 40% AI, 34% return 2025",
+  "horizon": "4Y (2022-2025)"
+}

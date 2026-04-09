@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": 0.3573786529663667,
+    "cagr": 0.07960859144131582,
+    "annual_volatility": 0.14002230552879155,
+    "sharpe_ratio": 0.3387290092489083,
+    "sortino_ratio": 0.4943937870892912,
+    "calmar_ratio": 0.3745877685033276,
+    "max_drawdown": -0.2125232005289266,
+    "max_drawdown_date": "2022-10-11",
+    "win_rate": 0.37025948103792417,
+    "profit_factor": 1.1471650170792258,
+    "num_trading_days": 1002,
+    "skewness": -0.03270928336642511,
+    "kurtosis": 6.76055223712862,
+    "best_day": 0.03760483168077,
+    "worst_day": -0.0617384910112333,
+    "avg_daily_return": 0.0003438626279679116,
+    "black_swan_resilience": 75.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.029059105757058612,
+    "beta": 0.5343919924354537,
+    "information_ratio": -0.2204588174003553,
+    "tracking_error": 0.13181194610278163
+  },
+  "trade_metrics": {
+    "num_trades": 170,
+    "num_buys": 88,
+    "num_sells": 82,
+    "total_commission": 0.0,
+    "total_slippage": 2491.3043028965003,
+    "total_transaction_costs": 2491.3043028965003,
+    "avg_trade_size": 14654.731193508822
+  },
+  "final_positions": {
+    "DIS": {
+      "qty": 250.0,
+      "avg_cost": 106.05245971679688,
+      "realized_pnl": 4155.096641540529
+    },
+    "MA": {
+      "qty": 49.0,
+      "avg_cost": 543.2539672851562,
+      "realized_pnl": 4166.849761962891
+    }
+  },
+  "source": "famous",
+  "description": "Global blue-chip contrarian: buy iconic brands during crises",
+  "horizon": "4Y (2022-2025)"
+}

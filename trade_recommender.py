@@ -92,7 +92,7 @@ def generate_trade_recommendations(
         "execution_guidance": {
             "order_type": "limit" if vol < 0.20 else "market",
             "limit_offset": "0.5% below current price for buys" if vol < 0.20 else "use market orders in volatile names",
-            "timing": _timing_guidance(metrics),
+            "timing": _timing_guidance(metrics, name),
             "scaling": "Enter in 3 tranches over 1-2 weeks to average in",
         },
         "position_recommendations": [],
@@ -146,17 +146,47 @@ def _assess_strategy(metrics: dict[str, float]) -> str:
         return "NEUTRAL — Mixed signals. Paper trade before committing capital."
 
 
-def _timing_guidance(metrics: dict[str, float]) -> str:
-    """Generate timing guidance based on strategy characteristics."""
+def _timing_guidance(metrics: dict[str, float], name: str = "") -> str:
+    """Generate timing guidance based on strategy characteristics and name."""
     vol = _safe_float(metrics.get("annual_volatility"), 0.15)
     win_rate = _safe_float(metrics.get("win_rate"), 0.5)
+    name_lower = name.lower()
 
+    # Regime/inverse strategies have SPECIFIC triggers
+    if "job_loss" in name_lower or "unemployment" in name_lower:
+        return "TRIGGER: Enter when staffing stocks (MAN, RHI, ADP) break below SMA200. Exit when staffing recovers above SMA200."
+    if "oil_down" in name_lower:
+        return "TRIGGER: Enter when XLE/XOP break below SMA200 (energy crash). Exit when energy recovers."
+    if "dollar_weak" in name_lower:
+        return "TRIGGER: Enter when UUP (dollar ETF) breaks below SMA200. Exit when dollar strengthens."
+    if "bonds_down" in name_lower or "yield_curve" in name_lower:
+        return "TRIGGER: Enter when TLT breaks below SMA200 (rates rising). Exit when bonds recover."
+    if "k_shape" in name_lower or "wealth_barometer" in name_lower:
+        return "TRIGGER: Enter when DLTR/DG break below SMA200 while COST stays above. K-shape confirmed."
+    if "v_shape" in name_lower:
+        return "TRIGGER: Enter when SPY reclaims SMA50 after being below SMA200 (V-recovery confirmed)."
+    if "l_shape" in name_lower or "stagnation" in name_lower:
+        return "TRIGGER: Enter when SPY death cross persists (SMA50 < SMA200 for 3+ months). Worst case hedge."
+    if "vix" in name_lower or "crisis" in name_lower:
+        return "TRIGGER: Enter when VIX spikes >25 (VXX >1.3x SMA200). Buy fear in quality names."
+    if "domino" in name_lower or "chain" in name_lower:
+        return "TRIGGER: Enter hedge when supply chain canaries (SMCI, AMKR, KLIC) break below SMA200 with volume spike."
+    if "crypto" in name_lower:
+        return "TRIGGER: Enter when COIN/GBTC drop >20% below SMA200. Rotate to TradFi."
+    if "retail_crash" in name_lower:
+        return "TRIGGER: Enter when XRT (retail ETF) breaks below SMA200. E-commerce accelerates."
+    if "regime" in name_lower or "orchestrator" in name_lower:
+        return "AUTO: Regime detected weekly from SPY/VIX/XLE/TLT/DLTR. Strategy auto-switches between bull/bear/rotation/crisis/K-shape."
+    if "seasonal" in name_lower or "sell_in_may" in name_lower:
+        return "CALENDAR: Enter stocks Nov 1, exit to bonds May 1. Seasonal effect."
+
+    # Generic fallback
     if vol > 0.25:
         return "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency."
     elif win_rate < 0.40:
         return "Strategy has low win rate — enter only on strong setup days. Be patient."
     else:
-        return "Enter on any weekly rebalance day. No specific timing edge detected."
+        return "Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation."
 
 
 def _generate_position_rec(

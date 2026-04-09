@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": 0.08441254852016322,
+    "cagr": 0.020522981294542886,
+    "annual_volatility": 0.095714443480631,
+    "sharpe_ratio": -0.14881524031370863,
+    "sortino_ratio": -0.20141916821049316,
+    "calmar_ratio": 0.11765972599446804,
+    "max_drawdown": -0.1744265603296391,
+    "max_drawdown_date": "2022-10-07",
+    "win_rate": 0.45708582834331335,
+    "profit_factor": 1.054161107004712,
+    "num_trading_days": 1002,
+    "skewness": -1.1492664278319575,
+    "kurtosis": 15.658405180514862,
+    "best_day": 0.026747624340611065,
+    "worst_day": -0.06408756543997451,
+    "avg_daily_return": 9.912697426720334e-05,
+    "black_swan_resilience": 65.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08814471590383155,
+    "beta": 0.21988871233715493,
+    "information_ratio": -0.53309560318383,
+    "tracking_error": 0.1653450438859391
+  },
+  "trade_metrics": {
+    "num_trades": 218,
+    "num_buys": 117,
+    "num_sells": 101,
+    "total_commission": 0.0,
+    "total_slippage": 3266.360256473543,
+    "total_transaction_costs": 3266.360256473543,
+    "avg_trade_size": 14983.303928777712
+  },
+  "final_positions": {
+    "UL": {
+      "qty": 324.0,
+      "avg_cost": 67.22823034686807,
+      "realized_pnl": 1919.5058097839355
+    }
+  },
+  "source": "famous",
+  "description": "Consumer brand dominance: buy great brands on weakness, concentrate",
+  "horizon": "4Y (2022-2025)"
+}
