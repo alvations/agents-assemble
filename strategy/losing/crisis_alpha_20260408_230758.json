@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: Small hedge allocation (5-10%) at all times. STRONG BUY: When VIX spikes >25 \u2014 crisis alpha: deploy into oversold quality names.",
+    "timing": "SAFE TO BUY as portfolio insurance. Add more during market selloffs \u2014 fear creates the best prices in quality names.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

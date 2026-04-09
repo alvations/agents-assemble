@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "BUY: When NVDA is above SMA200, hold diversified AI chain. STRONG BUY hedge: When ANY chain member breaks SMA200 with RSI < 35 \u2014 first-one-out exit rule.",
+    "timing": "SAFE TO BUY. Important: exit ALL positions if any company in the AI supply chain starts collapsing \u2014 domino risk.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

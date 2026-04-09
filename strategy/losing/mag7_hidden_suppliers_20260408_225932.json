@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "BUY: When QQQ above SMA200 (tech capex cycle intact). STRONG BUY: When hidden suppliers (AJINY, ENTG, ASML) dip to RSI < 35 \u2014 monopoly suppliers always recover.",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: When bank stocks (JPM, GS) are above SMA200. STRONG BUY: When TLT breaks below SMA200 \u2014 rising rates widen bank net interest margins.",
+    "timing": "SAFE TO BUY. Even better: add more when interest rates are rising \u2014 banks earn wider margins on loans.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

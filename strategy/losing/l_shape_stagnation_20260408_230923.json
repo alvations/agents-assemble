@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: Always hold 10-15% in GLD + short-duration bonds as insurance. STRONG BUY: When SPY death cross persists (SMA50 < SMA200 for 3+ months) \u2014 max defensive.",
+    "timing": "WAIT FOR SIGNAL: Go max defensive ONLY during prolonged market downturn (3+ months). Otherwise hold small gold/bond insurance.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

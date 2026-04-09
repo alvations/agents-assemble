@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "BUY: When uranium miners (CCJ, UUUU) are above SMA200. STRONG BUY: On pullback (RSI < 40) in secular uptrend \u2014 supply deficit is structural, every dip is an entry.",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

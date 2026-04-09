@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: When SaaS/AI names (CRM, NOW, NVDA) are above SMA200. STRONG BUY: When staffing stocks (MAN, RHI, ADP) break below SMA200 \u2014 automation acceleration confirmed.",
+    "timing": "SAFE TO BUY. Even better: add more when hiring slows (staffing companies declining) \u2014 that's when companies accelerate automation spending.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

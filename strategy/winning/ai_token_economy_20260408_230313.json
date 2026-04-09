@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "BUY: When AI infrastructure stocks (NVDA, AVGO, VRT) are above SMA50. STRONG BUY: When NVDA has golden cross (SMA50 > SMA200) + MACD positive \u2014 compute demand accelerating.",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

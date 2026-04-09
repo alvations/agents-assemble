@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "BUY: Hold Mag7 names when all above SMA200. STRONG BUY hedge: When 2+ supply chain canaries (SMCI, AMKR, KLIC) break below SMA200 with volume \u2014 exit growth, rotate defensive.",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

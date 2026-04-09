@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: Hold Mag7 names when all above SMA200. STRONG BUY hedge: When 2+ supply chain canaries (SMCI, AMKR, KLIC) break below SMA200 with volume \u2014 exit growth, rotate defensive.",
+    "timing": "WAIT FOR SIGNAL: Hold AI stocks normally. Switch to defensive ONLY when supply chain companies start breaking down.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: When cash-rich companies (AAPL, GOOGL, META) are above SMA200. STRONG BUY: When VIX spikes >25 and RSI < 40 \u2014 buy the fear, these companies buy themselves back.",
+    "timing": "SAFE TO BUY. Even better: add more during market panic \u2014 these cash-rich companies buy back their own stock at discount prices.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

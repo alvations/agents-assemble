@@ -147,127 +147,55 @@ def _assess_strategy(metrics: dict[str, float]) -> str:
 
 
 def _timing_guidance(metrics: dict[str, float], name: str = "") -> str:
-    """Generate two-tier timing: BUY (normal) + STRONG BUY (trigger).
+    """Generate timing guidance. Three types only:
 
-    Every strategy should be investable anytime in uptrend (BUY).
-    The trigger is when to add aggressively (STRONG BUY).
+    1. SAFE TO BUY — invest anytime, risk managed by position sizing
+    2. WAIT FOR SIGNAL — only invest when trigger fires
+    3. ALWAYS ACTIVE — auto-managed, no timing needed
     """
-    name_lower = name.lower()
+    n = name.lower()
 
-    # --- Inverse / regime strategies: hedge overlays with triggers ---
-    if "job_loss" in name_lower or "unemployment" in name_lower:
-        return "BUY: When SaaS/AI names (CRM, NOW, NVDA) are above SMA200. STRONG BUY: When staffing stocks (MAN, RHI, ADP) break below SMA200 — automation acceleration confirmed."
-    if "oil_down" in name_lower:
-        return "SIGNAL-BASED: Small tech position (QQQ) when above SMA50. STRONG BUY: When XLE/XOP break below SMA200 — energy crash drives capital rotation to tech. Exit tech overweight when energy recovers."
-    if "dollar_weak" in name_lower:
-        return "SIGNAL-BASED: Small EM position when EEM above SMA50. STRONG BUY: When UUP (dollar ETF) breaks below SMA200 — weak dollar boosts EM + gold + commodity exporters. Exit when dollar strengthens above SMA200."
-    if "bonds_down" in name_lower or "yield_curve" in name_lower:
-        return "BUY: When bank stocks (JPM, GS) are above SMA200. STRONG BUY: When TLT breaks below SMA200 — rising rates widen bank net interest margins."
-    if "k_shape" in name_lower or "wealth_barometer" in name_lower:
-        return "BUY: When COST/luxury are above SMA200. STRONG BUY: When DLTR/DG break below SMA200 while COST stays above — K-shape divergence confirmed."
-    if "v_shape" in name_lower:
-        return "TRIGGER ONLY: Do NOT hold without signal. Enter ONLY when SPY reclaims SMA50 after being below SMA200 — V-recovery confirmed. Then load high-beta growth aggressively. Exit when SPY retakes SMA200 (recovery complete)."
-    if "l_shape" in name_lower or "stagnation" in name_lower:
-        return "BUY: Always hold 10-15% in GLD + short-duration bonds as insurance. STRONG BUY: When SPY death cross persists (SMA50 < SMA200 for 3+ months) — max defensive."
-    if "vix" in name_lower and "buyback" in name_lower:
-        return "BUY: When cash-rich companies (AAPL, GOOGL, META) are above SMA200. STRONG BUY: When VIX spikes >25 and RSI < 40 — buy the fear, these companies buy themselves back."
-    if "vix" in name_lower or ("crisis" in name_lower and "alpha" in name_lower):
-        return "BUY: Small hedge allocation (5-10%) at all times. STRONG BUY: When VIX spikes >25 — crisis alpha: deploy into oversold quality names."
-    if "domino" in name_lower:
-        return "BUY: Hold Mag7 names when all above SMA200. STRONG BUY hedge: When 2+ supply chain canaries (SMCI, AMKR, KLIC) break below SMA200 with volume — exit growth, rotate defensive."
-    if "chain" in name_lower and "nvidia" in name_lower:
-        return "BUY: When NVDA is above SMA200, hold diversified AI chain. STRONG BUY hedge: When ANY chain member breaks SMA200 with RSI < 35 — first-one-out exit rule."
-    if "crypto" in name_lower and ("crash" in name_lower or "tradfi" in name_lower):
-        return "TRIGGER ONLY: Do NOT hold without signal. Enter ONLY when COIN/GBTC drop >20% below SMA200. Then long TradFi banks (JPM, GS, SCHW). Exit when crypto stabilizes above SMA50."
-    if "retail_crash" in name_lower:
-        return "TRIGGER ONLY: Do NOT hold without signal. Enter ONLY when XRT (retail ETF) breaks below SMA200. Then long e-commerce (AMZN, SHOP, MELI). Exit when XRT recovers above SMA200."
-    if "regime" in name_lower or "orchestrator" in name_lower:
-        return "AUTO: Always invested — regime detected weekly from SPY/VIX/XLE/TLT/DLTR. Allocation auto-switches between growth/defensive/rotation per regime."
-    if "seasonal" in name_lower or "sell_in_may" in name_lower:
-        return "CALENDAR: BUY stocks Nov 1 → Apr 30. Rotate to bonds May 1 → Oct 31. Seasonal effect."
+    # --- WAIT FOR SIGNAL: inverse/event strategies that need a trigger ---
+    if "v_shape" in n:
+        return "WAIT FOR SIGNAL: Only enter after a major crash (-15%+) when market starts recovering. Exit at take profit."
+    if "retail_crash" in n:
+        return "WAIT FOR SIGNAL: Only enter when retail sector is collapsing. Long e-commerce names. Exit when retail stabilizes."
+    if "crypto" in n and ("crash" in n or "tradfi" in n):
+        return "WAIT FOR SIGNAL: Only enter when crypto is crashing hard (-20%+). Long traditional banks. Exit when crypto stabilizes."
+    if "oil_down" in n:
+        return "WAIT FOR SIGNAL: Only enter when oil/energy is crashing. Long tech stocks that benefit from lower costs. Exit when energy recovers."
+    if "dollar_weak" in n:
+        return "WAIT FOR SIGNAL: Only enter when US dollar is weakening. Long emerging markets + gold. Exit when dollar strengthens."
+    if "domino" in n and "nvidia" in n:
+        return "WAIT FOR SIGNAL: Hold AI stocks normally. Switch to defensive ONLY when supply chain companies start breaking down."
+    if "l_shape" in n or "stagnation" in n:
+        return "WAIT FOR SIGNAL: Go max defensive ONLY during prolonged market downturn (3+ months). Otherwise hold small gold/bond insurance."
+    if any(x in n for x in ["pairs", "arb", "reversion", "zscore", "cointegration"]):
+        return "WAIT FOR SIGNAL: Only enter when price spread between paired stocks reaches extreme levels. Exit when spread normalizes."
 
-    # --- Specific strategy types ---
-    if "ai_token" in name_lower or "token_economy" in name_lower:
-        return "BUY: When AI infrastructure stocks (NVDA, AVGO, VRT) are above SMA50. STRONG BUY: When NVDA has golden cross (SMA50 > SMA200) + MACD positive — compute demand accelerating."
-    if "uranium" in name_lower or "nuclear" in name_lower:
-        return "BUY: When uranium miners (CCJ, UUUU) are above SMA200. STRONG BUY: On pullback (RSI < 40) in secular uptrend — supply deficit is structural, every dip is an entry."
-    if "midstream" in name_lower or "toll_road" in name_lower:
-        return "BUY: When EPD/ET/MPLX are above SMA200 (volume growth intact). STRONG BUY: On RSI dip to 30-45 — yield expands on pullback, distribution still growing."
-    if "tanker" in name_lower or "shipping" in name_lower:
-        return "BUY: When shipping stocks have golden cross (SMA50 > SMA200). STRONG BUY: When freight rates spike + volume surge — cycle upturn confirmed."
-    if "subscription" in name_lower:
-        return "BUY: When CRM/ADP/NFLX are above SMA200 (subscriber growth intact). STRONG BUY: On RSI dip to 30-45 in uptrend — subscription revenue is predictable, dips always recover."
-    if "insurance" in name_lower and "specialty" in name_lower:
-        return "BUY: When KNSL/RLI are above SMA200. STRONG BUY: On pullback (RSI < 45) — these 25%+ ROE businesses compound through any cycle."
-    if "insurance" in name_lower and "float" in name_lower:
-        return "BUY: When BRK-B/PGR are above SMA200. STRONG BUY: On RSI dip to 35-45 — float compounds regardless of market, buy every pullback."
-    if "monopoly" in name_lower and "hidden" in name_lower:
-        return "BUY: When SPGI/MCO/WM/CSX are above SMA200 (compounding intact). STRONG BUY: On RSI dip to 30-45 — monopolies always recover, buy the gift."
-    if "boring_compounder" in name_lower:
-        return "BUY: When above SMA200 (compounding intact). STRONG BUY: On RSI dip to 30-45 — POOL/ODFL/CTAS never stay down long, best entry is on fear."
-    if "toll_booth" in name_lower:
-        return "BUY: When V/MA/ICE/CME are above SMA200 (transaction volumes growing). STRONG BUY: On pullback to SMA50 — toll collectors grow with GDP."
-    if "beaten_down" in name_lower or "staples" in name_lower:
-        return "BUY: When consumer staples (PEP, KO, MDLZ) show RSI reversal from oversold. STRONG BUY: When RSI < 35 AND price near 52-week low — GLP-1 fear overreaction is the entry."
-    if "billboard" in name_lower:
-        return "BUY: When LAMR/CCO are above SMA50. STRONG BUY: On RSI pullback to 35-50 — billboard permits are frozen, digital conversion doubles revenue."
-    if "fallen_luxury" in name_lower:
-        return "BUY: When luxury names show MACD reversal from below. STRONG BUY: When RSI < 35 AND price > 15% below SMA200 — brand equity doesn't depreciate, deep value entry."
-    if "muni_bond" in name_lower:
-        return "BUY: Always hold for tax-free income (4% muni = 6%+ taxable equiv). STRONG BUY: When rates spike (bond prices drop) — yields expand, lock in higher tax-free income."
-    if "dcf_deep" in name_lower:
-        return "BUY: When high-FCF stocks show MACD turning positive. STRONG BUY: When RSI < 35 AND price > 10% below SMA200 — market overreacts to short-term misses in FCF machines."
-    if "serial_acquirer" in name_lower:
-        return "BUY: When TDG/HEI/ROP are above SMA200. STRONG BUY: On RSI dip to 35-50 — these 15-25% CAGR machines look expensive on P/E but are cheap on P/FCF."
-    if "patent_cliff" in name_lower:
-        return "BUY: When pharma RSI shows reversal (MACD crossover). STRONG BUY: When BMY/PFE RSI < 35 — market overprices patent cliffs by 2-3x, biosimilar erosion is only 60-70%."
-    if "constellation" in name_lower:
-        return "BUY: When STZ/EFX show MACD reversal from below. STRONG BUY: When STZ > 30% below DCF intrinsic value — Modelo is #1 US beer, the selloff is temporary."
-    if "reshoring" in name_lower:
-        return "BUY: When ETN/CAT/NUE are above SMA200 (capex cycle intact). STRONG BUY: On RSI pullback — only 2% of manufacturers have fully reshored, 98% of orders still coming."
-    if "water" in name_lower:
-        return "BUY: When AWK/XYL are above SMA200. STRONG BUY: On rate-case dip (RSI < 40) — $45B EPA mandate is legally required, utilities MUST be made whole."
-    if "china_adr" in name_lower:
-        return "BUY: Small position when BABA/JD above SMA50 (stimulus working). STRONG BUY: When RSI < 35 + volume surge > 2x — 9x P/E with resolved delisting risk is deep value."
-    if "economic_indicator" in name_lower:
-        return "BUY: Balanced allocation across consumer proxies. STRONG BUY risk-on: When MCD/RL/FCX all above SMA200. STRONG BUY defensive: When HBI drops below SMA200 (underwear index recession signal)."
-    if "tepper" in name_lower:
-        return "BUY: When growth names are above SMA50. STRONG BUY: On RSI dip to 35-50 with MACD positive — Tepper style: concentrated high-conviction bets on macro trends."
-    if "druckenmiller" in name_lower:
-        return "BUY: When top holdings above SMA50 > SMA200. STRONG BUY: On pullback with MACD crossover — Druckenmiller: big concentrated bets when conviction is high."
-    if "pelosi" in name_lower:
-        return "BUY: When disclosed positions above SMA200. STRONG BUY: On new disclosure filing — congressional insider timing signal."
-    if "momentum" in name_lower and "crash" in name_lower:
-        return "BUY: When top momentum names above SMA200. STRONG BUY: On pullback to SMA50 in uptrend — crash-hedged momentum rides trends but cuts losers fast."
-    if "momentum" in name_lower:
-        return "BUY: When trend leaders above SMA50 > SMA200 (golden cross). STRONG BUY: On RSI pullback to 40-55 in confirmed uptrend — ride the trend, don't fight it."
-    if "mag7" in name_lower and "hidden" in name_lower:
-        return "BUY: When QQQ above SMA200 (tech capex cycle intact). STRONG BUY: When hidden suppliers (AJINY, ENTG, ASML) dip to RSI < 35 — monopoly suppliers always recover."
-    if "nvidia_supply" in name_lower:
-        return "BUY: When NVDA above SMA200 (demand signal intact). STRONG BUY: When supply chain names (AMKR, KLIC, MPWR) dip on broad market sell — NVDA demand pulls them back up."
-    if "singapore" in name_lower:
-        return "BUY: When DBS/UOB/OCBC above SMA200. STRONG BUY: On RSI dip to 35-45 — Singapore banks yield 5%+ with AAA sovereign backing, buy every pullback."
-    if "korean" in name_lower or "chaebol" in name_lower:
-        return "BUY: When Korean names above SMA50. STRONG BUY: On governance reform catalyst or RSI < 35 — Korea discount is structural, any catalyst triggers re-rating."
-    if "japan" in name_lower or "sogo_shosha" in name_lower:
-        return "BUY: When Japanese ADRs above SMA200. STRONG BUY: On Yen weakness (boosts exporters) or RSI < 40 — Buffett-approved, trading at book value with 15%+ ROE."
+    # --- ALWAYS ACTIVE: auto-managed ---
+    if "regime" in n or "orchestrator" in n:
+        return "ALWAYS ACTIVE: Auto-managed. Switches between growth and defensive weekly based on market conditions. No user timing needed."
+    if "seasonal" in n or "sell_in_may" in n:
+        return "ALWAYS ACTIVE: Calendar-based. Stocks Nov-Apr, bonds May-Oct. Just rebalance twice a year."
 
-    # --- Category-level fallbacks ---
-    if any(x in name_lower for x in ["value", "graham", "buffett", "deep", "dcf", "contrarian", "fallen"]):
-        return "BUY: When target names show MACD reversal from below signal line. STRONG BUY: When RSI < 35 AND price > 10% below SMA200 — deep value entry at maximum pessimism."
-    if any(x in name_lower for x in ["growth", "revolution", "breakout", "disrupt"]):
-        return "BUY: When names above SMA50 > SMA200 (uptrend confirmed). STRONG BUY: On RSI pullback to 35-50 in uptrend — growth names always overshoot on dips."
-    if any(x in name_lower for x in ["dividend", "income", "yield", "aristocrat"]):
-        return "BUY: Always hold for income (DCA on rebalance). STRONG BUY: On price dip to SMA200 — yield expands, lock in higher income rate."
-    if any(x in name_lower for x in ["defensive", "gold", "treasury", "safe", "recession"]):
-        return "BUY: Always hold 5-15% as portfolio insurance. STRONG BUY: When SPY breaks below SMA200 or VIX > 25 — max defensive allocation."
-    if any(x in name_lower for x in ["pairs", "arb", "reversion", "zscore", "cointegration"]):
-        return "BUY: When spread Z-score > 1.5 (divergence starting). STRONG BUY: When Z-score > 2.0 — statistical mean reversion at extreme levels."
-    if any(x in name_lower for x in ["political", "gop", "bipartisan", "polymarket"]):
-        return "BUY: When disclosed positions above SMA200. STRONG BUY: On new filing or policy catalyst — political insider timing signal."
+    # --- SAFE TO BUY: everything else. Risk managed by position sizing. ---
+    # Only add specific timing note for strategies where it really matters
+    if "job_loss" in n or "unemployment" in n:
+        return "SAFE TO BUY. Even better: add more when hiring slows (staffing companies declining) — that's when companies accelerate automation spending."
+    if "bonds_down" in n or "yield_curve" in n:
+        return "SAFE TO BUY. Even better: add more when interest rates are rising — banks earn wider margins on loans."
+    if "k_shape" in n or "wealth_barometer" in n:
+        return "SAFE TO BUY. Even better: add more when discount retailers (Dollar Tree) are struggling — signals money flowing to premium brands."
+    if "vix" in n and "buyback" in n:
+        return "SAFE TO BUY. Even better: add more during market panic — these cash-rich companies buy back their own stock at discount prices."
+    if "vix" in n or ("crisis" in n and "alpha" in n):
+        return "SAFE TO BUY as portfolio insurance. Add more during market selloffs — fear creates the best prices in quality names."
+    if "chain" in n and "nvidia" in n:
+        return "SAFE TO BUY. Important: exit ALL positions if any company in the AI supply chain starts collapsing — domino risk."
 
-    # --- True generic fallback (should rarely hit) ---
-    return "BUY: When holdings above SMA200 on weekly rebalance. STRONG BUY: On RSI pullback to 35-50 in confirmed uptrend — buy the dip in quality."
+    # For everything else: SAFE TO BUY, risk is managed by position sizing already
+    return "SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically."
 
 
 def _generate_position_rec(

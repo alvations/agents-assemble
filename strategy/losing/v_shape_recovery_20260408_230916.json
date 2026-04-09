@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "TRIGGER ONLY: Do NOT hold without signal. Enter ONLY when SPY reclaims SMA50 after being below SMA200 \u2014 V-recovery confirmed. Then load high-beta growth aggressively. Exit when SPY retakes SMA200 (recovery complete).",
+    "timing": "WAIT FOR SIGNAL: Only enter after a major crash (-15%+) when market starts recovering. Exit at take profit.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

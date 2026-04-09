@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "SIGNAL-BASED: Small tech position (QQQ) when above SMA50. STRONG BUY: When XLE/XOP break below SMA200 \u2014 energy crash drives capital rotation to tech. Exit tech overweight when energy recovers.",
+    "timing": "WAIT FOR SIGNAL: Only enter when oil/energy is crashing. Long tech stocks that benefit from lower costs. Exit when energy recovers.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

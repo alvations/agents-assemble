@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "BUY: When pharma RSI shows reversal (MACD crossover). STRONG BUY: When BMY/PFE RSI < 35 \u2014 market overprices patent cliffs by 2-3x, biosimilar erosion is only 60-70%.",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [
