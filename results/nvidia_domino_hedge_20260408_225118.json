@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": -0.1834216668298203,
+    "cagr": -0.0655303178978408,
+    "annual_volatility": 0.07033398008389657,
+    "sharpe_ratio": -1.4878709973866215,
+    "sortino_ratio": -1.9591771028705,
+    "calmar_ratio": -0.3188699305608179,
+    "max_drawdown": -0.2055079881084687,
+    "max_drawdown_date": "2024-12-16",
+    "win_rate": 0.48404255319148937,
+    "profit_factor": 0.7996672776436711,
+    "num_trading_days": 752,
+    "skewness": 0.1361572779261321,
+    "kurtosis": 12.347519453559267,
+    "best_day": 0.03485539508486579,
+    "worst_day": -0.023456502643985577,
+    "avg_daily_return": -0.00025961953838968147,
+    "black_swan_resilience": 78.5,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.15215489699760498,
+    "beta": -0.2444371986083302,
+    "information_ratio": -0.6765265307588656,
+    "tracking_error": 0.22490603114549185
+  },
+  "trade_metrics": {
+    "num_trades": 1209,
+    "num_buys": 610,
+    "num_sells": 599,
+    "total_commission": 0.0,
+    "total_slippage": 2459.0459120712208,
+    "total_transaction_costs": 2459.0459120712208,
+    "avg_trade_size": 2033.9502994799238
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 34.0,
+      "avg_cost": 247.46914833110918,
+      "realized_pnl": 2340.5727626180687
+    },
+    "SQQQ": {
+      "qty": 46.0,
+      "avg_cost": 152.32238762025813,
+      "realized_pnl": -7340.182040806019
+    },
+    "TLT": {
+      "qty": 69.0,
+      "avg_cost": 86.36814629947828,
+      "realized_pnl": -336.5831043106145
+    },
+    "SHY": {
+      "qty": 52.0,
+      "avg_cost": 77.82165513173553,
+      "realized_pnl": 108.44799067837705
+    },
+    "UVXY": {
+      "qty": 40.0,
+      "avg_cost": 118.11008999979748,
+      "realized_pnl": -9113.646074995891
+    }
+  },
+  "source": "unconventional",
+  "description": "Profit when NVIDIA financing chain breaks: inverse ETFs + safe havens + vol, scaled by supply chain stress"
+}

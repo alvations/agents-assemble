@@ -153,7 +153,7 @@ class CleanEnergy(BasePersona):
             universe=universe or [
                 "ENPH", "SEDG", "FSLR", "RUN",  # Solar
                 "TSLA", "RIVN", "LCID", "NIO", "LI", "XPEV",  # EVs
-                "ALB", "LTHM", "SQM",  # Lithium/batteries
+                "ALB", "SQM",  # Lithium/batteries (LTHM merged into Arcadium/RIO)
                 "NEE", "AES", "BEP",  # Utilities/renewables
                 "ICLN", "TAN", "QCLN",  # Clean energy ETFs
             ],
@@ -2045,16 +2045,20 @@ class SingaporeAlpha(BasePersona):
     def __init__(self, universe: list[str] | None = None):
         config = PersonaConfig(
             name="Singapore Alpha",
-            description="Singapore heritage consumer + REITs: AAA-rated income + growth",
+            description="Singapore heritage consumer + banks + REITs: AAA-rated income + growth",
             risk_tolerance=0.3,
-            max_position_size=0.15,
-            max_positions=8,
+            max_position_size=0.12,
+            max_positions=11,
             rebalance_frequency="monthly",
             universe=universe or [
                 # Heritage consumer brands
                 "H02.SI",   # Haw Par Corporation (Tiger Balm, healthcare)
                 "F34.SI",   # Wilmar International (world's largest palm oil)
                 "Y92.SI",   # Thai Beverage (Chang Beer, spirits, regional)
+                # Singapore banks (AAA-rated, 5%+ yield)
+                "D05.SI",   # DBS Group Holdings (Singapore's largest bank)
+                "U11.SI",   # UOB (United Overseas Bank)
+                "O39.SI",   # OCBC (Oversea-Chinese Banking Corp)
                 # Singapore REITs (S-REITs)
                 "A17U.SI",  # CapitaLand Ascendas REIT (industrial, data centers)
                 "N2IU.SI",  # Mapletree Pan Asia Commercial Trust

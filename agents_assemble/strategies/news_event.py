@@ -515,12 +515,12 @@ class MergerArbitrage(BasePersona):
             max_positions=10,
             rebalance_frequency="daily",
             universe=universe or [
-                # Large-cap frequent M&A targets / acquirers
-                "ATVI", "VMW", "SPLK", "FORG", "COUP",
-                # Pharma (frequent M&A)
-                "SGEN", "ALNY", "BMRN", "HZNP", "IONS",
-                # Tech M&A
-                "NUAN", "TWLO", "ZEN", "FIVN", "QLYS",
+                # Large-cap frequent M&A targets (ATVI/VMW/SPLK/NUAN/HZNP/SGEN all acquired)
+                "FORG", "TWLO", "ZEN", "FIVN", "QLYS",
+                # Pharma (frequent M&A targets)
+                "ALNY", "BMRN", "IONS", "JAZZ", "SIRI",
+                # Tech M&A candidates
+                "PAYC", "PCOR", "DDOG", "MDB", "ESTC",
                 # Industrial / consumer
                 "IR", "ROK", "IEX", "POOL",
             ],

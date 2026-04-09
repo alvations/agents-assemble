@@ -437,7 +437,7 @@ class RareEarthCriticalMinerals(BasePersona):
                 "ALB",    # Albemarle (lithium)
                 "SQM",    # Sociedad Quimica y Minera (lithium, Chile)
                 "LAC",    # Lithium Americas
-                "LTHM",   # Livent (lithium)
+                "ALTM",   # Arcadium Lithium (ex-Livent/Allkem merger, acquired by RIO)
                 # Uranium (nuclear renaissance)
                 "CCJ",    # Cameco (uranium)
                 "URA",    # Global X Uranium ETF

@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": -0.07680600642264113,
+    "cagr": -0.02637602118505533,
+    "annual_volatility": 0.20046919061348228,
+    "sharpe_ratio": -0.22910509448979371,
+    "sortino_ratio": -0.32525998368448905,
+    "calmar_ratio": -0.09799974648398564,
+    "max_drawdown": -0.2691437695643988,
+    "max_drawdown_date": "2022-10-24",
+    "win_rate": 0.45478723404255317,
+    "profit_factor": 0.9939471479587818,
+    "num_trading_days": 752,
+    "skewness": 0.008027413586316827,
+    "kurtosis": 2.3303386758026856,
+    "best_day": 0.05070231957952709,
+    "worst_day": -0.06264146209699062,
+    "avg_daily_return": -2.6606140612682934e-05,
+    "black_swan_resilience": 73.4,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11300060028481951,
+    "beta": 0.6287149590240407,
+    "information_ratio": -0.6287779641516223,
+    "tracking_error": 0.17971463175762747
+  },
+  "trade_metrics": {
+    "num_trades": 976,
+    "num_buys": 474,
+    "num_sells": 502,
+    "total_commission": 0.0,
+    "total_slippage": 4701.5837104687735,
+    "total_transaction_costs": 4701.5837104687735,
+    "avg_trade_size": 4817.196424660624
+  },
+  "final_positions": {
+    "AJINY": {
+      "qty": 547.0,
+      "avg_cost": 19.066180082600543,
+      "realized_pnl": -3538.178408696896
+    },
+    "FORM": {
+      "qty": 244.0,
+      "avg_cost": 44.1944658404491,
+      "realized_pnl": -4927.940326690671
+    },
+    "TTMI": {
+      "qty": 448.0,
+      "avg_cost": 24.94944272722517,
+      "realized_pnl": -2034.3170967102035
+    },
+    "ASX": {
+      "qty": 1130.0,
+      "avg_cost": 9.684409863509579,
+      "realized_pnl": 2268.946629480883
+    }
+  },
+  "source": "theme",
+  "description": "Non-megacap companies NVIDIA depends on: packaging, testing, materials, cooling, power"
+}
