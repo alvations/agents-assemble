@@ -1661,7 +1661,19 @@ def fetch_tsa_checkpoint(cache: bool = True) -> pd.DataFrame:
 
     url = "https://www.tsa.gov/travel/passenger-volumes"
     try:
-        tables = pd.read_html(url, header=0)
+        # TSA blocks default User-Agent; use a browser-like header
+        from io import StringIO
+
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36"
+            )
+        }
+        resp = requests.get(url, headers=headers, timeout=30)
+        resp.raise_for_status()
+        tables = pd.read_html(StringIO(resp.text), header=0)
         if not tables:
             return pd.DataFrame()
 
@@ -2242,3 +2254,53 @@ if __name__ == "__main__":
     df = fetch_ohlcv("AAPL", start="2024-01-01")
     print(f"Fetched {len(df)} rows for AAPL")
     print(df.tail())
+
+    # --- Alternative data tests ---
+    print("\n=== Alternative Data Sources ===")
+
+    print("\n--- Steam Player Counts ---")
+    try:
+        steam = fetch_steam_all_players(cache=False)
+        for game, count in sorted(steam.items(), key=lambda x: -x[1])[:5]:
+            print(f"  {game}: {count:,} players")
+        idx = fetch_steam_gaming_index(cache=False)
+        print(f"  Total: {idx['total_players']:,} | By ticker: {idx['by_ticker']}")
+    except Exception as e:
+        print(f"  Steam error: {e}")
+
+    print("\n--- Reddit Trending Stocks (ApeWisdom) ---")
+    try:
+        reddit = fetch_reddit_trending_stocks(pages=1, cache=False)
+        if not reddit.empty:
+            print(reddit.head(10).to_string(index=False))
+    except Exception as e:
+        print(f"  Reddit error: {e}")
+
+    print("\n--- DeFi Llama Total TVL ---")
+    try:
+        tvl = fetch_defi_total_tvl(cache=False)
+        if not tvl.empty:
+            print(f"  Latest TVL: ${tvl.iloc[-1]['tvl']:,.0f}")
+            print(f"  Data range: {tvl.index[0].date()} to {tvl.index[-1].date()}")
+    except Exception as e:
+        print(f"  DeFi Llama error: {e}")
+
+    print("\n--- TSA Checkpoint Data ---")
+    try:
+        tsa = fetch_tsa_checkpoint(cache=False)
+        if not tsa.empty:
+            print(f"  Columns: {list(tsa.columns)}")
+            print(f"  Latest: {tsa.index[-1].date()} — {tsa.iloc[-1].to_dict()}")
+    except Exception as e:
+        print(f"  TSA error: {e}")
+
+    print("\n--- Google Trends (requires pytrends) ---")
+    try:
+        gt = fetch_google_trends(["NVDA", "TSLA"], timeframe="today 3-m", cache=False)
+        if not gt.empty:
+            print(f"  Fetched {len(gt)} data points for NVDA, TSLA trends")
+            print(gt.tail(5))
+    except ImportError:
+        print("  pytrends not installed (pip install pytrends)")
+    except Exception as e:
+        print(f"  Google Trends error: {e}")

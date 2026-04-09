@@ -1,0 +1,85 @@
+{
+  "metrics": {
+    "total_return": 0.5626104660331457,
+    "cagr": 0.16101761341430176,
+    "annual_volatility": 0.21847617128794744,
+    "sharpe_ratio": 0.6143079507646715,
+    "sortino_ratio": 0.9034819620857817,
+    "calmar_ratio": 0.8534323113714095,
+    "max_drawdown": -0.18867063183435961,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5292553191489362,
+    "profit_factor": 1.159755722723366,
+    "num_trading_days": 752,
+    "skewness": 0.07702262522979124,
+    "kurtosis": 3.1511931217399725,
+    "best_day": 0.06315124071062361,
+    "worst_day": -0.06300983469259025,
+    "avg_daily_return": 0.0006882357718182879,
+    "black_swan_resilience": 78.0,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.07439303431453759,
+    "beta": 0.8618015253373186,
+    "information_ratio": 0.46538839490133077,
+    "tracking_error": 0.15985150280833713
+  },
+  "trade_metrics": {
+    "num_trades": 986,
+    "num_buys": 492,
+    "num_sells": 494,
+    "total_commission": 0.0,
+    "total_slippage": 4836.533922506329,
+    "total_transaction_costs": 4836.533922506329,
+    "avg_trade_size": 4905.206817957741
+  },
+  "final_positions": {
+    "CRM": {
+      "qty": 53.0,
+      "avg_cost": 302.4395874295934,
+      "realized_pnl": 7043.797477640522
+    },
+    "NOW": {
+      "qty": 83.0,
+      "avg_cost": 180.99436521382165,
+      "realized_pnl": 8396.019869204714
+    },
+    "NVDA": {
+      "qty": 138.0,
+      "avg_cost": 115.86673787380596,
+      "realized_pnl": 23181.113717576427
+    },
+    "INTU": {
+      "qty": 14.0,
+      "avg_cost": 631.8424210611979,
+      "realized_pnl": 216.53327473958473
+    },
+    "PANW": {
+      "qty": 96.0,
+      "avg_cost": 192.83656574923347,
+      "realized_pnl": 8400.758927954244
+    },
+    "HUBS": {
+      "qty": 25.0,
+      "avg_cost": 699.5494912997159,
+      "realized_pnl": 789.3693015358665
+    },
+    "WDAY": {
+      "qty": 51.0,
+      "avg_cost": 263.1542975107829,
+      "realized_pnl": -743.2739849090549
+    },
+    "ZM": {
+      "qty": 213.0,
+      "avg_cost": 79.82394457227987,
+      "realized_pnl": 1965.8497155325758
+    },
+    "AI": {
+      "qty": 500.0,
+      "avg_cost": 32.324988009240165,
+      "realized_pnl": 5194.221654308803
+    }
+  },
+  "source": "unconventional",
+  "description": "Unemployment rises \u2192 companies automate \u2192 tech/SaaS/AI booms. Inverse staffing-to-tech signal."
+}

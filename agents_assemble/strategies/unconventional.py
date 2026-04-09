@@ -2337,9 +2337,117 @@ class AITokenEconomy(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Job Loss → Tech Productivity Boom
+# ---------------------------------------------------------------------------
+class JobLossTechBoom(BasePersona):
+    """When jobs are lost and PPI drops, companies automate → tech booms.
+
+    Inverse correlation: rising unemployment + falling PPI = cost-cutting mode.
+    Companies replace workers with software/AI/automation.
+    Result: staffing stocks (MAN, RHI) DROP while tech/SaaS (CRM, NOW, WDAY) RISE.
+
+    Proxy: Track staffing companies as employment leading indicators.
+    When staffing breaks SMA200, it means hiring is slowing → go LONG tech productivity.
+    When staffing is strong, labor market tight → stay balanced.
+
+    Historical: 2022-23 tech layoffs → massive cloud/AI adoption. Every recession
+    triggers a productivity investment cycle that benefits automation stocks.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Job Loss → Tech Productivity Boom",
+            description="Unemployment rises → companies automate → tech/SaaS/AI booms. Inverse staffing-to-tech signal.",
+            risk_tolerance=0.6, max_position_size=0.12, max_positions=12, rebalance_frequency="weekly",
+            universe=universe or [
+                # Staffing companies (INVERSE indicators — weakness = signal)
+                "MAN",    # ManpowerGroup — global staffing bellwether
+                "RHI",    # Robert Half — white-collar staffing
+                "ASGN",   # ASGN — IT staffing
+                "HAYS",   # Hays plc (if available)
+                # Tech productivity beneficiaries (LONG these when staffing drops)
+                "CRM",    # Salesforce — replaces salespeople
+                "NOW",    # ServiceNow — IT automation
+                "WDAY",   # Workday — HR/finance automation
+                "INTU",   # Intuit — replaces accountants
+                "ADBE",   # Adobe — replaces designers
+                "PANW",   # Palo Alto — replaces security analysts
+                "HUBS",   # HubSpot — replaces marketing teams
+                "ZM",     # Zoom — reduces office/travel costs
+                # AI/automation pure plays
+                "NVDA",   # GPU compute for AI replacing workers
+                "PATH",   # UiPath — robotic process automation
+                "AI",     # C3.ai — enterprise AI
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Check staffing company health (inverse signal)
+        staffing_weak = 0
+        staffing_tickers = ["MAN", "RHI", "ASGN"]
+        for sym in staffing_tickers:
+            if sym not in data or sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_200"], date)
+            s200 = inds["sma_200"]
+            if _is_missing(s200):
+                continue
+            if prices[sym] < s200:
+                staffing_weak += 1  # Below trend = hiring slowing
+
+        # Tech productivity targets
+        tech_targets = ["CRM", "NOW", "WDAY", "INTU", "ADBE", "PANW", "HUBS",
+                        "NVDA", "PATH", "AI", "ZM"]
+
+        if staffing_weak >= 2:
+            # Strong signal: staffing companies weak → tech productivity boom
+            scored = []
+            for sym in tech_targets:
+                if sym not in prices:
+                    continue
+                inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+                s200, rsi = inds["sma_200"], inds["rsi_14"]
+                if _is_missing(s200) or _is_missing(rsi):
+                    continue
+                price = prices[sym]
+                score = 0.0
+                if price > s200:
+                    score += 2.0
+                s50 = inds["sma_50"]
+                if s50 is not None and s50 > s200:
+                    score += 1.0
+                if 35 < rsi < 65:
+                    score += 1.0
+                macd, ms = inds["macd"], inds["macd_signal"]
+                if macd is not None and ms is not None and macd > ms:
+                    score += 1.0
+                if score >= 2:
+                    scored.append((sym, score))
+            scored.sort(key=lambda x: -x[1])
+            top = scored[:self.config.max_positions]
+            if top:
+                total = sum(s for _, s in top)
+                for sym, sc in top:
+                    weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        else:
+            # Staffing strong → balanced allocation (no strong automation signal)
+            for sym in ["CRM", "NOW", "NVDA", "INTU"]:
+                if sym in prices:
+                    inds = self._get_indicators(data, sym, ["sma_200"], date)
+                    if not _is_missing(inds["sma_200"]) and prices[sym] > inds["sma_200"]:
+                        weights[sym] = 0.08
+
+        return weights
+
+
 # Add strategies defined after the registry dict
 UNCONVENTIONAL_STRATEGIES["economic_indicators"] = EconomicIndicatorProxy
 UNCONVENTIONAL_STRATEGIES["ai_token_economy"] = AITokenEconomy
+UNCONVENTIONAL_STRATEGIES["job_loss_tech_boom"] = JobLossTechBoom
 
 
 def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
