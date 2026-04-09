@@ -23,11 +23,31 @@ These strategies profit when one sector's pain becomes another's gain.
 **Strategies:** `oil_down_tech_up`  
 **How to check:** Look at XLE (Energy ETF) — is it in a sustained decline?
 
+<details>
+<summary>Technical details (for advanced users)</summary>
+
+- **Entry signal:** XLE and XOP both below their 200-day simple moving average (SMA200)
+- **Exit signal:** XLE recovers above SMA200
+- **Indicators used:** SMA50, SMA200, RSI14, MACD
+- **Target stocks:** AAPL, MSFT, GOOGL, AMZN, META, CRM, NOW
+- **Position sizing:** Score-weighted by trend strength. Max 12% per position.
+</details>
+
 ### Job Losses → Automation Boom
 **What to watch:** Staffing companies (ManpowerGroup, Robert Half, ADP) declining  
 **Why it works:** When companies cut staff, they invest in software/AI to replace workers. Salesforce, ServiceNow, and AI companies benefit.  
 **Strategies:** `job_loss_tech_boom`  
 **How to check:** Are staffing company stocks dropping while tech/SaaS stocks are rising?
+
+<details>
+<summary>Technical details (for advanced users)</summary>
+
+- **Entry signal:** 2+ of MAN, RHI, ASGN, ADP below their SMA200
+- **Exit signal:** Staffing stocks recover above SMA200
+- **Indicators used:** SMA50, SMA200, RSI14, MACD, MACD Signal
+- **Target stocks:** CRM, NOW, WDAY, INTU, ADBE, PANW, NVDA, PATH
+- **Position sizing:** Score-weighted. Concentrated in strongest momentum names.
+</details>
 
 ### Dollar Stores Struggling → Luxury Winning (K-Shape Economy)
 **What to watch:** Dollar Tree, Dollar General stocks declining while Costco stays strong  
@@ -35,11 +55,30 @@ These strategies profit when one sector's pain becomes another's gain.
 **Strategies:** `k_shape_economy`, `wealth_barometer`  
 **How to check:** Compare Dollar Tree stock vs Costco stock. If Dollar Tree is falling and Costco isn't, K-shape is active.
 
+<details>
+<summary>Technical details (for advanced users)</summary>
+
+- **Entry signal:** DLTR or DG below SMA200 AND COST above SMA200
+- **Exit signal:** Dollar stores recover OR luxury breaks down
+- **Indicators used:** SMA50, SMA200, RSI14
+- **Target stocks:** COST, LVMUY, AAPL, AMZN, UNH, BX, LULU, RH
+- **Position sizing:** Score-weighted by trend. Max 12% per position.
+</details>
+
 ### Rising Interest Rates → Banks Profit
 **What to watch:** Bond prices falling (TLT declining)  
 **Why it works:** When interest rates rise, banks earn more on loans (wider "net interest margin"). Insurance companies also earn more on their investment float.  
 **Strategies:** `bonds_down_banks_up`, `yield_curve_inversion`  
 **How to check:** Are bond ETFs (TLT, AGG) declining? That means rates are rising → good for banks.
+
+<details>
+<summary>Technical details (for advanced users)</summary>
+
+- **Entry signal:** TLT below SMA200 (rates rising)
+- **Exit signal:** TLT recovers above SMA200 (rates falling)
+- **Target stocks:** JPM, BAC, WFC, C, GS, PGR, ALL, CB, MET, SCHW, MS
+- **Position sizing:** Score-weighted by SMA50/200 trend + RSI.
+</details>
 
 ### Weak Dollar → Emerging Markets Rise
 **What to watch:** US Dollar Index declining  
