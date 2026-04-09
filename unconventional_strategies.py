@@ -3207,6 +3207,109 @@ UNCONVENTIONAL_STRATEGIES["nvidia_domino_hedge"] = NVIDIADominoHedge
 UNCONVENTIONAL_STRATEGIES["nvidia_chain_diversified"] = NVIDIAChainDiversified
 
 
+class WarflationHedge(BasePersona):
+    """Oil-driven inflation hedge: long energy midstream + defense, avoid bonds.
+    When oil spikes from geopolitical conflict, energy/defense outperform while bonds suffer.
+    Midstream (EPD, ET, WMB) yields 6-8% while appreciating in warflation regime.
+    Active since Hormuz closure Feb 2026: energy +38% YTD while S&P -4.4%."""
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Warflation Hedge (Oil Conflict Regime)",
+            description="Geopolitical oil inflation: long energy midstream + defense, short duration. 6-8% yield + appreciation.",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                "EPD", "ET", "WMB", "MPLX", "OKE",  # Midstream (fee-based, 7%+ yield)
+                "XLE", "OXY", "DVN",                   # Upstream energy
+                "LMT", "RTX", "NOC",                   # Defense primes
+                "ITA",                                  # Defense ETF
+                "SHY",                                  # Short-duration bond (not TLT)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        # Check if oil/energy is in uptrend (warflation active)
+        energy_strong = 0
+        for sym in ["XLE", "OXY", "EPD"]:
+            if sym in data and sym in prices:
+                inds = self._get_indicators(data, sym, ["sma_50", "sma_200"], date)
+                s200 = inds["sma_200"]
+                if s200 is not None and not _is_missing(s200) and prices[sym] > s200:
+                    energy_strong += 1
+        if energy_strong >= 2:
+            # Warflation regime active — full allocation
+            midstream = ["EPD", "ET", "WMB", "MPLX", "OKE"]
+            defense = ["LMT", "RTX", "NOC", "ITA"]
+            for sym in midstream:
+                if sym in prices: weights[sym] = 0.10
+            for sym in defense:
+                if sym in prices: weights[sym] = 0.08
+            if "SHY" in prices: weights["SHY"] = 0.05
+        else:
+            # Not warflation — small energy + defense hedge
+            for sym in ["EPD", "LMT", "SHY"]:
+                if sym in prices: weights[sym] = 0.06
+        return weights
+
+
+class DefenseBudgetFloor(BasePersona):
+    """Defense primes have locked-in backlogs regardless of peace/war outcome.
+    $1.5T FY2027 budget = multi-year revenue floor. Buy dips caused by peace headlines.
+    LMT $173B backlog, RTX $251B order book, NOC has B-21 + Golden Dome."""
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Defense Budget Floor (Buy Peace Dips)",
+            description="Defense primes with locked-in backlogs. Buy dips on peace headlines — revenue is already contracted.",
+            risk_tolerance=0.4, max_position_size=0.12, max_positions=8, rebalance_frequency="weekly",
+            universe=universe or [
+                "LMT",   # Lockheed — $173B backlog, F-35
+                "RTX",   # Raytheon — $251B order book, missiles
+                "NOC",   # Northrop — B-21 bomber, Golden Dome
+                "GD",    # General Dynamics — Gulfstream + subs
+                "HII",   # Huntington Ingalls — shipbuilding
+                "LHX",   # L3Harris — comms + sensors
+                "KTOS",  # Kratos — drones + hypersonics
+                "LDOS",  # Leidos — IT/cyber for DoD
+                "ITA",   # Defense ETF
+                "BAESY", # BAE Systems
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi): continue
+            price = prices[sym]
+            sc = 0.0
+            if price > sma200: sc += 2.0
+            sma50 = inds["sma_50"]
+            if sma50 is not None and sma50 > sma200: sc += 1.0
+            # Buy dips aggressively (peace headlines = gift entry)
+            if 30 < rsi < 45 and price > sma200:
+                sc += 2.5  # Pullback in defense = buy the peace dip
+            elif 45 <= rsi < 65:
+                sc += 1.0
+            if sc >= 3:
+                scored.append((sym, sc))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["warflation_hedge"] = WarflationHedge
+UNCONVENTIONAL_STRATEGIES["defense_budget_floor"] = DefenseBudgetFloor
+
 if __name__ == "__main__":
     print("=== Unconventional Strategies ===\n")
     for key, cls in UNCONVENTIONAL_STRATEGIES.items():

@@ -1,0 +1,132 @@
+{
+  "strategy_name": "defense_budget_floor",
+  "is_winning": true,
+  "generated_at": "2026-04-09T09:06:31.414818",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "11.2%",
+    "stop_loss": "13.9%",
+    "take_profit_target": "8.7%",
+    "max_drawdown_tolerance": "11.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "LMT",
+      "action": "BUY",
+      "current_position": 33.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "14.6% below entry",
+      "take_profit": "9.2% above entry",
+      "position_size": "10.6% of portfolio",
+      "trailing_stop": "10.2% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LMT",
+      "yahoo_url": "https://finance.yahoo.com/quote/LMT/"
+    },
+    {
+      "symbol": "HII",
+      "action": "BUY",
+      "current_position": 47.0,
+      "annual_volatility": "40%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "23.2% below entry",
+      "take_profit": "14.6% above entry",
+      "position_size": "6.7% of portfolio",
+      "trailing_stop": "16.2% trailing after 5.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=HII",
+      "yahoo_url": "https://finance.yahoo.com/quote/HII/"
+    },
+    {
+      "symbol": "LDOS",
+      "action": "BUY",
+      "current_position": 106.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "17.3% below entry",
+      "take_profit": "10.9% above entry",
+      "position_size": "9.0% of portfolio",
+      "trailing_stop": "12.1% trailing after 4.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LDOS",
+      "yahoo_url": "https://finance.yahoo.com/quote/LDOS/"
+    },
+    {
+      "symbol": "RTX",
+      "action": "BUY",
+      "current_position": 88.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "14.5% below entry",
+      "take_profit": "9.1% above entry",
+      "position_size": "10.7% of portfolio",
+      "trailing_stop": "10.2% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=RTX",
+      "yahoo_url": "https://finance.yahoo.com/quote/RTX/"
+    },
+    {
+      "symbol": "NOC",
+      "action": "BUY",
+      "current_position": 34.0,
+      "annual_volatility": "26%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "14.9% below entry",
+      "take_profit": "9.4% above entry",
+      "position_size": "10.4% of portfolio",
+      "trailing_stop": "10.4% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NOC",
+      "yahoo_url": "https://finance.yahoo.com/quote/NOC/"
+    },
+    {
+      "symbol": "GD",
+      "action": "BUY",
+      "current_position": 58.0,
+      "annual_volatility": "21%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.3% below entry",
+      "take_profit": "7.7% above entry",
+      "position_size": "12.6% of portfolio",
+      "trailing_stop": "8.6% trailing after 3.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GD/"
+    },
+    {
+      "symbol": "KTOS",
+      "action": "BUY",
+      "current_position": 254.0,
+      "annual_volatility": "58%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "34.0% below entry",
+      "take_profit": "21.3% above entry",
+      "position_size": "4.6% of portfolio",
+      "trailing_stop": "23.8% trailing after 8.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KTOS",
+      "yahoo_url": "https://finance.yahoo.com/quote/KTOS/"
+    },
+    {
+      "symbol": "LHX",
+      "action": "BUY",
+      "current_position": 67.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.5% below entry",
+      "take_profit": "8.5% above entry",
+      "position_size": "11.5% of portfolio",
+      "trailing_stop": "9.5% trailing after 3.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LHX",
+      "yahoo_url": "https://finance.yahoo.com/quote/LHX/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "61.70%",
+    "sharpe_ratio": "1.01",
+    "max_drawdown": "-11.58%",
+    "win_rate": "54.46%",
+    "alpha": "-5.69%"
+  }
+}
