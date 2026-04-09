@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.0,
+    "cagr": 0.0,
+    "annual_volatility": 0.0,
+    "sharpe_ratio": -Infinity,
+    "sortino_ratio": -15.874507866387544,
+    "calmar_ratio": 0,
+    "max_drawdown": 0.0,
+    "max_drawdown_date": null,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "num_trading_days": 752,
+    "skewness": 0.0,
+    "kurtosis": 0.0,
+    "best_day": 0.0,
+    "worst_day": 0.0,
+    "avg_daily_return": 0.0,
+    "black_swan_resilience": 87.5,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08662457909976418,
+    "beta": 0.0,
+    "information_ratio": -0.494785628755081,
+    "tracking_error": 0.17507496997784341
+  },
+  "trade_metrics": {
+    "num_trades": 0,
+    "num_buys": 0,
+    "num_sells": 0,
+    "total_commission": 0.0,
+    "total_slippage": 0.0,
+    "total_transaction_costs": 0.0,
+    "avg_trade_size": 0.0
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GLD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IAU": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLU": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SHY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BIL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SCHD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "recession",
+  "description": "Persistent crash with no recovery (Japan 1990s). Gold + utilities + short bonds + dividends only."
+}

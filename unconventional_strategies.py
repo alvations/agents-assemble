@@ -2832,6 +2832,380 @@ def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
 
 UNCONVENTIONAL_STRATEGIES["wealth_barometer"] = WealthBarometer
 
+
+# ---------------------------------------------------------------------------
+# NVIDIA Domino Hedge — profit when NVIDIA supply chain collapses
+# ---------------------------------------------------------------------------
+class NVIDIADominoHedge(BasePersona):
+    """Hedging strategy that profits when the NVIDIA financing/supply chain breaks.
+
+    Thesis: NVIDIA has a ~$110B financing book (2.8x Lucent's ratio when it
+    collapsed). CoreWeave alone has $28B in debt, 40% market-implied default
+    risk, and GPUs as collateral. The supply chain is single-threaded:
+    Trumpf -> ASML -> TSMC -> SK Hynix -> NVIDIA -> CoreWeave -> AI startups.
+    If ANY link breaks, the whole chain suffers.
+
+    Historical precedent: Cisco 2000 (stock -88%, 20 years to recover),
+    Lucent 2001 ($3.5B write-offs, revenue -69%, 24 of 30 top customers bankrupt).
+
+    Implementation:
+    - Normal times (no stress): small hedge (8% in safe havens)
+    - Moderate stress (NVDA overbought, supply chain names breaking): 25-35% hedge
+    - High stress (SMCI collapse, vol spike, chain breaking): 40-60% defensive
+    - Uses NVDA RSI, SMCI trend break, and vol regime as stress signals
+
+    Instruments:
+    - SQQQ (3x inverse Nasdaq — NVDA is ~8% of QQQ)
+    - GLD, TLT, SHY (safe havens)
+    - UVXY (1.5x VIX futures for vol spike capture)
+    - Monitors SMCI, NVDA, AVGO, MU as chain stress indicators
+
+    Edge: Most portfolios are long-only NVDA-exposed. This is the anti-portfolio
+    that pays off exactly when crowded AI trades unwind. The Cisco/Lucent parallel
+    is well-documented but not yet priced in because "this time is different."
+
+    Sources:
+    - Tomasz Tunguz: NVIDIA's $110B bet echoes telecom bubble
+    - Jim Chanos: "putting money into money-losing companies to order their chips"
+    - Harding Loevner: NVIDIA and the cautionary tale of Cisco Systems
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="NVIDIA Domino Hedge (Supply Chain Collapse)",
+            description="Profit when NVIDIA financing chain breaks: inverse ETFs + safe havens + vol, scaled by supply chain stress",
+            risk_tolerance=0.7,
+            max_position_size=0.25,
+            max_positions=8,
+            rebalance_frequency="daily",
+            universe=universe or [
+                # Inverse / hedge instruments
+                "SQQQ",   # 3x inverse Nasdaq (primary NVDA hedge)
+                "UVXY",   # 1.5x VIX futures (vol spike capture)
+                # Safe havens
+                "GLD",    # Gold (crisis alpha)
+                "TLT",    # Long-term treasuries (flight to quality)
+                "SHY",    # Short-term treasuries (cash proxy)
+                # Supply chain stress monitors (we track but DON'T buy)
+                "NVDA",   # NVIDIA itself (monitor RSI/trend)
+                "SMCI",   # Super Micro (canary in the coal mine)
+                "AVGO",   # Broadcom (AI chip peer)
+                "MU",     # Micron (HBM memory supplier)
+            ],
+        )
+        super().__init__(config)
+
+    def _compute_stress_level(self, date, prices, data):
+        """Compute NVIDIA supply chain stress level (0-10 scale).
+
+        Stress signals:
+        - NVDA RSI > 75: overbought (fragile)
+        - SMCI below SMA200: supply chain cracking
+        - High realized vol on NVDA: institutional repositioning
+        - MU/AVGO below SMA200: broad chain weakness
+        """
+        stress = 0.0
+
+        # Signal 1: NVDA overbought (RSI > 75 = fragile, pre-crash)
+        nvda_rsi = self._get_indicator(data, "NVDA", "rsi_14", date)
+        if not _is_missing(nvda_rsi):
+            if nvda_rsi > 80:
+                stress += 2.5  # Extremely overbought
+            elif nvda_rsi > 75:
+                stress += 1.5  # Overbought
+            elif nvda_rsi < 30:
+                stress += 2.0  # Already crashing
+
+        # Signal 2: SMCI below SMA200 (canary — supply chain stress)
+        if "SMCI" in prices:
+            smci_sma200 = self._get_indicator(data, "SMCI", "sma_200", date)
+            smci_rsi = self._get_indicator(data, "SMCI", "rsi_14", date)
+            if not _is_missing(smci_sma200):
+                if prices["SMCI"] < smci_sma200 * 0.85:
+                    stress += 2.5  # Deep breakdown
+                elif prices["SMCI"] < smci_sma200:
+                    stress += 1.5  # Below trend
+            if not _is_missing(smci_rsi) and smci_rsi < 30:
+                stress += 1.0  # SMCI in panic
+
+        # Signal 3: NVDA vol spike (institutional repositioning)
+        nvda_vol = self._get_indicator(data, "NVDA", "vol_20", date)
+        if not _is_missing(nvda_vol):
+            annualized = nvda_vol * _SQRT_252 * 100
+            if annualized > 60:
+                stress += 2.0  # Extreme vol
+            elif annualized > 40:
+                stress += 1.0  # Elevated vol
+
+        # Signal 4: Broad chain weakness (MU, AVGO below SMA200)
+        chain_weak = 0
+        for sym in ["MU", "AVGO"]:
+            if sym in prices:
+                sma = self._get_indicator(data, sym, "sma_200", date)
+                if not _is_missing(sma) and prices[sym] < sma:
+                    chain_weak += 1
+        stress += chain_weak * 1.0
+
+        return min(stress, 10.0)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        stress = self._compute_stress_level(date, prices, data)
+
+        if stress >= 6.0:
+            # HIGH STRESS: Full defensive mode (40-60% hedged)
+            # This is the Cisco 2000 / Lucent 2001 scenario
+            weights["SQQQ"] = 0.15   # Aggressive inverse Nasdaq
+            weights["UVXY"] = 0.10   # Vol spike capture
+            weights["GLD"] = 0.15    # Gold safe haven
+            weights["TLT"] = 0.10    # Flight to quality
+            weights["SHY"] = 0.10    # Cash proxy
+            # Total: 60% hedged
+        elif stress >= 3.5:
+            # MODERATE STRESS: Elevated hedge (25-35%)
+            weights["SQQQ"] = 0.08
+            weights["UVXY"] = 0.05
+            weights["GLD"] = 0.10
+            weights["TLT"] = 0.07
+            weights["SHY"] = 0.05
+            # Total: 35% hedged
+        elif stress >= 1.5:
+            # LOW STRESS but not zero: Maintain small hedge (15%)
+            weights["SQQQ"] = 0.03
+            weights["GLD"] = 0.07
+            weights["TLT"] = 0.03
+            weights["SHY"] = 0.02
+            # Total: 15% hedged
+        else:
+            # NO STRESS: Minimal insurance position (8%)
+            weights["GLD"] = 0.04
+            weights["SHY"] = 0.04
+            # Total: 8% hedged
+
+        # Zero out monitor-only tickers (we track them, don't buy them)
+        for sym in ["NVDA", "SMCI", "AVGO", "MU"]:
+            if sym in prices:
+                weights[sym] = 0.0
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+# ---------------------------------------------------------------------------
+# NVIDIA Chain Diversified — spread across the chain with EXIT rules
+# ---------------------------------------------------------------------------
+class NVIDIAChainDiversified(BasePersona):
+    """Diversified NVIDIA supply chain strategy with domino EXIT rules.
+
+    Instead of pure NVDA exposure, spread across the entire supply chain
+    but with strict "first one out" exit rules. If ANY chain member breaks
+    down technically, EXIT ALL chain members immediately.
+
+    The supply chain (investable links):
+    - ASML: EUV lithography monopoly
+    - TSM: TSMC (advanced fabrication)
+    - NVDA: GPU design
+    - AVGO: AI networking/custom silicon
+    - MU: HBM memory (Micron)
+    - SMCI: Server assembly (canary)
+    - AMD: Alternative GPU (diversification from pure NVDA)
+
+    Exit rule: If ANY of these breaks below SMA200 with volume spike,
+    exit ALL positions and rotate to safe havens. This is the "first domino"
+    detector — don't wait for the chain reaction to reach you.
+
+    Historical parallel: In 2000, server assemblers broke down months before
+    Cisco peaked. The canary dies first.
+
+    Sources:
+    - NVIDIA GB200 supply chain ecosystem analysis
+    - AI infrastructure bottleneck research (CoWoS, HBM capacity)
+    - Cisco/Lucent collapse timeline studies
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="NVIDIA Chain Diversified (First One Out)",
+            description="Spread across NVDA supply chain but EXIT ALL if any link breaks SMA200 — domino detector",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="daily",
+            universe=universe or [
+                # The supply chain (upstream to downstream)
+                "ASML",   # EUV lithography monopoly
+                "TSM",    # TSMC fabrication
+                "NVDA",   # GPU design
+                "AVGO",   # AI networking + custom silicon
+                "MU",     # HBM memory (Micron)
+                "AMD",    # Alternative GPU supplier
+                "SMCI",   # Server assembly (canary in coal mine)
+                # Safe havens (exit targets)
+                "GLD",    # Gold
+                "TLT",    # Long-term treasuries
+                "SHY",    # Short-term treasuries (cash)
+            ],
+        )
+        super().__init__(config)
+
+    def _check_chain_break(self, date, prices, data):
+        """Check if ANY chain member has broken down (domino detector).
+
+        A "break" is defined as:
+        - Price below SMA200 AND RSI < 40 (weakness confirmed)
+        - OR price below SMA200 * 0.90 (severe break, no RSI needed)
+
+        Returns: (is_broken: bool, broken_names: list, severity: float)
+        """
+        chain_tickers = ["ASML", "TSM", "NVDA", "AVGO", "MU", "AMD", "SMCI"]
+        broken = []
+        severity = 0.0
+
+        for sym in chain_tickers:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+
+            if _is_missing(sma200):
+                continue
+
+            # Severe break: >10% below SMA200
+            if price < sma200 * 0.90:
+                broken.append(sym)
+                severity += 3.0
+            # Moderate break: below SMA200 with weak RSI
+            elif price < sma200:
+                if not _is_missing(rsi) and rsi < 40:
+                    broken.append(sym)
+                    severity += 2.0
+                elif _is_missing(rsi):
+                    broken.append(sym)
+                    severity += 1.0
+
+        # SMCI gets extra weight as canary (it breaks first historically)
+        if "SMCI" in broken:
+            severity += 2.0
+
+        return len(broken) > 0, broken, severity
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        chain_tickers = ["ASML", "TSM", "NVDA", "AVGO", "MU", "AMD", "SMCI"]
+
+        is_broken, broken_names, severity = self._check_chain_break(
+            date, prices, data
+        )
+
+        if is_broken and severity >= 3.0:
+            # DOMINO DETECTED: EXIT ALL chain positions, go to safe havens
+            for sym in chain_tickers:
+                if sym in prices:
+                    weights[sym] = 0.0
+
+            if severity >= 6.0:
+                # Multiple chain members broken — maximum defense
+                weights["GLD"] = 0.30
+                weights["TLT"] = 0.25
+                weights["SHY"] = 0.25
+            else:
+                # Single/early break — defensive but less extreme
+                weights["GLD"] = 0.25
+                weights["TLT"] = 0.20
+                weights["SHY"] = 0.15
+
+        elif is_broken and severity < 3.0:
+            # EARLY WARNING: Reduce chain exposure, add some safe havens
+            scored = []
+            for sym in chain_tickers:
+                if sym not in prices or sym in broken_names:
+                    if sym in prices:
+                        weights[sym] = 0.0
+                    continue
+                inds = self._get_indicators(
+                    data, sym, ["sma_50", "sma_200", "rsi_14"], date
+                )
+                sma50 = inds["sma_50"]
+                sma200 = inds["sma_200"]
+                rsi = inds["rsi_14"]
+                if _is_missing(sma200):
+                    continue
+                price = prices[sym]
+                sc = 0.0
+                if price > sma200:
+                    sc += 2.0
+                if sma50 is not None and price > sma50:
+                    sc += 1.0
+                if not _is_missing(rsi) and 40 < rsi < 70:
+                    sc += 1.0
+                if sc >= 2:
+                    scored.append((sym, sc))
+
+            scored.sort(key=lambda x: -x[1])
+            top = scored[:5]
+            if top:
+                total = sum(s for _, s in top)
+                for sym, sc in top:
+                    weights[sym] = min((sc / total) * 0.40, 0.10)
+
+            weights["GLD"] = 0.15
+            weights["TLT"] = 0.10
+
+        else:
+            # NO BREAK: Normal diversified chain allocation
+            scored = []
+            for sym in chain_tickers:
+                if sym not in prices:
+                    continue
+                inds = self._get_indicators(
+                    data, sym,
+                    ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                    date,
+                )
+                sma50 = inds["sma_50"]
+                sma200 = inds["sma_200"]
+                rsi = inds["rsi_14"]
+                macd = inds["macd"]
+                macd_sig = inds["macd_signal"]
+                if _is_missing(sma200):
+                    continue
+                price = prices[sym]
+                sc = 0.0
+                if price > sma200:
+                    sc += 2.0
+                else:
+                    continue  # Skip below SMA200 even in normal mode
+                if sma50 is not None and price > sma50:
+                    sc += 1.0
+                if macd is not None and macd_sig is not None and macd > macd_sig:
+                    sc += 1.0
+                if not _is_missing(rsi) and 40 < rsi < 70:
+                    sc += 1.0
+                elif not _is_missing(rsi) and rsi > 80:
+                    sc -= 1.0  # Penalize extreme overbought
+                if sc >= 3:
+                    scored.append((sym, sc))
+
+            scored.sort(key=lambda x: -x[1])
+            top = scored[:6]
+            if top:
+                total = sum(s for _, s in top)
+                for sym, sc in top:
+                    weights[sym] = min(
+                        (sc / total) * 0.80, self.config.max_position_size
+                    )
+
+            # Always keep small safe haven position (insurance)
+            weights["GLD"] = 0.05
+            weights["SHY"] = 0.05
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
+UNCONVENTIONAL_STRATEGIES["nvidia_domino_hedge"] = NVIDIADominoHedge
+UNCONVENTIONAL_STRATEGIES["nvidia_chain_diversified"] = NVIDIAChainDiversified
+
+
 if __name__ == "__main__":
     print("=== Unconventional Strategies ===\n")
     for key, cls in UNCONVENTIONAL_STRATEGIES.items():

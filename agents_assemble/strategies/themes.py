@@ -74,6 +74,7 @@ class AIRevolution(BasePersona):
             rebalance_frequency="weekly",
             universe=universe or [
                 "NVDA", "AMD", "AVGO", "MRVL", "ARM",  # AI chips
+                "TSM", "ASML",  # AI chip manufacturing (picks & shovels)
                 "MSFT", "GOOGL", "AMZN", "META",  # AI cloud/apps
                 "PLTR", "AI", "PATH", "SNOW",  # AI software
                 "SMH", "SOXX",  # Semiconductor ETFs
@@ -818,6 +819,8 @@ class RoboticsAutonomous(BasePersona):
             universe=universe or [
                 "ISRG", "NVDA", "INTC", "TER", "CGNX",
                 "GOOGL", "TSLA", "GM",
+                "ROK", "ABB", "HON",  # Industrial automation / robotics
+                "BOTZ", "ROBO",  # Robotics & AI ETFs
             ],
         )
         super().__init__(config)
@@ -1473,9 +1476,10 @@ class GlobalAirlinesTravel(BasePersona):
             max_positions=8,
             rebalance_frequency="weekly",
             universe=universe or [
-                "DAL", "LUV", "UAL", "JBLU",  # US airlines
+                "DAL", "LUV", "UAL", "JBLU", "AAL",  # US airlines
                 "BKNG", "ABNB", "EXPE",  # OTAs / travel platforms
                 "TCOM",  # Trip.com (China/Asia travel)
+                "MAR", "HLT",  # Hotels (travel ecosystem)
             ],
         )
         super().__init__(config)
@@ -1554,9 +1558,9 @@ class UtilityInfraIncome(BasePersona):
             max_positions=8,
             rebalance_frequency="monthly",
             universe=universe or [
-                "SO", "D", "DUK", "PPL",  # Regulated utilities
-                "EQIX",  # Data center REIT
-                "TMUS",  # T-Mobile (telecom)
+                "SO", "D", "DUK", "PPL", "NEE",  # Regulated utilities
+                "EQIX", "DLR",  # Data center REITs
+                "TMUS", "VZ",  # Telecom (income)
                 "COST",  # Costco (defensive consumer)
                 "SCHW",  # Schwab (financial infrastructure)
             ],
@@ -1630,8 +1634,9 @@ class JapanIndustrialFinance(BasePersona):
             rebalance_frequency="monthly",
             universe=universe or [
                 "MKTAY", "NMR", "SMFG", "MUFG",  # Finance / industrial
-                "ITOCY", "MITSY",  # Trading houses (Buffett favorites)
-                "TM", "SONY",  # Consumer / auto
+                "ITOCY", "MITSY", "MRBEY",  # Trading houses (Buffett favorites)
+                "TM", "SONY", "HMC",  # Consumer / auto
+                "EWJ",  # Japan broad ETF
             ],
         )
         super().__init__(config)
@@ -1793,6 +1798,7 @@ class GlobalConsumerStaples(BasePersona):
             universe=universe or [
                 "UL", "MKC", "DE", "NVO",  # International staples/health
                 "PG", "KO", "NSRGY", "COST",  # US/global staples
+                "PEP", "CL", "KHC",  # Additional consumer staples
             ],
         )
         super().__init__(config)
@@ -1948,6 +1954,7 @@ class GlobalPharmaPipeline(BasePersona):
             universe=universe or [
                 "RHHBY", "MRK", "BAYRY", "NVS",  # Global pharma
                 "AZN", "GSK", "TAK", "SNY",  # EU/Japan pharma
+                "LLY", "ABBV",  # US pharma with deep pipelines
             ],
         )
         super().__init__(config)
@@ -2460,6 +2467,7 @@ class KoreanChaebols(BasePersona):
                 "SHG",    # Shinhan Financial (premium Korean bank)
                 "PKX",    # POSCO Holdings (steel + battery materials)
                 "LPL",    # LG Display (OLED technology leader)
+                "HMC",    # Hyundai Motor (global auto + EV + robotics)
                 "EWY",    # iShares MSCI South Korea ETF (broad exposure)
             ],
         )
