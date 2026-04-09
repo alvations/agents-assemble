@@ -55,3 +55,34 @@ This strategy lost money. Key issues:
 - Alpha: -23.76% (target > 0%)
 
 **DO NOT REPEAT** these patterns without fundamental strategy changes.
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | 33.5% |
+| **Avg 5Y Sharpe** | 0.18 |
+| **Avg 5Y Max DD** | -35.9% |
+| **10Y Return (2015-2024)** | 62.7% |
+| **10Y Sharpe** | 0.14 |
+| **10Y Max DD** | -40.3% |
+| **HODL Composite** | 0.13 |
+| **Windows Tested** | 28 |
+| **Consistency** | 60% |
+
+### How to Use This Strategy Passively
+
+This strategy has **moderate long-term potential** but requires more active monitoring than a pure passive approach.
+
+**Entry:** Wait for a pullback before entering. Buy in 3 tranches over 2-4 weeks to average your entry price.
+
+**Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
+
+**Exit rules:**
+- **Take profit:** Trim winners that are up 50%+ to lock in gains
+- **Stop loss:** Exit if drawdown exceeds 25% — the strategy may not recover quickly
+- **Time limit:** If flat (< 5% return) after 12 months, reassess whether the thesis still holds
+
+</details>
