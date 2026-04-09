@@ -1,0 +1,135 @@
+{
+  "metrics": {
+    "total_return": 0.5949968394639955,
+    "cagr": 0.16901129089020017,
+    "annual_volatility": 0.2323626436786776,
+    "sharpe_ratio": 0.621591877794762,
+    "sortino_ratio": 0.9178782562793026,
+    "calmar_ratio": 0.6553039208579573,
+    "max_drawdown": -0.2579128332834053,
+    "max_drawdown_date": "2025-03-13",
+    "win_rate": 0.4207723035952064,
+    "profit_factor": 1.1810976077191202,
+    "num_trading_days": 751,
+    "skewness": 0.05603434908543865,
+    "kurtosis": 5.776023287066838,
+    "best_day": 0.08054492841332994,
+    "worst_day": -0.0889411389670226,
+    "avg_daily_return": 0.0007288035612578674,
+    "black_swan_resilience": 74.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.062294856486718286,
+    "beta": 0.8258187591006367,
+    "information_ratio": -0.3169207303838485,
+    "tracking_error": 0.1965628957476777
+  },
+  "trade_metrics": {
+    "num_trades": 624,
+    "num_buys": 324,
+    "num_sells": 300,
+    "total_commission": 0.0,
+    "total_slippage": 6888.388421269419,
+    "total_transaction_costs": 6888.388421269419,
+    "avg_trade_size": 11039.084008444579
+  },
+  "final_positions": {
+    "HOOD": {
+      "qty": 208.0,
+      "avg_cost": 122.22750267615685,
+      "realized_pnl": 35338.41697692871
+    },
+    "PATH": {
+      "qty": 1448.0,
+      "avg_cost": 16.850000381469727,
+      "realized_pnl": -2248.229030609129
+    },
+    "CRSP": {
+      "qty": 452.0,
+      "avg_cost": 53.970001220703125,
+      "realized_pnl": -9514.149627685547
+    },
+    "DDOG": {
+      "qty": 177.0,
+      "avg_cost": 154.98845770514907,
+      "realized_pnl": 1337.4968011038607
+    },
+    "ARKK": {
+      "qty": 310.0,
+      "avg_cost": 78.61000061035156,
+      "realized_pnl": 863.8738403320287
+    }
+  },
+  "source": "famous",
+  "description": "Disruptive innovation: AI + genomics + robotics + crypto, 5-year horizon",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2463,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1447,
+  "avg_3Y_return": 0.3456,
+  "avg_5Y_return": 0.7867,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.004,
+      "sh": -0.14,
+      "dd": -0.2066
+    },
+    "1Y_2024": {
+      "ret": 0.497,
+      "sh": 1.68,
+      "dd": -0.1251
+    },
+    "1Y_2025": {
+      "ret": 0.0532,
+      "sh": 0.18,
+      "dd": -0.2583
+    },
+    "3Y_2022_2024": {
+      "ret": 0.4634,
+      "sh": 0.58,
+      "dd": -0.2066
+    },
+    "3Y_2023_2025": {
+      "ret": 0.595,
+      "sh": 0.62,
+      "dd": -0.2579
+    },
+    "5Y_2020_2024": {
+      "ret": 0.9446,
+      "sh": 0.56,
+      "dd": -0.2528
+    },
+    "1Y_2020": {
+      "ret": 0.2926,
+      "sh": 1.0,
+      "dd": -0.2528
+    },
+    "1Y_2021": {
+      "ret": 0.0455,
+      "sh": 0.14,
+      "dd": -0.2302
+    },
+    "1Y_2022": {
+      "ret": -0.0162,
+      "sh": -0.58,
+      "dd": -0.0867
+    },
+    "3Y_2020_2022": {
+      "ret": 0.3076,
+      "sh": 0.35,
+      "dd": -0.2528
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0163,
+      "sh": -0.1,
+      "dd": -0.2302
+    },
+    "5Y_2021_2025": {
+      "ret": 0.6287,
+      "sh": 0.38,
+      "dd": -0.2579
+    }
+  }
+}

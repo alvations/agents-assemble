@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.29045088629774085,
+    "cagr": 0.08903187475620311,
+    "annual_volatility": 0.14508807625954825,
+    "sharpe_ratio": 0.39194699270730315,
+    "sortino_ratio": 0.5646098465006747,
+    "calmar_ratio": 0.44014171837740107,
+    "max_drawdown": -0.20228001809149665,
+    "max_drawdown_date": "2025-07-09",
+    "win_rate": 0.511318242343542,
+    "profit_factor": 1.1254125720784272,
+    "num_trading_days": 751,
+    "skewness": -0.05869605266877736,
+    "kurtosis": 1.9599609779370963,
+    "best_day": 0.0342503204799407,
+    "worst_day": -0.04071849668705563,
+    "avg_daily_return": 0.0003813119071072064,
+    "black_swan_resilience": 76.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.14227427262071535,
+    "beta": 0.2242592106551783,
+    "information_ratio": -0.7710706806437667,
+    "tracking_error": 0.18451521526136955
+  },
+  "trade_metrics": {
+    "num_trades": 938,
+    "num_buys": 451,
+    "num_sells": 487,
+    "total_commission": 0.0,
+    "total_slippage": 6563.7513849182205,
+    "total_transaction_costs": 6563.7513849182205,
+    "avg_trade_size": 6997.602755776346
+  },
+  "final_positions": {
+    "GNK": {
+      "qty": 801.0,
+      "avg_cost": 18.38540645629092,
+      "realized_pnl": 5098.046053132707
+    },
+    "EXPD": {
+      "qty": 97.0,
+      "avg_cost": 127.65767303692115,
+      "realized_pnl": -4854.347820521189
+    },
+    "SBLK": {
+      "qty": 757.0,
+      "avg_cost": 18.506000518798828,
+      "realized_pnl": 3359.957393646241
+    },
+    "SEA": {
+      "qty": 1020.0,
+      "avg_cost": 13.772724840044916,
+      "realized_pnl": -93.39700573688498
+    },
+    "CHRW": {
+      "qty": 90.0,
+      "avg_cost": 152.007646394899,
+      "realized_pnl": 2422.310863834365
+    },
+    "MATX": {
+      "qty": 118.0,
+      "avg_cost": 122.84796142578125,
+      "realized_pnl": 3576.0685310363688
+    },
+    "ZIM": {
+      "qty": 716.0,
+      "avg_cost": 19.437683455598215,
+      "realized_pnl": 14272.488950605724
+    },
+    "EGLE": {
+      "qty": 501.0,
+      "avg_cost": 28.912670924964967,
+      "realized_pnl": -340.54361082472894
+    }
+  },
+  "source": "crisis",
+  "description": "Global shipping cycle: container/bulk shippers + freight ETFs",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2613,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1057,
+  "avg_3Y_return": 0.3332,
+  "avg_5Y_return": 0.7143,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0781,
+      "sh": 0.32,
+      "dd": -0.1252
+    },
+    "1Y_2024": {
+      "ret": 0.1567,
+      "sh": 0.76,
+      "dd": -0.1159
+    },
+    "1Y_2025": {
+      "ret": 0.0044,
+      "sh": -0.21,
+      "dd": -0.1243
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2419,
+      "sh": 0.27,
+      "dd": -0.2079
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2905,
+      "sh": 0.39,
+      "dd": -0.2023
+    },
+    "5Y_2020_2024": {
+      "ret": 0.7369,
+      "sh": 0.47,
+      "dd": -0.2078
+    },
+    "1Y_2020": {
+      "ret": 0.0483,
+      "sh": 0.13,
+      "dd": -0.1401
+    },
+    "1Y_2021": {
+      "ret": 0.3548,
+      "sh": 1.27,
+      "dd": -0.1149
+    },
+    "1Y_2022": {
+      "ret": -0.0082,
+      "sh": -0.07,
+      "dd": -0.2079
+    },
+    "3Y_2020_2022": {
+      "ret": 0.387,
+      "sh": 0.44,
+      "dd": -0.2078
+    },
+    "3Y_2021_2023": {
+      "ret": 0.4133,
+      "sh": 0.47,
+      "dd": -0.208
+    },
+    "5Y_2021_2025": {
+      "ret": 0.6916,
+      "sh": 0.45,
+      "dd": -0.208
+    }
+  }
+}

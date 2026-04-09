@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.5862253594600917,
+    "cagr": 0.16685704240561883,
+    "annual_volatility": 0.20180826726108378,
+    "sharpe_ratio": 0.6733764631461711,
+    "sortino_ratio": 1.0198798106923088,
+    "calmar_ratio": 0.8001698985595369,
+    "max_drawdown": -0.2085270174571604,
+    "max_drawdown_date": "2024-08-14",
+    "win_rate": 0.5126498002663116,
+    "profit_factor": 1.1619533232588508,
+    "num_trading_days": 751,
+    "skewness": 0.40991545596135065,
+    "kurtosis": 2.4017645051424843,
+    "best_day": 0.0669295957900462,
+    "worst_day": -0.042960069234537435,
+    "avg_daily_return": 0.0006949075502592223,
+    "black_swan_resilience": 81.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.06444910497129963,
+    "beta": 0.6832349602336485,
+    "information_ratio": -0.3597705742117791,
+    "tracking_error": 0.17913945606168902
+  },
+  "trade_metrics": {
+    "num_trades": 1189,
+    "num_buys": 587,
+    "num_sells": 602,
+    "total_commission": 0.0,
+    "total_slippage": 9513.580286705967,
+    "total_transaction_costs": 9513.580286705967,
+    "avg_trade_size": 8001.329088903255
+  },
+  "final_positions": {
+    "TCOM": {
+      "qty": 246.0,
+      "avg_cost": 70.35852969516147,
+      "realized_pnl": 7836.020563005332
+    },
+    "UAL": {
+      "qty": 160.0,
+      "avg_cost": 102.27818219715654,
+      "realized_pnl": 11531.897819605349
+    },
+    "DAL": {
+      "qty": 258.0,
+      "avg_cost": 69.34159088134766,
+      "realized_pnl": 2585.034126281735
+    },
+    "AAL": {
+      "qty": 1180.0,
+      "avg_cost": 16.208745996830828,
+      "realized_pnl": 3842.8688974380448
+    },
+    "LUV": {
+      "qty": 436.0,
+      "avg_cost": 40.943138122558594,
+      "realized_pnl": -1432.8639564514133
+    },
+    "MAR": {
+      "qty": 57.0,
+      "avg_cost": 274.97353778009136,
+      "realized_pnl": 11943.470184348995
+    },
+    "JBLU": {
+      "qty": 3944.0,
+      "avg_cost": 4.86708913782789,
+      "realized_pnl": -5385.6093578338605
+    },
+    "EXPE": {
+      "qty": 62.0,
+      "avg_cost": 227.6858715360127,
+      "realized_pnl": 8831.414538162478
+    }
+  },
+  "source": "theme",
+  "description": "Airlines and OTAs: DAL, UAL, BKNG, ABNB \u2014 post-pandemic travel demand",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.0233,
+  "consistency_score": 0.42,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0122,
+  "avg_3Y_return": -0.1245,
+  "avg_5Y_return": -0.1827,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1691,
+      "sh": 0.76,
+      "dd": -0.1826
+    },
+    "1Y_2024": {
+      "ret": 0.2227,
+      "sh": 0.91,
+      "dd": -0.2086
+    },
+    "1Y_2025": {
+      "ret": 0.1421,
+      "sh": 0.53,
+      "dd": -0.1955
+    },
+    "3Y_2022_2024": {
+      "ret": -0.2614,
+      "sh": -0.52,
+      "dd": -0.5192
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5862,
+      "sh": 0.67,
+      "dd": -0.2085
+    },
+    "5Y_2020_2024": {
+      "ret": -0.2647,
+      "sh": -0.33,
+      "dd": -0.5678
+    },
+    "1Y_2020": {
+      "ret": -0.0573,
+      "sh": -0.29,
+      "dd": -0.226
+    },
+    "1Y_2021": {
+      "ret": 0.0798,
+      "sh": 0.28,
+      "dd": -0.2155
+    },
+    "1Y_2022": {
+      "ret": -0.4832,
+      "sh": -2.41,
+      "dd": -0.5192
+    },
+    "3Y_2020_2022": {
+      "ret": -0.4859,
+      "sh": -0.91,
+      "dd": -0.5678
+    },
+    "3Y_2021_2023": {
+      "ret": -0.3371,
+      "sh": -0.64,
+      "dd": -0.5677
+    },
+    "5Y_2021_2025": {
+      "ret": -0.1007,
+      "sh": -0.16,
+      "dd": -0.5677
+    }
+  }
+}

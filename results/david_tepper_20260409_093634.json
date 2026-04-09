@@ -1,0 +1,140 @@
+{
+  "metrics": {
+    "total_return": 0.9146721806341638,
+    "cagr": 0.2426659143188914,
+    "annual_volatility": 0.16060931590026686,
+    "sharpe_ratio": 1.1934700698027125,
+    "sortino_ratio": 1.831549410752023,
+    "calmar_ratio": 1.3198086473421873,
+    "max_drawdown": -0.18386446763140152,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5193075898801598,
+    "profit_factor": 1.2918057211995009,
+    "num_trading_days": 751,
+    "skewness": 0.21116385059212542,
+    "kurtosis": 4.378383316924419,
+    "best_day": 0.06202247254546167,
+    "worst_day": -0.048117556775670534,
+    "avg_daily_return": 0.0009162943527057762,
+    "black_swan_resilience": 80.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.011359766941972937,
+    "beta": 0.6409187373894327,
+    "information_ratio": 0.08208037558477248,
+    "tracking_error": 0.1383980867660698
+  },
+  "trade_metrics": {
+    "num_trades": 286,
+    "num_buys": 138,
+    "num_sells": 148,
+    "total_commission": 0.0,
+    "total_slippage": 3867.0836754331585,
+    "total_transaction_costs": 3867.0836754331585,
+    "avg_trade_size": 13521.271592423633
+  },
+  "final_positions": {
+    "AMZN": {
+      "qty": 114.0,
+      "avg_cost": 233.8800048828125,
+      "realized_pnl": 11753.911819458004
+    },
+    "GOOGL": {
+      "qty": 85.0,
+      "avg_cost": 314.4627990722656,
+      "realized_pnl": 12620.36553192139
+    },
+    "F": {
+      "qty": 2056.0,
+      "avg_cost": 11.646574750661639,
+      "realized_pnl": 3903.3586286368786
+    },
+    "JD": {
+      "qty": 895.0,
+      "avg_cost": 29.889999389648438,
+      "realized_pnl": -3840.2341613769513
+    },
+    "GM": {
+      "qty": 368.0,
+      "avg_cost": 72.63267517089844,
+      "realized_pnl": 891.0927810668945
+    },
+    "XLF": {
+      "qty": 510.0,
+      "avg_cost": 52.436248779296875,
+      "realized_pnl": 144.2082710266111
+    }
+  },
+  "source": "political",
+  "description": "Macro mean-reversion: cyclicals + China, +24% in 2025",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.7092,
+  "consistency_score": 1.0,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.2453,
+  "avg_3Y_return": 0.7319,
+  "avg_5Y_return": 1.6785,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1643,
+      "sh": 0.79,
+      "dd": -0.1311
+    },
+    "1Y_2024": {
+      "ret": 0.4377,
+      "sh": 1.98,
+      "dd": -0.1117
+    },
+    "1Y_2025": {
+      "ret": 0.151,
+      "sh": 0.77,
+      "dd": -0.1837
+    },
+    "3Y_2022_2024": {
+      "ret": 0.7966,
+      "sh": 0.83,
+      "dd": -0.2118
+    },
+    "3Y_2023_2025": {
+      "ret": 0.9147,
+      "sh": 1.19,
+      "dd": -0.1839
+    },
+    "5Y_2020_2024": {
+      "ret": 2.0258,
+      "sh": 0.93,
+      "dd": -0.2372
+    },
+    "1Y_2020": {
+      "ret": 0.5406,
+      "sh": 1.6,
+      "dd": -0.2372
+    },
+    "1Y_2021": {
+      "ret": 0.1107,
+      "sh": 0.46,
+      "dd": -0.0894
+    },
+    "1Y_2022": {
+      "ret": 0.0673,
+      "sh": 0.23,
+      "dd": -0.2118
+    },
+    "3Y_2020_2022": {
+      "ret": 0.7984,
+      "sh": 0.75,
+      "dd": -0.2372
+    },
+    "3Y_2021_2023": {
+      "ret": 0.4177,
+      "sh": 0.46,
+      "dd": -0.2119
+    },
+    "5Y_2021_2025": {
+      "ret": 1.3313,
+      "sh": 0.76,
+      "dd": -0.2119
+    }
+  }
+}

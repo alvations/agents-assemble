@@ -1,0 +1,140 @@
+{
+  "metrics": {
+    "total_return": 0.1962587741521915,
+    "cagr": 0.06177084908690578,
+    "annual_volatility": 0.13921682822318784,
+    "sharpe_ratio": 0.219735623967767,
+    "sortino_ratio": 0.3141203902157142,
+    "calmar_ratio": 0.39412187136724963,
+    "max_drawdown": -0.156730325248422,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5193075898801598,
+    "profit_factor": 1.0864383978089016,
+    "num_trading_days": 751,
+    "skewness": -0.0056490195595936,
+    "kurtosis": 1.2872944007336358,
+    "best_day": 0.038962724137894034,
+    "worst_day": -0.03699076696335857,
+    "avg_daily_return": 0.0002770423096818803,
+    "black_swan_resilience": 79.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16953529829001268,
+    "beta": 0.5675606861610867,
+    "information_ratio": -1.3321071202160588,
+    "tracking_error": 0.12726851746165518
+  },
+  "trade_metrics": {
+    "num_trades": 231,
+    "num_buys": 113,
+    "num_sells": 118,
+    "total_commission": 0.0,
+    "total_slippage": 1067.862274343491,
+    "total_transaction_costs": 1067.862274343491,
+    "avg_trade_size": 4622.7804084133795
+  },
+  "final_positions": {
+    "XYL": {
+      "qty": 130.0,
+      "avg_cost": 133.24610560062158,
+      "realized_pnl": 3295.1054910812954
+    },
+    "WTS": {
+      "qty": 60.0,
+      "avg_cost": 215.24425374345722,
+      "realized_pnl": 6127.477688596697
+    },
+    "WTRG": {
+      "qty": 420.0,
+      "avg_cost": 37.58867485472044,
+      "realized_pnl": -3687.5454499486905
+    },
+    "FELE": {
+      "qty": 174.0,
+      "avg_cost": 93.94725799560547,
+      "realized_pnl": -509.60497283935547
+    },
+    "ECL": {
+      "qty": 60.0,
+      "avg_cost": 241.19526358405474,
+      "realized_pnl": 5121.466059183907
+    },
+    "PNR": {
+      "qty": 173.0,
+      "avg_cost": 99.37085491720838,
+      "realized_pnl": 8519.665728435833
+    }
+  },
+  "source": "theme",
+  "description": "Regulated water monopolies: $45B EPA mandate, AWK below fair value, 8-9% rate base growth guaranteed",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0622,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0554,
+  "avg_3Y_return": 0.0647,
+  "avg_5Y_return": 0.2087,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0752,
+      "sh": 0.31,
+      "dd": -0.1398
+    },
+    "1Y_2024": {
+      "ret": 0.0727,
+      "sh": 0.3,
+      "dd": -0.0748
+    },
+    "1Y_2025": {
+      "ret": 0.0549,
+      "sh": 0.18,
+      "dd": -0.1245
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0781,
+      "sh": -0.33,
+      "dd": -0.2663
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1963,
+      "sh": 0.22,
+      "dd": -0.1567
+    },
+    "5Y_2020_2024": {
+      "ret": 0.1853,
+      "sh": 0.08,
+      "dd": -0.3326
+    },
+    "1Y_2020": {
+      "ret": 0.0241,
+      "sh": 0.12,
+      "dd": -0.3326
+    },
+    "1Y_2021": {
+      "ret": 0.3024,
+      "sh": 1.58,
+      "dd": -0.0713
+    },
+    "1Y_2022": {
+      "ret": -0.1968,
+      "sh": -1.19,
+      "dd": -0.2663
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0333,
+      "sh": 0.0,
+      "dd": -0.3326
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1072,
+      "sh": 0.05,
+      "dd": -0.2769
+    },
+    "5Y_2021_2025": {
+      "ret": 0.232,
+      "sh": 0.1,
+      "dd": -0.2769
+    }
+  }
+}

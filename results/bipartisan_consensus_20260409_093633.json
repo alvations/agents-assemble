@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 0.560218455520642,
+    "cagr": 0.16042285567240833,
+    "annual_volatility": 0.10941932105694191,
+    "sharpe_ratio": 1.0607382261811096,
+    "sortino_ratio": 1.5250885162715728,
+    "calmar_ratio": 1.3575555453543438,
+    "max_drawdown": -0.11817038074161113,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5472703062583223,
+    "profit_factor": 1.281473243647017,
+    "num_trading_days": 751,
+    "skewness": -0.25241703578008895,
+    "kurtosis": 3.0975220473045457,
+    "best_day": 0.03279708855499819,
+    "worst_day": -0.037506503893343424,
+    "avg_daily_return": 0.0006162262775844449,
+    "black_swan_resilience": 78.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.07088329170451013,
+    "beta": 0.5781618499441618,
+    "information_ratio": -0.7785651115981983,
+    "tracking_error": 0.09104349867284005
+  },
+  "trade_metrics": {
+    "num_trades": 373,
+    "num_buys": 178,
+    "num_sells": 195,
+    "total_commission": 0.0,
+    "total_slippage": 1449.2302357425683,
+    "total_transaction_costs": 1449.2302357425683,
+    "avg_trade_size": 3885.335752661043
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 51.0,
+      "avg_cost": 217.2078232634608,
+      "realized_pnl": 3677.459841539039
+    },
+    "JNJ": {
+      "qty": 76.0,
+      "avg_cost": 159.9041700753552,
+      "realized_pnl": -2823.2342461480043
+    },
+    "GD": {
+      "qty": 47.0,
+      "avg_cost": 289.12499155896774,
+      "realized_pnl": 1775.306945800779
+    },
+    "XOM": {
+      "qty": 134.0,
+      "avg_cost": 113.20343404741429,
+      "realized_pnl": -1689.9928207397454
+    },
+    "CVX": {
+      "qty": 103.0,
+      "avg_cost": 148.05673025186778,
+      "realized_pnl": -4125.6937408447275
+    },
+    "MSFT": {
+      "qty": 32.0,
+      "avg_cost": 470.27276134490967,
+      "realized_pnl": 3647.436706542966
+    },
+    "AAPL": {
+      "qty": 55.0,
+      "avg_cost": 238.23993585759942,
+      "realized_pnl": 2520.9678039550763
+    },
+    "GOOGL": {
+      "qty": 49.0,
+      "avg_cost": 186.7929500657685,
+      "realized_pnl": 5623.220825195313
+    },
+    "AMZN": {
+      "qty": 66.0,
+      "avg_cost": 227.20444516980007,
+      "realized_pnl": 3746.653445904073
+    }
+  },
+  "source": "political",
+  "description": "Stocks BOTH parties buy: strongest signal when Dems + GOP agree",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.4324,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1596,
+  "avg_3Y_return": 0.4566,
+  "avg_5Y_return": 1.0019,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1631,
+      "sh": 1.04,
+      "dd": -0.0674
+    },
+    "1Y_2024": {
+      "ret": 0.1978,
+      "sh": 1.41,
+      "dd": -0.0548
+    },
+    "1Y_2025": {
+      "ret": 0.1269,
+      "sh": 0.81,
+      "dd": -0.1185
+    },
+    "3Y_2022_2024": {
+      "ret": 0.3187,
+      "sh": 0.52,
+      "dd": -0.1163
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5602,
+      "sh": 1.06,
+      "dd": -0.1182
+    },
+    "5Y_2020_2024": {
+      "ret": 1.0808,
+      "sh": 0.81,
+      "dd": -0.1778
+    },
+    "1Y_2020": {
+      "ret": 0.2318,
+      "sh": 0.87,
+      "dd": -0.1778
+    },
+    "1Y_2021": {
+      "ret": 0.2786,
+      "sh": 1.63,
+      "dd": -0.0428
+    },
+    "1Y_2022": {
+      "ret": -0.0407,
+      "sh": -0.59,
+      "dd": -0.1163
+    },
+    "3Y_2020_2022": {
+      "ret": 0.5142,
+      "sh": 0.68,
+      "dd": -0.1778
+    },
+    "3Y_2021_2023": {
+      "ret": 0.4331,
+      "sh": 0.71,
+      "dd": -0.1162
+    },
+    "5Y_2021_2025": {
+      "ret": 0.923,
+      "sh": 0.84,
+      "dd": -0.1178
+    }
+  }
+}

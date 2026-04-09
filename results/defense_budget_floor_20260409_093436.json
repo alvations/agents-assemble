@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.6169934438126836,
+    "cagr": 0.17437913243585546,
+    "annual_volatility": 0.129602604932811,
+    "sharpe_ratio": 1.006842797120217,
+    "sortino_ratio": 1.4514238363962184,
+    "calmar_ratio": 1.5064658632554186,
+    "max_drawdown": -0.11575378950773463,
+    "max_drawdown_date": "2024-12-18",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.2586486628694955,
+    "num_trading_days": 751,
+    "skewness": -0.48311017298580233,
+    "kurtosis": 4.69575496238679,
+    "best_day": 0.03330266034961671,
+    "worst_day": -0.05042584385174531,
+    "avg_daily_return": 0.0006734651376508573,
+    "black_swan_resilience": 75.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.056927014941063,
+    "beta": 0.32291605024252157,
+    "information_ratio": -0.3590157566420426,
+    "tracking_error": 0.15856411282199573
+  },
+  "trade_metrics": {
+    "num_trades": 968,
+    "num_buys": 484,
+    "num_sells": 484,
+    "total_commission": 0.0,
+    "total_slippage": 3641.4117211847306,
+    "total_transaction_costs": 3641.4117211847306,
+    "avg_trade_size": 3761.788968166044
+  },
+  "final_positions": {
+    "LMT": {
+      "qty": 33.0,
+      "avg_cost": 465.321119609632,
+      "realized_pnl": -2669.5727000989427
+    },
+    "HII": {
+      "qty": 47.0,
+      "avg_cost": 309.8801513495303,
+      "realized_pnl": 5601.912462549021
+    },
+    "LDOS": {
+      "qty": 106.0,
+      "avg_cost": 184.43527710613702,
+      "realized_pnl": 3950.236617513216
+    },
+    "RTX": {
+      "qty": 88.0,
+      "avg_cost": 158.7337104719114,
+      "realized_pnl": 6020.250969770392
+    },
+    "NOC": {
+      "qty": 34.0,
+      "avg_cost": 561.1744659318232,
+      "realized_pnl": -4203.739026237939
+    },
+    "GD": {
+      "qty": 58.0,
+      "avg_cost": 329.91920115037993,
+      "realized_pnl": 4246.698737522811
+    },
+    "KTOS": {
+      "qty": 254.0,
+      "avg_cost": 80.23727487128095,
+      "realized_pnl": 29748.79689960364
+    },
+    "LHX": {
+      "qty": 67.0,
+      "avg_cost": 279.3961051547813,
+      "realized_pnl": 3007.8000927336348
+    }
+  },
+  "source": "unconventional",
+  "description": "Defense primes with locked-in backlogs. Buy dips on peace headlines \u2014 revenue is already contracted.",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2174,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1016,
+  "avg_3Y_return": 0.2791,
+  "avg_5Y_return": 0.5245,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2020": {
+      "ret": -0.0734,
+      "sh": -0.89,
+      "dd": -0.1952
+    },
+    "1Y_2021": {
+      "ret": 0.0756,
+      "sh": 0.32,
+      "dd": -0.0973
+    },
+    "1Y_2022": {
+      "ret": 0.0592,
+      "sh": 0.2,
+      "dd": -0.1181
+    },
+    "1Y_2023": {
+      "ret": 0.0776,
+      "sh": 0.41,
+      "dd": -0.0576
+    },
+    "1Y_2024": {
+      "ret": 0.1047,
+      "sh": 0.54,
+      "dd": -0.1157
+    },
+    "1Y_2025": {
+      "ret": 0.3657,
+      "sh": 1.88,
+      "dd": -0.0929
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0277,
+      "sh": -0.14,
+      "dd": -0.1952
+    },
+    "3Y_2021_2023": {
+      "ret": 0.2219,
+      "sh": 0.27,
+      "dd": -0.1177
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2499,
+      "sh": 0.33,
+      "dd": -0.1181
+    },
+    "3Y_2023_2025": {
+      "ret": 0.617,
+      "sh": 1.01,
+      "dd": -0.1158
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2131,
+      "sh": 0.06,
+      "dd": -0.1952
+    },
+    "5Y_2021_2025": {
+      "ret": 0.836,
+      "sh": 0.67,
+      "dd": -0.1177
+    }
+  }
+}

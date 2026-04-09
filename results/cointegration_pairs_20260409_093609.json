@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 0.06211521961205224,
+    "cagr": 0.020360964736103382,
+    "annual_volatility": 0.03871647601701622,
+    "sharpe_ratio": -0.47144495678499043,
+    "sortino_ratio": -0.636638773211767,
+    "calmar_ratio": 0.33064498018152466,
+    "max_drawdown": -0.06157953683411488,
+    "max_drawdown_date": "2023-09-26",
+    "win_rate": 0.48601864181091875,
+    "profit_factor": 1.1078387315553482,
+    "num_trading_days": 751,
+    "skewness": -0.5079165742959297,
+    "kurtosis": 6.375422854329658,
+    "best_day": 0.010015487213713703,
+    "worst_day": -0.016025338584881754,
+    "avg_daily_return": 8.321856373289245e-05,
+    "black_swan_resilience": 77.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.21094518264081508,
+    "beta": 0.10697759007980842,
+    "information_ratio": -1.4908023234596608,
+    "tracking_error": 0.14149775548463114
+  },
+  "trade_metrics": {
+    "num_trades": 806,
+    "num_buys": 399,
+    "num_sells": 407,
+    "total_commission": 0.0,
+    "total_slippage": 4920.553512121194,
+    "total_transaction_costs": 4920.553512121194,
+    "avg_trade_size": 6104.905101887346
+  },
+  "final_positions": {
+    "UPS": {
+      "qty": 129.0,
+      "avg_cost": 98.81201171875,
+      "realized_pnl": -658.7749633789065
+    },
+    "PG": {
+      "qty": 90.0,
+      "avg_cost": 142.1705780029297,
+      "realized_pnl": 255.81176757812693
+    }
+  },
+  "source": "math",
+  "description": "Long laggard in cointegrated pairs when spread Z > 2",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0009,
+  "consistency_score": 0.08,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0067,
+  "avg_3Y_return": -0.0065,
+  "avg_5Y_return": 0.036,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0044,
+      "sh": -1.08,
+      "dd": -0.0616
+    },
+    "1Y_2024": {
+      "ret": 0.0324,
+      "sh": -0.18,
+      "dd": -0.0247
+    },
+    "1Y_2025": {
+      "ret": 0.0325,
+      "sh": -0.15,
+      "dd": -0.0246
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0687,
+      "sh": -1.36,
+      "dd": -0.1404
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0621,
+      "sh": -0.47,
+      "dd": -0.0616
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0101,
+      "sh": -0.7,
+      "dd": -0.1398
+    },
+    "1Y_2020": {
+      "ret": -0.0179,
+      "sh": -0.77,
+      "dd": -0.118
+    },
+    "1Y_2021": {
+      "ret": 0.0895,
+      "sh": 1.18,
+      "dd": -0.0211
+    },
+    "1Y_2022": {
+      "ret": -0.0919,
+      "sh": -2.34,
+      "dd": -0.1117
+    },
+    "3Y_2020_2022": {
+      "ret": -0.015,
+      "sh": -0.73,
+      "dd": -0.118
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0045,
+      "sh": -0.84,
+      "dd": -0.1401
+    },
+    "5Y_2021_2025": {
+      "ret": 0.0619,
+      "sh": -0.6,
+      "dd": -0.1401
+    }
+  }
+}

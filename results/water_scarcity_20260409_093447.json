@@ -1,0 +1,130 @@
+{
+  "metrics": {
+    "total_return": -0.0897993741259866,
+    "cagr": -0.030981054759046778,
+    "annual_volatility": 0.08500175002814932,
+    "sharpe_ratio": -0.7903223466885092,
+    "sortino_ratio": -1.0315609877121277,
+    "calmar_ratio": -0.21249937219480255,
+    "max_drawdown": -0.1457936295955068,
+    "max_drawdown_date": "2025-05-14",
+    "win_rate": 0.43541944074567246,
+    "profit_factor": 0.9413978638747992,
+    "num_trading_days": 751,
+    "skewness": -0.5237381855872693,
+    "kurtosis": 2.5260710828710664,
+    "best_day": 0.018571815275514103,
+    "worst_day": -0.02887690164057477,
+    "avg_daily_return": -0.00011093260766459837,
+    "black_swan_resilience": 73.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.26228720213596524,
+    "beta": 0.24479450233223682,
+    "information_ratio": -1.8902969708126058,
+    "tracking_error": 0.1387544952913999
+  },
+  "trade_metrics": {
+    "num_trades": 228,
+    "num_buys": 100,
+    "num_sells": 128,
+    "total_commission": 0.0,
+    "total_slippage": 1622.177609731673,
+    "total_transaction_costs": 1622.177609731673,
+    "avg_trade_size": 7114.814077770501
+  },
+  "final_positions": {
+    "YORW": {
+      "qty": 349.0,
+      "avg_cost": 30.78531265258789,
+      "realized_pnl": -1673.7272701263432
+    },
+    "CGW": {
+      "qty": 176.0,
+      "avg_cost": 63.03103256225586,
+      "realized_pnl": 340.06464385986385
+    },
+    "A": {
+      "qty": 74.0,
+      "avg_cost": 144.10304260253906,
+      "realized_pnl": -3432.8015365600577
+    },
+    "ECL": {
+      "qty": 41.0,
+      "avg_cost": 271.3698425292969,
+      "realized_pnl": 5067.45362854004
+    }
+  },
+  "source": "crisis",
+  "description": "Water infrastructure and technology: secular scarcity mega-trend",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.0076,
+  "consistency_score": 0.17,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0013,
+  "avg_3Y_return": -0.0861,
+  "avg_5Y_return": -0.0849,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0526,
+      "sh": -1.07,
+      "dd": -0.1013
+    },
+    "1Y_2024": {
+      "ret": -0.0226,
+      "sh": -0.59,
+      "dd": -0.1056
+    },
+    "1Y_2025": {
+      "ret": -0.0116,
+      "sh": -0.69,
+      "dd": -0.0397
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1985,
+      "sh": -1.35,
+      "dd": -0.2051
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0898,
+      "sh": -0.79,
+      "dd": -0.1458
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0208,
+      "sh": -0.39,
+      "dd": -0.2667
+    },
+    "1Y_2020": {
+      "ret": 0.1476,
+      "sh": 0.83,
+      "dd": -0.1097
+    },
+    "1Y_2021": {
+      "ret": 0.0814,
+      "sh": 0.42,
+      "dd": -0.09
+    },
+    "1Y_2022": {
+      "ret": -0.1343,
+      "sh": -3.27,
+      "dd": -0.1388
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0581,
+      "sh": -0.15,
+      "dd": -0.2053
+    },
+    "3Y_2021_2023": {
+      "ret": -0.1142,
+      "sh": -0.89,
+      "dd": -0.2554
+    },
+    "5Y_2021_2025": {
+      "ret": -0.1491,
+      "sh": -0.79,
+      "dd": -0.2924
+    }
+  }
+}

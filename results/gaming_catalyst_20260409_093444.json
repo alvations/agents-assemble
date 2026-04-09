@@ -1,0 +1,130 @@
+{
+  "metrics": {
+    "total_return": 0.2034472386199926,
+    "cagr": 0.06390066949518114,
+    "annual_volatility": 0.1580607556875233,
+    "sharpe_ratio": 0.2240851010786092,
+    "sortino_ratio": 0.3122333786694352,
+    "calmar_ratio": 0.2694201601555039,
+    "max_drawdown": -0.23717850014749808,
+    "max_drawdown_date": "2024-09-06",
+    "win_rate": 0.5206391478029294,
+    "profit_factor": 1.0893078694999192,
+    "num_trading_days": 751,
+    "skewness": -0.23684993728073225,
+    "kurtosis": 2.8555852211662103,
+    "best_day": 0.041605336773006485,
+    "worst_day": -0.046805161460833467,
+    "avg_daily_return": 0.00029620168983412,
+    "black_swan_resilience": 72.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16740547788173732,
+    "beta": 0.5428700430354637,
+    "information_ratio": -1.1047329897129103,
+    "tracking_error": 0.15153478663223535
+  },
+  "trade_metrics": {
+    "num_trades": 891,
+    "num_buys": 413,
+    "num_sells": 478,
+    "total_commission": 0.0,
+    "total_slippage": 6187.497716019624,
+    "total_transaction_costs": 6187.497716019624,
+    "avg_trade_size": 6944.441881054579
+  },
+  "final_positions": {
+    "U": {
+      "qty": 402.0,
+      "avg_cost": 45.21534942513082,
+      "realized_pnl": -1402.640615463256
+    },
+    "EA": {
+      "qty": 89.0,
+      "avg_cost": 203.59735107421875,
+      "realized_pnl": 3655.178649902348
+    },
+    "TTWO": {
+      "qty": 71.0,
+      "avg_cost": 248.5800018310547,
+      "realized_pnl": 3121.7213287353497
+    },
+    "WBD": {
+      "qty": 628.0,
+      "avg_cost": 28.75,
+      "realized_pnl": 6136.026991844178
+    }
+  },
+  "source": "crisis",
+  "description": "Buy-the-rumor on game publishers: NTDOY, TTWO, EA momentum",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0425,
+  "consistency_score": 0.5,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0765,
+  "avg_3Y_return": 0.0997,
+  "avg_5Y_return": 0.1436,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0541,
+      "sh": 0.17,
+      "dd": -0.1561
+    },
+    "1Y_2024": {
+      "ret": -0.0542,
+      "sh": -0.64,
+      "dd": -0.1921
+    },
+    "1Y_2025": {
+      "ret": 0.2238,
+      "sh": 1.0,
+      "dd": -0.1929
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0222,
+      "sh": -0.18,
+      "dd": -0.2371
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2034,
+      "sh": 0.22,
+      "dd": -0.2372
+    },
+    "5Y_2020_2024": {
+      "ret": 0.1599,
+      "sh": 0.0,
+      "dd": -0.2372
+    },
+    "1Y_2020": {
+      "ret": 0.2931,
+      "sh": 1.44,
+      "dd": -0.0764
+    },
+    "1Y_2021": {
+      "ret": -0.1029,
+      "sh": -1.0,
+      "dd": -0.1907
+    },
+    "1Y_2022": {
+      "ret": 0.0452,
+      "sh": 0.1,
+      "dd": -0.075
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1863,
+      "sh": 0.2,
+      "dd": -0.2132
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0133,
+      "sh": -0.27,
+      "dd": -0.2132
+    },
+    "5Y_2021_2025": {
+      "ret": 0.1272,
+      "sh": -0.03,
+      "dd": -0.2371
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "strategy_name": "singapore_alpha",
+  "is_winning": true,
+  "generated_at": "2026-04-09T09:33:45.624688",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "11.3%",
+    "stop_loss": "12.7%",
+    "take_profit_target": "7.3%",
+    "max_drawdown_tolerance": "10.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "ME8U.SI",
+      "action": "BUY",
+      "current_position": 7448.0,
+      "annual_volatility": "15%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "8.1% below entry",
+      "take_profit": "4.6% above entry",
+      "position_size": "17.8% of portfolio",
+      "trailing_stop": "5.7% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ME8U.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/ME8U.SI/"
+    },
+    {
+      "symbol": "AJBU.SI",
+      "action": "BUY",
+      "current_position": 6715.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "11.5% below entry",
+      "take_profit": "6.6% above entry",
+      "position_size": "12.5% of portfolio",
+      "trailing_stop": "8.0% trailing after 2.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AJBU.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/AJBU.SI/"
+    },
+    {
+      "symbol": "O39.SI",
+      "action": "BUY",
+      "current_position": 637.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "8.8% below entry",
+      "take_profit": "5.1% above entry",
+      "position_size": "16.2% of portfolio",
+      "trailing_stop": "6.2% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=O39.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/O39.SI/"
+    },
+    {
+      "symbol": "F34.SI",
+      "action": "BUY",
+      "current_position": 3665.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.8% below entry",
+      "take_profit": "5.6% above entry",
+      "position_size": "14.7% of portfolio",
+      "trailing_stop": "6.8% trailing after 2.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=F34.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/F34.SI/"
+    },
+    {
+      "symbol": "A17U.SI",
+      "action": "BUY",
+      "current_position": 5587.0,
+      "annual_volatility": "15%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "8.2% below entry",
+      "take_profit": "4.7% above entry",
+      "position_size": "17.4% of portfolio",
+      "trailing_stop": "5.8% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=A17U.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/A17U.SI/"
+    },
+    {
+      "symbol": "N2IU.SI",
+      "action": "BUY",
+      "current_position": 8390.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.2% below entry",
+      "take_profit": "5.3% above entry",
+      "position_size": "15.6% of portfolio",
+      "trailing_stop": "6.4% trailing after 2.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=N2IU.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/N2IU.SI/"
+    },
+    {
+      "symbol": "C38U.SI",
+      "action": "BUY",
+      "current_position": 5210.0,
+      "annual_volatility": "15%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "8.2% below entry",
+      "take_profit": "4.7% above entry",
+      "position_size": "17.4% of portfolio",
+      "trailing_stop": "5.8% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=C38U.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/C38U.SI/"
+    },
+    {
+      "symbol": "Y92.SI",
+      "action": "BUY",
+      "current_position": 33347.0,
+      "annual_volatility": "20%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "10.8% below entry",
+      "take_profit": "6.2% above entry",
+      "position_size": "13.3% of portfolio",
+      "trailing_stop": "7.6% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=Y92.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/Y92.SI/"
+    },
+    {
+      "symbol": "U11.SI",
+      "action": "BUY",
+      "current_position": 436.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.0% below entry",
+      "take_profit": "5.2% above entry",
+      "position_size": "15.9% of portfolio",
+      "trailing_stop": "6.3% trailing after 2.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=U11.SI",
+      "yahoo_url": "https://finance.yahoo.com/quote/U11.SI/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "50.37%",
+    "sharpe_ratio": "0.80",
+    "max_drawdown": "-10.58%",
+    "win_rate": "52.79%",
+    "alpha": "-6.54%"
+  }
+}

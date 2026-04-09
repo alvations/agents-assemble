@@ -1,0 +1,160 @@
+{
+  "metrics": {
+    "total_return": -0.051265600828407365,
+    "cagr": -0.017448355416283645,
+    "annual_volatility": 0.09795010309250997,
+    "sharpe_ratio": -0.5316342753264911,
+    "sortino_ratio": -0.7038685228876689,
+    "calmar_ratio": -0.11285080446385687,
+    "max_drawdown": -0.15461436450700616,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.507323568575233,
+    "profit_factor": 0.9773364343512867,
+    "num_trading_days": 751,
+    "skewness": -0.8304777053118126,
+    "kurtosis": 9.778646314457182,
+    "best_day": 0.033204029577723615,
+    "worst_day": -0.055424190739159496,
+    "avg_daily_return": -5.0991534334696044e-05,
+    "black_swan_resilience": 69.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2487545027932021,
+    "beta": 0.3638938029608591,
+    "information_ratio": -1.9660403810719065,
+    "tracking_error": 0.126525632529266
+  },
+  "trade_metrics": {
+    "num_trades": 467,
+    "num_buys": 226,
+    "num_sells": 241,
+    "total_commission": 0.0,
+    "total_slippage": 2593.6164229698193,
+    "total_transaction_costs": 2593.6164229698193,
+    "avg_trade_size": 5553.782490299396
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 42.0,
+      "avg_cost": 160.47183291051738,
+      "realized_pnl": 131.093379946808
+    },
+    "NEE": {
+      "qty": 102.0,
+      "avg_cost": 72.64048075879741,
+      "realized_pnl": -1797.4435532398713
+    },
+    "MRK": {
+      "qty": 85.0,
+      "avg_cost": 100.22469329833984,
+      "realized_pnl": -1665.8559570312502
+    },
+    "EMR": {
+      "qty": 65.0,
+      "avg_cost": 138.8912811279297,
+      "realized_pnl": 1422.1421051025386
+    },
+    "LOW": {
+      "qty": 35.0,
+      "avg_cost": 245.2884063720703,
+      "realized_pnl": 352.38253784179733
+    },
+    "XOM": {
+      "qty": 74.0,
+      "avg_cost": 112.3610323951358,
+      "realized_pnl": -1566.3550901867097
+    },
+    "ECL": {
+      "qty": 32.0,
+      "avg_cost": 271.3698425292969,
+      "realized_pnl": 3843.676208496093
+    },
+    "PEP": {
+      "qty": 58.0,
+      "avg_cost": 146.75071716308594,
+      "realized_pnl": -591.7991333007818
+    },
+    "WMT": {
+      "qty": 77.0,
+      "avg_cost": 111.07515716552734,
+      "realized_pnl": 2397.4516029357906
+    },
+    "MCD": {
+      "qty": 28.0,
+      "avg_cost": 301.88360595703125,
+      "realized_pnl": -268.58172607421795
+    }
+  },
+  "source": "unconventional",
+  "description": "Quality dividends + momentum: only buy Aristocrats in uptrends",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0446,
+  "consistency_score": 0.42,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0559,
+  "avg_3Y_return": 0.0926,
+  "avg_5Y_return": 0.2249,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.1066,
+      "sh": -1.67,
+      "dd": -0.1356
+    },
+    "1Y_2024": {
+      "ret": 0.0903,
+      "sh": 0.58,
+      "dd": -0.0705
+    },
+    "1Y_2025": {
+      "ret": -0.0163,
+      "sh": -0.44,
+      "dd": -0.1062
+    },
+    "3Y_2022_2024": {
+      "ret": -0.008,
+      "sh": -0.33,
+      "dd": -0.1548
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0513,
+      "sh": -0.53,
+      "dd": -0.1546
+    },
+    "5Y_2020_2024": {
+      "ret": 0.3184,
+      "sh": 0.19,
+      "dd": -0.1547
+    },
+    "1Y_2020": {
+      "ret": 0.1623,
+      "sh": 0.77,
+      "dd": -0.1509
+    },
+    "1Y_2021": {
+      "ret": 0.1787,
+      "sh": 1.23,
+      "dd": -0.0634
+    },
+    "1Y_2022": {
+      "ret": 0.0271,
+      "sh": -0.02,
+      "dd": -0.1548
+    },
+    "3Y_2020_2022": {
+      "ret": 0.3652,
+      "sh": 0.54,
+      "dd": -0.1547
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0646,
+      "sh": -0.1,
+      "dd": -0.1548
+    },
+    "5Y_2021_2025": {
+      "ret": 0.1314,
+      "sh": -0.08,
+      "dd": -0.1548
+    }
+  }
+}

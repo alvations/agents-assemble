@@ -1,0 +1,170 @@
+{
+  "metrics": {
+    "total_return": 0.42801565747372616,
+    "cagr": 0.12656116866955425,
+    "annual_volatility": 0.1550272255684473,
+    "sharpe_ratio": 0.5958787056175936,
+    "sortino_ratio": 0.8480368571819764,
+    "calmar_ratio": 0.5878246573243499,
+    "max_drawdown": -0.2153042869035695,
+    "max_drawdown_date": "2025-06-23",
+    "win_rate": 0.5352862849533955,
+    "profit_factor": 1.1542104110676616,
+    "num_trading_days": 751,
+    "skewness": -0.29649162720389133,
+    "kurtosis": 2.10434539543004,
+    "best_day": 0.03327114436401768,
+    "worst_day": -0.052919220266355205,
+    "avg_daily_return": 0.0005222269362325845,
+    "black_swan_resilience": 72.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10474497870736421,
+    "beta": 0.5852483942042969,
+    "information_ratio": -0.7403666152520328,
+    "tracking_error": 0.14147717704924784
+  },
+  "trade_metrics": {
+    "num_trades": 1850,
+    "num_buys": 869,
+    "num_sells": 981,
+    "total_commission": 0.0,
+    "total_slippage": 9585.910564137224,
+    "total_transaction_costs": 9585.910564137224,
+    "avg_trade_size": 5181.573277912011
+  },
+  "final_positions": {
+    "LLY": {
+      "qty": 10.0,
+      "avg_cost": 909.6012517755681,
+      "realized_pnl": 5945.149205988106
+    },
+    "MRK": {
+      "qty": 102.0,
+      "avg_cost": 85.71829395294189,
+      "realized_pnl": -1573.8459171295178
+    },
+    "JNJ": {
+      "qty": 52.0,
+      "avg_cost": 181.8703987482763,
+      "realized_pnl": -31.676673536894157
+    },
+    "ISRG": {
+      "qty": 19.0,
+      "avg_cost": 566.8900146484375,
+      "realized_pnl": 6995.46017456055
+    },
+    "ABBV": {
+      "qty": 47.0,
+      "avg_cost": 225.6345977783203,
+      "realized_pnl": 849.6411743164028
+    },
+    "XLV": {
+      "qty": 69.0,
+      "avg_cost": 155.17208862304688,
+      "realized_pnl": 1293.2815322875967
+    },
+    "TSM": {
+      "qty": 36.0,
+      "avg_cost": 292.4559020996094,
+      "realized_pnl": 6307.619407653808
+    },
+    "EWT": {
+      "qty": 170.0,
+      "avg_cost": 63.33000183105469,
+      "realized_pnl": -1191.4886932373054
+    },
+    "EWJ": {
+      "qty": 133.0,
+      "avg_cost": 81.08999633789062,
+      "realized_pnl": 806.1330871582057
+    },
+    "TM": {
+      "qty": 50.0,
+      "avg_cost": 214.84259765625,
+      "realized_pnl": 2545.261077880858
+    },
+    "INFY": {
+      "qty": 585.0,
+      "avg_cost": 19.135042598104885,
+      "realized_pnl": -857.1915397644041
+    },
+    "REGN": {
+      "qty": 14.0,
+      "avg_cost": 706.2049026489258,
+      "realized_pnl": 3513.8856658935556
+    }
+  },
+  "source": "hedge_fund",
+  "description": "2025 hedge fund winner: healthcare + Asian equities momentum",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2771,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1581,
+  "avg_3Y_return": 0.3346,
+  "avg_5Y_return": 0.791,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1512,
+      "sh": 0.82,
+      "dd": -0.0862
+    },
+    "1Y_2024": {
+      "ret": 0.2854,
+      "sh": 1.48,
+      "dd": -0.0812
+    },
+    "1Y_2025": {
+      "ret": -0.0304,
+      "sh": -0.31,
+      "dd": -0.2164
+    },
+    "3Y_2022_2024": {
+      "ret": 0.3094,
+      "sh": 0.42,
+      "dd": -0.195
+    },
+    "3Y_2023_2025": {
+      "ret": 0.428,
+      "sh": 0.6,
+      "dd": -0.2153
+    },
+    "5Y_2020_2024": {
+      "ret": 1.2277,
+      "sh": 0.8,
+      "dd": -0.2802
+    },
+    "1Y_2020": {
+      "ret": 0.5935,
+      "sh": 2.03,
+      "dd": -0.1468
+    },
+    "1Y_2021": {
+      "ret": 0.0625,
+      "sh": 0.22,
+      "dd": -0.1493
+    },
+    "1Y_2022": {
+      "ret": -0.1136,
+      "sh": -0.93,
+      "dd": -0.195
+    },
+    "3Y_2020_2022": {
+      "ret": 0.5084,
+      "sh": 0.63,
+      "dd": -0.2802
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0927,
+      "sh": 0.01,
+      "dd": -0.2803
+    },
+    "5Y_2021_2025": {
+      "ret": 0.3543,
+      "sh": 0.22,
+      "dd": -0.2803
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "metrics": {
+    "total_return": 0.16497810441253535,
+    "cagr": 0.052402410536734445,
+    "annual_volatility": 0.06612703148521834,
+    "sharpe_ratio": 0.21480646093683897,
+    "sortino_ratio": 0.30528636953775273,
+    "calmar_ratio": 0.6196441553894606,
+    "max_drawdown": -0.08456855451787215,
+    "max_drawdown_date": "2023-10-19",
+    "win_rate": 0.5233022636484687,
+    "profit_factor": 1.139706285981343,
+    "num_trading_days": 751,
+    "skewness": -0.056106464595485454,
+    "kurtosis": 0.7620316909836968,
+    "best_day": 0.014571421695465103,
+    "worst_day": -0.016900004782462563,
+    "avg_daily_return": 0.0002120169802737972,
+    "black_swan_resilience": 82.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.178903736840184,
+    "beta": 0.11205334011532632,
+    "information_ratio": -1.1885725233427635,
+    "tracking_error": 0.15051983225813753
+  },
+  "trade_metrics": {
+    "num_trades": 225,
+    "num_buys": 105,
+    "num_sells": 120,
+    "total_commission": 0.0,
+    "total_slippage": 229.01185811996461,
+    "total_transaction_costs": 229.01185811996461,
+    "avg_trade_size": 1017.830480533176
+  },
+  "final_positions": {
+    "AGG": {
+      "qty": 94.0,
+      "avg_cost": 89.10114145318354,
+      "realized_pnl": 839.5940428150709
+    },
+    "BND": {
+      "qty": 127.0,
+      "avg_cost": 66.13227178324844,
+      "realized_pnl": 843.3479702079106
+    },
+    "LQD": {
+      "qty": 160.0,
+      "avg_cost": 97.40840580390324,
+      "realized_pnl": 308.90983951318674
+    },
+    "FBND": {
+      "qty": 128.0,
+      "avg_cost": 41.0070042644978,
+      "realized_pnl": 1057.604324786382
+    },
+    "SCHI": {
+      "qty": 514.0,
+      "avg_cost": 18.55784867237073,
+      "realized_pnl": 71.177508309004
+    },
+    "VTEB": {
+      "qty": 234.0,
+      "avg_cost": 45.14100958978136,
+      "realized_pnl": 44.91637950688607
+    },
+    "TLT": {
+      "qty": 200.0,
+      "avg_cost": 87.10594416810764,
+      "realized_pnl": -181.67091521880587
+    },
+    "VWOB": {
+      "qty": 211.0,
+      "avg_cost": 57.045623627268526,
+      "realized_pnl": 480.84126125697964
+    },
+    "HYG": {
+      "qty": 177.0,
+      "avg_cost": 69.51085330851741,
+      "realized_pnl": 592.0717275936648
+    },
+    "SPBO": {
+      "qty": 201.0,
+      "avg_cost": 25.471010214069256,
+      "realized_pnl": 793.9612686651291
+    }
+  },
+  "source": "portfolio",
+  "description": "Diversified bonds: duration ladder + credit spectrum + EM, 3-5% yield target",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.003,
+  "consistency_score": 0.33,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0147,
+  "avg_3Y_return": -0.0275,
+  "avg_5Y_return": -0.019,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.068,
+      "sh": 0.38,
+      "dd": -0.0846
+    },
+    "1Y_2024": {
+      "ret": 0.0185,
+      "sh": -0.31,
+      "dd": -0.044
+    },
+    "1Y_2025": {
+      "ret": 0.0754,
+      "sh": 0.67,
+      "dd": -0.0318
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0756,
+      "sh": -0.78,
+      "dd": -0.1946
+    },
+    "3Y_2023_2025": {
+      "ret": 0.165,
+      "sh": 0.21,
+      "dd": -0.0846
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0152,
+      "sh": -0.47,
+      "dd": -0.2114
+    },
+    "1Y_2020": {
+      "ret": 0.0874,
+      "sh": 0.46,
+      "dd": -0.1582
+    },
+    "1Y_2021": {
+      "ret": -0.01,
+      "sh": -0.96,
+      "dd": -0.0527
+    },
+    "1Y_2022": {
+      "ret": -0.151,
+      "sh": -2.12,
+      "dd": -0.1946
+    },
+    "3Y_2020_2022": {
+      "ret": -0.0955,
+      "sh": -0.78,
+      "dd": -0.2114
+    },
+    "3Y_2021_2023": {
+      "ret": -0.1041,
+      "sh": -0.94,
+      "dd": -0.2115
+    },
+    "5Y_2021_2025": {
+      "ret": -0.0227,
+      "sh": -0.59,
+      "dd": -0.2115
+    }
+  }
+}

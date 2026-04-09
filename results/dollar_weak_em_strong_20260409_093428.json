@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 0.36749919741857995,
+    "cagr": 0.11036207777057672,
+    "annual_volatility": 0.0815525441918386,
+    "sharpe_ratio": 0.8477369260193538,
+    "sortino_ratio": 1.2820046991348748,
+    "calmar_ratio": 0.8472952404485932,
+    "max_drawdown": -0.13025221021204658,
+    "max_drawdown_date": "2023-06-29",
+    "win_rate": 0.5752330226364847,
+    "profit_factor": 1.3250682038039352,
+    "num_trading_days": 751,
+    "skewness": 0.4850755806155004,
+    "kurtosis": 7.788732330901329,
+    "best_day": 0.033276798174367794,
+    "worst_day": -0.022490041664146143,
+    "avg_daily_return": 0.0004299955101017658,
+    "black_swan_resilience": 86.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12094406960634174,
+    "beta": 0.19347338858587249,
+    "information_ratio": -0.8326719342172649,
+    "tracking_error": 0.14524816393629572
+  },
+  "trade_metrics": {
+    "num_trades": 636,
+    "num_buys": 302,
+    "num_sells": 334,
+    "total_commission": 0.0,
+    "total_slippage": 1422.960310748099,
+    "total_transaction_costs": 1422.960310748099,
+    "avg_trade_size": 2237.3589791636796
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 34.0,
+      "avg_cost": 233.45813544624542,
+      "realized_pnl": 4347.356771798321
+    },
+    "EEM": {
+      "qty": 250.0,
+      "avg_cost": 39.96527538842193,
+      "realized_pnl": 1043.1632761215926
+    }
+  },
+  "source": "unconventional",
+  "description": "USD weakens \u2192 EM stocks + commodities + gold outperform. Inverse dollar-to-EM signal.",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1239,
+  "consistency_score": 0.58,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1078,
+  "avg_3Y_return": 0.1961,
+  "avg_5Y_return": 0.4088,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0062,
+      "sh": -0.27,
+      "dd": -0.1303
+    },
+    "1Y_2024": {
+      "ret": 0.1035,
+      "sh": 0.96,
+      "dd": -0.022
+    },
+    "1Y_2025": {
+      "ret": 0.2324,
+      "sh": 2.41,
+      "dd": -0.0343
+    },
+    "3Y_2022_2024": {
+      "ret": 0.089,
+      "sh": -0.11,
+      "dd": -0.1301
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3675,
+      "sh": 0.85,
+      "dd": -0.1303
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4448,
+      "sh": 0.41,
+      "dd": -0.1302
+    },
+    "1Y_2020": {
+      "ret": 0.2889,
+      "sh": 1.74,
+      "dd": -0.0462
+    },
+    "1Y_2021": {
+      "ret": 0.0225,
+      "sh": -0.08,
+      "dd": -0.104
+    },
+    "1Y_2022": {
+      "ret": -0.0065,
+      "sh": -1.27,
+      "dd": -0.0474
+    },
+    "3Y_2020_2022": {
+      "ret": 0.318,
+      "sh": 0.57,
+      "dd": -0.1039
+    },
+    "3Y_2021_2023": {
+      "ret": 0.01,
+      "sh": -0.34,
+      "dd": -0.1302
+    },
+    "5Y_2021_2025": {
+      "ret": 0.3728,
+      "sh": 0.33,
+      "dd": -0.1302
+    }
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "metrics": {
+    "total_return": -0.24673319692761397,
+    "cagr": -0.09041751810558685,
+    "annual_volatility": 0.09096301128426143,
+    "sharpe_ratio": -1.4307464863178274,
+    "sortino_ratio": -1.8935507288335958,
+    "calmar_ratio": -0.3156735092531198,
+    "max_drawdown": -0.28642732270919324,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.44607190412782954,
+    "profit_factor": 0.8344622170063861,
+    "num_trading_days": 751,
+    "skewness": -0.08877965438930983,
+    "kurtosis": 2.9688950801453498,
+    "best_day": 0.02285459333263451,
+    "worst_day": -0.027694847299675085,
+    "avg_daily_return": -0.00036079858474780834,
+    "black_swan_resilience": 71.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.3217236654825053,
+    "beta": 0.3556037863622476,
+    "information_ratio": -2.61993079294536,
+    "tracking_error": 0.1227985358807205
+  },
+  "trade_metrics": {
+    "num_trades": 5610,
+    "num_buys": 2807,
+    "num_sells": 2803,
+    "total_commission": 0.0,
+    "total_slippage": 61115.62011067183,
+    "total_transaction_costs": 61115.62011067183,
+    "avg_trade_size": 10894.04993060107
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 28.0,
+      "avg_cost": 319.1398010253906,
+      "realized_pnl": 1651.6590881347656
+    },
+    "META": {
+      "qty": 14.0,
+      "avg_cost": 659.5253295898438,
+      "realized_pnl": 2923.5877990722656
+    },
+    "SPY": {
+      "qty": 13.0,
+      "avg_cost": 680.062744140625,
+      "realized_pnl": 2509.7861328125
+    },
+    "GOOGL": {
+      "qty": 29.0,
+      "avg_cost": 312.7798156738281,
+      "realized_pnl": 7324.713104248047
+    }
+  },
+  "source": "math",
+  "description": "Secretary problem applied to exits: sell after peak exceeds 37th pctile",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.0,
+  "consistency_score": 0.0,
+  "n_windows_tested": 12,
+  "avg_1Y_return": -0.1457,
+  "avg_3Y_return": -0.3727,
+  "avg_5Y_return": -0.5496,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.027,
+      "sh": -0.64,
+      "dd": -0.1276
+    },
+    "1Y_2024": {
+      "ret": -0.1233,
+      "sh": -1.81,
+      "dd": -0.1736
+    },
+    "1Y_2025": {
+      "ret": -0.146,
+      "sh": -2.36,
+      "dd": -0.1606
+    },
+    "3Y_2022_2024": {
+      "ret": -0.3396,
+      "sh": -1.76,
+      "dd": -0.3455
+    },
+    "3Y_2023_2025": {
+      "ret": -0.2467,
+      "sh": -1.43,
+      "dd": -0.2864
+    },
+    "5Y_2020_2024": {
+      "ret": -0.5521,
+      "sh": -1.77,
+      "dd": -0.5576
+    },
+    "1Y_2020": {
+      "ret": -0.1269,
+      "sh": -1.12,
+      "dd": -0.1647
+    },
+    "1Y_2021": {
+      "ret": -0.2073,
+      "sh": -2.77,
+      "dd": -0.2216
+    },
+    "1Y_2022": {
+      "ret": -0.2436,
+      "sh": -3.01,
+      "dd": -0.244
+    },
+    "3Y_2020_2022": {
+      "ret": -0.489,
+      "sh": -2.17,
+      "dd": -0.4901
+    },
+    "3Y_2021_2023": {
+      "ret": -0.4157,
+      "sh": -2.15,
+      "dd": -0.4506
+    },
+    "5Y_2021_2025": {
+      "ret": -0.5471,
+      "sh": -2.04,
+      "dd": -0.5501
+    }
+  }
+}

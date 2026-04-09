@@ -1,0 +1,158 @@
+{
+  "metrics": {
+    "total_return": 0.0017105512003607881,
+    "cagr": 0.000571816425109839,
+    "annual_volatility": 0.00865738607724024,
+    "sharpe_ratio": -4.460103741414251,
+    "sortino_ratio": -5.646408194410635,
+    "calmar_ratio": 0.047108736524229984,
+    "max_drawdown": -0.012138224611813353,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.013315579227696404,
+    "profit_factor": 1.0945723066221018,
+    "num_trading_days": 751,
+    "skewness": -0.6869265281414568,
+    "kurtosis": 123.17082087379175,
+    "best_day": 0.006743809853342997,
+    "worst_day": -0.006408108955357483,
+    "avg_daily_return": 2.4243071009182097e-06,
+    "black_swan_resilience": 78.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.23073433095180862,
+    "beta": 0.012885531061733808,
+    "information_ratio": -1.5203585489878308,
+    "tracking_error": 0.15176310292425332
+  },
+  "trade_metrics": {
+    "num_trades": 8,
+    "num_buys": 4,
+    "num_sells": 4,
+    "total_commission": 0.0,
+    "total_slippage": 54.62177796649933,
+    "total_transaction_costs": 54.62177796649933,
+    "avg_trade_size": 6827.722245812416
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AVGO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NFLX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CRM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PLTR": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "Multi-strategy consensus: momentum + value + growth + dividend",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.0,
+  "consistency_score": 0.0,
+  "n_windows_tested": 12,
+  "avg_1Y_return": -0.0025,
+  "avg_3Y_return": 0.0001,
+  "avg_5Y_return": -0.0036,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0113,
+      "sh": -2.28,
+      "dd": -0.0066
+    },
+    "1Y_2024": {
+      "ret": 0.0001,
+      "sh": -67.83,
+      "dd": -0.0004
+    },
+    "1Y_2025": {
+      "ret": -0.0095,
+      "sh": -5.62,
+      "dd": -0.012
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0077,
+      "sh": -4.26,
+      "dd": -0.0104
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0017,
+      "sh": -4.46,
+      "dd": -0.0121
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0054,
+      "sh": -3.03,
+      "dd": -0.0352
+    },
+    "1Y_2020": {
+      "ret": -0.013,
+      "sh": -2.03,
+      "dd": -0.0352
+    },
+    "1Y_2021": {
+      "ret": 0.0,
+      "sh": -Infinity,
+      "dd": 0.0
+    },
+    "1Y_2022": {
+      "ret": -0.0037,
+      "sh": -4.98,
+      "dd": -0.0096
+    },
+    "3Y_2020_2022": {
+      "ret": -0.0166,
+      "sh": -2.87,
+      "dd": -0.0352
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0075,
+      "sh": -4.27,
+      "dd": -0.0104
+    },
+    "5Y_2021_2025": {
+      "ret": -0.0018,
+      "sh": -5.15,
+      "dd": -0.0119
+    }
+  }
+}

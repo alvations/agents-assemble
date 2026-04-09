@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 0.46150895432083416,
+    "cagr": 0.13533093955579956,
+    "annual_volatility": 0.2062780969192312,
+    "sharpe_ratio": 0.5305371992965657,
+    "sortino_ratio": 0.7525140848051034,
+    "calmar_ratio": 0.4077576311810909,
+    "max_drawdown": -0.33189063602269453,
+    "max_drawdown_date": "2025-04-21",
+    "win_rate": 0.521970705725699,
+    "profit_factor": 1.1300127425000912,
+    "num_trading_days": 751,
+    "skewness": -0.30386153510918035,
+    "kurtosis": 1.735127148173567,
+    "best_day": 0.04065336496651839,
+    "worst_day": -0.05083950229495149,
+    "avg_daily_return": 0.000589928449361717,
+    "black_swan_resilience": 66.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.0959752078211189,
+    "beta": 0.7824646041398151,
+    "information_ratio": -0.5612829650785202,
+    "tracking_error": 0.17099255418822934
+  },
+  "trade_metrics": {
+    "num_trades": 1405,
+    "num_buys": 703,
+    "num_sells": 702,
+    "total_commission": 0.0,
+    "total_slippage": 6035.522949275495,
+    "total_transaction_costs": 6035.522949275495,
+    "avg_trade_size": 4295.745871370458
+  },
+  "final_positions": {
+    "AJINY": {
+      "qty": 821.0,
+      "avg_cost": 23.38336762276604,
+      "realized_pnl": 4000.570214828702
+    },
+    "AMKR": {
+      "qty": 289.0,
+      "avg_cost": 43.561220584272526,
+      "realized_pnl": 3999.359529326563
+    },
+    "ASML": {
+      "qty": 16.0,
+      "avg_cost": 1031.9601449498618,
+      "realized_pnl": 9280.013564314988
+    },
+    "LSRCY": {
+      "qty": 460.0,
+      "avg_cost": 37.84363887104859,
+      "realized_pnl": 15330.373755941755
+    },
+    "SHECY": {
+      "qty": 752.0,
+      "avg_cost": 15.318398093752918,
+      "realized_pnl": -516.908348211849
+    },
+    "SUOPY": {
+      "qty": 511.0,
+      "avg_cost": 17.88736163144772,
+      "realized_pnl": -5457.448329697527
+    },
+    "ENTG": {
+      "qty": 202.0,
+      "avg_cost": 83.56452687700927,
+      "realized_pnl": 1851.8635230889822
+    },
+    "TOELY": {
+      "qty": 161.0,
+      "avg_cost": 105.54148845791076,
+      "realized_pnl": 4764.100631713862
+    },
+    "GLW": {
+      "qty": 163.0,
+      "avg_cost": 88.09260414742134,
+      "realized_pnl": 6350.596062943733
+    }
+  },
+  "source": "theme",
+  "description": "Hidden supply chain monopolies ALL Magnificent 7 depend on: ABF, EUV, wafers, capacitors",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.13,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1676,
+  "avg_3Y_return": 0.1894,
+  "avg_5Y_return": 0.4148,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3402,
+      "sh": 1.49,
+      "dd": -0.1397
+    },
+    "1Y_2024": {
+      "ret": -0.1199,
+      "sh": -0.65,
+      "dd": -0.2379
+    },
+    "1Y_2025": {
+      "ret": 0.2605,
+      "sh": 1.03,
+      "dd": -0.1607
+    },
+    "3Y_2022_2024": {
+      "ret": -0.2116,
+      "sh": -0.47,
+      "dd": -0.385
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4615,
+      "sh": 0.53,
+      "dd": -0.3319
+    },
+    "5Y_2020_2024": {
+      "ret": 0.5772,
+      "sh": 0.35,
+      "dd": -0.4013
+    },
+    "1Y_2020": {
+      "ret": 0.5967,
+      "sh": 2.09,
+      "dd": -0.1327
+    },
+    "1Y_2021": {
+      "ret": 0.25,
+      "sh": 1.02,
+      "dd": -0.1277
+    },
+    "1Y_2022": {
+      "ret": -0.3216,
+      "sh": -1.88,
+      "dd": -0.385
+    },
+    "3Y_2020_2022": {
+      "ret": 0.3579,
+      "sh": 0.4,
+      "dd": -0.4013
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1497,
+      "sh": 0.14,
+      "dd": -0.4014
+    },
+    "5Y_2021_2025": {
+      "ret": 0.2523,
+      "sh": 0.13,
+      "dd": -0.4014
+    }
+  }
+}

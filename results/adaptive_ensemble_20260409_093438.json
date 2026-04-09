@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.8405169492927038,
+    "cagr": 0.2263559636211918,
+    "annual_volatility": 0.14390669730776093,
+    "sharpe_ratio": 1.2223119492642853,
+    "sortino_ratio": 1.805472143078156,
+    "calmar_ratio": 1.7094773458574706,
+    "max_drawdown": -0.13241237982457854,
+    "max_drawdown_date": "2024-08-07",
+    "win_rate": 0.5672436750998668,
+    "profit_factor": 1.2946876103985667,
+    "num_trading_days": 751,
+    "skewness": -0.04478968690149657,
+    "kurtosis": 2.374855505271155,
+    "best_day": 0.0452069884283699,
+    "worst_day": -0.036322873175189785,
+    "avg_daily_return": 0.000853661274292988,
+    "black_swan_resilience": 79.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.004950183755726645,
+    "beta": 0.612181899681051,
+    "information_ratio": -0.039861066068216,
+    "tracking_error": 0.12418593489835864
+  },
+  "trade_metrics": {
+    "num_trades": 1013,
+    "num_buys": 532,
+    "num_sells": 481,
+    "total_commission": 0.0,
+    "total_slippage": 5284.704101249699,
+    "total_transaction_costs": 5284.704101249699,
+    "avg_trade_size": 5216.88460143109
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 23.0,
+      "avg_cost": 329.796807919215,
+      "realized_pnl": 10174.865019031593
+    },
+    "SHY": {
+      "qty": 113.0,
+      "avg_cost": 81.79787555664407,
+      "realized_pnl": 664.578608555076
+    },
+    "VIG": {
+      "qty": 84.0,
+      "avg_cost": 201.8118314016349,
+      "realized_pnl": 5048.704366301783
+    },
+    "QQQ": {
+      "qty": 75.0,
+      "avg_cost": 583.1033657633463,
+      "realized_pnl": 13669.654043579107
+    },
+    "NVDA": {
+      "qty": 148.0,
+      "avg_cost": 179.78272742729683,
+      "realized_pnl": 32009.36758692853
+    },
+    "MSFT": {
+      "qty": 57.0,
+      "avg_cost": 485.4229147392407,
+      "realized_pnl": 2727.185623168943
+    },
+    "AMZN": {
+      "qty": 120.0,
+      "avg_cost": 233.6508243748399,
+      "realized_pnl": 9852.254785881672
+    }
+  },
+  "source": "portfolio",
+  "description": "Regime-switching: momentum in bulls, defensive in bears, quality in transitions",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.4203,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1632,
+  "avg_3Y_return": 0.4884,
+  "avg_5Y_return": 1.0556,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3102,
+      "sh": 1.62,
+      "dd": -0.0959
+    },
+    "1Y_2024": {
+      "ret": 0.3367,
+      "sh": 1.71,
+      "dd": -0.1325
+    },
+    "1Y_2025": {
+      "ret": 0.0639,
+      "sh": 0.25,
+      "dd": -0.0891
+    },
+    "3Y_2022_2024": {
+      "ret": 0.4813,
+      "sh": 0.73,
+      "dd": -0.2047
+    },
+    "3Y_2023_2025": {
+      "ret": 0.8405,
+      "sh": 1.22,
+      "dd": -0.1324
+    },
+    "5Y_2020_2024": {
+      "ret": 1.1563,
+      "sh": 0.85,
+      "dd": -0.2484
+    },
+    "1Y_2020": {
+      "ret": 0.1854,
+      "sh": 0.89,
+      "dd": -0.1403
+    },
+    "1Y_2021": {
+      "ret": 0.2314,
+      "sh": 1.13,
+      "dd": -0.0932
+    },
+    "1Y_2022": {
+      "ret": -0.1484,
+      "sh": -1.84,
+      "dd": -0.2047
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2403,
+      "sh": 0.3,
+      "dd": -0.2484
+    },
+    "3Y_2021_2023": {
+      "ret": 0.3914,
+      "sh": 0.57,
+      "dd": -0.2483
+    },
+    "5Y_2021_2025": {
+      "ret": 0.9549,
+      "sh": 0.75,
+      "dd": -0.2483
+    }
+  }
+}

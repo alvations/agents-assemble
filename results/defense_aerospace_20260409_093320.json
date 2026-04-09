@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 1.1101457609443544,
+    "cagr": 0.28373501966666304,
+    "annual_volatility": 0.44992824917827295,
+    "sharpe_ratio": 0.6958068536691948,
+    "sortino_ratio": 1.149875335772425,
+    "calmar_ratio": 0.5736404380521527,
+    "max_drawdown": -0.49462171919070175,
+    "max_drawdown_date": "2023-05-04",
+    "win_rate": 0.5406125166444741,
+    "profit_factor": 1.3118981289804443,
+    "num_trading_days": 751,
+    "skewness": 3.2047863131966063,
+    "kurtosis": 159.63970148539167,
+    "best_day": 0.41266788078601024,
+    "worst_day": -0.41037105804495466,
+    "avg_daily_return": 0.0013979639875437372,
+    "black_swan_resilience": 74.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.05242887228974458,
+    "beta": 0.6570477292464899,
+    "information_ratio": 0.11871767633838096,
+    "tracking_error": 0.4416265033718027
+  },
+  "trade_metrics": {
+    "num_trades": 357,
+    "num_buys": 183,
+    "num_sells": 174,
+    "total_commission": 0.0,
+    "total_slippage": 3926.793855707643,
+    "total_transaction_costs": 3926.793855707643,
+    "avg_trade_size": 10999.42256500741
+  },
+  "final_positions": {
+    "PANW": {
+      "qty": 101.0,
+      "avg_cost": 187.72999572753906,
+      "realized_pnl": 8977.105697631836
+    },
+    "FTNT": {
+      "qty": 232.0,
+      "avg_cost": 81.81999969482422,
+      "realized_pnl": -1532.8616027832022
+    },
+    "LHX": {
+      "qty": 70.0,
+      "avg_cost": 271.3747253417969,
+      "realized_pnl": 818.5538330078144
+    },
+    "LUNR": {
+      "qty": 2053.0,
+      "avg_cost": 11.579999923706055,
+      "realized_pnl": 15111.256101131443
+    },
+    "ITA": {
+      "qty": 95.0,
+      "avg_cost": 199.11077880859375,
+      "realized_pnl": 7403.649017333986
+    },
+    "NOC": {
+      "qty": 35.0,
+      "avg_cost": 571.257568359375,
+      "realized_pnl": 6797.753723144529
+    },
+    "LMT": {
+      "qty": 44.0,
+      "avg_cost": 481.7245788574219,
+      "realized_pnl": -640.4008789062516
+    },
+    "ZS": {
+      "qty": 78.0,
+      "avg_cost": 243.27999877929688,
+      "realized_pnl": 6056.907783508303
+    },
+    "BA": {
+      "qty": 102.0,
+      "avg_cost": 204.5500030517578,
+      "realized_pnl": -2424.6497955322275
+    }
+  },
+  "source": "theme",
+  "description": "Defense spending boom: contractors, space, cybersecurity",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1851,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1268,
+  "avg_3Y_return": 0.416,
+  "avg_5Y_return": 0.6907,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.296,
+      "sh": 0.67,
+      "dd": -0.4946
+    },
+    "1Y_2024": {
+      "ret": 0.2235,
+      "sh": 0.96,
+      "dd": -0.1178
+    },
+    "1Y_2025": {
+      "ret": 0.3538,
+      "sh": 1.3,
+      "dd": -0.1255
+    },
+    "3Y_2022_2024": {
+      "ret": 0.444,
+      "sh": 0.41,
+      "dd": -0.4946
+    },
+    "3Y_2023_2025": {
+      "ret": 1.1101,
+      "sh": 0.7,
+      "dd": -0.4946
+    },
+    "5Y_2020_2024": {
+      "ret": 0.369,
+      "sh": 0.26,
+      "dd": -0.4947
+    },
+    "1Y_2020": {
+      "ret": -0.066,
+      "sh": -0.19,
+      "dd": -0.3721
+    },
+    "1Y_2021": {
+      "ret": 0.0313,
+      "sh": 0.02,
+      "dd": -0.1169
+    },
+    "1Y_2022": {
+      "ret": -0.0776,
+      "sh": -0.3,
+      "dd": -0.2159
+    },
+    "3Y_2020_2022": {
+      "ret": -0.1264,
+      "sh": -0.2,
+      "dd": -0.3721
+    },
+    "3Y_2021_2023": {
+      "ret": 0.2365,
+      "sh": 0.3,
+      "dd": -0.4946
+    },
+    "5Y_2021_2025": {
+      "ret": 1.0124,
+      "sh": 0.46,
+      "dd": -0.4946
+    }
+  }
+}

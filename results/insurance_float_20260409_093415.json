@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.4246266531321943,
+    "cagr": 0.125666206235308,
+    "annual_volatility": 0.12704128022500907,
+    "sharpe_ratio": 0.6900001010926513,
+    "sortino_ratio": 0.9523690233440921,
+    "calmar_ratio": 1.3240916474069016,
+    "max_drawdown": -0.09490748354270828,
+    "max_drawdown_date": "2025-04-07",
+    "win_rate": 0.5459387483355526,
+    "profit_factor": 1.195661366547794,
+    "num_trading_days": 751,
+    "skewness": -0.9452311824507992,
+    "kurtosis": 10.627945580430985,
+    "best_day": 0.043067006325356205,
+    "worst_day": -0.07214807330719641,
+    "avg_daily_return": 0.0005035010381809298,
+    "black_swan_resilience": 70.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10563994114161046,
+    "beta": 0.34974133946902075,
+    "information_ratio": -0.6932466944349837,
+    "tracking_error": 0.15238434166312195
+  },
+  "trade_metrics": {
+    "num_trades": 224,
+    "num_buys": 105,
+    "num_sells": 119,
+    "total_commission": 0.0,
+    "total_slippage": 1089.5254212532043,
+    "total_transaction_costs": 1089.5254212532043,
+    "avg_trade_size": 4863.952773451805
+  },
+  "final_positions": {
+    "BRK-B": {
+      "qty": 33.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 5483.708953857423
+    },
+    "CB": {
+      "qty": 58.0,
+      "avg_cost": 293.0150146484375,
+      "realized_pnl": 1495.0526428222643
+    },
+    "MKL": {
+      "qty": 8.0,
+      "avg_cost": 1955.1099853515625,
+      "realized_pnl": 4862.490722656249
+    },
+    "AFL": {
+      "qty": 156.0,
+      "avg_cost": 108.97103118896484,
+      "realized_pnl": 2664.3488540649423
+    },
+    "WRB": {
+      "qty": 237.0,
+      "avg_cost": 71.74166870117188,
+      "realized_pnl": 7646.362964630127
+    },
+    "ALL": {
+      "qty": 81.0,
+      "avg_cost": 208.9427490234375,
+      "realized_pnl": 5575.580841064455
+    },
+    "CINF": {
+      "qty": 103.0,
+      "avg_cost": 133.78176727627843,
+      "realized_pnl": 3448.2317844005242
+    }
+  },
+  "source": "unconventional",
+  "description": "Insurance companies with massive float: paid to hold money, compound via investing",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2239,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0877,
+  "avg_3Y_return": 0.2686,
+  "avg_5Y_return": 0.5676,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0598,
+      "sh": 0.25,
+      "dd": -0.0671
+    },
+    "1Y_2024": {
+      "ret": 0.235,
+      "sh": 1.47,
+      "dd": -0.0775
+    },
+    "1Y_2025": {
+      "ret": 0.0823,
+      "sh": 0.34,
+      "dd": -0.0951
+    },
+    "3Y_2022_2024": {
+      "ret": 0.3036,
+      "sh": 0.48,
+      "dd": -0.1405
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4246,
+      "sh": 0.69,
+      "dd": -0.0949
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4866,
+      "sh": 0.38,
+      "dd": -0.1565
+    },
+    "1Y_2020": {
+      "ret": -0.008,
+      "sh": -0.27,
+      "dd": -0.1565
+    },
+    "1Y_2021": {
+      "ret": 0.1734,
+      "sh": 0.94,
+      "dd": -0.0698
+    },
+    "1Y_2022": {
+      "ret": -0.0165,
+      "sh": -0.37,
+      "dd": -0.1405
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1216,
+      "sh": 0.06,
+      "dd": -0.1565
+    },
+    "3Y_2021_2023": {
+      "ret": 0.2248,
+      "sh": 0.3,
+      "dd": -0.1402
+    },
+    "5Y_2021_2025": {
+      "ret": 0.6487,
+      "sh": 0.54,
+      "dd": -0.1402
+    }
+  }
+}

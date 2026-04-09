@@ -1,0 +1,140 @@
+{
+  "metrics": {
+    "total_return": 0.3649962323690106,
+    "cagr": 0.10968189658907224,
+    "annual_volatility": 0.12574447184709658,
+    "sharpe_ratio": 0.5811201906229223,
+    "sortino_ratio": 0.8590076512477732,
+    "calmar_ratio": 0.5067702579960454,
+    "max_drawdown": -0.2164331762933257,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5246338215712384,
+    "profit_factor": 1.170643031136821,
+    "num_trading_days": 751,
+    "skewness": 0.6682377690352955,
+    "kurtosis": 10.18579613254932,
+    "best_day": 0.07216599699539938,
+    "worst_day": -0.035230566482521763,
+    "avg_daily_return": 0.0004456207018768321,
+    "black_swan_resilience": 84.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12162425078784622,
+    "beta": 0.5953946374158819,
+    "information_ratio": -1.143343457435655,
+    "tracking_error": 0.10637595378437804
+  },
+  "trade_metrics": {
+    "num_trades": 1054,
+    "num_buys": 509,
+    "num_sells": 545,
+    "total_commission": 0.0,
+    "total_slippage": 7739.761376804346,
+    "total_transaction_costs": 7739.761376804346,
+    "avg_trade_size": 7343.227112717601
+  },
+  "final_positions": {
+    "EWT": {
+      "qty": 323.0,
+      "avg_cost": 62.1597212091688,
+      "realized_pnl": 579.8168983459486
+    },
+    "VNM": {
+      "qty": 1082.0,
+      "avg_cost": 18.653263012715055,
+      "realized_pnl": 6916.276153564451
+    },
+    "EWY": {
+      "qty": 207.0,
+      "avg_cost": 93.1918134237166,
+      "realized_pnl": 10642.30565565636
+    },
+    "EEM": {
+      "qty": 375.0,
+      "avg_cost": 54.103598541259764,
+      "realized_pnl": 7227.562110900879
+    },
+    "EWS": {
+      "qty": 739.0,
+      "avg_cost": 27.700000762939453,
+      "realized_pnl": 1621.8442611694322
+    },
+    "NU": {
+      "qty": 1229.0,
+      "avg_cost": 16.11065452034909,
+      "realized_pnl": 6609.853151083985
+    }
+  },
+  "source": "theme",
+  "description": "EM country ETFs at value prices: Vietnam, Korea, India, Taiwan, Singapore",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0099,
+  "consistency_score": 0.33,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0329,
+  "avg_3Y_return": 0.0293,
+  "avg_5Y_return": 0.0531,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1936,
+      "sh": 1.35,
+      "dd": -0.0791
+    },
+    "1Y_2024": {
+      "ret": -0.0257,
+      "sh": -0.53,
+      "dd": -0.1296
+    },
+    "1Y_2025": {
+      "ret": 0.1788,
+      "sh": 0.91,
+      "dd": -0.1262
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0789,
+      "sh": -0.48,
+      "dd": -0.2239
+    },
+    "3Y_2023_2025": {
+      "ret": 0.365,
+      "sh": 0.58,
+      "dd": -0.2164
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0171,
+      "sh": -0.21,
+      "dd": -0.2988
+    },
+    "1Y_2020": {
+      "ret": 0.0312,
+      "sh": 0.08,
+      "dd": -0.2988
+    },
+    "1Y_2021": {
+      "ret": 0.0243,
+      "sh": -0.09,
+      "dd": -0.0581
+    },
+    "1Y_2022": {
+      "ret": -0.2047,
+      "sh": -1.78,
+      "dd": -0.2239
+    },
+    "3Y_2020_2022": {
+      "ret": -0.1514,
+      "sh": -0.47,
+      "dd": -0.2988
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0176,
+      "sh": -0.31,
+      "dd": -0.2455
+    },
+    "5Y_2021_2025": {
+      "ret": 0.1233,
+      "sh": -0.06,
+      "dd": -0.2455
+    }
+  }
+}

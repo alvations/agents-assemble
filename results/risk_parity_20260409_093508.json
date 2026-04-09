@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.2588033429901486,
+    "cagr": 0.08002477130901231,
+    "annual_volatility": 0.06465251131889788,
+    "sharpe_ratio": 0.6203300386886678,
+    "sortino_ratio": 0.8951895882196864,
+    "calmar_ratio": 1.1534445042470043,
+    "max_drawdown": -0.06937895235909453,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.559254327563249,
+    "profit_factor": 1.23084701524654,
+    "num_trading_days": 751,
+    "skewness": 0.016052971621229685,
+    "kurtosis": 2.0584375711175253,
+    "best_day": 0.019875823393353143,
+    "worst_day": -0.015012182897741422,
+    "avg_daily_return": 0.0003148002391713082,
+    "black_swan_resilience": 84.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.15128137606790615,
+    "beta": 0.22946085749917794,
+    "information_ratio": -1.1626674457383919,
+    "tracking_error": 0.13011577525663817
+  },
+  "trade_metrics": {
+    "num_trades": 277,
+    "num_buys": 141,
+    "num_sells": 136,
+    "total_commission": 0.0,
+    "total_slippage": 695.9277816581728,
+    "total_transaction_costs": 695.9277816581728,
+    "avg_trade_size": 2512.374663025894
+  },
+  "final_positions": {
+    "TIP": {
+      "qty": 336.0,
+      "avg_cost": 104.2514679852419,
+      "realized_pnl": 1455.9781292107089
+    },
+    "IEF": {
+      "qty": 309.0,
+      "avg_cost": 91.29928013158771,
+      "realized_pnl": 830.7526079628437
+    },
+    "GLD": {
+      "qty": 18.0,
+      "avg_cost": 315.9894972655642,
+      "realized_pnl": 6358.991080785041
+    },
+    "EFA": {
+      "qty": 93.0,
+      "avg_cost": 82.03226912370974,
+      "realized_pnl": 3569.4689545303963
+    },
+    "SPY": {
+      "qty": 12.0,
+      "avg_cost": 599.1619610275009,
+      "realized_pnl": 5987.818929058525
+    },
+    "VNQ": {
+      "qty": 52.0,
+      "avg_cost": 88.52726745605469,
+      "realized_pnl": 1587.3674545288056
+    },
+    "DBC": {
+      "qty": 466.0,
+      "avg_cost": 21.40081200391804,
+      "realized_pnl": -307.0479420811741
+    },
+    "TLT": {
+      "qty": 159.0,
+      "avg_cost": 86.73811300975268,
+      "realized_pnl": -177.77489625645018
+    }
+  },
+  "source": "hedge_fund",
+  "description": "All Weather risk parity: equal risk contribution across asset classes",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0408,
+  "consistency_score": 0.5,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0465,
+  "avg_3Y_return": 0.0684,
+  "avg_5Y_return": 0.167,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0708,
+      "sh": 0.44,
+      "dd": -0.0694
+    },
+    "1Y_2024": {
+      "ret": 0.0553,
+      "sh": 0.27,
+      "dd": -0.0457
+    },
+    "1Y_2025": {
+      "ret": 0.1163,
+      "sh": 1.33,
+      "dd": -0.0424
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0104,
+      "sh": -0.48,
+      "dd": -0.1716
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2588,
+      "sh": 0.62,
+      "dd": -0.0694
+    },
+    "5Y_2020_2024": {
+      "ret": 0.147,
+      "sh": -0.11,
+      "dd": -0.1717
+    },
+    "1Y_2020": {
+      "ret": 0.0816,
+      "sh": 0.52,
+      "dd": -0.1172
+    },
+    "1Y_2021": {
+      "ret": 0.0781,
+      "sh": 0.71,
+      "dd": -0.0298
+    },
+    "1Y_2022": {
+      "ret": -0.1233,
+      "sh": -1.59,
+      "dd": -0.1716
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0154,
+      "sh": -0.37,
+      "dd": -0.1717
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0099,
+      "sh": -0.4,
+      "dd": -0.1719
+    },
+    "5Y_2021_2025": {
+      "ret": 0.1871,
+      "sh": -0.03,
+      "dd": -0.1719
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 0.5565360239007164,
+    "cagr": 0.15950605580533517,
+    "annual_volatility": 0.07401402231586768,
+    "sharpe_ratio": 1.513479173584916,
+    "sortino_ratio": 2.4728376007249735,
+    "calmar_ratio": 2.1245097602521903,
+    "max_drawdown": -0.07507899412352004,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.459387483355526,
+    "profit_factor": 1.5091941937499398,
+    "num_trading_days": 751,
+    "skewness": 0.5685232321115863,
+    "kurtosis": 4.564577207081667,
+    "best_day": 0.02453474436133951,
+    "worst_day": -0.019753597287719526,
+    "avg_daily_return": 0.0006001684394909252,
+    "black_swan_resilience": 90.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.07180009157158329,
+    "beta": 0.14468829769358946,
+    "information_ratio": -0.4816361693686085,
+    "tracking_error": 0.1490753729432493
+  },
+  "trade_metrics": {
+    "num_trades": 127,
+    "num_buys": 63,
+    "num_sells": 64,
+    "total_commission": 0.0,
+    "total_slippage": 2448.057252481459,
+    "total_transaction_costs": 2448.057252481459,
+    "avg_trade_size": 19276.041358121736
+  },
+  "final_positions": {
+    "MA": {
+      "qty": 56.0,
+      "avg_cost": 543.2397024972098,
+      "realized_pnl": 1226.3169555664062
+    },
+    "V": {
+      "qty": 92.0,
+      "avg_cost": 334.65458413828975,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "generic",
+  "description": "Deep value investing: buy great companies when they're cheap",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2684,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.106,
+  "avg_3Y_return": 0.3901,
+  "avg_5Y_return": 0.6758,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2298,
+      "sh": 2.07,
+      "dd": -0.0751
+    },
+    "1Y_2024": {
+      "ret": 0.036,
+      "sh": -0.09,
+      "dd": -0.0167
+    },
+    "1Y_2025": {
+      "ret": 0.224,
+      "sh": 1.87,
+      "dd": -0.0378
+    },
+    "3Y_2022_2024": {
+      "ret": 0.3629,
+      "sh": 0.66,
+      "dd": -0.1253
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5565,
+      "sh": 1.51,
+      "dd": -0.0751
+    },
+    "5Y_2020_2024": {
+      "ret": 0.478,
+      "sh": 0.3,
+      "dd": -0.3599
+    },
+    "1Y_2020": {
+      "ret": -0.0368,
+      "sh": -0.01,
+      "dd": -0.3599
+    },
+    "1Y_2021": {
+      "ret": 0.113,
+      "sh": 0.99,
+      "dd": -0.0609
+    },
+    "1Y_2022": {
+      "ret": 0.0699,
+      "sh": 0.26,
+      "dd": -0.1253
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1603,
+      "sh": 0.16,
+      "dd": -0.3599
+    },
+    "3Y_2021_2023": {
+      "ret": 0.4808,
+      "sh": 0.88,
+      "dd": -0.1253
+    },
+    "5Y_2021_2025": {
+      "ret": 0.8735,
+      "sh": 0.94,
+      "dd": -0.1253
+    }
+  }
+}

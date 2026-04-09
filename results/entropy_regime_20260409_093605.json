@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 0.5637904556798778,
+    "cagr": 0.16131078694994527,
+    "annual_volatility": 0.09624131063420387,
+    "sharpe_ratio": 1.1998147351755184,
+    "sortino_ratio": 1.823890562046622,
+    "calmar_ratio": 1.8480497055402563,
+    "max_drawdown": -0.08728703912365166,
+    "max_drawdown_date": "2025-03-11",
+    "win_rate": 0.5432756324900133,
+    "profit_factor": 1.313763514092241,
+    "num_trading_days": 751,
+    "skewness": 0.08137311510516121,
+    "kurtosis": 1.6648631358406059,
+    "best_day": 0.025066382363086115,
+    "worst_day": -0.027345941726877432,
+    "avg_daily_return": 0.0006138710637100014,
+    "black_swan_resilience": 83.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.06999536042697319,
+    "beta": 0.4051844064046857,
+    "information_ratio": -0.5973368323943848,
+    "tracking_error": 0.11717904644587453
+  },
+  "trade_metrics": {
+    "num_trades": 1146,
+    "num_buys": 535,
+    "num_sells": 611,
+    "total_commission": 0.0,
+    "total_slippage": 9946.02602132416,
+    "total_transaction_costs": 9946.02602132416,
+    "avg_trade_size": 8678.90577776977
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 46.0,
+      "avg_cost": 320.0014953613281,
+      "realized_pnl": 7264.340965270993
+    },
+    "META": {
+      "qty": 23.0,
+      "avg_cost": 660.9341430664062,
+      "realized_pnl": 9631.196533203125
+    },
+    "GLD": {
+      "qty": 37.0,
+      "avg_cost": 398.6000061035156,
+      "realized_pnl": 9695.423583984382
+    },
+    "NVDA": {
+      "qty": 79.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 1428.9400253295958
+    },
+    "SPY": {
+      "qty": 22.0,
+      "avg_cost": 676.8758544921875,
+      "realized_pnl": 2693.8571777343664
+    },
+    "AMZN": {
+      "qty": 64.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 7824.711441040039
+    },
+    "QQQ": {
+      "qty": 24.0,
+      "avg_cost": 618.4302368164062,
+      "realized_pnl": 5288.055023193356
+    },
+    "AAPL": {
+      "qty": 54.0,
+      "avg_cost": 273.8537292480469,
+      "realized_pnl": 6671.407836914061
+    },
+    "GOOGL": {
+      "qty": 47.0,
+      "avg_cost": 308.003173828125,
+      "realized_pnl": 10389.309616088864
+    }
+  },
+  "source": "math",
+  "description": "Shannon entropy of returns: momentum in low-entropy, defensive in high",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1546,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1099,
+  "avg_3Y_return": 0.1935,
+  "avg_5Y_return": 0.4273,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1287,
+      "sh": 0.99,
+      "dd": -0.0852
+    },
+    "1Y_2024": {
+      "ret": 0.1789,
+      "sh": 1.28,
+      "dd": -0.0491
+    },
+    "1Y_2025": {
+      "ret": 0.1855,
+      "sh": 1.41,
+      "dd": -0.0844
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1072,
+      "sh": -0.01,
+      "dd": -0.1771
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5638,
+      "sh": 1.2,
+      "dd": -0.0873
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4721,
+      "sh": 0.42,
+      "dd": -0.1977
+    },
+    "1Y_2020": {
+      "ret": 0.2722,
+      "sh": 1.58,
+      "dd": -0.1235
+    },
+    "1Y_2021": {
+      "ret": 0.0618,
+      "sh": 0.25,
+      "dd": -0.0686
+    },
+    "1Y_2022": {
+      "ret": -0.1676,
+      "sh": -2.53,
+      "dd": -0.1771
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1063,
+      "sh": 0.01,
+      "dd": -0.1977
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0033,
+      "sh": -0.38,
+      "dd": -0.1973
+    },
+    "5Y_2021_2025": {
+      "ret": 0.3824,
+      "sh": 0.32,
+      "dd": -0.1973
+    }
+  }
+}

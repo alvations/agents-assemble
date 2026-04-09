@@ -1,0 +1,93 @@
+{
+  "strategy_name": "energy_seasonal",
+  "is_winning": false,
+  "generated_at": "2026-04-09T09:36:42.286295",
+  "overall_assessment": "NEUTRAL \u2014 Mixed signals. Paper trade before committing capital.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "23.7%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "19.8%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "ALWAYS ACTIVE: Calendar-based. Stocks Nov-Apr, bonds May-Oct. Just rebalance twice a year.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "CVX",
+      "action": "BUY",
+      "current_position": 127.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.3% below entry",
+      "take_profit": "4.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "16.3% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CVX",
+      "yahoo_url": "https://finance.yahoo.com/quote/CVX/"
+    },
+    {
+      "symbol": "XOM",
+      "action": "BUY",
+      "current_position": 166.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.5% below entry",
+      "take_profit": "4.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "16.4% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XOM",
+      "yahoo_url": "https://finance.yahoo.com/quote/XOM/"
+    },
+    {
+      "symbol": "XLE",
+      "action": "BUY",
+      "current_position": 426.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.7% below entry",
+      "take_profit": "4.8% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "15.9% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XLE",
+      "yahoo_url": "https://finance.yahoo.com/quote/XLE/"
+    },
+    {
+      "symbol": "OXY",
+      "action": "BUY",
+      "current_position": 458.0,
+      "annual_volatility": "34%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "33.4% below entry",
+      "take_profit": "7.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "23.4% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=OXY",
+      "yahoo_url": "https://finance.yahoo.com/quote/OXY/"
+    },
+    {
+      "symbol": "DVN",
+      "action": "BUY",
+      "current_position": 513.0,
+      "annual_volatility": "37%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "36.6% below entry",
+      "take_profit": "7.7% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "25.6% trailing after 3.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=DVN",
+      "yahoo_url": "https://finance.yahoo.com/quote/DVN/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "6.00%",
+    "sharpe_ratio": "-0.10",
+    "max_drawdown": "-19.76%",
+    "win_rate": "52.46%",
+    "alpha": "-21.16%"
+  }
+}

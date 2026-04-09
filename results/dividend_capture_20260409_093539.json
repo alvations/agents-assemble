@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": -0.007511650342437726,
+    "cagr": -0.002518788430307617,
+    "annual_volatility": 0.09395605937620823,
+    "sharpe_ratio": -0.39740865245952517,
+    "sortino_ratio": -0.5407784277664975,
+    "calmar_ratio": -0.017344054276706433,
+    "max_drawdown": -0.14522489321833032,
+    "max_drawdown_date": "2023-10-06",
+    "win_rate": 0.49533954727030627,
+    "profit_factor": 1.0034298412713964,
+    "num_trading_days": 751,
+    "skewness": -0.3702785951294919,
+    "kurtosis": 3.75186783859336,
+    "best_day": 0.022528188761530288,
+    "worst_day": -0.0404634859239682,
+    "avg_daily_return": 7.479422524968983e-06,
+    "black_swan_resilience": 75.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.23382493580722608,
+    "beta": 0.18781546196887128,
+    "information_ratio": -1.5239896791326362,
+    "tracking_error": 0.15342947462761378
+  },
+  "trade_metrics": {
+    "num_trades": 1659,
+    "num_buys": 813,
+    "num_sells": 846,
+    "total_commission": 0.0,
+    "total_slippage": 8347.249082346922,
+    "total_transaction_costs": 8347.249082346922,
+    "avg_trade_size": 5031.494323295308
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 48.0,
+      "avg_cost": 201.6169319152832,
+      "realized_pnl": 568.7923278808594
+    },
+    "KO": {
+      "qty": 143.0,
+      "avg_cost": 71.13704449966419,
+      "realized_pnl": 1285.3652353086663
+    },
+    "SCHD": {
+      "qty": 364.0,
+      "avg_cost": 27.388330459594727,
+      "realized_pnl": 782.2694396972649
+    },
+    "VYM": {
+      "qty": 69.0,
+      "avg_cost": 140.14512503487722,
+      "realized_pnl": 1214.5035489763548
+    },
+    "HDV": {
+      "qty": 82.0,
+      "avg_cost": 121.31036064423711,
+      "realized_pnl": 511.3390229006827
+    },
+    "IBM": {
+      "qty": 33.0,
+      "avg_cost": 296.7840207186612,
+      "realized_pnl": 5887.256655883789
+    },
+    "MCD": {
+      "qty": 33.0,
+      "avg_cost": 303.9373668323864,
+      "realized_pnl": -1979.9518890380837
+    },
+    "XOM": {
+      "qty": 83.0,
+      "avg_cost": 111.90673745358984,
+      "realized_pnl": -2393.1071167304603
+    },
+    "VZ": {
+      "qty": 251.0,
+      "avg_cost": 39.78965759277344,
+      "realized_pnl": -2405.694963455199
+    }
+  },
+  "source": "news_event",
+  "description": "Dividend capture: hold high-yield low-vol stocks, harvest dividends",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.007,
+  "consistency_score": 0.25,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0048,
+  "avg_3Y_return": -0.0718,
+  "avg_5Y_return": -0.0386,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0888,
+      "sh": -1.57,
+      "dd": -0.1452
+    },
+    "1Y_2024": {
+      "ret": 0.0487,
+      "sh": 0.14,
+      "dd": -0.0693
+    },
+    "1Y_2025": {
+      "ret": 0.0261,
+      "sh": -0.08,
+      "dd": -0.0824
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1613,
+      "sh": -0.91,
+      "dd": -0.2731
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0075,
+      "sh": -0.4,
+      "dd": -0.1452
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0338,
+      "sh": -0.38,
+      "dd": -0.2732
+    },
+    "1Y_2020": {
+      "ret": 0.0579,
+      "sh": 0.2,
+      "dd": -0.1285
+    },
+    "1Y_2021": {
+      "ret": 0.1136,
+      "sh": 0.76,
+      "dd": -0.0846
+    },
+    "1Y_2022": {
+      "ret": -0.1287,
+      "sh": -1.36,
+      "dd": -0.1833
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0034,
+      "sh": -0.27,
+      "dd": -0.1835
+    },
+    "3Y_2021_2023": {
+      "ret": -0.1218,
+      "sh": -0.75,
+      "dd": -0.273
+    },
+    "5Y_2021_2025": {
+      "ret": -0.0433,
+      "sh": -0.42,
+      "dd": -0.273
+    }
+  }
+}

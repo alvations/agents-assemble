@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 1.7090461169310163,
+    "cagr": 0.39562124768514706,
+    "annual_volatility": 0.2747346642300092,
+    "sharpe_ratio": 1.212096491891299,
+    "sortino_ratio": 1.8515467425932866,
+    "calmar_ratio": 1.4446021556443913,
+    "max_drawdown": -0.27386173150812787,
+    "max_drawdown_date": "2025-04-28",
+    "win_rate": 0.5019973368841545,
+    "profit_factor": 1.26723807981929,
+    "num_trading_days": 751,
+    "skewness": 0.16416587566306862,
+    "kurtosis": 3.49403581426645,
+    "best_day": 0.08959298293923301,
+    "worst_day": -0.09529152536992447,
+    "avg_daily_return": 0.0014770979687997077,
+    "black_swan_resilience": 74.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.1643151003082286,
+    "beta": 1.0618864544299413,
+    "information_ratio": 0.7423140662884277,
+    "tracking_error": 0.22135522923579307
+  },
+  "trade_metrics": {
+    "num_trades": 1436,
+    "num_buys": 696,
+    "num_sells": 740,
+    "total_commission": 0.0,
+    "total_slippage": 21852.87482886984,
+    "total_transaction_costs": 21852.87482886984,
+    "avg_trade_size": 15217.87940729096
+  },
+  "final_positions": {
+    "HPE": {
+      "qty": 1272.0,
+      "avg_cost": 23.759348870823217,
+      "realized_pnl": 3512.428844451909
+    },
+    "TSM": {
+      "qty": 102.0,
+      "avg_cost": 292.4559020996094,
+      "realized_pnl": 8225.68415069579
+    },
+    "SMH": {
+      "qty": 84.0,
+      "avg_cost": 351.8584967719184,
+      "realized_pnl": 2086.976758321123
+    },
+    "SOXX": {
+      "qty": 101.0,
+      "avg_cost": 296.43319623898236,
+      "realized_pnl": 8396.10838043995
+    },
+    "NVDA": {
+      "qty": 163.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 23191.831512451186
+    },
+    "PLTR": {
+      "qty": 167.0,
+      "avg_cost": 193.45185185049823,
+      "realized_pnl": 32436.080047607415
+    },
+    "AMZN": {
+      "qty": 132.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 7720.061073303223
+    },
+    "GOOGL": {
+      "qty": 98.0,
+      "avg_cost": 308.003173828125,
+      "realized_pnl": 20649.86394500733
+    }
+  },
+  "source": "theme",
+  "description": "AI megatrend: GPUs, cloud, data centers, AI applications",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.7062,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.2956,
+  "avg_3Y_return": 0.8917,
+  "avg_5Y_return": 2.0751,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.7162,
+      "sh": 2.05,
+      "dd": -0.1381
+    },
+    "1Y_2024": {
+      "ret": 0.5202,
+      "sh": 1.43,
+      "dd": -0.2188
+    },
+    "1Y_2025": {
+      "ret": 0.05,
+      "sh": 0.17,
+      "dd": -0.273
+    },
+    "3Y_2022_2024": {
+      "ret": 0.833,
+      "sh": 0.76,
+      "dd": -0.3404
+    },
+    "3Y_2023_2025": {
+      "ret": 1.709,
+      "sh": 1.21,
+      "dd": -0.2739
+    },
+    "5Y_2020_2024": {
+      "ret": 2.5632,
+      "sh": 0.99,
+      "dd": -0.342
+    },
+    "1Y_2020": {
+      "ret": 0.4706,
+      "sh": 1.49,
+      "dd": -0.1797
+    },
+    "1Y_2021": {
+      "ret": 0.3043,
+      "sh": 1.17,
+      "dd": -0.0995
+    },
+    "1Y_2022": {
+      "ret": -0.2877,
+      "sh": -1.81,
+      "dd": -0.3404
+    },
+    "3Y_2020_2022": {
+      "ret": 0.3858,
+      "sh": 0.42,
+      "dd": -0.342
+    },
+    "3Y_2021_2023": {
+      "ret": 0.639,
+      "sh": 0.67,
+      "dd": -0.342
+    },
+    "5Y_2021_2025": {
+      "ret": 1.587,
+      "sh": 0.73,
+      "dd": -0.342
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.9683875347192636,
+    "cagr": 0.25421945690432346,
+    "annual_volatility": 0.1562213219206725,
+    "sharpe_ratio": 1.2822230418770177,
+    "sortino_ratio": 1.8859645789697297,
+    "calmar_ratio": 1.7161907111814605,
+    "max_drawdown": -0.14813007391778366,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5565912117177098,
+    "profit_factor": 1.2989696141226375,
+    "num_trading_days": 751,
+    "skewness": -0.1696464046183694,
+    "kurtosis": 1.7105375467084558,
+    "best_day": 0.04062789152517965,
+    "worst_day": -0.044402610934254794,
+    "avg_daily_return": 0.0009505331112006815,
+    "black_swan_resilience": 77.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.022913309527405,
+    "beta": 0.8178193414766153,
+    "information_ratio": 0.23599809277339026,
+    "tracking_error": 0.09709107924616486
+  },
+  "trade_metrics": {
+    "num_trades": 320,
+    "num_buys": 156,
+    "num_sells": 164,
+    "total_commission": 0.0,
+    "total_slippage": 3197.2524512767804,
+    "total_transaction_costs": 3197.2524512767804,
+    "avg_trade_size": 9991.413910239935
+  },
+  "final_positions": {
+    "BRK-B": {
+      "qty": 50.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 6646.562011718753
+    },
+    "HLT": {
+      "qty": 90.0,
+      "avg_cost": 258.82073974609375,
+      "realized_pnl": 7357.189865112305
+    },
+    "BN": {
+      "qty": 552.0,
+      "avg_cost": 39.41251555887169,
+      "realized_pnl": 4404.051117794043
+    },
+    "MSFT": {
+      "qty": 53.0,
+      "avg_cost": 515.3478042314638,
+      "realized_pnl": 4443.009124755861
+    },
+    "AAPL": {
+      "qty": 90.0,
+      "avg_cost": 256.39288892244036,
+      "realized_pnl": 843.2189507735413
+    },
+    "AMZN": {
+      "qty": 109.0,
+      "avg_cost": 226.66917153454702,
+      "realized_pnl": 4947.050819396975
+    },
+    "GOOGL": {
+      "qty": 81.0,
+      "avg_cost": 189.75608503553602,
+      "realized_pnl": 4105.7168182373025
+    }
+  },
+  "source": "famous",
+  "description": "Ultra-concentrated compounders: 11 positions, 40% AI, 34% return 2025",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.3296,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1508,
+  "avg_3Y_return": 0.4549,
+  "avg_5Y_return": 0.8802,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.4104,
+      "sh": 2.02,
+      "dd": -0.0925
+    },
+    "1Y_2024": {
+      "ret": 0.3079,
+      "sh": 1.59,
+      "dd": -0.1211
+    },
+    "1Y_2025": {
+      "ret": 0.0857,
+      "sh": 0.36,
+      "dd": -0.1483
+    },
+    "3Y_2022_2024": {
+      "ret": 0.4711,
+      "sh": 0.67,
+      "dd": -0.204
+    },
+    "3Y_2023_2025": {
+      "ret": 0.9684,
+      "sh": 1.28,
+      "dd": -0.1481
+    },
+    "5Y_2020_2024": {
+      "ret": 0.9032,
+      "sh": 0.57,
+      "dd": -0.2677
+    },
+    "1Y_2020": {
+      "ret": 0.1319,
+      "sh": 0.43,
+      "dd": -0.2677
+    },
+    "1Y_2021": {
+      "ret": 0.1578,
+      "sh": 0.79,
+      "dd": -0.0656
+    },
+    "1Y_2022": {
+      "ret": -0.1887,
+      "sh": -1.76,
+      "dd": -0.204
+    },
+    "3Y_2020_2022": {
+      "ret": 0.05,
+      "sh": -0.0,
+      "dd": -0.2677
+    },
+    "3Y_2021_2023": {
+      "ret": 0.3299,
+      "sh": 0.45,
+      "dd": -0.2213
+    },
+    "5Y_2021_2025": {
+      "ret": 0.8573,
+      "sh": 0.64,
+      "dd": -0.2213
+    }
+  }
+}

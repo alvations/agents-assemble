@@ -1,0 +1,135 @@
+{
+  "metrics": {
+    "total_return": 0.3756600706094064,
+    "cagr": 0.11257405838230627,
+    "annual_volatility": 0.12488845513327407,
+    "sharpe_ratio": 0.6055747387501159,
+    "sortino_ratio": 0.8384275939657319,
+    "calmar_ratio": 0.7961754978150545,
+    "max_drawdown": -0.14139352277386508,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5499334221038615,
+    "profit_factor": 1.1749801765607928,
+    "num_trading_days": 751,
+    "skewness": -0.5841815355781919,
+    "kurtosis": 9.411681383538024,
+    "best_day": 0.054885261485866144,
+    "worst_day": -0.06487215091517295,
+    "avg_daily_return": 0.0004557661071969692,
+    "black_swan_resilience": 72.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.11873208899461218,
+    "beta": 0.5934160241020793,
+    "information_ratio": -1.1221859959048275,
+    "tracking_error": 0.10580428683649501
+  },
+  "trade_metrics": {
+    "num_trades": 344,
+    "num_buys": 163,
+    "num_sells": 181,
+    "total_commission": 0.0,
+    "total_slippage": 1080.0983063430785,
+    "total_transaction_costs": 1080.0983063430785,
+    "avg_trade_size": 3139.820657974066
+  },
+  "final_positions": {
+    "NDAQ": {
+      "qty": 154.0,
+      "avg_cost": 65.14703458503878,
+      "realized_pnl": 1696.9577334446044
+    },
+    "A": {
+      "qty": 92.0,
+      "avg_cost": 125.9905458430654,
+      "realized_pnl": -3936.7835016152294
+    },
+    "MCO": {
+      "qty": 28.0,
+      "avg_cost": 483.94140625,
+      "realized_pnl": 4325.133850097654
+    },
+    "CHRW": {
+      "qty": 86.0,
+      "avg_cost": 127.3181381225586,
+      "realized_pnl": 70.70899200439544
+    },
+    "CME": {
+      "qty": 51.0,
+      "avg_cost": 213.8986909230003,
+      "realized_pnl": 2802.846252820085
+    }
+  },
+  "source": "unconventional",
+  "description": "Companies that tax every transaction: payments, exchanges, ratings, logistics",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1302,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0701,
+  "avg_3Y_return": 0.1626,
+  "avg_5Y_return": 0.3583,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1399,
+      "sh": 0.84,
+      "dd": -0.0999
+    },
+    "1Y_2024": {
+      "ret": 0.1771,
+      "sh": 1.21,
+      "dd": -0.0731
+    },
+    "1Y_2025": {
+      "ret": 0.0375,
+      "sh": 0.06,
+      "dd": -0.142
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1249,
+      "sh": 0.06,
+      "dd": -0.1729
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3757,
+      "sh": 0.61,
+      "dd": -0.1414
+    },
+    "5Y_2020_2024": {
+      "ret": 0.3325,
+      "sh": 0.19,
+      "dd": -0.3331
+    },
+    "1Y_2020": {
+      "ret": 0.0093,
+      "sh": 0.08,
+      "dd": -0.3331
+    },
+    "1Y_2021": {
+      "ret": 0.2117,
+      "sh": 1.17,
+      "dd": -0.0778
+    },
+    "1Y_2022": {
+      "ret": -0.1548,
+      "sh": -1.84,
+      "dd": -0.1657
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0034,
+      "sh": -0.07,
+      "dd": -0.3331
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1466,
+      "sh": 0.12,
+      "dd": -0.1912
+    },
+    "5Y_2021_2025": {
+      "ret": 0.3841,
+      "sh": 0.27,
+      "dd": -0.1912
+    }
+  }
+}

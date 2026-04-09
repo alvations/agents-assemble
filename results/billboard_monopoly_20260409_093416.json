@@ -1,0 +1,130 @@
+{
+  "metrics": {
+    "total_return": 0.38090843998540014,
+    "cagr": 0.11399200290492573,
+    "annual_volatility": 0.18407641810136569,
+    "sharpe_ratio": 0.46748006820738186,
+    "sortino_ratio": 0.6560020527458778,
+    "calmar_ratio": 0.5113978473019465,
+    "max_drawdown": -0.22290278206357217,
+    "max_drawdown_date": "2023-08-21",
+    "win_rate": 0.563249001331558,
+    "profit_factor": 1.1270041237422113,
+    "num_trading_days": 751,
+    "skewness": -0.28768466303837326,
+    "kurtosis": 3.771296723955601,
+    "best_day": 0.057324854139201964,
+    "worst_day": -0.07097989833346319,
+    "avg_daily_return": 0.000497126277431727,
+    "black_swan_resilience": 72.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.11731414447199273,
+    "beta": 0.6283213414777636,
+    "information_ratio": -0.7031419735323616,
+    "tracking_error": 0.16684275564242565
+  },
+  "trade_metrics": {
+    "num_trades": 200,
+    "num_buys": 92,
+    "num_sells": 108,
+    "total_commission": 0.0,
+    "total_slippage": 1186.8868915947683,
+    "total_transaction_costs": 1186.8868915947683,
+    "avg_trade_size": 5934.434457973838
+  },
+  "final_positions": {
+    "MSGS": {
+      "qty": 88.0,
+      "avg_cost": 228.97703881697223,
+      "realized_pnl": 203.2686004638657
+    },
+    "LAMR": {
+      "qty": 154.0,
+      "avg_cost": 116.4246826171875,
+      "realized_pnl": -2237.933258056639
+    },
+    "OUT": {
+      "qty": 875.0,
+      "avg_cost": 16.67301919921254,
+      "realized_pnl": 3505.5352014105815
+    },
+    "CCO": {
+      "qty": 9958.0,
+      "avg_cost": 1.2678027622047068,
+      "realized_pnl": -10560.360966801643
+    }
+  },
+  "source": "unconventional",
+  "description": "Irreplaceable physical ad assets: billboards, airports, transit \u2014 frozen permits = moat",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1203,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1257,
+  "avg_3Y_return": 0.1474,
+  "avg_5Y_return": 0.4625,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0731,
+      "sh": -0.49,
+      "dd": -0.2229
+    },
+    "1Y_2024": {
+      "ret": 0.2271,
+      "sh": 0.96,
+      "dd": -0.0876
+    },
+    "1Y_2025": {
+      "ret": 0.2197,
+      "sh": 1.1,
+      "dd": -0.1565
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0838,
+      "sh": -0.28,
+      "dd": -0.3247
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3809,
+      "sh": 0.47,
+      "dd": -0.2229
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4559,
+      "sh": 0.28,
+      "dd": -0.3394
+    },
+    "1Y_2020": {
+      "ret": 0.2698,
+      "sh": 1.37,
+      "dd": -0.2054
+    },
+    "1Y_2021": {
+      "ret": 0.2877,
+      "sh": 0.93,
+      "dd": -0.1396
+    },
+    "1Y_2022": {
+      "ret": -0.1772,
+      "sh": -1.49,
+      "dd": -0.2168
+    },
+    "3Y_2020_2022": {
+      "ret": 0.3081,
+      "sh": 0.35,
+      "dd": -0.2341
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0157,
+      "sh": -0.1,
+      "dd": -0.3394
+    },
+    "5Y_2021_2025": {
+      "ret": 0.469,
+      "sh": 0.29,
+      "dd": -0.3394
+    }
+  }
+}

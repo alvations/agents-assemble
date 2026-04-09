@@ -1,0 +1,160 @@
+{
+  "metrics": {
+    "total_return": 0.730320242517031,
+    "cagr": 0.20129059470147714,
+    "annual_volatility": 0.1497420786759246,
+    "sharpe_ratio": 1.0415752031455596,
+    "sortino_ratio": 1.613012463070327,
+    "calmar_ratio": 1.3638292759453035,
+    "max_drawdown": -0.1475922230529607,
+    "max_drawdown_date": "2025-04-21",
+    "win_rate": 0.5299600532623169,
+    "profit_factor": 1.2594235080845075,
+    "num_trading_days": 751,
+    "skewness": 0.7914518987067706,
+    "kurtosis": 10.800259701743673,
+    "best_day": 0.08707740546892317,
+    "worst_day": -0.04457547466734446,
+    "avg_daily_return": 0.0007745690533321935,
+    "black_swan_resilience": 89.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.030015552675441315,
+    "beta": 0.7154003934310869,
+    "information_ratio": -0.2709591711572923,
+    "tracking_error": 0.1107751863398535
+  },
+  "trade_metrics": {
+    "num_trades": 430,
+    "num_buys": 262,
+    "num_sells": 168,
+    "total_commission": 0.0,
+    "total_slippage": 2657.7737748394,
+    "total_transaction_costs": 2657.7737748394,
+    "avg_trade_size": 6180.869243812561
+  },
+  "final_positions": {
+    "CRM": {
+      "qty": 65.0,
+      "avg_cost": 274.5683260633552,
+      "realized_pnl": 5351.3549056659385
+    },
+    "DIS": {
+      "qty": 142.0,
+      "avg_cost": 106.05245971679688,
+      "realized_pnl": 9577.840545654297
+    },
+    "DOW": {
+      "qty": 638.0,
+      "avg_cost": 36.07687786938961,
+      "realized_pnl": 4593.474945294601
+    },
+    "UNH": {
+      "qty": 47.0,
+      "avg_cost": 360.61919611888413,
+      "realized_pnl": 3312.8229970065045
+    },
+    "HD": {
+      "qty": 43.0,
+      "avg_cost": 352.67584228515625,
+      "realized_pnl": 1526.5333862304683
+    },
+    "NKE": {
+      "qty": 232.0,
+      "avg_cost": 61.84208297729492,
+      "realized_pnl": -2308.0486640930158
+    },
+    "HON": {
+      "qty": 79.0,
+      "avg_cost": 201.11913560312004,
+      "realized_pnl": 92.75883483886713
+    },
+    "BA": {
+      "qty": 81.0,
+      "avg_cost": 186.4600067138672,
+      "realized_pnl": 252.76934814452989
+    },
+    "PG": {
+      "qty": 103.0,
+      "avg_cost": 156.79125324730734,
+      "realized_pnl": 2107.230667114257
+    },
+    "V": {
+      "qty": 46.0,
+      "avg_cost": 345.2278415845788,
+      "realized_pnl": 1403.7965698242188
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy worst-performing blue chips yearly, contrarian equal-weight",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2408,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1172,
+  "avg_3Y_return": 0.3259,
+  "avg_5Y_return": 0.611,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3618,
+      "sh": 2.17,
+      "dd": -0.0832
+    },
+    "1Y_2024": {
+      "ret": 0.0573,
+      "sh": 0.2,
+      "dd": -0.0836
+    },
+    "1Y_2025": {
+      "ret": 0.1984,
+      "sh": 0.85,
+      "dd": -0.1478
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1984,
+      "sh": 0.21,
+      "dd": -0.2717
+    },
+    "3Y_2023_2025": {
+      "ret": 0.7303,
+      "sh": 1.04,
+      "dd": -0.1476
+    },
+    "5Y_2020_2024": {
+      "ret": 0.5365,
+      "sh": 0.32,
+      "dd": -0.3682
+    },
+    "1Y_2020": {
+      "ret": 0.0976,
+      "sh": 0.33,
+      "dd": -0.3682
+    },
+    "1Y_2021": {
+      "ret": 0.1702,
+      "sh": 1.09,
+      "dd": -0.0845
+    },
+    "1Y_2022": {
+      "ret": -0.1823,
+      "sh": -0.88,
+      "dd": -0.2717
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0486,
+      "sh": 0.05,
+      "dd": -0.3682
+    },
+    "3Y_2021_2023": {
+      "ret": 0.3265,
+      "sh": 0.41,
+      "dd": -0.2713
+    },
+    "5Y_2021_2025": {
+      "ret": 0.6856,
+      "sh": 0.48,
+      "dd": -0.2713
+    }
+  }
+}

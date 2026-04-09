@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.13847701104058352,
+    "cagr": 0.044333546710141114,
+    "annual_volatility": 0.03220249217469485,
+    "sharpe_ratio": 0.14955640592203867,
+    "sortino_ratio": 0.20807938893495767,
+    "calmar_ratio": 1.6499020863420368,
+    "max_drawdown": -0.02687041072142171,
+    "max_drawdown_date": "2023-03-09",
+    "win_rate": 0.5539280958721704,
+    "profit_factor": 1.2614976279238816,
+    "num_trading_days": 751,
+    "skewness": -0.11660508015325227,
+    "kurtosis": 2.3153919862869543,
+    "best_day": 0.011323789179613186,
+    "worst_day": -0.007571735173784844,
+    "avg_daily_return": 0.00017476132704277047,
+    "black_swan_resilience": 84.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.18697260066677734,
+    "beta": 0.08754841656714697,
+    "information_ratio": -1.3066600008407363,
+    "tracking_error": 0.14309200598967955
+  },
+  "trade_metrics": {
+    "num_trades": 260,
+    "num_buys": 129,
+    "num_sells": 131,
+    "total_commission": 0.0,
+    "total_slippage": 827.1504111633304,
+    "total_transaction_costs": 827.1504111633304,
+    "avg_trade_size": 3181.347735243577
+  },
+  "final_positions": {
+    "SHY": {
+      "qty": 348.0,
+      "avg_cost": 72.71786371454367,
+      "realized_pnl": 114.01088571051454
+    },
+    "TIP": {
+      "qty": 155.0,
+      "avg_cost": 103.49985808841416,
+      "realized_pnl": 1493.086531841407
+    },
+    "IEF": {
+      "qty": 143.0,
+      "avg_cost": 93.36695406425513,
+      "realized_pnl": 222.13677707471223
+    },
+    "GLD": {
+      "qty": 8.0,
+      "avg_cost": 318.6999982198079,
+      "realized_pnl": 2466.4499460856114
+    },
+    "VEA": {
+      "qty": 9.0,
+      "avg_cost": 60.13845443725586,
+      "realized_pnl": 753.6422233581545
+    },
+    "VTI": {
+      "qty": 11.0,
+      "avg_cost": 293.03504231200145,
+      "realized_pnl": 2661.4581430443204
+    },
+    "XLE": {
+      "qty": 75.0,
+      "avg_cost": 44.98017883300781,
+      "realized_pnl": -622.3043441772458
+    }
+  },
+  "source": "portfolio",
+  "description": "Updated Dalio All-Weather: reduced bonds, added TIPS + crypto exposure",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0089,
+  "consistency_score": 0.25,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0192,
+  "avg_3Y_return": 0.0315,
+  "avg_5Y_return": 0.0621,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0523,
+      "sh": 0.34,
+      "dd": -0.0269
+    },
+    "1Y_2024": {
+      "ret": 0.0283,
+      "sh": -0.34,
+      "dd": -0.0248
+    },
+    "1Y_2025": {
+      "ret": 0.057,
+      "sh": 0.71,
+      "dd": -0.0142
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0212,
+      "sh": -0.84,
+      "dd": -0.0715
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1385,
+      "sh": 0.15,
+      "dd": -0.0269
+    },
+    "5Y_2020_2024": {
+      "ret": 0.05,
+      "sh": -0.87,
+      "dd": -0.0791
+    },
+    "1Y_2020": {
+      "ret": 0.0322,
+      "sh": -0.21,
+      "dd": -0.0398
+    },
+    "1Y_2021": {
+      "ret": -0.0019,
+      "sh": -3.16,
+      "dd": -0.0152
+    },
+    "1Y_2022": {
+      "ret": -0.0525,
+      "sh": -2.26,
+      "dd": -0.0715
+    },
+    "3Y_2020_2022": {
+      "ret": -0.0268,
+      "sh": -1.51,
+      "dd": -0.0791
+    },
+    "3Y_2021_2023": {
+      "ret": -0.007,
+      "sh": -1.23,
+      "dd": -0.0794
+    },
+    "5Y_2021_2025": {
+      "ret": 0.0742,
+      "sh": -0.77,
+      "dd": -0.0794
+    }
+  }
+}

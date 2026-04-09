@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.34595488647923944,
+    "cagr": 0.10448002936187284,
+    "annual_volatility": 0.08466266746595433,
+    "sharpe_ratio": 0.7567634583600916,
+    "sortino_ratio": 1.0857535781571797,
+    "calmar_ratio": 1.1149393808607904,
+    "max_drawdown": -0.09370915688816095,
+    "max_drawdown_date": "2023-10-19",
+    "win_rate": 0.5512649800266312,
+    "profit_factor": 1.2250044680534065,
+    "num_trading_days": 751,
+    "skewness": -0.1502825373804609,
+    "kurtosis": 1.1025802840083934,
+    "best_day": 0.02123558252182778,
+    "worst_day": -0.019088823007592515,
+    "avg_daily_return": 0.0004098943589243025,
+    "black_swan_resilience": 80.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12682611801504562,
+    "beta": 0.3657033181916923,
+    "information_ratio": -1.091666728213931,
+    "tracking_error": 0.1161765901050635
+  },
+  "trade_metrics": {
+    "num_trades": 241,
+    "num_buys": 122,
+    "num_sells": 119,
+    "total_commission": 0.0,
+    "total_slippage": 2428.4166617622373,
+    "total_transaction_costs": 2428.4166617622373,
+    "avg_trade_size": 10076.417683660737
+  },
+  "final_positions": {
+    "IEF": {
+      "qty": 350.0,
+      "avg_cost": 93.1071697038114,
+      "realized_pnl": 669.9852340415117
+    },
+    "GLD": {
+      "qty": 29.0,
+      "avg_cost": 330.7349866467382,
+      "realized_pnl": 7898.21446932279
+    },
+    "EFA": {
+      "qty": 153.0,
+      "avg_cost": 89.73072579201687,
+      "realized_pnl": 4100.077901647331
+    },
+    "EEM": {
+      "qty": 271.0,
+      "avg_cost": 48.97183141787065,
+      "realized_pnl": 4243.437012027369
+    },
+    "SPY": {
+      "qty": 20.0,
+      "avg_cost": 597.6282648980256,
+      "realized_pnl": 5342.691030382382
+    },
+    "IWM": {
+      "qty": 35.0,
+      "avg_cost": 233.5969852479566,
+      "realized_pnl": 1208.6595746208623
+    },
+    "QQQ": {
+      "qty": 16.0,
+      "avg_cost": 544.2922565734464,
+      "realized_pnl": 8674.753772411479
+    }
+  },
+  "source": "math",
+  "description": "Each asset contributes equal risk, with momentum filter",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0168,
+  "consistency_score": 0.42,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0556,
+  "avg_3Y_return": 0.0129,
+  "avg_5Y_return": 0.084,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0803,
+      "sh": 0.44,
+      "dd": -0.0937
+    },
+    "1Y_2024": {
+      "ret": 0.0624,
+      "sh": 0.3,
+      "dd": -0.0389
+    },
+    "1Y_2025": {
+      "ret": 0.1831,
+      "sh": 1.93,
+      "dd": -0.0398
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1112,
+      "sh": -0.68,
+      "dd": -0.257
+    },
+    "3Y_2023_2025": {
+      "ret": 0.346,
+      "sh": 0.76,
+      "dd": -0.0937
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0874,
+      "sh": -0.16,
+      "dd": -0.2974
+    },
+    "1Y_2020": {
+      "ret": 0.1959,
+      "sh": 1.29,
+      "dd": -0.07
+    },
+    "1Y_2021": {
+      "ret": 0.0358,
+      "sh": -0.0,
+      "dd": -0.0555
+    },
+    "1Y_2022": {
+      "ret": -0.2238,
+      "sh": -2.15,
+      "dd": -0.257
+    },
+    "3Y_2020_2022": {
+      "ret": -0.0503,
+      "sh": -0.44,
+      "dd": -0.2974
+    },
+    "3Y_2021_2023": {
+      "ret": -0.1331,
+      "sh": -0.75,
+      "dd": -0.2978
+    },
+    "5Y_2021_2025": {
+      "ret": 0.0806,
+      "sh": -0.2,
+      "dd": -0.2978
+    }
+  }
+}

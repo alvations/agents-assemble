@@ -1,0 +1,158 @@
+{
+  "metrics": {
+    "total_return": 0.20188487914274256,
+    "cagr": 0.06343849040752159,
+    "annual_volatility": 0.06278369116596978,
+    "sharpe_ratio": 0.38940200139135944,
+    "sortino_ratio": 0.6487326159096848,
+    "calmar_ratio": 1.093110974262968,
+    "max_drawdown": -0.058034812476651876,
+    "max_drawdown_date": "2025-08-01",
+    "win_rate": 0.1877496671105193,
+    "profit_factor": 1.3694932852176798,
+    "num_trading_days": 751,
+    "skewness": 1.724274244319957,
+    "kurtosis": 19.345975232490844,
+    "best_day": 0.030945141236971008,
+    "worst_day": -0.026002043006589703,
+    "avg_daily_return": 0.0002526661127704916,
+    "black_swan_resilience": 96.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16786765696939687,
+    "beta": 0.07379980592143807,
+    "information_ratio": -1.082947993263909,
+    "tracking_error": 0.15500989707128843
+  },
+  "trade_metrics": {
+    "num_trades": 35,
+    "num_buys": 19,
+    "num_sells": 16,
+    "total_commission": 0.0,
+    "total_slippage": 935.166333295822,
+    "total_transaction_costs": 935.166333295822,
+    "avg_trade_size": 26719.038094166346
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "OXY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DVN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "C": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Concentrated deep value: buy beaten-down large caps showing recovery",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0448,
+  "consistency_score": 0.42,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0287,
+  "avg_3Y_return": 0.1338,
+  "avg_5Y_return": 0.1952,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1545,
+      "sh": 1.57,
+      "dd": -0.0294
+    },
+    "1Y_2024": {
+      "ret": 0.0143,
+      "sh": -0.38,
+      "dd": -0.0554
+    },
+    "1Y_2025": {
+      "ret": 0.0218,
+      "sh": -0.27,
+      "dd": -0.058
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1599,
+      "sh": 0.16,
+      "dd": -0.0738
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2019,
+      "sh": 0.39,
+      "dd": -0.058
+    },
+    "5Y_2020_2024": {
+      "ret": 0.1574,
+      "sh": -0.07,
+      "dd": -0.1828
+    },
+    "1Y_2020": {
+      "ret": -0.0364,
+      "sh": -0.59,
+      "dd": -0.1828
+    },
+    "1Y_2021": {
+      "ret": 0.0264,
+      "sh": -0.57,
+      "dd": -0.0143
+    },
+    "1Y_2022": {
+      "ret": -0.0086,
+      "sh": -0.34,
+      "dd": -0.0738
+    },
+    "3Y_2020_2022": {
+      "ret": -0.0109,
+      "sh": -0.39,
+      "dd": -0.1828
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1843,
+      "sh": 0.25,
+      "dd": -0.0737
+    },
+    "5Y_2021_2025": {
+      "ret": 0.233,
+      "sh": 0.08,
+      "dd": -0.0737
+    }
+  }
+}

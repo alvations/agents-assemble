@@ -1,0 +1,160 @@
+{
+  "metrics": {
+    "total_return": 0.1567831354696585,
+    "cagr": 0.049920430111178415,
+    "annual_volatility": 0.09133956057659308,
+    "sharpe_ratio": 0.151630410525806,
+    "sortino_ratio": 0.20061766943303655,
+    "calmar_ratio": 0.40365360745909656,
+    "max_drawdown": -0.1236714578755177,
+    "max_drawdown_date": "2025-07-22",
+    "win_rate": 0.5472703062583223,
+    "profit_factor": 1.1260450395790516,
+    "num_trading_days": 751,
+    "skewness": -1.939201043227053,
+    "kurtosis": 26.53971993978915,
+    "best_day": 0.03263238630088394,
+    "worst_day": -0.06653885184571184,
+    "avg_daily_return": 0.00021060960512251492,
+    "black_swan_resilience": 68.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.18138571726574004,
+    "beta": 0.2522500202540675,
+    "information_ratio": -1.281980032177359,
+    "tracking_error": 0.14148872268912668
+  },
+  "trade_metrics": {
+    "num_trades": 1014,
+    "num_buys": 503,
+    "num_sells": 511,
+    "total_commission": 0.0,
+    "total_slippage": 2712.1640611572266,
+    "total_transaction_costs": 2712.1640611572266,
+    "avg_trade_size": 2674.718009030795
+  },
+  "final_positions": {
+    "EPD": {
+      "qty": 369.0,
+      "avg_cost": 30.471724985207647,
+      "realized_pnl": 3327.5320213268983
+    },
+    "LMT": {
+      "qty": 19.0,
+      "avg_cost": 446.4589100366419,
+      "realized_pnl": 684.112509690331
+    },
+    "SHY": {
+      "qty": 71.0,
+      "avg_cost": 79.31683481979638,
+      "realized_pnl": 511.36516051120975
+    },
+    "ET": {
+      "qty": 726.0,
+      "avg_cost": 16.369468413582887,
+      "realized_pnl": 666.1994079218225
+    },
+    "WMB": {
+      "qty": 195.0,
+      "avg_cost": 59.63073794735828,
+      "realized_pnl": 4164.730178268795
+    },
+    "MPLX": {
+      "qty": 219.0,
+      "avg_cost": 50.88682540546764,
+      "realized_pnl": 3328.9779626499494
+    },
+    "OKE": {
+      "qty": 160.0,
+      "avg_cost": 67.13358823408991,
+      "realized_pnl": -1503.7679762040575
+    },
+    "RTX": {
+      "qty": 50.0,
+      "avg_cost": 177.29194584599247,
+      "realized_pnl": 2043.263094301577
+    },
+    "NOC": {
+      "qty": 16.0,
+      "avg_cost": 558.0261876723346,
+      "realized_pnl": 1269.189907298369
+    },
+    "ITA": {
+      "qty": 43.0,
+      "avg_cost": 210.42052620944648,
+      "realized_pnl": 951.9510504681136
+    }
+  },
+  "source": "unconventional",
+  "description": "Geopolitical oil inflation: long energy midstream + defense, short duration. 6-8% yield + appreciation.",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.295,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1011,
+  "avg_3Y_return": 0.3755,
+  "avg_5Y_return": 0.7336,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2020": {
+      "ret": 0.0383,
+      "sh": 0.03,
+      "dd": -0.0783
+    },
+    "1Y_2021": {
+      "ret": 0.255,
+      "sh": 1.31,
+      "dd": -0.0936
+    },
+    "1Y_2022": {
+      "ret": 0.1599,
+      "sh": 0.7,
+      "dd": -0.1363
+    },
+    "1Y_2023": {
+      "ret": 0.0063,
+      "sh": -0.35,
+      "dd": -0.0997
+    },
+    "1Y_2024": {
+      "ret": 0.1749,
+      "sh": 1.5,
+      "dd": -0.054
+    },
+    "1Y_2025": {
+      "ret": -0.0281,
+      "sh": -0.6,
+      "dd": -0.1238
+    },
+    "3Y_2020_2022": {
+      "ret": 0.5114,
+      "sh": 0.74,
+      "dd": -0.1362
+    },
+    "3Y_2021_2023": {
+      "ret": 0.4697,
+      "sh": 0.69,
+      "dd": -0.136
+    },
+    "3Y_2022_2024": {
+      "ret": 0.3639,
+      "sh": 0.58,
+      "dd": -0.1363
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1568,
+      "sh": 0.15,
+      "dd": -0.1237
+    },
+    "5Y_2020_2024": {
+      "ret": 0.7772,
+      "sh": 0.67,
+      "dd": -0.1362
+    },
+    "5Y_2021_2025": {
+      "ret": 0.69,
+      "sh": 0.58,
+      "dd": -0.136
+    }
+  }
+}

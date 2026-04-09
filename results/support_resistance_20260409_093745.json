@@ -1,0 +1,140 @@
+{
+  "metrics": {
+    "total_return": -0.08340180418593268,
+    "cagr": -0.028708236219288863,
+    "annual_volatility": 0.14621452866246765,
+    "sharpe_ratio": -0.3949499033335586,
+    "sortino_ratio": -0.5400406911229939,
+    "calmar_ratio": -0.09692933931839408,
+    "max_drawdown": -0.29617695138711175,
+    "max_drawdown_date": "2024-02-14",
+    "win_rate": 0.49267643142476697,
+    "profit_factor": 0.977260098112609,
+    "num_trading_days": 751,
+    "skewness": -0.26694708375230397,
+    "kurtosis": 4.665734742334167,
+    "best_day": 0.044455485968543984,
+    "worst_day": -0.05772433907856378,
+    "avg_daily_return": -7.350654181668731e-05,
+    "black_swan_resilience": 68.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2600143835962073,
+    "beta": 0.27115443464874506,
+    "information_ratio": -1.4498166575954996,
+    "tracking_error": 0.17934294121536545
+  },
+  "trade_metrics": {
+    "num_trades": 3316,
+    "num_buys": 1604,
+    "num_sells": 1712,
+    "total_commission": 0.0,
+    "total_slippage": 27380.914504863733,
+    "total_transaction_costs": 27380.914504863733,
+    "avg_trade_size": 8257.211853095218
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 32.0,
+      "avg_cost": 398.6636665158155,
+      "realized_pnl": 9617.32204530298
+    },
+    "SLV": {
+      "qty": 199.0,
+      "avg_cost": 64.41999816894531,
+      "realized_pnl": 11555.940004348742
+    },
+    "NEM": {
+      "qty": 129.0,
+      "avg_cost": 100.00729211771264,
+      "realized_pnl": 12596.400056659031
+    },
+    "CPER": {
+      "qty": 367.0,
+      "avg_cost": 33.5644468042151,
+      "realized_pnl": -1633.8564628707395
+    },
+    "COPX": {
+      "qty": 179.0,
+      "avg_cost": 71.79000091552734,
+      "realized_pnl": -492.27250289916446
+    },
+    "XLE": {
+      "qty": 412.0,
+      "avg_cost": 44.130937596949835,
+      "realized_pnl": -4941.641524387729
+    }
+  },
+  "source": "famous",
+  "description": "Breakout trading on commodity ETFs with defined S/R levels and ATR stops",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0739,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0601,
+  "avg_3Y_return": 0.1165,
+  "avg_5Y_return": 0.2629,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.2044,
+      "sh": -2.12,
+      "dd": -0.2904
+    },
+    "1Y_2024": {
+      "ret": 0.0944,
+      "sh": 0.44,
+      "dd": -0.0976
+    },
+    "1Y_2025": {
+      "ret": 0.0506,
+      "sh": 0.15,
+      "dd": -0.1262
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0113,
+      "sh": -0.2,
+      "dd": -0.3228
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0834,
+      "sh": -0.39,
+      "dd": -0.2962
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2913,
+      "sh": 0.16,
+      "dd": -0.3228
+    },
+    "1Y_2020": {
+      "ret": 0.0933,
+      "sh": 0.38,
+      "dd": -0.0892
+    },
+    "1Y_2021": {
+      "ret": 0.1864,
+      "sh": 0.78,
+      "dd": -0.1214
+    },
+    "1Y_2022": {
+      "ret": 0.1404,
+      "sh": 0.58,
+      "dd": -0.1275
+    },
+    "3Y_2020_2022": {
+      "ret": 0.4892,
+      "sh": 0.6,
+      "dd": -0.1275
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0716,
+      "sh": -0.01,
+      "dd": -0.3173
+    },
+    "5Y_2021_2025": {
+      "ret": 0.2344,
+      "sh": 0.1,
+      "dd": -0.3229
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "metrics": {
+    "total_return": 0.4294225752478593,
+    "cagr": 0.12693228988692007,
+    "annual_volatility": 0.12239599839903995,
+    "sharpe_ratio": 0.7202505371918831,
+    "sortino_ratio": 1.054546437441526,
+    "calmar_ratio": 1.0107805086709525,
+    "max_drawdown": -0.12557848988779952,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5326231691078562,
+    "profit_factor": 1.2072803806156769,
+    "num_trading_days": 751,
+    "skewness": 0.31566727489071555,
+    "kurtosis": 13.304930674070684,
+    "best_day": 0.07065558029773089,
+    "worst_day": -0.05216938580137709,
+    "avg_daily_return": 0.0005054744008747762,
+    "black_swan_resilience": 84.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10437385748999839,
+    "beta": 0.5055111064302384,
+    "information_ratio": -0.8602453945736215,
+    "tracking_error": 0.121330329866783
+  },
+  "trade_metrics": {
+    "num_trades": 325,
+    "num_buys": 165,
+    "num_sells": 160,
+    "total_commission": 0.0,
+    "total_slippage": 2179.134924972532,
+    "total_transaction_costs": 2179.134924972532,
+    "avg_trade_size": 6705.030538377028
+  },
+  "final_positions": {
+    "V": {
+      "qty": 39.0,
+      "avg_cost": 340.55894222422546,
+      "realized_pnl": 3569.377512613929
+    },
+    "KO": {
+      "qty": 179.0,
+      "avg_cost": 67.46751407055145,
+      "realized_pnl": 2285.5836354194807
+    },
+    "MA": {
+      "qty": 23.0,
+      "avg_cost": 572.1541137695312,
+      "realized_pnl": 2844.075958251953
+    },
+    "BRK-B": {
+      "qty": 25.0,
+      "avg_cost": 500.9526064130995,
+      "realized_pnl": 413.56436687045596
+    },
+    "OXY": {
+      "qty": 304.0,
+      "avg_cost": 40.49138259887695,
+      "realized_pnl": -2891.8292503356943
+    },
+    "MCO": {
+      "qty": 26.0,
+      "avg_cost": 496.43951416015625,
+      "realized_pnl": 5215.3797607421875
+    },
+    "PG": {
+      "qty": 87.0,
+      "avg_cost": 161.32255472629703,
+      "realized_pnl": 4098.504384600927
+    },
+    "CVX": {
+      "qty": 84.0,
+      "avg_cost": 151.38775598435174,
+      "realized_pnl": 6444.290771484371
+    },
+    "KHC": {
+      "qty": 511.0,
+      "avg_cost": 27.939501984528306,
+      "realized_pnl": -41.49898335782177
+    },
+    "CB": {
+      "qty": 44.0,
+      "avg_cost": 284.49017333984375,
+      "realized_pnl": 2416.795120239261
+    }
+  },
+  "source": "famous",
+  "description": "Actual BRK holdings: AAPL, AXP, BAC, KO, CVX, GOOGL, CB, $274B",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2169,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0963,
+  "avg_3Y_return": 0.2553,
+  "avg_5Y_return": 0.5528,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1138,
+      "sh": 0.65,
+      "dd": -0.0945
+    },
+    "1Y_2024": {
+      "ret": 0.0787,
+      "sh": 0.46,
+      "dd": -0.0417
+    },
+    "1Y_2025": {
+      "ret": 0.1759,
+      "sh": 0.89,
+      "dd": -0.1255
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1067,
+      "sh": 0.03,
+      "dd": -0.2212
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4294,
+      "sh": 0.72,
+      "dd": -0.1256
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4696,
+      "sh": 0.3,
+      "dd": -0.3288
+    },
+    "1Y_2020": {
+      "ret": 0.0559,
+      "sh": 0.21,
+      "dd": -0.3288
+    },
+    "1Y_2021": {
+      "ret": 0.2426,
+      "sh": 1.81,
+      "dd": -0.0646
+    },
+    "1Y_2022": {
+      "ret": -0.0891,
+      "sh": -0.59,
+      "dd": -0.2212
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2104,
+      "sh": 0.22,
+      "dd": -0.3288
+    },
+    "3Y_2021_2023": {
+      "ret": 0.2745,
+      "sh": 0.37,
+      "dd": -0.2211
+    },
+    "5Y_2021_2025": {
+      "ret": 0.636,
+      "sh": 0.51,
+      "dd": -0.2211
+    }
+  }
+}

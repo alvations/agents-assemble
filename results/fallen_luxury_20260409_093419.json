@@ -1,0 +1,125 @@
+{
+  "metrics": {
+    "total_return": -0.029145504182335857,
+    "cagr": -0.009835674231854719,
+    "annual_volatility": 0.17615106460399502,
+    "sharpe_ratio": -0.19032076093811734,
+    "sortino_ratio": -0.28960891819923196,
+    "calmar_ratio": -0.032359516510961965,
+    "max_drawdown": -0.30394997491766695,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.4909560723514212,
+    "profit_factor": 1.006730322923997,
+    "num_trading_days": 774,
+    "skewness": 1.6593288392378596,
+    "kurtosis": 24.374053070166063,
+    "best_day": 0.11718805378300567,
+    "worst_day": -0.07998918459248172,
+    "avg_daily_return": 2.261333638058108e-05,
+    "black_swan_resilience": 84.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.24235109486192496,
+    "beta": 0.6668094341706021,
+    "information_ratio": -1.5617842053853803,
+    "tracking_error": 0.15517578806741952
+  },
+  "trade_metrics": {
+    "num_trades": 801,
+    "num_buys": 442,
+    "num_sells": 359,
+    "total_commission": 0.0,
+    "total_slippage": 3779.519758539204,
+    "total_transaction_costs": 3779.519758539204,
+    "avg_trade_size": 4718.501571209988
+  },
+  "final_positions": {
+    "HESAY": {
+      "qty": 47.0,
+      "avg_cost": 247.22998046875,
+      "realized_pnl": 6238.919998168944
+    },
+    "CPRI": {
+      "qty": 473.0,
+      "avg_cost": 24.610000610351562,
+      "realized_pnl": -1134.1601924896263
+    },
+    "RMS.PA": {
+      "qty": 6.0,
+      "avg_cost": 2122.877970377604,
+      "realized_pnl": 3035.630371093749
+    }
+  },
+  "source": "unconventional",
+  "description": "Luxury brands at decade-low multiples: Kering, Coach, Burberry \u2014 brand equity doesn't depreciate",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1482,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1019,
+  "avg_3Y_return": 0.2974,
+  "avg_5Y_return": 0.5125,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0064,
+      "sh": -0.15,
+      "dd": -0.1464
+    },
+    "1Y_2024": {
+      "ret": -0.0695,
+      "sh": -0.53,
+      "dd": -0.232
+    },
+    "1Y_2025": {
+      "ret": 0.0562,
+      "sh": 0.17,
+      "dd": -0.2255
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0289,
+      "sh": -0.06,
+      "dd": -0.2802
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0291,
+      "sh": -0.19,
+      "dd": -0.3039
+    },
+    "5Y_2020_2024": {
+      "ret": 0.6252,
+      "sh": 0.36,
+      "dd": -0.3618
+    },
+    "1Y_2020": {
+      "ret": 0.2158,
+      "sh": 0.6,
+      "dd": -0.3618
+    },
+    "1Y_2021": {
+      "ret": 0.3007,
+      "sh": 1.8,
+      "dd": -0.0965
+    },
+    "1Y_2022": {
+      "ret": 0.1015,
+      "sh": 0.35,
+      "dd": -0.1419
+    },
+    "3Y_2020_2022": {
+      "ret": 0.7423,
+      "sh": 0.67,
+      "dd": -0.3618
+    },
+    "3Y_2021_2023": {
+      "ret": 0.4476,
+      "sh": 0.55,
+      "dd": -0.146
+    },
+    "5Y_2021_2025": {
+      "ret": 0.3998,
+      "sh": 0.24,
+      "dd": -0.3027
+    }
+  }
+}

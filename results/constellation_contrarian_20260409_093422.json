@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": -0.01870975326738411,
+    "cagr": -0.006297372620494346,
+    "annual_volatility": 0.1674818566993491,
+    "sharpe_ratio": -0.18861429940508598,
+    "sortino_ratio": -0.2718406107435686,
+    "calmar_ratio": -0.02375354746794694,
+    "max_drawdown": -0.2651129322469423,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.48868175765645805,
+    "profit_factor": 1.0079054767834394,
+    "num_trading_days": 751,
+    "skewness": 0.4171599540671983,
+    "kurtosis": 6.484295912804477,
+    "best_day": 0.08091602340696769,
+    "worst_day": -0.05949406034593219,
+    "avg_daily_return": 3.029481094836308e-05,
+    "black_swan_resilience": 78.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2376035199974128,
+    "beta": 0.6789210790225778,
+    "information_ratio": -1.696395793136907,
+    "tracking_error": 0.14006372861727387
+  },
+  "trade_metrics": {
+    "num_trades": 1441,
+    "num_buys": 729,
+    "num_sells": 712,
+    "total_commission": 0.0,
+    "total_slippage": 6179.915535690308,
+    "total_transaction_costs": 6179.915535690308,
+    "avg_trade_size": 4288.629795760103
+  },
+  "final_positions": {
+    "STZ": {
+      "qty": 68.0,
+      "avg_cost": 137.61434936523438,
+      "realized_pnl": -1534.9058532714835
+    },
+    "SAM": {
+      "qty": 60.0,
+      "avg_cost": 204.3841920301649,
+      "realized_pnl": 1493.5911336263025
+    },
+    "DEO": {
+      "qty": 137.0,
+      "avg_cost": 91.57330365298043,
+      "realized_pnl": -2398.694818670103
+    },
+    "NKE": {
+      "qty": 154.0,
+      "avg_cost": 63.70326988275663,
+      "realized_pnl": -6205.806774359188
+    },
+    "LULU": {
+      "qty": 44.0,
+      "avg_cost": 221.05914356548203,
+      "realized_pnl": -4598.550637220357
+    },
+    "EFX": {
+      "qty": 42.0,
+      "avg_cost": 227.44608734114792,
+      "realized_pnl": 6460.785335686607
+    },
+    "PVH": {
+      "qty": 174.0,
+      "avg_cost": 73.45447641131521,
+      "realized_pnl": 6257.387939453121
+    },
+    "MNST": {
+      "qty": 121.0,
+      "avg_cost": 77.65653184622772,
+      "realized_pnl": 2328.0195808410617
+    },
+    "BUD": {
+      "qty": 146.0,
+      "avg_cost": 61.83782548773779,
+      "realized_pnl": 1827.0121116638136
+    }
+  },
+  "source": "unconventional",
+  "description": "STZ 49.8% DCF discount, EFX 34%, NKE permanent moat \u2014 most mispriced wide-moat stocks",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0031,
+  "consistency_score": 0.33,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0126,
+  "avg_3Y_return": 0.0146,
+  "avg_5Y_return": 0.0121,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.185,
+      "sh": 0.97,
+      "dd": -0.1394
+    },
+    "1Y_2024": {
+      "ret": -0.0661,
+      "sh": -0.72,
+      "dd": -0.175
+    },
+    "1Y_2025": {
+      "ret": -0.102,
+      "sh": -0.6,
+      "dd": -0.1614
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0302,
+      "sh": -0.17,
+      "dd": -0.2493
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0187,
+      "sh": -0.19,
+      "dd": -0.2651
+    },
+    "5Y_2020_2024": {
+      "ret": 0.1448,
+      "sh": 0.06,
+      "dd": -0.4031
+    },
+    "1Y_2020": {
+      "ret": 0.1715,
+      "sh": 0.51,
+      "dd": -0.4031
+    },
+    "1Y_2021": {
+      "ret": 0.0018,
+      "sh": -0.23,
+      "dd": -0.1343
+    },
+    "1Y_2022": {
+      "ret": -0.1144,
+      "sh": -0.5,
+      "dd": -0.2493
+    },
+    "3Y_2020_2022": {
+      "ret": 0.045,
+      "sh": 0.04,
+      "dd": -0.4031
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0621,
+      "sh": -0.01,
+      "dd": -0.3024
+    },
+    "5Y_2021_2025": {
+      "ret": -0.1207,
+      "sh": -0.27,
+      "dd": -0.3024
+    }
+  }
+}

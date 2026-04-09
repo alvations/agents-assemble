@@ -1,0 +1,135 @@
+{
+  "metrics": {
+    "total_return": 0.4286082961191846,
+    "cagr": 0.12671752641394285,
+    "annual_volatility": 0.2714325436349077,
+    "sharpe_ratio": 0.4322333499009241,
+    "sortino_ratio": 0.6116927992833022,
+    "calmar_ratio": 0.42918578878719976,
+    "max_drawdown": -0.29525098389679516,
+    "max_drawdown_date": "2024-08-05",
+    "win_rate": 0.5419440745672437,
+    "profit_factor": 1.1068197273353861,
+    "num_trading_days": 751,
+    "skewness": -0.06834706391243284,
+    "kurtosis": 3.3459906691159036,
+    "best_day": 0.08848950453270343,
+    "worst_day": -0.09078688587140082,
+    "avg_daily_return": 0.0006212141390112823,
+    "black_swan_resilience": 70.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10458862096297561,
+    "beta": 1.04405441133243,
+    "information_ratio": -0.47720546358939514,
+    "tracking_error": 0.21916895120246874
+  },
+  "trade_metrics": {
+    "num_trades": 965,
+    "num_buys": 480,
+    "num_sells": 485,
+    "total_commission": 0.0,
+    "total_slippage": 7458.872634185791,
+    "total_transaction_costs": 7458.872634185791,
+    "avg_trade_size": 7729.401693456778
+  },
+  "final_positions": {
+    "FTNT": {
+      "qty": 268.0,
+      "avg_cost": 80.81999969482422,
+      "realized_pnl": 7330.077880859381
+    },
+    "SNOW": {
+      "qty": 97.0,
+      "avg_cost": 222.89999389648438,
+      "realized_pnl": 5297.23651123047
+    },
+    "NET": {
+      "qty": 108.0,
+      "avg_cost": 205.6934550892223,
+      "realized_pnl": 21133.770903847446
+    },
+    "PANW": {
+      "qty": 116.0,
+      "avg_cost": 183.94953134879205,
+      "realized_pnl": 12298.62255754142
+    },
+    "S": {
+      "qty": 1441.0,
+      "avg_cost": 15.029999732971191,
+      "realized_pnl": -20211.18443775177
+    }
+  },
+  "source": "theme",
+  "description": "Cloud/cyber non-discretionary spend: buy dips in Cloudflare, Datadog, CrowdStrike, Palo Alto",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0568,
+  "consistency_score": 0.58,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1438,
+  "avg_3Y_return": 0.0743,
+  "avg_5Y_return": 0.2681,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3312,
+      "sh": 1.05,
+      "dd": -0.1677
+    },
+    "1Y_2024": {
+      "ret": 0.1078,
+      "sh": 0.37,
+      "dd": -0.2949
+    },
+    "1Y_2025": {
+      "ret": -0.0122,
+      "sh": -0.06,
+      "dd": -0.262
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1357,
+      "sh": -0.21,
+      "dd": -0.4132
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4286,
+      "sh": 0.43,
+      "dd": -0.2953
+    },
+    "5Y_2020_2024": {
+      "ret": 0.5624,
+      "sh": 0.32,
+      "dd": -0.5202
+    },
+    "1Y_2020": {
+      "ret": 0.6573,
+      "sh": 2.02,
+      "dd": -0.1241
+    },
+    "1Y_2021": {
+      "ret": 0.1717,
+      "sh": 0.6,
+      "dd": -0.1812
+    },
+    "1Y_2022": {
+      "ret": -0.393,
+      "sh": -2.27,
+      "dd": -0.4078
+    },
+    "3Y_2020_2022": {
+      "ret": 0.097,
+      "sh": 0.09,
+      "dd": -0.5158
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0929,
+      "sh": -0.16,
+      "dd": -0.52
+    },
+    "5Y_2021_2025": {
+      "ret": -0.0263,
+      "sh": -0.04,
+      "dd": -0.52
+    }
+  }
+}

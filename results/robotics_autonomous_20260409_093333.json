@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.9350972918280154,
+    "cagr": 0.24708422933205365,
+    "annual_volatility": 0.18037531507483284,
+    "sharpe_ratio": 1.101146678440061,
+    "sortino_ratio": 1.6592129362505055,
+    "calmar_ratio": 1.2940269429007396,
+    "max_drawdown": -0.19094210571704195,
+    "max_drawdown_date": "2025-05-07",
+    "win_rate": 0.507323568575233,
+    "profit_factor": 1.2592406208664735,
+    "num_trading_days": 751,
+    "skewness": 0.05613019100114946,
+    "kurtosis": 2.007439234219068,
+    "best_day": 0.04628926682078016,
+    "worst_day": -0.04513148999223304,
+    "avg_daily_return": 0.0009438231924231344,
+    "black_swan_resilience": 78.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.015778081955135193,
+    "beta": 0.7181125955069388,
+    "information_ratio": 0.1057625196446813,
+    "tracking_error": 0.14918405885320318
+  },
+  "trade_metrics": {
+    "num_trades": 1040,
+    "num_buys": 497,
+    "num_sells": 543,
+    "total_commission": 0.0,
+    "total_slippage": 9622.457047674188,
+    "total_transaction_costs": 9622.457047674188,
+    "avg_trade_size": 9252.362545840557
+  },
+  "final_positions": {
+    "ISRG": {
+      "qty": 38.0,
+      "avg_cost": 565.9073486328125,
+      "realized_pnl": 14567.44955444336
+    },
+    "ROK": {
+      "qty": 56.0,
+      "avg_cost": 362.63444566845135,
+      "realized_pnl": -829.4687079719957
+    },
+    "TER": {
+      "qty": 112.0,
+      "avg_cost": 181.3429812582735,
+      "realized_pnl": 16067.086607530642
+    },
+    "BOTZ": {
+      "qty": 602.0,
+      "avg_cost": 36.40281677246094,
+      "realized_pnl": 5723.036884307867
+    },
+    "ROBO": {
+      "qty": 316.0,
+      "avg_cost": 67.9162244796753,
+      "realized_pnl": 1392.9985694885295
+    },
+    "NVDA": {
+      "qty": 117.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 25435.01683998107
+    },
+    "GOOGL": {
+      "qty": 70.0,
+      "avg_cost": 291.73999392745327,
+      "realized_pnl": 14996.867926667335
+    },
+    "TSLA": {
+      "qty": 48.0,
+      "avg_cost": 442.09777173456155,
+      "realized_pnl": 12917.659168747237
+    }
+  },
+  "source": "theme",
+  "description": "Humanoid robots + autonomous vehicles: $200B market by 2030",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.5175,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.2376,
+  "avg_3Y_return": 0.5904,
+  "avg_5Y_return": 1.2692,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.4193,
+      "sh": 1.83,
+      "dd": -0.1208
+    },
+    "1Y_2024": {
+      "ret": 0.1499,
+      "sh": 0.65,
+      "dd": -0.167
+    },
+    "1Y_2025": {
+      "ret": 0.1976,
+      "sh": 0.89,
+      "dd": -0.1618
+    },
+    "3Y_2022_2024": {
+      "ret": 0.3979,
+      "sh": 0.52,
+      "dd": -0.1707
+    },
+    "3Y_2023_2025": {
+      "ret": 0.9351,
+      "sh": 1.1,
+      "dd": -0.1909
+    },
+    "5Y_2020_2024": {
+      "ret": 1.6427,
+      "sh": 0.93,
+      "dd": -0.228
+    },
+    "1Y_2020": {
+      "ret": 0.6875,
+      "sh": 2.22,
+      "dd": -0.1417
+    },
+    "1Y_2021": {
+      "ret": 0.1055,
+      "sh": 0.42,
+      "dd": -0.109
+    },
+    "1Y_2022": {
+      "ret": -0.134,
+      "sh": -1.32,
+      "dd": -0.1707
+    },
+    "3Y_2020_2022": {
+      "ret": 0.6386,
+      "sh": 0.76,
+      "dd": -0.228
+    },
+    "3Y_2021_2023": {
+      "ret": 0.3901,
+      "sh": 0.51,
+      "dd": -0.2278
+    },
+    "5Y_2021_2025": {
+      "ret": 0.8956,
+      "sh": 0.6,
+      "dd": -0.2278
+    }
+  }
+}

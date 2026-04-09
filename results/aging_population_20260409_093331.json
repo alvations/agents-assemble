@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.2290462941899154,
+    "cagr": 0.0714171858431305,
+    "annual_volatility": 0.1294365041807221,
+    "sharpe_ratio": 0.29643633976935047,
+    "sortino_ratio": 0.41444100399222095,
+    "calmar_ratio": 0.5399638824379339,
+    "max_drawdown": -0.13226289417855563,
+    "max_drawdown_date": "2024-12-19",
+    "win_rate": 0.5339547270306259,
+    "profit_factor": 1.1050874571561071,
+    "num_trading_days": 751,
+    "skewness": -0.33527709651835014,
+    "kurtosis": 3.6049448711811705,
+    "best_day": 0.04224907308485082,
+    "worst_day": -0.05284598644565952,
+    "avg_daily_return": 0.00030791051172726874,
+    "black_swan_resilience": 76.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.15988896153378795,
+    "beta": 0.3926050943421535,
+    "information_ratio": -1.0825274923435164,
+    "tracking_error": 0.14769967752749755
+  },
+  "trade_metrics": {
+    "num_trades": 425,
+    "num_buys": 218,
+    "num_sells": 207,
+    "total_commission": 0.0,
+    "total_slippage": 2267.485172365187,
+    "total_transaction_costs": 2267.485172365187,
+    "avg_trade_size": 5335.259229094561
+  },
+  "final_positions": {
+    "UNH": {
+      "qty": 46.0,
+      "avg_cost": 332.2417449951172,
+      "realized_pnl": 2408.230102539064
+    },
+    "ELV": {
+      "qty": 45.0,
+      "avg_cost": 326.95784844292535,
+      "realized_pnl": -3869.587585449218
+    },
+    "HUM": {
+      "qty": 61.0,
+      "avg_cost": 242.4709885393987,
+      "realized_pnl": -5898.858200073243
+    },
+    "ABT": {
+      "qty": 115.0,
+      "avg_cost": 127.37718853304845,
+      "realized_pnl": 1014.6197995867038
+    },
+    "PFE": {
+      "qty": 587.0,
+      "avg_cost": 24.21966136172033,
+      "realized_pnl": -2099.412500381471
+    },
+    "CI": {
+      "qty": 54.0,
+      "avg_cost": 279.38984058521413,
+      "realized_pnl": 5221.904266357421
+    },
+    "SYK": {
+      "qty": 39.0,
+      "avg_cost": 376.79969583029276,
+      "realized_pnl": 3429.714260428293
+    }
+  },
+  "source": "theme",
+  "description": "Demographic megatrend: healthcare, pharma, senior care",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1633,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0998,
+  "avg_3Y_return": 0.2589,
+  "avg_5Y_return": 0.5411,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0305,
+      "sh": -0.02,
+      "dd": -0.0721
+    },
+    "1Y_2024": {
+      "ret": -0.0002,
+      "sh": -0.33,
+      "dd": -0.1324
+    },
+    "1Y_2025": {
+      "ret": 0.1732,
+      "sh": 0.83,
+      "dd": -0.082
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0474,
+      "sh": -0.12,
+      "dd": -0.1404
+    },
+    "3Y_2023_2025": {
+      "ret": 0.229,
+      "sh": 0.3,
+      "dd": -0.1323
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4872,
+      "sh": 0.32,
+      "dd": -0.3236
+    },
+    "1Y_2020": {
+      "ret": 0.1014,
+      "sh": 0.34,
+      "dd": -0.3236
+    },
+    "1Y_2021": {
+      "ret": 0.2945,
+      "sh": 2.11,
+      "dd": -0.049
+    },
+    "1Y_2022": {
+      "ret": -0.0005,
+      "sh": -0.17,
+      "dd": -0.1404
+    },
+    "3Y_2020_2022": {
+      "ret": 0.4223,
+      "sh": 0.48,
+      "dd": -0.3236
+    },
+    "3Y_2021_2023": {
+      "ret": 0.3368,
+      "sh": 0.52,
+      "dd": -0.1402
+    },
+    "5Y_2021_2025": {
+      "ret": 0.5949,
+      "sh": 0.48,
+      "dd": -0.1402
+    }
+  }
+}

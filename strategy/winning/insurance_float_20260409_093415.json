@@ -1,0 +1,119 @@
+{
+  "strategy_name": "insurance_float",
+  "is_winning": true,
+  "generated_at": "2026-04-09T09:34:15.780875",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "8.9%",
+    "stop_loss": "11.4%",
+    "take_profit_target": "6.3%",
+    "max_drawdown_tolerance": "9.5%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "BRK-B",
+      "action": "BUY",
+      "current_position": 33.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "8.4% below entry",
+      "take_profit": "4.6% above entry",
+      "position_size": "12.1% of portfolio",
+      "trailing_stop": "5.9% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BRK-B",
+      "yahoo_url": "https://finance.yahoo.com/quote/BRK-B/"
+    },
+    {
+      "symbol": "CB",
+      "action": "BUY",
+      "current_position": 58.0,
+      "annual_volatility": "19%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.1% below entry",
+      "take_profit": "5.0% above entry",
+      "position_size": "11.1% of portfolio",
+      "trailing_stop": "6.4% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CB",
+      "yahoo_url": "https://finance.yahoo.com/quote/CB/"
+    },
+    {
+      "symbol": "MKL",
+      "action": "BUY",
+      "current_position": 8.0,
+      "annual_volatility": "21%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "10.1% below entry",
+      "take_profit": "5.6% above entry",
+      "position_size": "10.0% of portfolio",
+      "trailing_stop": "7.1% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MKL",
+      "yahoo_url": "https://finance.yahoo.com/quote/MKL/"
+    },
+    {
+      "symbol": "AFL",
+      "action": "BUY",
+      "current_position": 156.0,
+      "annual_volatility": "20%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.6% below entry",
+      "take_profit": "5.3% above entry",
+      "position_size": "10.6% of portfolio",
+      "trailing_stop": "6.7% trailing after 2.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AFL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AFL/"
+    },
+    {
+      "symbol": "WRB",
+      "action": "BUY",
+      "current_position": 237.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "10.8% below entry",
+      "take_profit": "6.0% above entry",
+      "position_size": "9.4% of portfolio",
+      "trailing_stop": "7.6% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=WRB",
+      "yahoo_url": "https://finance.yahoo.com/quote/WRB/"
+    },
+    {
+      "symbol": "ALL",
+      "action": "BUY",
+      "current_position": 81.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "11.9% below entry",
+      "take_profit": "6.6% above entry",
+      "position_size": "8.6% of portfolio",
+      "trailing_stop": "8.3% trailing after 2.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ALL",
+      "yahoo_url": "https://finance.yahoo.com/quote/ALL/"
+    },
+    {
+      "symbol": "CINF",
+      "action": "BUY",
+      "current_position": 103.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "11.0% below entry",
+      "take_profit": "6.1% above entry",
+      "position_size": "9.2% of portfolio",
+      "trailing_stop": "7.7% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CINF",
+      "yahoo_url": "https://finance.yahoo.com/quote/CINF/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "42.46%",
+    "sharpe_ratio": "0.69",
+    "max_drawdown": "-9.49%",
+    "win_rate": "54.59%",
+    "alpha": "-10.56%"
+  }
+}

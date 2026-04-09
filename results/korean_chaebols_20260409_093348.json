@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.3749421215520843,
+    "cagr": 0.11237981132381436,
+    "annual_volatility": 0.1700688121577502,
+    "sharpe_ratio": 0.4824215729258335,
+    "sortino_ratio": 0.7159055737130813,
+    "calmar_ratio": 0.47813772985035635,
+    "max_drawdown": -0.23503648490359896,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5139813581890812,
+    "profit_factor": 1.1300814325848687,
+    "num_trading_days": 751,
+    "skewness": 0.3709113779624732,
+    "kurtosis": 3.3980072956640637,
+    "best_day": 0.06862053009516211,
+    "worst_day": -0.03876373435358005,
+    "avg_daily_return": 0.0004812247194054293,
+    "black_swan_resilience": 79.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1189263360531041,
+    "beta": 0.6378451782498351,
+    "information_ratio": -0.7941327506587703,
+    "tracking_error": 0.1497562415785637
+  },
+  "trade_metrics": {
+    "num_trades": 1034,
+    "num_buys": 541,
+    "num_sells": 493,
+    "total_commission": 0.0,
+    "total_slippage": 6441.623076898819,
+    "total_transaction_costs": 6441.623076898819,
+    "avg_trade_size": 6229.809552126512
+  },
+  "final_positions": {
+    "SHG": {
+      "qty": 330.0,
+      "avg_cost": 51.212080867705716,
+      "realized_pnl": 15156.480737322498
+    },
+    "CPNG": {
+      "qty": 733.0,
+      "avg_cost": 26.629093668803765,
+      "realized_pnl": 5167.733420616222
+    },
+    "LPL": {
+      "qty": 4218.0,
+      "avg_cost": 4.108814738722648,
+      "realized_pnl": 5654.290001630794
+    },
+    "EWY": {
+      "qty": 182.0,
+      "avg_cost": 93.52895801928074,
+      "realized_pnl": 6215.420151226617
+    },
+    "SKM": {
+      "qty": 868.0,
+      "avg_cost": 21.018327554325374,
+      "realized_pnl": 3606.6135326085287
+    },
+    "PKX": {
+      "qty": 330.0,
+      "avg_cost": 54.349998474121094,
+      "realized_pnl": 1147.1974945068348
+    },
+    "KB": {
+      "qty": 206.0,
+      "avg_cost": 83.70571956397688,
+      "realized_pnl": 3334.6423712619994
+    }
+  },
+  "source": "theme",
+  "description": "Korea discount value: chaebols + fintech, governance reform catalyst",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1045,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0916,
+  "avg_3Y_return": 0.1836,
+  "avg_5Y_return": 0.2998,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2198,
+      "sh": 1.12,
+      "dd": -0.1084
+    },
+    "1Y_2024": {
+      "ret": -0.0826,
+      "sh": -0.61,
+      "dd": -0.1971
+    },
+    "1Y_2025": {
+      "ret": 0.2331,
+      "sh": 1.07,
+      "dd": -0.1262
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0146,
+      "sh": -0.08,
+      "dd": -0.2508
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3749,
+      "sh": 0.48,
+      "dd": -0.235
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2973,
+      "sh": 0.17,
+      "dd": -0.3549
+    },
+    "1Y_2020": {
+      "ret": 0.2163,
+      "sh": 0.67,
+      "dd": -0.3549
+    },
+    "1Y_2021": {
+      "ret": 0.0527,
+      "sh": 0.16,
+      "dd": -0.1421
+    },
+    "1Y_2022": {
+      "ret": -0.0894,
+      "sh": -0.45,
+      "dd": -0.2508
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1711,
+      "sh": 0.18,
+      "dd": -0.3549
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1739,
+      "sh": 0.17,
+      "dd": -0.3123
+    },
+    "5Y_2021_2025": {
+      "ret": 0.3023,
+      "sh": 0.17,
+      "dd": -0.3123
+    }
+  }
+}

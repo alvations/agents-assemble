@@ -1,0 +1,54 @@
+{
+  "strategy_name": "subscription_monopoly",
+  "is_winning": true,
+  "generated_at": "2026-04-09T09:33:35.088000",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "8.4%",
+    "stop_loss": "24.1%",
+    "take_profit_target": "8.2%",
+    "max_drawdown_tolerance": "20.1%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "CRM",
+      "action": "BUY",
+      "current_position": 71.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "33.8% below entry",
+      "take_profit": "11.4% above entry",
+      "position_size": "6.0% of portfolio",
+      "trailing_stop": "23.6% trailing after 4.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CRM",
+      "yahoo_url": "https://finance.yahoo.com/quote/CRM/"
+    },
+    {
+      "symbol": "ZM",
+      "action": "BUY",
+      "current_position": 219.0,
+      "annual_volatility": "35%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "35.7% below entry",
+      "take_profit": "12.1% above entry",
+      "position_size": "5.7% of portfolio",
+      "trailing_stop": "25.0% trailing after 4.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ZM",
+      "yahoo_url": "https://finance.yahoo.com/quote/ZM/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "57.16%",
+    "sharpe_ratio": "0.75",
+    "max_drawdown": "-20.12%",
+    "win_rate": "54.99%",
+    "alpha": "-6.81%"
+  }
+}

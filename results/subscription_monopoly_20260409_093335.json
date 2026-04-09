@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 0.5715747980452275,
+    "cagr": 0.16324116078375694,
+    "annual_volatility": 0.16938939152139793,
+    "sharpe_ratio": 0.7490494516840815,
+    "sortino_ratio": 1.0504795971518506,
+    "calmar_ratio": 0.8111526625693654,
+    "max_drawdown": -0.2012459162331819,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.5499334221038615,
+    "profit_factor": 1.1806837793814868,
+    "num_trading_days": 751,
+    "skewness": -0.41207012840737484,
+    "kurtosis": 1.7037215740501122,
+    "best_day": 0.038076753218915016,
+    "worst_day": -0.04896847129388071,
+    "avg_daily_return": 0.0006591460169190538,
+    "black_swan_resilience": 71.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.06806498659316151,
+    "beta": 0.7281524631941926,
+    "information_ratio": -0.5081708794749894,
+    "tracking_error": 0.13394113937320068
+  },
+  "trade_metrics": {
+    "num_trades": 1166,
+    "num_buys": 569,
+    "num_sells": 597,
+    "total_commission": 0.0,
+    "total_slippage": 5568.1987441864085,
+    "total_transaction_costs": 5568.1987441864085,
+    "avg_trade_size": 4775.470621086108
+  },
+  "final_positions": {
+    "CRM": {
+      "qty": 71.0,
+      "avg_cost": 264.6300048828125,
+      "realized_pnl": 8254.496109008789
+    },
+    "ZM": {
+      "qty": 219.0,
+      "avg_cost": 81.67678841108608,
+      "realized_pnl": -942.4395116782058
+    }
+  },
+  "source": "theme",
+  "description": "Sticky subscriptions nobody cancels: CRM, ADP, NFLX, SPOT \u2014 predictable cash flow machines",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.5221,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.2207,
+  "avg_3Y_return": 0.642,
+  "avg_5Y_return": 1.4198,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3739,
+      "sh": 1.63,
+      "dd": -0.1503
+    },
+    "1Y_2024": {
+      "ret": 0.2184,
+      "sh": 1.03,
+      "dd": -0.0969
+    },
+    "1Y_2025": {
+      "ret": -0.0452,
+      "sh": -0.48,
+      "dd": -0.2026
+    },
+    "3Y_2022_2024": {
+      "ret": 0.5547,
+      "sh": 0.77,
+      "dd": -0.1507
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5716,
+      "sh": 0.75,
+      "dd": -0.2012
+    },
+    "5Y_2020_2024": {
+      "ret": 1.9723,
+      "sh": 1.01,
+      "dd": -0.1985
+    },
+    "1Y_2020": {
+      "ret": 0.5509,
+      "sh": 1.58,
+      "dd": -0.1985
+    },
+    "1Y_2021": {
+      "ret": 0.2791,
+      "sh": 1.12,
+      "dd": -0.1341
+    },
+    "1Y_2022": {
+      "ret": -0.0529,
+      "sh": -0.78,
+      "dd": -0.0933
+    },
+    "3Y_2020_2022": {
+      "ret": 0.8081,
+      "sh": 0.86,
+      "dd": -0.1985
+    },
+    "3Y_2021_2023": {
+      "ret": 0.6334,
+      "sh": 0.82,
+      "dd": -0.183
+    },
+    "5Y_2021_2025": {
+      "ret": 0.8674,
+      "sh": 0.6,
+      "dd": -0.202
+    }
+  }
+}

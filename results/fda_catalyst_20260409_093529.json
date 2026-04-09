@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.02294671813229443,
+    "cagr": 0.007617302393845726,
+    "annual_volatility": 0.09683044577512998,
+    "sharpe_ratio": -0.27831660037966965,
+    "sortino_ratio": -0.41213356684040764,
+    "calmar_ratio": 0.04826051784206519,
+    "max_drawdown": -0.1578371458585195,
+    "max_drawdown_date": "2025-06-11",
+    "win_rate": 0.474034620505992,
+    "profit_factor": 1.0249410538298407,
+    "num_trading_days": 751,
+    "skewness": 1.1308072224714418,
+    "kurtosis": 11.572488642837051,
+    "best_day": 0.04912320245723434,
+    "worst_day": -0.024136543966633894,
+    "avg_daily_return": 4.8707321198476636e-05,
+    "black_swan_resilience": 91.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.22368884498307273,
+    "beta": 0.17395582270105533,
+    "information_ratio": -1.422084167368609,
+    "tracking_error": 0.15729648787032155
+  },
+  "trade_metrics": {
+    "num_trades": 2394,
+    "num_buys": 1154,
+    "num_sells": 1240,
+    "total_commission": 0.0,
+    "total_slippage": 12859.787345210994,
+    "total_transaction_costs": 12859.787345210994,
+    "avg_trade_size": 5371.67391195114
+  },
+  "final_positions": {
+    "ABBV": {
+      "qty": 48.0,
+      "avg_cost": 225.86790918420863,
+      "realized_pnl": -841.6828274197123
+    },
+    "JNJ": {
+      "qty": 53.0,
+      "avg_cost": 205.02904052734374,
+      "realized_pnl": 1023.7389923095734
+    },
+    "XBI": {
+      "qty": 89.0,
+      "avg_cost": 123.98109088557781,
+      "realized_pnl": 3221.1146733501164
+    },
+    "BIIB": {
+      "qty": 62.0,
+      "avg_cost": 175.25714329310827,
+      "realized_pnl": 1973.93557521275
+    },
+    "GILD": {
+      "qty": 89.0,
+      "avg_cost": 121.25931150079721,
+      "realized_pnl": 1280.6515842887266
+    },
+    "IBB": {
+      "qty": 64.0,
+      "avg_cost": 170.07220981545643,
+      "realized_pnl": 1371.3075854157703
+    },
+    "IONS": {
+      "qty": 137.0,
+      "avg_cost": 79.39634516033537,
+      "realized_pnl": 4871.399624948128
+    },
+    "AMGN": {
+      "qty": 33.0,
+      "avg_cost": 325.0576171875,
+      "realized_pnl": -706.9319610595726
+    }
+  },
+  "source": "news_event",
+  "description": "Biotech FDA event plays: volume spike + momentum in pharma/biotech",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.0147,
+  "consistency_score": 0.25,
+  "n_windows_tested": 12,
+  "avg_1Y_return": -0.0171,
+  "avg_3Y_return": -0.1023,
+  "avg_5Y_return": -0.1063,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.1166,
+      "sh": -2.11,
+      "dd": -0.135
+    },
+    "1Y_2024": {
+      "ret": 0.0608,
+      "sh": 0.25,
+      "dd": -0.076
+    },
+    "1Y_2025": {
+      "ret": 0.0779,
+      "sh": 0.39,
+      "dd": -0.1121
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1369,
+      "sh": -0.82,
+      "dd": -0.2277
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0229,
+      "sh": -0.28,
+      "dd": -0.1578
+    },
+    "5Y_2020_2024": {
+      "ret": -0.1798,
+      "sh": -0.56,
+      "dd": -0.3334
+    },
+    "1Y_2020": {
+      "ret": -0.0853,
+      "sh": -0.6,
+      "dd": -0.2331
+    },
+    "1Y_2021": {
+      "ret": 0.046,
+      "sh": 0.11,
+      "dd": -0.1116
+    },
+    "1Y_2022": {
+      "ret": -0.0854,
+      "sh": -1.0,
+      "dd": -0.1487
+    },
+    "3Y_2020_2022": {
+      "ret": -0.1312,
+      "sh": -0.52,
+      "dd": -0.2646
+    },
+    "3Y_2021_2023": {
+      "ret": -0.1639,
+      "sh": -0.87,
+      "dd": -0.244
+    },
+    "5Y_2021_2025": {
+      "ret": -0.0328,
+      "sh": -0.38,
+      "dd": -0.2604
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 1.6401465363459988,
+    "cagr": 0.3836470141350268,
+    "annual_volatility": 0.18267431435975667,
+    "sharpe_ratio": 1.6609349535144204,
+    "sortino_ratio": 2.501275236331405,
+    "calmar_ratio": 1.7912488738704446,
+    "max_drawdown": -0.21417850960378315,
+    "max_drawdown_date": "2025-04-28",
+    "win_rate": 0.5712383488681758,
+    "profit_factor": 1.3677801996284622,
+    "num_trading_days": 751,
+    "skewness": -0.10125524672492717,
+    "kurtosis": 1.402798595309469,
+    "best_day": 0.05534420091028647,
+    "worst_day": -0.04340922955221671,
+    "avg_daily_return": 0.0013596584097333307,
+    "black_swan_resilience": 74.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.15234086675810832,
+    "beta": 0.773034421979567,
+    "information_ratio": 1.0639392869509852,
+    "tracking_error": 0.1431856766890182
+  },
+  "trade_metrics": {
+    "num_trades": 1565,
+    "num_buys": 750,
+    "num_sells": 815,
+    "total_commission": 0.0,
+    "total_slippage": 11886.151280369304,
+    "total_transaction_costs": 11886.151280369304,
+    "avg_trade_size": 7594.984843686442
+  },
+  "final_positions": {
+    "TEVA": {
+      "qty": 624.0,
+      "avg_cost": 22.66083404683008,
+      "realized_pnl": 13922.251920899453
+    },
+    "META": {
+      "qty": 35.0,
+      "avg_cost": 660.9341430664062,
+      "realized_pnl": 16378.55673980714
+    },
+    "LLY": {
+      "qty": 21.0,
+      "avg_cost": 975.8830589011864,
+      "realized_pnl": 6591.841295030381
+    },
+    "XLF": {
+      "qty": 597.0,
+      "avg_cost": 52.60658619954036,
+      "realized_pnl": 464.5011666004495
+    },
+    "RSP": {
+      "qty": 170.0,
+      "avg_cost": 188.96243430689762,
+      "realized_pnl": -1616.2274916799465
+    },
+    "NTRA": {
+      "qty": 85.0,
+      "avg_cost": 211.1798442185751,
+      "realized_pnl": 25754.628795779812
+    },
+    "AMZN": {
+      "qty": 141.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 6734.276649475107
+    },
+    "GOOGL": {
+      "qty": 73.0,
+      "avg_cost": 265.9837024974848,
+      "realized_pnl": 15997.750406828116
+    },
+    "PLTR": {
+      "qty": 178.0,
+      "avg_cost": 182.61941950371926,
+      "realized_pnl": 27662.215521092116
+    }
+  },
+  "source": "famous",
+  "description": "Macro + high-conviction growth: aggressive repositioning, concentrated bets",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.4422,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.2637,
+  "avg_3Y_return": 0.6344,
+  "avg_5Y_return": 1.2913,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.4428,
+      "sh": 1.8,
+      "dd": -0.0997
+    },
+    "1Y_2024": {
+      "ret": 0.4815,
+      "sh": 2.22,
+      "dd": -0.0996
+    },
+    "1Y_2025": {
+      "ret": 0.2484,
+      "sh": 1.09,
+      "dd": -0.2141
+    },
+    "3Y_2022_2024": {
+      "ret": 0.5885,
+      "sh": 0.73,
+      "dd": -0.2636
+    },
+    "3Y_2023_2025": {
+      "ret": 1.6401,
+      "sh": 1.66,
+      "dd": -0.2142
+    },
+    "5Y_2020_2024": {
+      "ret": 1.5904,
+      "sh": 0.87,
+      "dd": -0.3517
+    },
+    "1Y_2020": {
+      "ret": 0.6554,
+      "sh": 1.98,
+      "dd": -0.2227
+    },
+    "1Y_2021": {
+      "ret": 0.0057,
+      "sh": -0.11,
+      "dd": -0.1307
+    },
+    "1Y_2022": {
+      "ret": -0.2513,
+      "sh": -1.78,
+      "dd": -0.2636
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2175,
+      "sh": 0.23,
+      "dd": -0.3517
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0914,
+      "sh": 0.04,
+      "dd": -0.3516
+    },
+    "5Y_2021_2025": {
+      "ret": 0.9923,
+      "sh": 0.64,
+      "dd": -0.3516
+    }
+  }
+}

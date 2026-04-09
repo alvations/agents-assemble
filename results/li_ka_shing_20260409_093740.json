@@ -1,0 +1,135 @@
+{
+  "metrics": {
+    "total_return": 0.1614009664246352,
+    "cagr": 0.05132044948419723,
+    "annual_volatility": 0.09996895918091926,
+    "sharpe_ratio": 0.15978154578262568,
+    "sortino_ratio": 0.23070630822504307,
+    "calmar_ratio": 0.2978501560446231,
+    "max_drawdown": -0.17230291286638955,
+    "max_drawdown_date": "2023-10-23",
+    "win_rate": 0.5233022636484687,
+    "profit_factor": 1.1072590318754838,
+    "num_trading_days": 751,
+    "skewness": 0.2674059826872103,
+    "kurtosis": 4.312396177086071,
+    "best_day": 0.0408293034037035,
+    "worst_day": -0.02707692633897263,
+    "avg_daily_return": 0.00021903555655399093,
+    "black_swan_resilience": 81.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.17998569789272123,
+    "beta": 0.26137779415964346,
+    "information_ratio": -1.234989422678179,
+    "tracking_error": 0.1457386553986892
+  },
+  "trade_metrics": {
+    "num_trades": 197,
+    "num_buys": 107,
+    "num_sells": 90,
+    "total_commission": 0.0,
+    "total_slippage": 1447.2923276138313,
+    "total_transaction_costs": 1447.2923276138313,
+    "avg_trade_size": 7346.661561491525
+  },
+  "final_positions": {
+    "AMT": {
+      "qty": 101.0,
+      "avg_cost": 194.75926389788637,
+      "realized_pnl": 3181.165512084961
+    },
+    "XLRE": {
+      "qty": 435.0,
+      "avg_cost": 40.120704151022025,
+      "realized_pnl": 2718.4656105041504
+    },
+    "VZ": {
+      "qty": 439.0,
+      "avg_cost": 38.79688262939453,
+      "realized_pnl": -1268.228435516356
+    },
+    "SO": {
+      "qty": 199.0,
+      "avg_cost": 88.31629180908203,
+      "realized_pnl": 691.0538940429688
+    },
+    "T": {
+      "qty": 689.0,
+      "avg_cost": 24.245742797851562,
+      "realized_pnl": -2050.7053565979
+    }
+  },
+  "source": "famous",
+  "description": "Patient infrastructure/utility value: steady cash flows, geographic diversity",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0835,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0554,
+  "avg_3Y_return": 0.1238,
+  "avg_5Y_return": 0.2674,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0252,
+      "sh": -0.03,
+      "dd": -0.1723
+    },
+    "1Y_2024": {
+      "ret": 0.062,
+      "sh": 0.38,
+      "dd": -0.0378
+    },
+    "1Y_2025": {
+      "ret": 0.0622,
+      "sh": 0.32,
+      "dd": -0.0541
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0646,
+      "sh": -0.08,
+      "dd": -0.1859
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1614,
+      "sh": 0.16,
+      "dd": -0.1723
+    },
+    "5Y_2020_2024": {
+      "ret": 0.3105,
+      "sh": 0.18,
+      "dd": -0.1859
+    },
+    "1Y_2020": {
+      "ret": 0.1334,
+      "sh": 0.51,
+      "dd": -0.1469
+    },
+    "1Y_2021": {
+      "ret": 0.0837,
+      "sh": 0.82,
+      "dd": -0.0527
+    },
+    "1Y_2022": {
+      "ret": -0.0344,
+      "sh": -0.38,
+      "dd": -0.1859
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1883,
+      "sh": 0.19,
+      "dd": -0.1859
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0809,
+      "sh": -0.04,
+      "dd": -0.1859
+    },
+    "5Y_2021_2025": {
+      "ret": 0.2243,
+      "sh": 0.07,
+      "dd": -0.1859
+    }
+  }
+}

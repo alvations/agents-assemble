@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 0.22847743404489296,
+    "cagr": 0.07125129196437308,
+    "annual_volatility": 0.13499800558835975,
+    "sharpe_ratio": 0.28787827477814726,
+    "sortino_ratio": 0.44732176640385013,
+    "calmar_ratio": 0.6071854163331007,
+    "max_drawdown": -0.11734684339863122,
+    "max_drawdown_date": "2024-08-05",
+    "win_rate": 0.4980026631158455,
+    "profit_factor": 1.1125234089639977,
+    "num_trading_days": 751,
+    "skewness": 1.4429534900108902,
+    "kurtosis": 15.878183669437247,
+    "best_day": 0.08641428034539933,
+    "worst_day": -0.03910299995895916,
+    "avg_daily_return": 0.00030986808877248376,
+    "black_swan_resilience": 93.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16005485541254538,
+    "beta": 0.5411931556247541,
+    "information_ratio": -1.2542975468202784,
+    "tracking_error": 0.1276051729657722
+  },
+  "trade_metrics": {
+    "num_trades": 1126,
+    "num_buys": 554,
+    "num_sells": 572,
+    "total_commission": 0.0,
+    "total_slippage": 5995.8536704311255,
+    "total_transaction_costs": 5995.8536704311255,
+    "avg_trade_size": 5324.914449761223
+  },
+  "final_positions": {
+    "MDT": {
+      "qty": 155.0,
+      "avg_cost": 97.01995007914881,
+      "realized_pnl": 1179.086540222165
+    },
+    "PFE": {
+      "qty": 600.0,
+      "avg_cost": 24.096582666136257,
+      "realized_pnl": -4420.241602481946
+    }
+  },
+  "source": "unconventional",
+  "description": "Once-great blue chips at deep discounts: turnaround catalysts + dividend income",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": -0.0066,
+  "consistency_score": 0.17,
+  "n_windows_tested": 12,
+  "avg_1Y_return": -0.0028,
+  "avg_3Y_return": -0.0683,
+  "avg_5Y_return": -0.084,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0276,
+      "sh": -0.05,
+      "dd": -0.1059
+    },
+    "1Y_2024": {
+      "ret": -0.0175,
+      "sh": -0.41,
+      "dd": -0.1174
+    },
+    "1Y_2025": {
+      "ret": 0.2026,
+      "sh": 0.96,
+      "dd": -0.1153
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1437,
+      "sh": -0.54,
+      "dd": -0.2559
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2285,
+      "sh": 0.29,
+      "dd": -0.1173
+    },
+    "5Y_2020_2024": {
+      "ret": -0.1909,
+      "sh": -0.42,
+      "dd": -0.2967
+    },
+    "1Y_2020": {
+      "ret": -0.0455,
+      "sh": -0.23,
+      "dd": -0.2205
+    },
+    "1Y_2021": {
+      "ret": -0.0159,
+      "sh": -0.73,
+      "dd": -0.1026
+    },
+    "1Y_2022": {
+      "ret": -0.1683,
+      "sh": -1.04,
+      "dd": -0.2559
+    },
+    "3Y_2020_2022": {
+      "ret": -0.2139,
+      "sh": -0.55,
+      "dd": -0.2967
+    },
+    "3Y_2021_2023": {
+      "ret": -0.1442,
+      "sh": -0.6,
+      "dd": -0.2964
+    },
+    "5Y_2021_2025": {
+      "ret": 0.0229,
+      "sh": -0.18,
+      "dd": -0.2964
+    }
+  }
+}

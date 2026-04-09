@@ -1,0 +1,158 @@
+{
+  "metrics": {
+    "total_return": -0.035819975976373986,
+    "cagr": -0.012126711597840956,
+    "annual_volatility": 0.04868729230309804,
+    "sharpe_ratio": -1.0331836626990478,
+    "sortino_ratio": -1.8588817370595048,
+    "calmar_ratio": -0.11482371853581644,
+    "max_drawdown": -0.105611556152994,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.11984021304926765,
+    "profit_factor": 0.8901984784435814,
+    "num_trading_days": 751,
+    "skewness": 10.064622345118984,
+    "kurtosis": 222.22121584669418,
+    "best_day": 0.06135687004304291,
+    "worst_day": -0.023447261897306837,
+    "avg_daily_return": -4.396487922704667e-05,
+    "black_swan_resilience": 94.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.24343285897475941,
+    "beta": 0.17182669732065645,
+    "information_ratio": -1.8227209150528587,
+    "tracking_error": 0.13355465280744852
+  },
+  "trade_metrics": {
+    "num_trades": 486,
+    "num_buys": 275,
+    "num_sells": 211,
+    "total_commission": 0.0,
+    "total_slippage": 5338.749310436248,
+    "total_transaction_costs": 5338.749310436248,
+    "avg_trade_size": 10985.080885671294
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "Mean-reversion: buy oversold, sell overbought, size by vol",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0017,
+  "consistency_score": 0.17,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0175,
+  "avg_3Y_return": -0.0059,
+  "avg_5Y_return": 0.0221,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0455,
+      "sh": -2.6,
+      "dd": -0.0573
+    },
+    "1Y_2024": {
+      "ret": -0.0067,
+      "sh": -1.75,
+      "dd": -0.0197
+    },
+    "1Y_2025": {
+      "ret": 0.018,
+      "sh": -0.25,
+      "dd": -0.0601
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0814,
+      "sh": -1.72,
+      "dd": -0.0989
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0358,
+      "sh": -1.03,
+      "dd": -0.1056
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0791,
+      "sh": -0.34,
+      "dd": -0.0986
+    },
+    "1Y_2020": {
+      "ret": 0.1371,
+      "sh": 0.78,
+      "dd": -0.0635
+    },
+    "1Y_2021": {
+      "ret": 0.0328,
+      "sh": -0.17,
+      "dd": -0.0149
+    },
+    "1Y_2022": {
+      "ret": -0.0309,
+      "sh": -1.31,
+      "dd": -0.0398
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1381,
+      "sh": 0.09,
+      "dd": -0.0635
+    },
+    "3Y_2021_2023": {
+      "ret": -0.0446,
+      "sh": -1.29,
+      "dd": -0.0948
+    },
+    "5Y_2021_2025": {
+      "ret": -0.035,
+      "sh": -0.96,
+      "dd": -0.1412
+    }
+  }
+}

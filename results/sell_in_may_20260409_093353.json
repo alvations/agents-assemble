@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 0.27470386499863997,
+    "cagr": 0.08456877051703104,
+    "annual_volatility": 0.13432975918980988,
+    "sharpe_ratio": 0.38099701442461076,
+    "sortino_ratio": 0.5640770430940091,
+    "calmar_ratio": 0.453684206139604,
+    "max_drawdown": -0.18640448438050372,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5312916111850865,
+    "profit_factor": 1.141949893371488,
+    "num_trading_days": 751,
+    "skewness": 1.3766483018278886,
+    "kurtosis": 28.230586018512767,
+    "best_day": 0.09902647219201022,
+    "worst_day": -0.05378294308254172,
+    "avg_daily_return": 0.00035874207390116156,
+    "black_swan_resilience": 90.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.14673737685988741,
+    "beta": 0.6764901813565425,
+    "information_ratio": -1.4878441115058656,
+    "tracking_error": 0.09862416077405628
+  },
+  "trade_metrics": {
+    "num_trades": 92,
+    "num_buys": 40,
+    "num_sells": 52,
+    "total_commission": 0.0,
+    "total_slippage": 1424.0922220382688,
+    "total_transaction_costs": 1424.0922220382688,
+    "avg_trade_size": 15479.263283024664
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 94.0,
+      "avg_cost": 679.4711303710938,
+      "realized_pnl": 13970.435974121097
+    },
+    "QQQ": {
+      "qty": 83.0,
+      "avg_cost": 630.2924981174699,
+      "realized_pnl": 15995.032928466799
+    }
+  },
+  "source": "unconventional",
+  "description": "Seasonal: stocks Nov-Apr, bonds May-Oct",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0376,
+  "consistency_score": 0.5,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.041,
+  "avg_3Y_return": 0.07,
+  "avg_5Y_return": 0.1783,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1847,
+      "sh": 1.19,
+      "dd": -0.0983
+    },
+    "1Y_2024": {
+      "ret": 0.1243,
+      "sh": 0.83,
+      "dd": -0.0539
+    },
+    "1Y_2025": {
+      "ret": -0.0313,
+      "sh": -0.32,
+      "dd": -0.1866
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0181,
+      "sh": -0.17,
+      "dd": -0.2456
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2747,
+      "sh": 0.38,
+      "dd": -0.1864
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2125,
+      "sh": 0.08,
+      "dd": -0.2826
+    },
+    "1Y_2020": {
+      "ret": 0.0372,
+      "sh": 0.13,
+      "dd": -0.2826
+    },
+    "1Y_2021": {
+      "ret": 0.1554,
+      "sh": 0.98,
+      "dd": -0.059
+    },
+    "1Y_2022": {
+      "ret": -0.2243,
+      "sh": -1.54,
+      "dd": -0.2456
+    },
+    "3Y_2020_2022": {
+      "ret": -0.0757,
+      "sh": -0.23,
+      "dd": -0.2826
+    },
+    "3Y_2021_2023": {
+      "ret": 0.063,
+      "sh": -0.06,
+      "dd": -0.2468
+    },
+    "5Y_2021_2025": {
+      "ret": 0.1441,
+      "sh": -0.02,
+      "dd": -0.2468
+    }
+  }
+}

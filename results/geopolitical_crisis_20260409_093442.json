@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 0.0008040794555528308,
+    "cagr": 0.000268874976791178,
+    "annual_volatility": 0.10093680102247445,
+    "sharpe_ratio": -0.33551443553180044,
+    "sortino_ratio": -0.45846282622399176,
+    "calmar_ratio": 0.0012580143586552284,
+    "max_drawdown": -0.21372965653475973,
+    "max_drawdown_date": "2025-04-07",
+    "win_rate": 0.5179760319573902,
+    "profit_factor": 1.0101667880857217,
+    "num_trading_days": 751,
+    "skewness": -0.0022095688954306973,
+    "kurtosis": 7.734945868636705,
+    "best_day": 0.04883790526745524,
+    "worst_day": -0.030661432154215462,
+    "avg_daily_return": 2.1261950809353395e-05,
+    "black_swan_resilience": 76.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.23103727240012728,
+    "beta": 0.26990651511096914,
+    "information_ratio": -1.5930857453567566,
+    "tracking_error": 0.14502500764539114
+  },
+  "trade_metrics": {
+    "num_trades": 770,
+    "num_buys": 358,
+    "num_sells": 412,
+    "total_commission": 0.0,
+    "total_slippage": 3229.1126967773466,
+    "total_transaction_costs": 3229.1126967773466,
+    "avg_trade_size": 4193.652852957589
+  },
+  "final_positions": {
+    "NOC": {
+      "qty": 20.0,
+      "avg_cost": 582.1075988769531,
+      "realized_pnl": -1670.8566284179688
+    },
+    "HAL": {
+      "qty": 410.0,
+      "avg_cost": 26.495930971015888,
+      "realized_pnl": -1519.4153607518952
+    },
+    "RTX": {
+      "qty": 62.0,
+      "avg_cost": 171.78169742707283,
+      "realized_pnl": 1537.422004699714
+    },
+    "ITA": {
+      "qty": 53.0,
+      "avg_cost": 210.0591396115861,
+      "realized_pnl": 3146.478706359859
+    },
+    "GLD": {
+      "qty": 13.0,
+      "avg_cost": 398.6000061035156,
+      "realized_pnl": 4965.209625244139
+    },
+    "SLV": {
+      "qty": 76.0,
+      "avg_cost": 62.470001220703125,
+      "realized_pnl": 5044.45986557007
+    },
+    "XLE": {
+      "qty": 259.0,
+      "avg_cost": 44.43147486109663,
+      "realized_pnl": -6684.068178517481
+    },
+    "DVN": {
+      "qty": 319.0,
+      "avg_cost": 34.08449755999245,
+      "realized_pnl": -1792.5684679070844
+    },
+    "LMT": {
+      "qty": 24.0,
+      "avg_cost": 482.2493184407552,
+      "realized_pnl": 760.5994567871066
+    }
+  },
+  "source": "crisis",
+  "description": "War/crisis beneficiaries: energy + defense spike when vol rises",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0465,
+  "consistency_score": 0.5,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0494,
+  "avg_3Y_return": 0.1038,
+  "avg_5Y_return": 0.219,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.1648,
+      "sh": -2.21,
+      "dd": -0.187
+    },
+    "1Y_2024": {
+      "ret": -0.0057,
+      "sh": -0.51,
+      "dd": -0.0992
+    },
+    "1Y_2025": {
+      "ret": 0.203,
+      "sh": 1.3,
+      "dd": -0.0553
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0135,
+      "sh": -0.22,
+      "dd": -0.2809
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0008,
+      "sh": -0.34,
+      "dd": -0.2137
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0124,
+      "sh": -0.09,
+      "dd": -0.3208
+    },
+    "1Y_2020": {
+      "ret": -0.1383,
+      "sh": -0.54,
+      "dd": -0.3208
+    },
+    "1Y_2021": {
+      "ret": 0.1951,
+      "sh": 0.77,
+      "dd": -0.1489
+    },
+    "1Y_2022": {
+      "ret": 0.2071,
+      "sh": 0.78,
+      "dd": -0.2136
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2385,
+      "sh": 0.25,
+      "dd": -0.3208
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1895,
+      "sh": 0.19,
+      "dd": -0.2732
+    },
+    "5Y_2021_2025": {
+      "ret": 0.4256,
+      "sh": 0.28,
+      "dd": -0.297
+    }
+  }
+}

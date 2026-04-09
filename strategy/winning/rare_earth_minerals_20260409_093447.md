@@ -1,0 +1,47 @@
+# WINNING Strategy: rare_earth_minerals
+
+> **What it does:** Critical minerals supply chain: rare earth miners + battery metals
+>
+> **Hypothesis:** Rare Earth / Critical Minerals — composite: 0.39, consistency: 75%
+
+**Generated:** 2026-04-09T09:34:47.055165
+**Assessment:** BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
+
+## Performance Summary
+- **total_return:** 62.28%
+- **sharpe_ratio:** 0.74
+- **max_drawdown:** -15.43%
+- **win_rate:** 47.54%
+- **alpha:** -5.55%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 8.2%
+- **stop_loss:** 18.5%
+- **take_profit_target:** 8.8%
+- **max_drawdown_tolerance:** 15.4%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **SCCO** | BUY | 43% | Market order (volatile) | 33.6% below entry | 15.9% above entry | 4.5% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=SCCO) / [Yahoo](https://finance.yahoo.com/quote/SCCO/) |
+| **FCX** | BUY | 45% | Market order (volatile) | 35.3% below entry | 16.8% above entry | 4.3% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=FCX) / [Yahoo](https://finance.yahoo.com/quote/FCX/) |
+| **PICK** | BUY | 27% | Limit 0.5% below market | 21.1% below entry | 10.0% above entry | 7.2% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=PICK) / [Yahoo](https://finance.yahoo.com/quote/PICK/) |
+| **XME** | BUY | 32% | Market order (volatile) | 25.2% below entry | 12.0% above entry | 6.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=XME) / [Yahoo](https://finance.yahoo.com/quote/XME/) |
+| **CCJ** | BUY | 52% | Market order (volatile) | 40.0% below entry | 19.0% above entry | 3.8% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=CCJ) / [Yahoo](https://finance.yahoo.com/quote/CCJ/) |
+| **REMX** | BUY | 42% | Market order (volatile) | 32.9% below entry | 15.6% above entry | 4.6% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=REMX) / [Yahoo](https://finance.yahoo.com/quote/REMX/) |
+| **SQM** | BUY | 90% | Market order (volatile) | 40.0% below entry | 26.4% above entry | 2.7% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=SQM) / [Yahoo](https://finance.yahoo.com/quote/SQM/) |
+| **ALB** | BUY | 60% | Market order (volatile) | 40.0% below entry | 22.0% above entry | 3.3% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ALB) / [Yahoo](https://finance.yahoo.com/quote/ALB/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.

@@ -1,0 +1,125 @@
+{
+  "metrics": {
+    "total_return": 0.33991402541755145,
+    "cagr": 0.10281951152771329,
+    "annual_volatility": 0.13255419525565193,
+    "sharpe_ratio": 0.5113873415941992,
+    "sortino_ratio": 0.7064179905829646,
+    "calmar_ratio": 0.5052659991141586,
+    "max_drawdown": -0.2034958055914673,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.1848386231978043,
+    "num_trading_days": 751,
+    "skewness": -0.5893648954731826,
+    "kurtosis": 23.975028626255067,
+    "best_day": 0.07921871288237159,
+    "worst_day": -0.07746047548370771,
+    "avg_daily_return": 0.00042464405933470025,
+    "black_swan_resilience": 69.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12848663584920517,
+    "beta": 0.4959861133257561,
+    "information_ratio": -0.9641378161565635,
+    "tracking_error": 0.1332658398997396
+  },
+  "trade_metrics": {
+    "num_trades": 1030,
+    "num_buys": 461,
+    "num_sells": 569,
+    "total_commission": 0.0,
+    "total_slippage": 4249.310199485776,
+    "total_transaction_costs": 4249.310199485776,
+    "avg_trade_size": 4125.543882995902
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 42.0,
+      "avg_cost": 259.0797258618331,
+      "realized_pnl": 7970.313429129119
+    },
+    "GS": {
+      "qty": 15.0,
+      "avg_cost": 608.7380333647777,
+      "realized_pnl": 4078.395756819321
+    },
+    "TLT": {
+      "qty": 154.0,
+      "avg_cost": 87.43053595920098,
+      "realized_pnl": -2095.8957807645
+    }
+  },
+  "source": "unconventional",
+  "description": "Rising rates crush bonds but boost banks (wider NIM) + insurance (float income). TLT\u2193 = XLF\u2191.",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1172,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0996,
+  "avg_3Y_return": 0.1572,
+  "avg_5Y_return": 0.4412,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0649,
+      "sh": -0.94,
+      "dd": -0.2035
+    },
+    "1Y_2024": {
+      "ret": 0.2364,
+      "sh": 1.41,
+      "dd": -0.0512
+    },
+    "1Y_2025": {
+      "ret": 0.1576,
+      "sh": 0.77,
+      "dd": -0.145
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0401,
+      "sh": -0.14,
+      "dd": -0.29
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3399,
+      "sh": 0.51,
+      "dd": -0.2035
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4478,
+      "sh": 0.32,
+      "dd": -0.3294
+    },
+    "1Y_2020": {
+      "ret": 0.1812,
+      "sh": 1.07,
+      "dd": -0.0913
+    },
+    "1Y_2021": {
+      "ret": 0.1923,
+      "sh": 0.88,
+      "dd": -0.1175
+    },
+    "1Y_2022": {
+      "ret": -0.1048,
+      "sh": -0.99,
+      "dd": -0.2017
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2467,
+      "sh": 0.31,
+      "dd": -0.2463
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0019,
+      "sh": -0.2,
+      "dd": -0.3301
+    },
+    "5Y_2021_2025": {
+      "ret": 0.4346,
+      "sh": 0.3,
+      "dd": -0.3301
+    }
+  }
+}

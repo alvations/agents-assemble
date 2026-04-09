@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 0.5036895388103582,
+    "cagr": 0.14618710205203933,
+    "annual_volatility": 0.13308512517980045,
+    "sharpe_ratio": 0.7969981234805223,
+    "sortino_ratio": 1.4587671499941508,
+    "calmar_ratio": 1.3822544833486317,
+    "max_drawdown": -0.10575990442649053,
+    "max_drawdown_date": "2025-04-09",
+    "win_rate": 0.5279255319148937,
+    "profit_factor": 1.2723532067098788,
+    "num_trading_days": 752,
+    "skewness": 6.36793615967562,
+    "kurtosis": 115.23239041156033,
+    "best_day": 0.14363266041714096,
+    "worst_day": -0.05434491893975657,
+    "avg_daily_return": 0.0005765569859320221,
+    "black_swan_resilience": 94.3,
+    "benchmark_total_return": 0.761897118190229,
+    "benchmark_cagr": 0.20857911809372864,
+    "alpha": -0.06544711800642222,
+    "beta": -0.008257776813115042,
+    "information_ratio": -0.3195728051745742,
+    "tracking_error": 0.2047956426413386
+  },
+  "trade_metrics": {
+    "num_trades": 325,
+    "num_buys": 175,
+    "num_sells": 150,
+    "total_commission": 0.0,
+    "total_slippage": 688.0599879924653,
+    "total_transaction_costs": 688.0599879924653,
+    "avg_trade_size": 2117.107655361432
+  },
+  "final_positions": {
+    "ME8U.SI": {
+      "qty": 7448.0,
+      "avg_cost": 1.9589299397658446,
+      "realized_pnl": 1292.7804657528832
+    },
+    "AJBU.SI": {
+      "qty": 6715.0,
+      "avg_cost": 2.118600051134788,
+      "realized_pnl": 3881.4807815538907
+    },
+    "O39.SI": {
+      "qty": 637.0,
+      "avg_cost": 11.9380989931151,
+      "realized_pnl": 2684.825576024598
+    },
+    "F34.SI": {
+      "qty": 3665.0,
+      "avg_cost": 3.141415122812717,
+      "realized_pnl": -797.5255284360089
+    },
+    "A17U.SI": {
+      "qty": 5587.0,
+      "avg_cost": 2.4303686165389085,
+      "realized_pnl": 1601.2001846991766
+    },
+    "N2IU.SI": {
+      "qty": 8390.0,
+      "avg_cost": 1.419780969619751,
+      "realized_pnl": 2267.875782251359
+    },
+    "C38U.SI": {
+      "qty": 5210.0,
+      "avg_cost": 1.7573727917014574,
+      "realized_pnl": 1165.4848979389951
+    },
+    "Y92.SI": {
+      "qty": 33347.0,
+      "avg_cost": 0.4556643674322715,
+      "realized_pnl": 13626.346336734507
+    },
+    "U11.SI": {
+      "qty": 436.0,
+      "avg_cost": 34.76859956902441,
+      "realized_pnl": 3599.3510998693005
+    }
+  },
+  "source": "theme",
+  "description": "Singapore heritage consumer + banks + REITs: AAA-rated income + growth",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.3069,
+  "consistency_score": 0.92,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1168,
+  "avg_3Y_return": 0.4109,
+  "avg_5Y_return": 0.6879,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.227,
+      "sh": 1.01,
+      "dd": -0.0977
+    },
+    "1Y_2024": {
+      "ret": 0.1111,
+      "sh": 0.71,
+      "dd": -0.0547
+    },
+    "1Y_2025": {
+      "ret": 0.1095,
+      "sh": 0.69,
+      "dd": -0.1058
+    },
+    "3Y_2022_2024": {
+      "ret": 0.5002,
+      "sh": 0.7,
+      "dd": -0.161
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5037,
+      "sh": 0.8,
+      "dd": -0.1058
+    },
+    "5Y_2020_2024": {
+      "ret": 0.6928,
+      "sh": 0.48,
+      "dd": -0.2761
+    },
+    "1Y_2020": {
+      "ret": 0.1234,
+      "sh": 0.44,
+      "dd": -0.2761
+    },
+    "1Y_2021": {
+      "ret": 0.0077,
+      "sh": -0.32,
+      "dd": -0.0643
+    },
+    "1Y_2022": {
+      "ret": 0.1222,
+      "sh": 0.53,
+      "dd": -0.161
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2664,
+      "sh": 0.31,
+      "dd": -0.2761
+    },
+    "3Y_2021_2023": {
+      "ret": 0.3733,
+      "sh": 0.51,
+      "dd": -0.161
+    },
+    "5Y_2021_2025": {
+      "ret": 0.683,
+      "sh": 0.55,
+      "dd": -0.161
+    }
+  }
+}

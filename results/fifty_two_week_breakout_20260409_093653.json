@@ -1,0 +1,115 @@
+{
+  "metrics": {
+    "total_return": 0.14930481968689224,
+    "cagr": 0.04764526749567377,
+    "annual_volatility": 0.03723618604112675,
+    "sharpe_ratio": 0.21927249700704204,
+    "sortino_ratio": 0.3500833862433057,
+    "calmar_ratio": 1.3104246822014765,
+    "max_drawdown": -0.036358646279182616,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.4474034620505992,
+    "profit_factor": 1.3197164188318036,
+    "num_trading_days": 751,
+    "skewness": 2.3552125738439473,
+    "kurtosis": 30.36144661351377,
+    "best_day": 0.028067155154262613,
+    "worst_day": -0.011094936681752543,
+    "avg_daily_return": 0.00018805014649069386,
+    "black_swan_resilience": 98.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1836608798812447,
+    "beta": 0.09696451125281576,
+    "information_ratio": -1.2864798656086378,
+    "tracking_error": 0.1427623430346919
+  },
+  "trade_metrics": {
+    "num_trades": 212,
+    "num_buys": 93,
+    "num_sells": 119,
+    "total_commission": 0.0,
+    "total_slippage": 2446.1175033569325,
+    "total_transaction_costs": 2446.1175033569325,
+    "avg_trade_size": 11538.290110174215
+  },
+  "final_positions": {
+    "GOOGL": {
+      "qty": 43.0,
+      "avg_cost": 292.4127502441406,
+      "realized_pnl": 310.97715759277344
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy new 52-week highs on 1.5x volume. 72% continuation, +11.4%/31d",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1406,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0569,
+  "avg_3Y_return": 0.1653,
+  "avg_5Y_return": 0.3019,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0567,
+      "sh": 0.43,
+      "dd": -0.0172
+    },
+    "1Y_2024": {
+      "ret": 0.0762,
+      "sh": 0.96,
+      "dd": -0.0154
+    },
+    "1Y_2025": {
+      "ret": 0.0184,
+      "sh": -0.6,
+      "dd": -0.0362
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1514,
+      "sh": 0.24,
+      "dd": -0.0213
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1493,
+      "sh": 0.22,
+      "dd": -0.0364
+    },
+    "5Y_2020_2024": {
+      "ret": 0.3441,
+      "sh": 0.46,
+      "dd": -0.0475
+    },
+    "1Y_2020": {
+      "ret": 0.077,
+      "sh": 0.53,
+      "dd": -0.0475
+    },
+    "1Y_2021": {
+      "ret": 0.083,
+      "sh": 1.05,
+      "dd": -0.0322
+    },
+    "1Y_2022": {
+      "ret": 0.0298,
+      "sh": -0.31,
+      "dd": -0.0139
+    },
+    "3Y_2020_2022": {
+      "ret": 0.2026,
+      "sh": 0.47,
+      "dd": -0.0475
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1581,
+      "sh": 0.28,
+      "dd": -0.0322
+    },
+    "5Y_2021_2025": {
+      "ret": 0.2596,
+      "sh": 0.21,
+      "dd": -0.0361
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "metrics": {
+    "total_return": 0.32351103205265397,
+    "cagr": 0.09828536212671612,
+    "annual_volatility": 0.12234790532164297,
+    "sharpe_ratio": 0.5096054037253223,
+    "sortino_ratio": 0.690565435144697,
+    "calmar_ratio": 0.5877628183499047,
+    "max_drawdown": -0.16721942773216603,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5366178428761651,
+    "profit_factor": 1.1541157767894912,
+    "num_trading_days": 751,
+    "skewness": -0.8075916983197512,
+    "kurtosis": 4.324809498936216,
+    "best_day": 0.029690680652063817,
+    "worst_day": -0.04831316986082235,
+    "avg_daily_return": 0.0004030671393245301,
+    "black_swan_resilience": 68.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.13302078525020233,
+    "beta": 0.6408842958931911,
+    "information_ratio": -1.4575214782764365,
+    "tracking_error": 0.09126506005764214
+  },
+  "trade_metrics": {
+    "num_trades": 813,
+    "num_buys": 430,
+    "num_sells": 383,
+    "total_commission": 0.0,
+    "total_slippage": 2703.089598056796,
+    "total_transaction_costs": 2703.089598056796,
+    "avg_trade_size": 3324.833453944395
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 77.0,
+      "avg_cost": 83.5259280328884,
+      "realized_pnl": 951.6730942745994
+    },
+    "GLD": {
+      "qty": 17.0,
+      "avg_cost": 307.8360896719821,
+      "realized_pnl": 5312.0755391942075
+    },
+    "SPY": {
+      "qty": 58.0,
+      "avg_cost": 609.9449521789289,
+      "realized_pnl": 6628.71069927827
+    },
+    "QQQ": {
+      "qty": 54.0,
+      "avg_cost": 552.3656437069859,
+      "realized_pnl": 5220.033334395985
+    },
+    "XLY": {
+      "qty": 166.0,
+      "avg_cost": 108.98261294128032,
+      "realized_pnl": 2164.689447105082
+    },
+    "KRE": {
+      "qty": 204.0,
+      "avg_cost": 58.98256287427871,
+      "realized_pnl": 1846.8258715493964
+    },
+    "HYG": {
+      "qty": 84.0,
+      "avg_cost": 77.00003281775886,
+      "realized_pnl": 470.05620060043793
+    }
+  },
+  "source": "recession",
+  "description": "Consumer discretionary vs staples ratio as credit stress indicator",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.1263,
+  "consistency_score": 0.67,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0693,
+  "avg_3Y_return": 0.1856,
+  "avg_5Y_return": 0.4351,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.113,
+      "sh": 0.71,
+      "dd": -0.0858
+    },
+    "1Y_2024": {
+      "ret": 0.2234,
+      "sh": 1.36,
+      "dd": -0.0825
+    },
+    "1Y_2025": {
+      "ret": -0.0167,
+      "sh": -0.35,
+      "dd": -0.1671
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1601,
+      "sh": 0.15,
+      "dd": -0.1826
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3235,
+      "sh": 0.51,
+      "dd": -0.1672
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4447,
+      "sh": 0.33,
+      "dd": -0.2306
+    },
+    "1Y_2020": {
+      "ret": 0.0002,
+      "sh": -0.13,
+      "dd": -0.2306
+    },
+    "1Y_2021": {
+      "ret": 0.2438,
+      "sh": 1.53,
+      "dd": -0.0493
+    },
+    "1Y_2022": {
+      "ret": -0.1477,
+      "sh": -1.63,
+      "dd": -0.1784
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0604,
+      "sh": -0.07,
+      "dd": -0.2306
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1983,
+      "sh": 0.24,
+      "dd": -0.183
+    },
+    "5Y_2021_2025": {
+      "ret": 0.4256,
+      "sh": 0.32,
+      "dd": -0.183
+    }
+  }
+}

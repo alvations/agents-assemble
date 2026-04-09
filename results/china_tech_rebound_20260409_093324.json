@@ -1,0 +1,130 @@
+{
+  "metrics": {
+    "total_return": 0.04124213686165934,
+    "cagr": 0.01360949354005192,
+    "annual_volatility": 0.25862841169960676,
+    "sharpe_ratio": 0.029401160034380428,
+    "sortino_ratio": 0.04345239760189114,
+    "calmar_ratio": 0.04450023875932071,
+    "max_drawdown": -0.3058296746149788,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.43009320905459386,
+    "profit_factor": 1.0351100200431858,
+    "num_trading_days": 751,
+    "skewness": 0.4343362735441334,
+    "kurtosis": 4.379234738006933,
+    "best_day": 0.09077133860402675,
+    "worst_day": -0.07817010560727045,
+    "avg_daily_return": 0.0001858243680365714,
+    "black_swan_resilience": 76.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.21769665383686654,
+    "beta": 0.6685475675613272,
+    "information_ratio": -0.8966592878798068,
+    "tracking_error": 0.24278637022945534
+  },
+  "trade_metrics": {
+    "num_trades": 1125,
+    "num_buys": 563,
+    "num_sells": 562,
+    "total_commission": 0.0,
+    "total_slippage": 11993.128751072165,
+    "total_transaction_costs": 11993.128751072165,
+    "avg_trade_size": 10660.558889841928
+  },
+  "final_positions": {
+    "FXI": {
+      "qty": 405.0,
+      "avg_cost": 38.62921094541196,
+      "realized_pnl": 2893.0606269836417
+    },
+    "BIDU": {
+      "qty": 123.0,
+      "avg_cost": 124.41000366210938,
+      "realized_pnl": 53.95436859131223
+    },
+    "TME": {
+      "qty": 906.0,
+      "avg_cost": 17.208541870117188,
+      "realized_pnl": 5477.409982204435
+    },
+    "ZTO": {
+      "qty": 737.0,
+      "avg_cost": 21.149999618530273,
+      "realized_pnl": -4038.7210330963126
+    }
+  },
+  "source": "theme",
+  "description": "China tech ADR recovery: deep value after regulatory crackdown",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0018,
+  "consistency_score": 0.5,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0661,
+  "avg_3Y_return": -0.0196,
+  "avg_5Y_return": -0.0265,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1496,
+      "sh": 0.5,
+      "dd": -0.2344
+    },
+    "1Y_2024": {
+      "ret": -0.061,
+      "sh": -0.27,
+      "dd": -0.1866
+    },
+    "1Y_2025": {
+      "ret": -0.0017,
+      "sh": -0.05,
+      "dd": -0.2494
+    },
+    "3Y_2022_2024": {
+      "ret": -0.039,
+      "sh": 0.03,
+      "dd": -0.3921
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0412,
+      "sh": 0.03,
+      "dd": -0.3058
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2281,
+      "sh": 0.17,
+      "dd": -0.619
+    },
+    "1Y_2020": {
+      "ret": 0.6646,
+      "sh": 1.75,
+      "dd": -0.2167
+    },
+    "1Y_2021": {
+      "ret": -0.2358,
+      "sh": -0.83,
+      "dd": -0.3946
+    },
+    "1Y_2022": {
+      "ret": -0.1193,
+      "sh": -0.1,
+      "dd": -0.3921
+    },
+    "3Y_2020_2022": {
+      "ret": 0.1258,
+      "sh": 0.18,
+      "dd": -0.619
+    },
+    "3Y_2021_2023": {
+      "ret": -0.2065,
+      "sh": -0.13,
+      "dd": -0.6187
+    },
+    "5Y_2021_2025": {
+      "ret": -0.2811,
+      "sh": -0.16,
+      "dd": -0.6187
+    }
+  }
+}

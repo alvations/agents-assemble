@@ -1,0 +1,150 @@
+{
+  "metrics": {
+    "total_return": 0.7053480910293495,
+    "cagr": 0.19546362702939746,
+    "annual_volatility": 0.22286488963796522,
+    "sharpe_ratio": 0.7393719295165999,
+    "sortino_ratio": 1.0743846682955178,
+    "calmar_ratio": 0.7151136559868873,
+    "max_drawdown": -0.27333225340194256,
+    "max_drawdown_date": "2025-04-25",
+    "win_rate": 0.5206391478029294,
+    "profit_factor": 1.1767365879342935,
+    "num_trading_days": 751,
+    "skewness": -0.16564932790153533,
+    "kurtosis": 2.7819774280848515,
+    "best_day": 0.06491126574454298,
+    "worst_day": -0.06878736034907795,
+    "avg_daily_return": 0.0008095389241925581,
+    "black_swan_resilience": 70.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.035842520347521,
+    "beta": 0.7011144021073892,
+    "information_ratio": -0.1787873888523917,
+    "tracking_error": 0.2004756631750625
+  },
+  "trade_metrics": {
+    "num_trades": 1130,
+    "num_buys": 548,
+    "num_sells": 582,
+    "total_commission": 0.0,
+    "total_slippage": 7228.20348266555,
+    "total_transaction_costs": 7228.20348266555,
+    "avg_trade_size": 6396.6402501464945
+  },
+  "final_positions": {
+    "AMKR": {
+      "qty": 496.0,
+      "avg_cost": 43.61800924125027,
+      "realized_pnl": 5077.888447231298
+    },
+    "ASX": {
+      "qty": 1240.0,
+      "avg_cost": 15.38742829677156,
+      "realized_pnl": 10401.622340686099
+    },
+    "COHU": {
+      "qty": 706.0,
+      "avg_cost": 23.6015362527997,
+      "realized_pnl": -4899.110466634865
+    },
+    "ONTO": {
+      "qty": 125.0,
+      "avg_cost": 156.02000427246094,
+      "realized_pnl": 6652.598045349118
+    },
+    "TTMI": {
+      "qty": 279.0,
+      "avg_cost": 57.03433780615155,
+      "realized_pnl": 8737.333340682093
+    },
+    "KLIC": {
+      "qty": 430.0,
+      "avg_cost": 46.11572265625,
+      "realized_pnl": 4179.079395294189
+    },
+    "ENTG": {
+      "qty": 231.0,
+      "avg_cost": 85.8686294555664,
+      "realized_pnl": 1468.079139709469
+    },
+    "FORM": {
+      "qty": 346.0,
+      "avg_cost": 56.44711338972845,
+      "realized_pnl": 3575.6632308318817
+    }
+  },
+  "source": "theme",
+  "description": "Non-megacap companies NVIDIA depends on: packaging, testing, materials, cooling, power",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.2342,
+  "consistency_score": 0.83,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.1769,
+  "avg_3Y_return": 0.2866,
+  "avg_5Y_return": 0.6455,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2316,
+      "sh": 1.02,
+      "dd": -0.1564
+    },
+    "1Y_2024": {
+      "ret": 0.0223,
+      "sh": 0.05,
+      "dd": -0.2156
+    },
+    "1Y_2025": {
+      "ret": 0.3774,
+      "sh": 1.32,
+      "dd": -0.1433
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0814,
+      "sh": -0.24,
+      "dd": -0.2691
+    },
+    "3Y_2023_2025": {
+      "ret": 0.7053,
+      "sh": 0.74,
+      "dd": -0.2733
+    },
+    "5Y_2020_2024": {
+      "ret": 0.6899,
+      "sh": 0.42,
+      "dd": -0.2699
+    },
+    "1Y_2020": {
+      "ret": 0.4625,
+      "sh": 1.75,
+      "dd": -0.1411
+    },
+    "1Y_2021": {
+      "ret": 0.2248,
+      "sh": 0.78,
+      "dd": -0.1384
+    },
+    "1Y_2022": {
+      "ret": -0.2574,
+      "sh": -1.98,
+      "dd": -0.2691
+    },
+    "3Y_2020_2022": {
+      "ret": 0.3651,
+      "sh": 0.41,
+      "dd": -0.2699
+    },
+    "3Y_2021_2023": {
+      "ret": 0.1573,
+      "sh": 0.15,
+      "dd": -0.2698
+    },
+    "5Y_2021_2025": {
+      "ret": 0.6012,
+      "sh": 0.36,
+      "dd": -0.2738
+    }
+  }
+}

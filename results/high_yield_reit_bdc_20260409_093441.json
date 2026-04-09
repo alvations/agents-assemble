@@ -1,0 +1,155 @@
+{
+  "metrics": {
+    "total_return": 0.28544215067164735,
+    "cagr": 0.0876162225247401,
+    "annual_volatility": 0.10163396492547629,
+    "sharpe_ratio": 0.4940479047295404,
+    "sortino_ratio": 0.6888028773189077,
+    "calmar_ratio": 0.5904069154910416,
+    "max_drawdown": -0.1483997226757916,
+    "max_drawdown_date": "2023-10-30",
+    "win_rate": 0.5406125166444741,
+    "profit_factor": 1.167835568829505,
+    "num_trading_days": 751,
+    "skewness": -0.3137493257884594,
+    "kurtosis": 3.5655895177195536,
+    "best_day": 0.032081980553686495,
+    "worst_day": -0.03145563690620157,
+    "avg_daily_return": 0.0003549040192229578,
+    "black_swan_resilience": 75.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.14368992485217835,
+    "beta": 0.4347274400308952,
+    "information_ratio": -1.2410290779527218,
+    "tracking_error": 0.11578288325783481
+  },
+  "trade_metrics": {
+    "num_trades": 343,
+    "num_buys": 153,
+    "num_sells": 190,
+    "total_commission": 0.0,
+    "total_slippage": 688.0226855468744,
+    "total_transaction_costs": 688.0226855468744,
+    "avg_trade_size": 2005.8970424107142
+  },
+  "final_positions": {
+    "VNQ": {
+      "qty": 87.0,
+      "avg_cost": 88.52726745605469,
+      "realized_pnl": 2166.7353210449196
+    },
+    "O": {
+      "qty": 181.0,
+      "avg_cost": 54.65801783623569,
+      "realized_pnl": 1063.194081904801
+    },
+    "STAG": {
+      "qty": 198.0,
+      "avg_cost": 32.37308998814994,
+      "realized_pnl": 1986.855605190309
+    },
+    "MAIN": {
+      "qty": 181.0,
+      "avg_cost": 58.916385650634766,
+      "realized_pnl": 4508.14045715332
+    },
+    "ARCC": {
+      "qty": 522.0,
+      "avg_cost": 20.14955791347127,
+      "realized_pnl": 3342.1293485535625
+    },
+    "ARR": {
+      "qty": 391.0,
+      "avg_cost": 14.016346146078671,
+      "realized_pnl": 685.9424514770511
+    },
+    "DX": {
+      "qty": 483.0,
+      "avg_cost": 10.817035031555243,
+      "realized_pnl": 1794.9363895366846
+    },
+    "HTGC": {
+      "qty": 437.0,
+      "avg_cost": 16.352464859842303,
+      "realized_pnl": 2717.985246931019
+    },
+    "AGNC": {
+      "qty": 638.0,
+      "avg_cost": 8.531857974614539,
+      "realized_pnl": 1561.538705198336
+    }
+  },
+  "source": "portfolio",
+  "description": "REITs + BDCs + RE tech: 6-8% yield, monthly income, dip accumulation",
+  "horizon": "3Y (2023-2025)",
+  "composite_score": 0.0872,
+  "consistency_score": 0.75,
+  "n_windows_tested": 12,
+  "avg_1Y_return": 0.0631,
+  "avg_3Y_return": 0.1273,
+  "avg_5Y_return": 0.2697,
+  "avg_10Y_return": null,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1207,
+      "sh": 0.66,
+      "dd": -0.1484
+    },
+    "1Y_2024": {
+      "ret": 0.043,
+      "sh": 0.08,
+      "dd": -0.044
+    },
+    "1Y_2025": {
+      "ret": 0.0978,
+      "sh": 0.64,
+      "dd": -0.0914
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0418,
+      "sh": -0.12,
+      "dd": -0.2435
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2854,
+      "sh": 0.49,
+      "dd": -0.1484
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2904,
+      "sh": 0.16,
+      "dd": -0.3741
+    },
+    "1Y_2020": {
+      "ret": 0.1464,
+      "sh": 0.46,
+      "dd": -0.3741
+    },
+    "1Y_2021": {
+      "ret": 0.0882,
+      "sh": 0.69,
+      "dd": -0.0583
+    },
+    "1Y_2022": {
+      "ret": -0.1174,
+      "sh": -0.8,
+      "dd": -0.2435
+    },
+    "3Y_2020_2022": {
+      "ret": 0.0934,
+      "sh": 0.07,
+      "dd": -0.3741
+    },
+    "3Y_2021_2023": {
+      "ret": 0.0888,
+      "sh": -0.01,
+      "dd": -0.2508
+    },
+    "5Y_2021_2025": {
+      "ret": 0.2491,
+      "sh": 0.11,
+      "dd": -0.2508
+    }
+  }
+}
