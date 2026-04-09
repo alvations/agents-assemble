@@ -72,6 +72,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Hold through peace headlines — backlogs are locked. Exit only if actual budget gets cut by Congress.
+- **Take profit:** Trim at +40% on individual defense primes. Backlogs are locked but stocks can get ahead of themselves.
+- **Stop loss:** Stop loss at -20%. Peace headlines cause dips but backlogs are locked — only exit if actual budget cut.
+- **Exit rule:** Exit if Congress actually reduces defense budget (not just threatens). Watch appropriations votes.
 
 </details>

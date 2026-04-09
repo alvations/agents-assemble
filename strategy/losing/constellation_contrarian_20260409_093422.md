@@ -81,6 +81,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit if beer market share starts declining (not just stock price). Modelo is #1 — monitor market share.
+- **Take profit:** Take profit when STZ returns to 15x P/E (fair value). Currently at ~10x — thats your 50% upside.
+- **Stop loss:** Stop loss at -25%. If Modelo market share starts declining, the thesis breaks.
+- **Exit rule:** Exit if beer consumption trend reverses (health trend, regulation). Monitor Nielsen data.
 
 </details>

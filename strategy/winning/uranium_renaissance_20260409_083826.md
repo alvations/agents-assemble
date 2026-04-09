@@ -72,6 +72,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Hold through volatility (50%+ drawdowns are normal for uranium). Exit only if nuclear policy reverses globally.
+- **Take profit:** Trim 30% after +150% (uranium spikes are violent — take some). Hold rest for secular thesis.
+- **Stop loss:** WIDE stop: -45%. Uranium drawdowns of 50% are NORMAL in bull markets. Dont get shaken out.
+- **Exit rule:** Exit only if global nuclear policy reverses (all countries abandon nuclear). This would take years to confirm.
 
 </details>

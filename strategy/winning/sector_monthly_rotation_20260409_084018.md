@@ -67,6 +67,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Follow the calendar. Timing IS the strategy — exit on schedule, not on price.
+- **Take profit:** Follow the calendar — sell on schedule.
+- **Stop loss:** No stop loss within the season.
+- **Exit rule:** Exit on calendar date regardless of P&L.
 
 </details>

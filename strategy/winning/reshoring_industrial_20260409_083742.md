@@ -75,6 +75,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Hold for 5+ years — reshoring is a decade-long cycle. Exit only if CHIPS Act gets repealed.
+- **Take profit:** Trim 25% at +80%. Rebalance quarterly.
+- **Stop loss:** Stop loss at -25% from entry.
+- **Exit rule:** Exit if strategy thesis no longer holds.
 
 </details>

@@ -65,6 +65,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Follow the calendar. Timing IS the strategy — exit on schedule, not on price.
+- **Take profit:** Follow the calendar — sell on schedule.
+- **Stop loss:** No stop loss within the season.
+- **Exit rule:** Exit on calendar date regardless of P&L.
 
 </details>

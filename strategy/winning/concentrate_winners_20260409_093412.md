@@ -69,6 +69,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Trim winners that become >20% of portfolio. Exit completely if 3+ holdings break trend simultaneously.
+- **Take profit:** Trim any position exceeding 25% of portfolio back to 15%. Concentration wins but diversify gains.
+- **Stop loss:** Stop loss at -20% per position. Concentrated means one bad position can hurt significantly.
+- **Exit rule:** Exit if Sharpe ratio turns negative for 2 consecutive quarters (strategy stopped working).
 
 </details>

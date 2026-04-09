@@ -82,6 +82,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit if any holding CUTS its dividend. Price drops alone are not exit signals — they increase your yield.
+- **Take profit:** Trim 25% of any position that doubles. Reinvest the proceeds into the lowest-yielding holding to rebalance.
+- **Stop loss:** No price-based stop loss. Only exit if dividend is CUT (not just frozen). A 30% price drop with maintained dividend = higher yield = buy more.
+- **Exit rule:** Full exit only if company cuts dividend AND debt-to-equity exceeds 2x (financial distress, not just a bad quarter).
 
 </details>

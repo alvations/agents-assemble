@@ -70,6 +70,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Exit defensive positions when VIX drops below 15 and SPY is above SMA200 (risk-on confirmed).
+- **Take profit:** Trim when markets recover (VIX < 15). Reduce allocation, dont eliminate.
+- **Stop loss:** No stop loss — this is insurance.
+- **Exit rule:** Reduce to minimum (5%) in strong bull markets. Never fully exit.
 
 </details>

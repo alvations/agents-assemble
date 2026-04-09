@@ -69,6 +69,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Exit if growth rate turns negative for 2+ quarters. Trim winners at +100%. Cut losers at -30%.
+- **Take profit:** Trim 25% after +80%. Rebalance quarterly.
+- **Stop loss:** Stop loss at -25%. Growth reversals are fast.
+- **Exit rule:** Exit if revenue growth turns negative for 2 quarters.
 
 </details>

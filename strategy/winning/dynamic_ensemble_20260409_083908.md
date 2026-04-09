@@ -76,6 +76,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Monitor quarterly 13F filings. Exit if the fund exits the position.
+- **Take profit:** Follow the fund — trim when 13F shows reduction.
+- **Stop loss:** Stop loss at -25%.
+- **Exit rule:** Exit when the fund fully exits the position.
 
 </details>

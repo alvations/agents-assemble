@@ -75,6 +75,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Never exit — this auto-manages. Check quarterly that the regime detection is working correctly.
+- **Take profit:** Auto-managed. The strategy takes profit by rotating out of winners during regime changes.
+- **Stop loss:** Auto-managed. Switches to defensive during bear regimes. No manual stop loss needed.
+- **Exit rule:** Never manually exit. Review quarterly that regime detection matches your view of the market.
 
 </details>

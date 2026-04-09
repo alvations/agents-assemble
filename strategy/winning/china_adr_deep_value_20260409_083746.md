@@ -69,6 +69,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** SIZE SMALL (max 5% of portfolio). Exit if delisting risk returns or regulatory crackdown resumes.
+- **Take profit:** Take profit aggressively — trim 30% at +50%, another 30% at +100%. China rallies are violent and short.
+- **Stop loss:** Stop loss at -25%. China policy can reverse overnight. SIZE SMALL: max 5% of total portfolio.
+- **Exit rule:** Exit all if delisting risk returns or new regulatory crackdown announced. Dont wait — get out.
 
 </details>

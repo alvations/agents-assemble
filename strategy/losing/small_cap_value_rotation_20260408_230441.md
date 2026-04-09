@@ -80,6 +80,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Exit if fundamental thesis breaks (competitive moat eroded, not just price drops). Value recovers — be patient.
+- **Take profit:** Sell half when price reaches fair value. Hold rest with trailing stop.
+- **Stop loss:** Stop loss at -30%. Value can be a trap.
+- **Exit rule:** Exit if fundamental thesis breaks (moat eroded, not just price down).
 
 </details>

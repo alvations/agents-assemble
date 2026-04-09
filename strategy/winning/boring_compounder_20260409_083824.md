@@ -67,6 +67,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Almost never exit. These compound 15-20% annually. Trim only if valuation exceeds 40x FCF.
+- **Take profit:** Trim at +100% per position. Redistribute to laggards. These compound — but take some off at doubles.
+- **Stop loss:** No hard stop. These are 15-20% annual growers. -25% dips = buy more.
+- **Exit rule:** Exit only if a company acquisition destroys ROIC (bad M&A) or FCF turns negative.
 
 </details>

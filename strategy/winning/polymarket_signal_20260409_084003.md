@@ -68,6 +68,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Exit when disclosed position is sold by the insider. Follow their entries AND exits.
+- **Take profit:** Trim at +40% or when insider sells their position.
+- **Stop loss:** Stop loss at -20%.
+- **Exit rule:** Exit when insider files disposal of the position.
 
 </details>

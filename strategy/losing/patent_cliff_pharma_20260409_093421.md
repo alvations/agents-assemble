@@ -73,6 +73,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit if pipeline fails Phase 3 trials. Patent cliff is PRICED IN — the risk is pipeline, not patents.
+- **Take profit:** Take profit at +40% or when P/E normalizes to sector average (thesis played out).
+- **Stop loss:** Stop loss at -30%. Patent cliff might be worse than expected if pipeline fails.
+- **Exit rule:** Exit if Phase 3 pipeline fails AND no M&A announced. Without new drugs, the cliff is real.
 
 </details>

@@ -81,6 +81,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit when disclosed position is sold by the insider. Follow their entries AND exits.
+- **Take profit:** Trim at +40% or when insider sells their position.
+- **Stop loss:** Stop loss at -20%.
+- **Exit rule:** Exit when insider files disposal of the position.
 
 </details>

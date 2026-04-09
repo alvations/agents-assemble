@@ -65,6 +65,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Exit if GLP-1 adoption exceeds 15% of population (thesis changes from overreaction to real threat).
+- **Take profit:** Take profit at +40%. These are recovery plays, not compounders — take the mean reversion.
+- **Stop loss:** Stop loss at -25%. If GLP-1 thesis accelerates beyond expectation, cut early.
+- **Exit rule:** Exit if GLP-1 adoption passes 15% of population (thesis shifts from overreaction to structural change).
 
 </details>

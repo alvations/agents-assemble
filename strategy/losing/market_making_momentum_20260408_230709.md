@@ -81,6 +81,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit if holdings break below SMA200 for 3+ months. Momentum reversal = cut losses, rotate to new leaders.
+- **Take profit:** Trailing stop of 15% from peak. Momentum rides trends — let winners run but protect gains.
+- **Stop loss:** Hard stop at -20% from entry. Momentum that reverses doesnt come back quickly.
+- **Exit rule:** Exit all if 3+ holdings break below SMA200 simultaneously (broad momentum reversal).
 
 </details>

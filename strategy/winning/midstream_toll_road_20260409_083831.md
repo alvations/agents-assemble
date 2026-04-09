@@ -71,6 +71,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit if a company cuts its distribution. Fee-based revenue is predictable — price dips are noise.
+- **Take profit:** Trim 25% at +100% gain. Midstream rarely sustains that — lock in and redeploy to laggards.
+- **Stop loss:** Exit if distribution cut (not just price drop). EPD has 27 years of increases — a cut means something is wrong.
+- **Exit rule:** Exit if fee-based revenue drops below 80% of total (means more commodity exposure than expected).
 
 </details>

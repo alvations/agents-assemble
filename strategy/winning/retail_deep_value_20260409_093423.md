@@ -67,6 +67,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** Exit if fundamental thesis breaks (competitive moat eroded, not just price drops). Value recovers — be patient.
+- **Take profit:** Sell half when price reaches fair value. Hold rest with trailing stop.
+- **Stop loss:** Stop loss at -30%. Value can be a trap.
+- **Exit rule:** Exit if fundamental thesis breaks (moat eroded, not just price down).
 
 </details>

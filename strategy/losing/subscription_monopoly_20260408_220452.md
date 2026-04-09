@@ -82,6 +82,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Exit rule:** Exit if net subscriber growth turns negative. Subscription moats erode slowly — watch churn rates.
+- **Take profit:** Trim at +60%. Subscription stocks trade on multiples that can compress fast.
+- **Stop loss:** Stop loss at -25%. If net subscriber growth turns negative, the moat is eroding.
+- **Exit rule:** Exit if churn rate exceeds 5% monthly for any holding. Subscription moats die slowly then suddenly.
 
 </details>

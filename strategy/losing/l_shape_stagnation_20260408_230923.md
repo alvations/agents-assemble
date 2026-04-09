@@ -75,6 +75,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Exit rule:** This is crisis insurance. Exit when SPY golden cross confirmed (SMA50 > SMA200 for 1+ month).
+- **Take profit:** Trim 25% at +80%. Rebalance quarterly.
+- **Stop loss:** Stop loss at -25% from entry.
+- **Exit rule:** Exit if strategy thesis no longer holds.
 
 </details>
