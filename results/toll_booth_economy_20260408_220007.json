@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.12541951008864838,
+    "cagr": 0.04031186633534145,
+    "annual_volatility": 0.11261443307579547,
+    "sharpe_ratio": 0.059610528514871586,
+    "sortino_ratio": 0.08223075325498791,
+    "calmar_ratio": 0.2331400363341959,
+    "max_drawdown": -0.17290838145686904,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.526595744680851,
+    "profit_factor": 1.0708857499056461,
+    "num_trading_days": 752,
+    "skewness": -0.23054713108550465,
+    "kurtosis": 1.107256137119681,
+    "best_day": 0.025252283290792654,
+    "worst_day": -0.02494379014333903,
+    "avg_daily_return": 0.0001822887749898771,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.046312712764422725,
+    "beta": 0.44780896965469297,
+    "information_ratio": -0.3674981317549787,
+    "tracking_error": 0.1260216277651738
+  },
+  "trade_metrics": {
+    "num_trades": 311,
+    "num_buys": 155,
+    "num_sells": 156,
+    "total_commission": 0.0,
+    "total_slippage": 957.1270324363704,
+    "total_transaction_costs": 957.1270324363704,
+    "avg_trade_size": 3077.5788824320607
+  },
+  "final_positions": {
+    "ICE": {
+      "qty": 63.0,
+      "avg_cost": 118.8668838450502,
+      "realized_pnl": 127.49048277527424
+    },
+    "CME": {
+      "qty": 45.0,
+      "avg_cost": 197.52543101591223,
+      "realized_pnl": 1220.8144549201502
+    },
+    "NDAQ": {
+      "qty": 122.0,
+      "avg_cost": 56.83966360376202,
+      "realized_pnl": -312.80521529830673
+    },
+    "ODFL": {
+      "qty": 35.0,
+      "avg_cost": 201.05471496582032,
+      "realized_pnl": 544.1407623290997
+    },
+    "CHRW": {
+      "qty": 76.0,
+      "avg_cost": 89.81671396104277,
+      "realized_pnl": -235.90679737139408
+    },
+    "A": {
+      "qty": 57.0,
+      "avg_cost": 137.89524841308594,
+      "realized_pnl": -1808.005058288574
+    },
+    "SPGI": {
+      "qty": 19.0,
+      "avg_cost": 425.6131043108977,
+      "realized_pnl": -1366.2779895284907
+    },
+    "MCO": {
+      "qty": 20.0,
+      "avg_cost": 360.8176524526665,
+      "realized_pnl": 248.38582493223794
+    },
+    "VRSK": {
+      "qty": 34.0,
+      "avg_cost": 257.8979627327711,
+      "realized_pnl": 122.70659045816211
+    },
+    "MA": {
+      "qty": 19.0,
+      "avg_cost": 427.9913976888621,
+      "realized_pnl": -119.81502472216795
+    },
+    "V": {
+      "qty": 31.0,
+      "avg_cost": 246.03085020626668,
+      "realized_pnl": 555.0875362038374
+    },
+    "FISV": {
+      "qty": 45.0,
+      "avg_cost": 147.44894741596303,
+      "realized_pnl": 1275.672879079668
+    }
+  },
+  "source": "unconventional",
+  "description": "Companies that tax every transaction: payments, exchanges, ratings, logistics"
+}

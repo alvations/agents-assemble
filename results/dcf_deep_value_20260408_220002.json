@@ -1,0 +1,99 @@
+{
+  "metrics": {
+    "total_return": 0.07924595039551519,
+    "cagr": 0.02583628185254838,
+    "annual_volatility": 0.16182701184117151,
+    "sharpe_ratio": -0.0037209186454574632,
+    "sortino_ratio": -0.005346892178073287,
+    "calmar_ratio": 0.14129299052265637,
+    "max_drawdown": -0.18285607627793488,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5079787234042553,
+    "profit_factor": 1.043172117198359,
+    "num_trading_days": 752,
+    "skewness": 0.15928824715140288,
+    "kurtosis": 3.1407396396135288,
+    "best_day": 0.05957717924278638,
+    "worst_day": -0.04510382266103685,
+    "avg_daily_return": 0.00015326039792737994,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.060788297247215795,
+    "beta": 0.7124413612705544,
+    "information_ratio": -0.5298011422874007,
+    "tracking_error": 0.11473795051623356
+  },
+  "trade_metrics": {
+    "num_trades": 1499,
+    "num_buys": 765,
+    "num_sells": 734,
+    "total_commission": 0.0,
+    "total_slippage": 5432.353793313978,
+    "total_transaction_costs": 5432.353793313978,
+    "avg_trade_size": 3623.985185666431
+  },
+  "final_positions": {
+    "GPN": {
+      "qty": 59.0,
+      "avg_cost": 110.06484506898008,
+      "realized_pnl": 5165.64643096924
+    },
+    "CAG": {
+      "qty": 256.0,
+      "avg_cost": 26.21731000577388,
+      "realized_pnl": -773.4531436030637
+    },
+    "CPB": {
+      "qty": 197.0,
+      "avg_cost": 39.35979786984206,
+      "realized_pnl": -94.35643768311012
+    },
+    "IDXX": {
+      "qty": 26.0,
+      "avg_cost": 486.1697130472859,
+      "realized_pnl": -1355.6767857217421
+    },
+    "ROP": {
+      "qty": 15.0,
+      "avg_cost": 536.2488403320312,
+      "realized_pnl": 2311.8986816406264
+    },
+    "ZTS": {
+      "qty": 61.0,
+      "avg_cost": 171.6735454621862,
+      "realized_pnl": 666.3191986084028
+    },
+    "DHR": {
+      "qty": 47.0,
+      "avg_cost": 238.15482904781405,
+      "realized_pnl": 2071.8429900275323
+    },
+    "ODFL": {
+      "qty": 43.0,
+      "avg_cost": 178.6232147216797,
+      "realized_pnl": 2509.951736450197
+    },
+    "HRL": {
+      "qty": 328.0,
+      "avg_cost": 29.561485290527344,
+      "realized_pnl": -163.2299461364721
+    },
+    "DOV": {
+      "qty": 35.0,
+      "avg_cost": 196.32398725237167,
+      "realized_pnl": 68.11587524414176
+    },
+    "SJM": {
+      "qty": 72.0,
+      "avg_cost": 105.70465321011014,
+      "realized_pnl": 870.2103729248088
+    },
+    "MDLZ": {
+      "qty": 190.0,
+      "avg_cost": 66.01176994395317,
+      "realized_pnl": 2504.889075605981
+    }
+  },
+  "source": "unconventional",
+  "description": "Mid/large caps trading 30%+ below intrinsic value \u2014 high FCF, beaten-down prices"
+}

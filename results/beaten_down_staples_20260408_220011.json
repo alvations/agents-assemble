@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "total_return": 0.16963789369968607,
+    "cagr": 0.053808525348978176,
+    "annual_volatility": 0.0881635465224293,
+    "sharpe_ratio": 0.1947639368128827,
+    "sortino_ratio": 0.2838483147448583,
+    "calmar_ratio": 0.4630371395751538,
+    "max_drawdown": -0.11620779576849627,
+    "max_drawdown_date": "2023-10-12",
+    "win_rate": 0.48138297872340424,
+    "profit_factor": 1.1272684726388522,
+    "num_trading_days": 752,
+    "skewness": 0.044029530241075275,
+    "kurtosis": 4.323441350642501,
+    "best_day": 0.02910774767986246,
+    "worst_day": -0.02761941645592425,
+    "avg_daily_return": 0.00022378906677576307,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.032816053750786,
+    "beta": 0.2174001506511143,
+    "information_ratio": -0.20714594696189187,
+    "tracking_error": 0.15841996540160685
+  },
+  "trade_metrics": {
+    "num_trades": 220,
+    "num_buys": 122,
+    "num_sells": 98,
+    "total_commission": 0.0,
+    "total_slippage": 1870.7782150230396,
+    "total_transaction_costs": 1870.7782150230396,
+    "avg_trade_size": 8503.537341013822
+  },
+  "final_positions": {
+    "MDLZ": {
+      "qty": 228.0,
+      "avg_cost": 64.91082823903938,
+      "realized_pnl": 243.83484268188573
+    }
+  },
+  "source": "unconventional",
+  "description": "Consumer staples oversold on GLP-1 fears \u2014 buy the overreaction, collect dividends"
+}

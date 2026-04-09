@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.3027654113541933,
+    "cagr": 0.09249693158780747,
+    "annual_volatility": 0.11726535899685435,
+    "sharpe_ratio": 0.4801319240126401,
+    "sortino_ratio": 0.6616789434245041,
+    "calmar_ratio": 0.6583291295182946,
+    "max_drawdown": -0.1405025654196531,
+    "max_drawdown_date": "2022-09-26",
+    "win_rate": 0.550531914893617,
+    "profit_factor": 1.1517868111224763,
+    "num_trading_days": 752,
+    "skewness": -0.4202052592079499,
+    "kurtosis": 2.772822637700758,
+    "best_day": 0.033374676115910606,
+    "worst_day": -0.03609568514651473,
+    "avg_daily_return": 0.00037907384070869386,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.005872352488043298,
+    "beta": 0.313741338130839,
+    "information_ratio": 0.03701490880544379,
+    "tracking_error": 0.1586483035500455
+  },
+  "trade_metrics": {
+    "num_trades": 214,
+    "num_buys": 91,
+    "num_sells": 123,
+    "total_commission": 0.0,
+    "total_slippage": 1051.0951397399897,
+    "total_transaction_costs": 1051.0951397399897,
+    "avg_trade_size": 4911.659531495281
+  },
+  "final_positions": {
+    "CB": {
+      "qty": 51.0,
+      "avg_cost": 270.542044970454,
+      "realized_pnl": 2051.90654630077
+    },
+    "AFL": {
+      "qty": 153.0,
+      "avg_cost": 108.42937469482422,
+      "realized_pnl": 2660.7388725280744
+    },
+    "WRB": {
+      "qty": 237.0,
+      "avg_cost": 50.94388854440885,
+      "realized_pnl": 6271.4860431852985
+    },
+    "BRK-B": {
+      "qty": 30.0,
+      "avg_cost": 357.63938056042724,
+      "realized_pnl": 1958.0516865882107
+    },
+    "PGR": {
+      "qty": 68.0,
+      "avg_cost": 243.1768341064453,
+      "realized_pnl": 9998.121688842773
+    },
+    "CINF": {
+      "qty": 96.0,
+      "avg_cost": 108.89548720793576,
+      "realized_pnl": -31.85207569441434
+    },
+    "MKL": {
+      "qty": 8.0,
+      "avg_cost": 1507.5645043945312,
+      "realized_pnl": -728.3734912109367
+    },
+    "ALL": {
+      "qty": 83.0,
+      "avg_cost": 142.23653577063018,
+      "realized_pnl": -1091.656830048929
+    }
+  },
+  "source": "unconventional",
+  "description": "Insurance companies with massive float: paid to hold money, compound via investing"
+}

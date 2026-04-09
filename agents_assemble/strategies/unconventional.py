@@ -544,6 +544,505 @@ class ConcentrateWinners(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 9. Hidden Monopoly Compounders — boring businesses with pricing power
+# ---------------------------------------------------------------------------
+class HiddenMonopoly(BasePersona):
+    """Invest in companies with natural monopolies or duopolies in boring industries.
+
+    These businesses have massive moats but get zero media attention:
+    - Credit ratings (MCO, SPGI) — literally impossible to compete
+    - Data monopolies (VRSK, ICE, MSCI) — mission-critical, no switching
+    - Waste management (WM, RSG) — local monopolies, inflation-linked pricing
+    - Railroads (CSX, NSC) — physically impossible to build competing rail
+    - Elevator/HVAC installed base (OTIS, CARR, TT) — service contracts = recurring
+
+    Edge: These compound intrinsic value 12-18% annually but trade at lower
+    multiples than tech because they're "boring." The market systematically
+    underprices predictability.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Hidden Monopoly Compounders",
+            description="Natural monopolies in boring industries: credit ratings, data, waste, rail, HVAC",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Credit ratings duopoly
+                "SPGI", "MCO",
+                # Data/analytics monopolies
+                "VRSK", "ICE", "MSCI", "FDS",
+                # Waste monopolies
+                "WM", "RSG",
+                # Railroad monopolies
+                "CSX", "NSC",
+                # Installed-base HVAC/elevator
+                "OTIS", "CARR", "TT",
+                # Industrial distribution
+                "FAST", "CTAS",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Long-term uptrend (compounding)
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            # Buy on pullbacks (RSI dip in uptrend = gift)
+            if 30 < rsi < 50 and price > sma200:
+                score += 2.0  # Pullback in uptrend = best entry
+            elif 50 <= rsi < 65:
+                score += 1.0
+            # Low vol = stable compounder (good)
+            if vol is not None and not _is_missing(vol) and vol < 0.015:
+                score += 1.0
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 10. DCF Deep Value — stocks trading 30%+ below intrinsic value
+# ---------------------------------------------------------------------------
+class DCFDeepValue(BasePersona):
+    """Buy mid/large caps trading far below DCF intrinsic value.
+
+    Uses price-to-FCF and distance-from-highs as proxies for DCF discount
+    (we can't compute DCF in real-time, but beaten-down FCF machines are
+    statistically the same set).
+
+    Universe: companies with high FCF yield that have sold off.
+    Edge: Market overreacts to short-term earnings misses in high-FCF companies.
+    The FCF keeps compounding even when the stock price doesn't.
+
+    Includes: healthcare post-patent, consumer staples GLP-1 fear selloff,
+    energy with massive buybacks, beaten-down industrials.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="DCF Deep Value (High FCF Discount)",
+            description="Mid/large caps trading 30%+ below intrinsic value — high FCF, beaten-down prices",
+            risk_tolerance=0.5,
+            max_position_size=0.10,
+            max_positions=15,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Consumer staples beaten down (GLP-1 fear overreaction)
+                "MDLZ", "CAG", "SJM", "HRL", "CPB",
+                # Healthcare FCF machines
+                "DHR", "WAT", "ZTS", "IDXX",
+                # Insurance float compounders
+                "ALL", "PGR", "MKL", "CINF",
+                # Payment infrastructure (depressed vs growth)
+                "FIS", "GPN", "FISV",
+                # Industrial FCF
+                "DOV", "ROP", "TDY",
+                # Boring but profitable
+                "WST", "ODFL",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+
+            # Deep value: price significantly below SMA200 = potential DCF discount
+            if price < sma200 * 0.90:
+                score += 3.0  # >10% below long-term avg = deep value
+            elif price < sma200:
+                score += 1.5
+
+            # RSI oversold = maximum pessimism
+            if rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+
+            # MACD turning up = reversal starting
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+
+            # Near lower Bollinger = statistical extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+
+            # Only buy if there's actual value signal (not just trending down)
+            if score >= 3.0:
+                scored.append((sym, score))
+            elif price > sma200:
+                # Exited value zone — reduce or exit
+                weights[sym] = 0.0
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 11. Toll Booth Economy — companies that tax every transaction
+# ---------------------------------------------------------------------------
+class TollBoothEconomy(BasePersona):
+    """Invest in companies that sit on critical infrastructure and collect fees.
+
+    These are the "toll booths" of the modern economy:
+    - Every credit card swipe: V, MA
+    - Every stock trade: ICE, CME, NDAQ
+    - Every insurance policy: SPGI, MCO rate it
+    - Every building needs HVAC: OTIS, CARR
+    - Every package shipped: ODFL, CHRW
+
+    Edge: Transaction volumes grow with GDP. These companies have near-zero
+    marginal cost per transaction. Revenue scales infinitely.
+    Unlike tech, they don't need to reinvent themselves every 3 years.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Toll Booth Economy",
+            description="Companies that tax every transaction: payments, exchanges, ratings, logistics",
+            risk_tolerance=0.4,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Payment toll booths
+                "V", "MA", "FISV", "GPN",
+                # Exchange toll booths
+                "ICE", "CME", "NDAQ",
+                # Ratings toll booths
+                "SPGI", "MCO",
+                # Logistics toll booths
+                "ODFL", "CHRW",
+                # Testing/compliance toll booths
+                "A", "VRSK",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Uptrend = growing transaction volumes
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and sma50 > sma200:
+                score += 1.0  # Golden cross
+            # Not overextended
+            if 40 < rsi < 70:
+                score += 1.0
+            # Low vol = stable toll collector (exactly what we want)
+            if vol is not None and not _is_missing(vol) and vol < 0.018:
+                score += 1.0
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 12. Beaten Down Staples (GLP-1 Fear Overreaction)
+# ---------------------------------------------------------------------------
+class BeatenDownStaples(BasePersona):
+    """Buy consumer staples crushed by GLP-1/Ozempic weight-loss drug fears.
+
+    The market sold off snack, soda, fast food, and packaged food companies
+    on fears that GLP-1 drugs will reduce calorie consumption. But:
+    - GLP-1 penetration is <5% of population even in 2026
+    - These companies have pricing power and adapt product lines
+    - Dividend yields are now at 10-year highs
+    - FCF is still growing
+
+    Edge: Classic overreaction. The selloff priced in 100% GLP-1 adoption
+    when real adoption is <5%. Buy the fear, collect the dividends.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Beaten Down Staples (GLP-1 Fear)",
+            description="Consumer staples oversold on GLP-1 fears — buy the overreaction, collect dividends",
+            risk_tolerance=0.3,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Snack/packaged food (hit hardest by GLP-1 fear)
+                "MDLZ", "CAG", "SJM", "HRL", "CPB",
+                # Soda (Pepsi/Coke hit by weight loss fears)
+                "PEP", "KO",
+                # Fast food/restaurants
+                "MCD", "YUM", "DPZ",
+                # Grocery/consumer
+                "KR", "SYY",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "bb_lower"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            bb_low = inds["bb_lower"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Below SMA200 = fear territory (where we want to buy)
+            if price < sma200 * 0.95:
+                score += 3.0  # Deep discount to trend
+            elif price < sma200:
+                score += 1.5
+            # RSI oversold = maximum fear
+            if rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+            # Near Bollinger lower = statistical extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+            # Recovery signal: if above SMA200, hold with momentum
+            if price > sma200 and rsi > 50:
+                score += 1.5
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 13. Insurance Float Compounders
+# ---------------------------------------------------------------------------
+class InsuranceFloat(BasePersona):
+    """Invest in insurance companies that compound via float investing.
+
+    Insurance companies collect premiums upfront and pay claims later.
+    The "float" — premiums collected but not yet paid out — is essentially
+    free leverage that they invest. Berkshire Hathaway pioneered this.
+
+    Edge: Float grows with premiums (inflation-linked). Combined ratios <100%
+    mean they're paid to hold your money. Market treats them as boring financials
+    but they're actually leveraged investment vehicles.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Insurance Float Compounders",
+            description="Insurance companies with massive float: paid to hold money, compound via investing",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "BRK-B",  # Berkshire Hathaway (the OG float compounder)
+                "PGR",    # Progressive (auto insurance, 96% combined ratio)
+                "ALL",    # Allstate
+                "CB",     # Chubb (global, very profitable)
+                "MKL",    # Markel (mini-Berkshire)
+                "CINF",   # Cincinnati Financial (50+ year dividend growth)
+                "AFL",    # Aflac (supplemental insurance, massive float)
+                "WRB",    # Berkley (specialty insurance)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Uptrend = growing premiums + float
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            # Buy dips in uptrend
+            if 35 < rsi < 50 and price > sma200:
+                score += 2.0
+            elif 50 <= rsi < 65:
+                score += 1.0
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 14. Boring Compounder 20% Club
+# ---------------------------------------------------------------------------
+class BoringCompounder(BasePersona):
+    """Companies growing intrinsic value 15-20% annually in boring industries.
+
+    These never make CNBC, never go viral on Reddit, never get mentioned
+    by Cathie Wood. They just quietly compound wealth:
+    - POOL: only national pool supply distributor
+    - ODFL: best-in-class LTL freight (98% on-time)
+    - CTAS: uniform rental monopoly
+    - WST: pharmaceutical packaging (every vial needs a stopper)
+    - ROP: vertical market software roll-up
+    - FAST: industrial fastener distribution
+
+    Edge: Boring = under-owned by retail = less volatile = better Sharpe.
+    Institutional ownership is high but passive flows dominate, meaning
+    mispricings persist longer.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Boring Compounder 20% Club",
+            description="Quiet compounders in boring industries: pool supply, uniforms, fasteners, packaging",
+            risk_tolerance=0.3,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "POOL",  # Pool supply distribution monopoly
+                "ODFL",  # Best LTL freight carrier
+                "CTAS",  # Uniform rental
+                "WST",   # Pharma packaging
+                "ROP",   # Vertical software roll-up
+                "FAST",  # Industrial fasteners
+                "TDY",   # Defense/instrumentation
+                "IDXX",  # Veterinary diagnostics monopoly
+                "CLH",   # Hazardous waste (Clean Harbors)
+                "LII",   # HVAC (Lennox)
+                "WSO",   # HVAC distribution (Watsco)
+                "MORN",  # Morningstar (investment research monopoly)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Must be in uptrend (compounders trend up)
+            if price > sma200:
+                score += 2.0
+            else:
+                continue  # Don't buy broken compounders
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            # Buy pullbacks aggressively (these always recover)
+            if 30 < rsi < 45:
+                score += 2.5  # Deep pullback in compounder = best entry
+            elif 45 <= rsi < 60:
+                score += 1.0
+            # Low vol = stable compounder
+            if vol is not None and not _is_missing(vol) and vol < 0.015:
+                score += 0.5
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
 UNCONVENTIONAL_STRATEGIES = {
     "sell_in_may": SellInMayGoAway,
     "turn_of_month": TurnOfMonth,
@@ -553,6 +1052,12 @@ UNCONVENTIONAL_STRATEGIES = {
     "tail_risk_harvest": TailRiskHarvest,
     "dividend_aristocrat_momentum": DividendAristocratMomentum,
     "concentrate_winners": ConcentrateWinners,
+    "hidden_monopoly": HiddenMonopoly,
+    "dcf_deep_value": DCFDeepValue,
+    "toll_booth_economy": TollBoothEconomy,
+    "beaten_down_staples": BeatenDownStaples,
+    "insurance_float": InsuranceFloat,
+    "boring_compounder": BoringCompounder,
 }
 
 

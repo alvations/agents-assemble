@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.031210800269446448,
+    "cagr": 0.01033274708042442,
+    "annual_volatility": 0.15639988970346086,
+    "sharpe_ratio": -0.10674400089230705,
+    "sortino_ratio": -0.1469190760190893,
+    "calmar_ratio": 0.034171740418154226,
+    "max_drawdown": -0.3023769627763824,
+    "max_drawdown_date": "2022-06-17",
+    "win_rate": 0.5132978723404256,
+    "profit_factor": 1.0242939981197385,
+    "num_trading_days": 752,
+    "skewness": -0.18249071606010608,
+    "kurtosis": 0.9778547221716232,
+    "best_day": 0.03585893730346079,
+    "worst_day": -0.03710157196347397,
+    "avg_daily_return": 8.940085498942571e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07629183201933976,
+    "beta": 0.6765512881989735,
+    "information_ratio": -0.6532876110862279,
+    "tracking_error": 0.11678138498981873
+  },
+  "trade_metrics": {
+    "num_trades": 291,
+    "num_buys": 153,
+    "num_sells": 138,
+    "total_commission": 0.0,
+    "total_slippage": 1324.793371032715,
+    "total_transaction_costs": 1324.793371032715,
+    "avg_trade_size": 4552.554539631323
+  },
+  "final_positions": {
+    "POOL": {
+      "qty": 26.0,
+      "avg_cost": 367.7112121582031,
+      "realized_pnl": -4451.232208251952
+    },
+    "FAST": {
+      "qty": 322.0,
+      "avg_cost": 33.695842932968915,
+      "realized_pnl": -1547.5515249553516
+    },
+    "WSO": {
+      "qty": 18.0,
+      "avg_cost": 438.3955180888274,
+      "realized_pnl": 1551.7515887824857
+    },
+    "ODFL": {
+      "qty": 58.0,
+      "avg_cost": 199.02857971191406,
+      "realized_pnl": -1549.3525238037105
+    },
+    "CTAS": {
+      "qty": 48.0,
+      "avg_cost": 165.54239469526186,
+      "realized_pnl": 4700.754992369643
+    },
+    "TDY": {
+      "qty": 27.0,
+      "avg_cost": 425.1515739704001,
+      "realized_pnl": -3776.717866568729
+    },
+    "MORN": {
+      "qty": 30.0,
+      "avg_cost": 301.4569140550567,
+      "realized_pnl": -1252.1131960240812
+    },
+    "ROP": {
+      "qty": 19.0,
+      "avg_cost": 562.5548095703125,
+      "realized_pnl": 149.83276367187432
+    },
+    "CLH": {
+      "qty": 51.0,
+      "avg_cost": 255.17999267578125,
+      "realized_pnl": 4311.469024658203
+    },
+    "LII": {
+      "qty": 11.0,
+      "avg_cost": 434.99799793726777,
+      "realized_pnl": 8208.117366348033
+    }
+  },
+  "source": "unconventional",
+  "description": "Quiet compounders in boring industries: pool supply, uniforms, fasteners, packaging"
+}
