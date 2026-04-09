@@ -73,6 +73,6 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Exit rules:**
 - **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
 - **Stop loss:** NO price-based stop loss. This strategy recovered from -25% drawdown to return 317% over the long term. Stopping out would have locked in losses.
-- **Exit rule:** This strategy returned 317% over 10 years despite -25% max drawdown. Exit only if the core thesis (described above) fundamentally breaks.
+- **Exit rule:** This strategy returned 317% over 10 years despite -25% max drawdown. Exit if the ensemble model underperforms SPY for 3 consecutive years — the multi-strategy blend has stopped adding value.
 
 </details>

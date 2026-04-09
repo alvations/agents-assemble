@@ -76,6 +76,6 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Exit rules:**
 - **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
 - **Stop loss:** NO price-based stop loss. This strategy recovered from -32% drawdown to return 251% over the long term. Stopping out would have locked in losses.
-- **Exit rule:** This strategy returned 251% over 10 years despite -32% max drawdown. Exit only if the core thesis (described above) fundamentally breaks.
+- **Exit rule:** This strategy returned 251% over 10 years despite -32% max drawdown. Exit if infrastructure spending bill gets repealed or if construction spending (Census Bureau data) declines for 6+ months.
 
 </details>

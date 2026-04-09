@@ -79,6 +79,6 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Exit rules:**
 - **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
 - **Stop loss:** NO price-based stop loss. This strategy recovered from -22% drawdown to return 319% over the long term. Stopping out would have locked in losses.
-- **Exit rule:** This strategy returned 319% over 10 years despite -22% max drawdown. Exit only if the core thesis (described above) fundamentally breaks.
+- **Exit rule:** This strategy returned 319% over 10 years despite -22% max drawdown. Exit if revenue growth turns negative for 2 quarters for 3+ holdings simultaneously — growth portfolio has become a value trap.
 
 </details>
