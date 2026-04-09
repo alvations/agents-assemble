@@ -4,29 +4,29 @@ Trading agents and algorithms for publicly tradable instruments. **175 strategie
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
-> **Today's Pre-Market Research:** [knowledge/premarket-research/](knowledge/premarket-research/) — Daily analysis of futures, news, sector signals before market open
->
 > **Start here:**
 > - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (Avg Return × Consistency × Drawdown Protection)
 > - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
+>
+> **Pre-Market Research (2026-04-09):** [knowledge/premarket-research/20260409.md](knowledge/premarket-research/20260409.md) — Iran ceasefire unraveling, oil to $98, $1.5T defense budget, UNH +9%
 > - **[knowledge/](knowledge/)** — 54 research files with backtested findings
 
-## Top 5 Strategies (4Y: 2022-2025)
+## Top 5 Strategies (by Composite Score, 12 rolling windows)
 
-| Rank | Strategy | 4Y Return | Sharpe | Max DD | Type |
-|------|----------|-----------|--------|--------|------|
-| 1 | **AI Token Economy** | **248.4%** | **1.12** | -28.7% | NVDA compute demand proxy → AI infra stack |
-| 2 | **Uranium Renaissance** | **156.9%** | **0.67** | -51.4% | Structural uranium supply deficit (UUUU, CCJ, LEU) |
-| 3 | **Midstream Toll Road** | **112.5%** | **0.86** | -19.9% | Pipeline fee-based income (EPD, ET, MPLX) |
-| 4 | **David Tepper** | **108.2%** | **0.82** | -16.2% | Appaloosa macro + high-conviction growth |
-| 5 | **UK European Banking** | **103.1%** | **0.83** | -23.6% | NatWest, HSBC, UBS value recovery |
+| Rank | Strategy | Composite | Consistency | Avg Return | Type |
+|------|----------|-----------|-------------|------------|------|
+| 1 | **AI Token Economy** | **1.10** | 92% | +156% avg | NVDA compute demand proxy → AI infra stack |
+| 2 | **Uranium Renaissance** | **0.74** | 92% | +134% avg | Structural uranium supply deficit (UUUU, CCJ, LEU) |
+| 3 | **Concentrate Winners** | **0.62** | 92% | +89% avg | Top 3-5 stocks outperform equal-weight |
+| 4 | **AI Revolution** | **0.53** | 92% | +79% avg | Broad AI theme (NVDA, AVGO, CRM, SNOW) |
+| 5 | **David Tepper** | **0.52** | 100% | +65% avg | Appaloosa macro — positive Sharpe in ALL 12 windows |
 
-**Regime Orchestrator:** Conservative version: +70.0%, 1.17 Sharpe, -16.7% DD — auto-switches between bull/bear/rotation/crisis/K-shape.
+Composite Score = Avg Return x Consistency x (1 - Avg Drawdown). See [LEADERBOARD.md](LEADERBOARD.md) for formula details.
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 173 strategies with full rankings.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 175 strategies with full rankings.
 
 ## Quick Start
 
@@ -95,12 +95,12 @@ strategy = get_orchestrated_strategy("conservative_regime")
 
 Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-shape), energy vs tech divergence, bond trend. Activates appropriate sub-strategies per regime.
 
-## 173 Strategies Across 15 Categories
+## 175 Strategies Across 13 Categories
 
-| Category | Count | Top Performer (4Y) |
-|----------|-------|---------------------|
-| Unconventional | 39 | AI Token Economy (+248%), Midstream Toll Road (+112%) |
-| Themes | 37 | Uranium Renaissance (+157%), Subscription Monopoly (+81%) |
+| Category | Count | Top Performer |
+|----------|-------|---------------|
+| Unconventional | 41 | AI Token Economy (1.10 composite), Warflation Hedge, Defense Budget Floor |
+| Themes | 37 | Uranium Renaissance (0.74 composite), Subscription Monopoly |
 | Famous Investors | 20 | David Tepper (+108%), Druckenmiller (+97%) |
 | Recession | 10 | K-Shape Economy, V-Shape Recovery, L-Shape Stagnation |
 | Generic | 10 | Momentum (+85%), Concentrate Winners (+78%) |
