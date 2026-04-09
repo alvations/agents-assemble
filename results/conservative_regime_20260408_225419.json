@@ -1,0 +1,100 @@
+{
+  "metrics": {
+    "total_return": 0.7000934927081222,
+    "cagr": 0.19423030564676935,
+    "annual_volatility": 0.12541449492706966,
+    "sharpe_ratio": 1.1683654110884323,
+    "sortino_ratio": 1.7113278171280988,
+    "calmar_ratio": 1.1609327207792488,
+    "max_drawdown": -0.1673053934739619,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5598404255319149,
+    "profit_factor": 1.2796646318518896,
+    "num_trading_days": 752,
+    "skewness": -0.16052074099071847,
+    "kurtosis": 0.9802357135802708,
+    "best_day": 0.027800750601724156,
+    "worst_day": -0.029282238011757222,
+    "avg_daily_return": 0.0007371179497829843,
+    "black_swan_resilience": 76.6,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.10760572654700518,
+    "beta": 0.5640292316894825,
+    "information_ratio": 0.9904380795577677,
+    "tracking_error": 0.10864457735212615
+  },
+  "trade_metrics": {
+    "num_trades": 1379,
+    "num_buys": 705,
+    "num_sells": 674,
+    "total_commission": 0.0,
+    "total_slippage": 1956.8953347754534,
+    "total_transaction_costs": 1956.8953347754534,
+    "avg_trade_size": 1419.068408104023
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 97.0,
+      "avg_cost": 195.87788051507937,
+      "realized_pnl": 2826.464026051568
+    },
+    "SHY": {
+      "qty": 218.0,
+      "avg_cost": 74.88516707973618,
+      "realized_pnl": -112.44920314338334
+    },
+    "SCHD": {
+      "qty": 656.0,
+      "avg_cost": 23.326288538396362,
+      "realized_pnl": 320.04352261257026
+    },
+    "NVDA": {
+      "qty": 110.0,
+      "avg_cost": 109.38282142421583,
+      "realized_pnl": 15512.407924031297
+    },
+    "AAPL": {
+      "qty": 60.0,
+      "avg_cost": 219.85882734842534,
+      "realized_pnl": 2695.1207816525925
+    },
+    "MSFT": {
+      "qty": 27.0,
+      "avg_cost": 427.3285847627008,
+      "realized_pnl": 47.980934711087514
+    },
+    "GOOGL": {
+      "qty": 79.0,
+      "avg_cost": 166.2147189629392,
+      "realized_pnl": 2839.2737493051
+    },
+    "CRM": {
+      "qty": 45.0,
+      "avg_cost": 295.60544391496967,
+      "realized_pnl": 3397.715175758595
+    },
+    "META": {
+      "qty": 25.0,
+      "avg_cost": 506.6728053341174,
+      "realized_pnl": 10276.457920218172
+    },
+    "EPD": {
+      "qty": 306.0,
+      "avg_cost": 25.027721634343262,
+      "realized_pnl": 2559.8537097727335
+    },
+    "ET": {
+      "qty": 492.0,
+      "avg_cost": 13.291799729085865,
+      "realized_pnl": 4381.821902581368
+    },
+    "MPLX": {
+      "qty": 203.0,
+      "avg_cost": 35.00328284819727,
+      "realized_pnl": 3154.1548710954216
+    }
+  },
+  "source": "orchestrator",
+  "description": "70% regime-adaptive + 30% permanent defense (GLD/SHY/SCHD). Lower DD, steadier returns."
+}

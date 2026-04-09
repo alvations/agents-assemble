@@ -2843,6 +2843,367 @@ class NvidiaSupplyChain(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Mag7 Hidden Suppliers
+# ---------------------------------------------------------------------------
+class Mag7HiddenSuppliers(BasePersona):
+    """Long the hidden supply chain monopolies that ALL Magnificent 7 depend on.
+
+    Thesis: The Mag7 collectively spend $320B+ annually on AI infrastructure.
+    Every dollar flows through a handful of under-followed monopoly/oligopoly
+    suppliers: Ajinomoto (95% ABF substrate monopoly), ASML (100% EUV monopoly),
+    Lasertec (100% EUV mask inspection), Shin-Etsu/SUMCO (90% silicon wafers),
+    Murata (40% MLCC capacitors), Entegris (ultra-pure chemicals), Disco Corp
+    (70% wafer dicing), Corning (glass + fiber optic), and SK Hynix (62% HBM).
+    These are picks-and-shovels for the entire tech ecosystem -- they capture
+    guaranteed revenue regardless of which Mag7 company wins the AI race.
+
+    Signal: Buy when Mag7 aggregate capex trend is strong (QQQ above SMA200)
+    and individual supply chain names show trend alignment + healthy RSI.
+    Overweight names with strongest monopoly positions. Reduce exposure only
+    when the entire tech capex cycle breaks (QQQ below SMA200).
+
+    Edge: Market obsesses over Mag7 directly. These suppliers are under-covered,
+    trade at lower multiples, and have guaranteed revenue from ALL Mag7 capex.
+    An activist investor called Ajinomoto "the world's most under-monetised
+    monopoly in AI infrastructure." Lasertec has 100% market share in sub-5nm
+    EUV mask inspection. These are the companies nobody talks about until they
+    break.
+    """
+
+    # Monopoly strength tiers for weighting: tier1 = true monopoly, tier2 = dominant oligopoly
+    _TIER1_MONOPOLY = {"ASML", "AJINY", "LSRCY", "ENTG"}  # 90%+ share or sole supplier
+    _TIER2_DOMINANT = {"SHECY", "DSCOY", "TOELY", "MRAAY", "GLW", "HXSCF", "SUOPY", "IBIDY"}
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Mag7 Hidden Suppliers",
+            description="Hidden supply chain monopolies ALL Magnificent 7 depend on: ABF, EUV, wafers, capacitors",
+            risk_tolerance=0.65,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Tier 1: True monopolies / near-monopolies (90%+ share)
+                "ASML",    # ASML — 100% EUV lithography monopoly (~350B EUR mkt cap)
+                "AJINY",   # Ajinomoto Fine-Techno — 95%+ ABF substrate film monopoly (~$28B mkt cap)
+                "LSRCY",   # Lasertec — 100% EUV mask inspection for sub-5nm (~$8B mkt cap)
+                "ENTG",    # Entegris — ultra-pure chemicals, filters for ALL advanced fabs (~$17B mkt cap)
+
+                # Tier 2: Dominant oligopoly positions (40-70% share)
+                "SHECY",   # Shin-Etsu Chemical — #1 silicon wafer maker, 30% share (~$65B mkt cap)
+                "SUOPY",   # SUMCO — #2 silicon wafer maker, 30% share (duopoly with Shin-Etsu) (~$4B mkt cap)
+                "DSCOY",   # Disco Corp — 70%+ wafer dicing/grinding monopoly (~$15B mkt cap)
+                "TOELY",   # Tokyo Electron — #1 Asia etch/deposition equipment (~$65B mkt cap)
+                "MRAAY",   # Murata Manufacturing — #1 MLCC capacitors, 40% global share (~$40B mkt cap)
+                "GLW",     # Corning — Gorilla Glass + fiber optic for ALL data centers (~$45B mkt cap)
+                "HXSCF",   # SK Hynix — 62% HBM memory market, NVIDIA primary supplier (~$90B mkt cap)
+                "IBIDY",   # Ibiden — sole AI server IC substrate supplier to NVIDIA (~$14B mkt cap)
+
+                # Tier 3: Critical but more competitive
+                "AMKR",    # Amkor Technology — #2 OSAT, advanced packaging for GPUs (~$12B mkt cap)
+                "MPWR",    # Monolithic Power Systems — DC-DC power for AI GPU racks (~$30B mkt cap)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        # ---- Tech capex cycle signal (QQQ as proxy) ----
+        capex_strong = False
+        capex_score = 0.0
+        if "QQQ" in prices:
+            qqq_inds = self._get_indicators(
+                data, "QQQ",
+                ["sma_50", "sma_200", "rsi_14"],
+                date,
+            )
+            qqq_price = prices["QQQ"]
+            qqq_sma50 = qqq_inds["sma_50"]
+            qqq_sma200 = qqq_inds["sma_200"]
+
+            if not _is_missing(qqq_sma50) and not _is_missing(qqq_sma200):
+                if qqq_price > qqq_sma50 > qqq_sma200:
+                    capex_strong = True
+                    capex_score = 3.0
+                elif qqq_price > qqq_sma200:
+                    capex_strong = True
+                    capex_score = 1.5
+                elif qqq_price > qqq_sma200 * 0.95:
+                    capex_score = 0.5  # Marginal — near support
+
+        # ---- Score each supply chain name ----
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+
+            if _is_missing(sma50) or _is_missing(rsi):
+                continue
+
+            # Hard exits
+            if rsi > 82:
+                weights[sym] = 0.0
+                continue
+            if not _is_missing(sma200) and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Monopoly tier bonus: true monopolies get structural premium
+            if sym in self._TIER1_MONOPOLY:
+                score += 1.5
+            elif sym in self._TIER2_DOMINANT:
+                score += 0.75
+
+            # Tech capex cycle boost
+            if capex_strong:
+                score += min(capex_score * 0.4, 1.2)
+
+            # Own-stock trend alignment
+            if not _is_missing(sma200) and price > sma50 > sma200:
+                score += 2.5
+            elif price > sma50:
+                score += 1.0
+            elif not _is_missing(sma200) and price > sma200:
+                score += 0.3
+
+            # MACD bullish
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                score += 0.8
+
+            # RSI sweet spot
+            if 30 < rsi < 65:
+                score += 0.5
+            # Oversold dip-buy for monopolies (they always recover)
+            elif rsi < 30 and sym in self._TIER1_MONOPOLY:
+                if not _is_missing(sma200) and price > sma200 * 0.80:
+                    score += 2.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.92, self.config.max_position_size)
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Mag7 Domino Hedge
+# ---------------------------------------------------------------------------
+class Mag7DominoHedge(BasePersona):
+    """Supply chain stress early-warning system that hedges Mag7 exposure.
+
+    Thesis: Supply chain companies break BEFORE the Mag7 themselves. When
+    critical suppliers (TSMC, ASML, Ajinomoto, SK Hynix, Entegris) show
+    technical stress (price below SMA200 + volume spike), it's an early
+    warning of Mag7 correction 2-6 weeks before it hits the megacaps.
+
+    The strategy monitors a basket of "canary" supply chain names. In
+    normal conditions, it holds equal-weight Mag7 + QQQ for growth exposure.
+    When supply chain stress signals fire, it systematically rotates into
+    defensive positions (staples, utilities, gold, treasuries).
+
+    Stress detection:
+    - Level 0 (green): 0-1 canaries stressed -> full Mag7 allocation
+    - Level 1 (yellow): 2-3 canaries stressed -> reduce to 60% Mag7, add 30% defensive
+    - Level 2 (orange): 4-5 canaries stressed -> 30% Mag7, 60% defensive
+    - Level 3 (red): 6+ canaries stressed -> 0% Mag7, full defensive rotation
+
+    A "stressed" canary = price below SMA200 AND (volume > 1.5x avg OR RSI < 35).
+
+    Edge: Institutional investors monitor Mag7 directly but ignore their supply
+    chain. A TSMC volume spike or Ajinomoto breakdown is visible weeks before
+    it shows up in NVDA or AAPL earnings. This strategy front-runs the domino.
+    """
+
+    # Supply chain canaries — the early warning signals
+    _CANARIES = [
+        "TSM",     # TSMC — if the foundry breaks, everything breaks
+        "ASML",    # ASML — EUV monopoly, bellwether for chip capex
+        "AJINY",   # Ajinomoto — ABF substrate, hidden linchpin
+        "HXSCF",   # SK Hynix — HBM memory, NVIDIA supply chain
+        "ENTG",    # Entegris — fab chemicals, canary for fab utilization
+        "LSRCY",   # Lasertec — EUV inspection, canary for leading-edge demand
+        "SHECY",   # Shin-Etsu — silicon wafers, canary for broad chip demand
+        "MRAAY",   # Murata — MLCC capacitors, canary for electronics demand
+        "DSCOY",   # Disco Corp — wafer dicing, canary for chip output volume
+        "GLW",     # Corning — glass + fiber, canary for both consumer + DC
+    ]
+
+    # Mag7 tickers for growth allocation
+    _MAG7 = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA"]
+
+    # Defensive rotation targets
+    _DEFENSIVE = [
+        "XLP",   # Consumer Staples ETF
+        "XLU",   # Utilities ETF
+        "GLD",   # Gold ETF
+        "TLT",   # Long-term Treasury ETF
+        "XLV",   # Healthcare ETF
+        "PG",    # Procter & Gamble
+        "JNJ",   # Johnson & Johnson
+        "KO",    # Coca-Cola
+    ]
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Mag7 Domino Hedge",
+            description="Supply chain stress early-warning: rotates Mag7 to defensive when canaries break",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or (
+                self._CANARIES + self._MAG7 + self._DEFENSIVE + ["QQQ", "SPY"]
+            ),
+        )
+        super().__init__(config)
+
+    def _count_stressed_canaries(self, date, prices, data):
+        """Count how many supply chain canaries show stress signals.
+
+        A canary is 'stressed' when:
+        1. Price is below SMA200 (broken long-term trend), AND
+        2. At least one of: volume > 1.5x average (panic selling) or RSI < 35 (oversold)
+        """
+        stressed = 0
+        canary_details = []
+
+        for sym in self._CANARIES:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "rsi_14", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma200):
+                continue
+
+            below_sma200 = price < sma200
+            vol_spike = (
+                not _is_missing(volume) and not _is_missing(vol_avg)
+                and vol_avg > 0 and volume > vol_avg * 1.5
+            )
+            oversold = not _is_missing(rsi) and rsi < 35
+
+            if below_sma200 and (vol_spike or oversold):
+                stressed += 1
+                canary_details.append(sym)
+
+        return stressed, canary_details
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # ---- Detect supply chain stress level ----
+        stressed_count, _ = self._count_stressed_canaries(date, prices, data)
+
+        # Determine allocation regime
+        if stressed_count <= 1:
+            # Level 0 (green): full growth
+            mag7_pct = 0.85
+            defensive_pct = 0.10
+        elif stressed_count <= 3:
+            # Level 1 (yellow): reduce growth, add defense
+            mag7_pct = 0.55
+            defensive_pct = 0.35
+        elif stressed_count <= 5:
+            # Level 2 (orange): heavy defensive
+            mag7_pct = 0.25
+            defensive_pct = 0.65
+        else:
+            # Level 3 (red): full defensive rotation
+            mag7_pct = 0.0
+            defensive_pct = 0.90
+
+        # ---- Allocate Mag7 portion ----
+        if mag7_pct > 0:
+            mag7_scored = []
+            for sym in self._MAG7:
+                if sym not in prices:
+                    continue
+                inds = self._get_indicators(
+                    data, sym,
+                    ["sma_50", "sma_200", "rsi_14"],
+                    date,
+                )
+                sma50 = inds["sma_50"]
+                sma200 = inds["sma_200"]
+                rsi = inds["rsi_14"]
+                price = prices[sym]
+
+                score = 1.0  # Base score for being in Mag7
+                if not _is_missing(sma50) and not _is_missing(sma200):
+                    if price > sma50 > sma200:
+                        score += 2.0
+                    elif price > sma50:
+                        score += 1.0
+                if not _is_missing(rsi) and 35 < rsi < 75:
+                    score += 0.5
+                # Skip overbought names even in growth mode
+                if not _is_missing(rsi) and rsi > 80:
+                    score = 0.0
+
+                if score > 0:
+                    mag7_scored.append((sym, score))
+
+            mag7_scored.sort(key=lambda x: -x[1])
+            # Take top names, allocate proportionally
+            top_mag7 = mag7_scored[:7]
+            if top_mag7:
+                total = sum(s for _, s in top_mag7)
+                for sym, sc in top_mag7:
+                    w = (sc / total) * mag7_pct
+                    weights[sym] = min(w, self.config.max_position_size)
+
+            # Add QQQ as broad tech exposure
+            if "QQQ" in prices:
+                weights["QQQ"] = min(mag7_pct * 0.10, 0.08)
+
+        # ---- Allocate defensive portion ----
+        if defensive_pct > 0:
+            def_available = [s for s in self._DEFENSIVE if s in prices]
+            if def_available:
+                per_def = min(defensive_pct / len(def_available), self.config.max_position_size)
+                for sym in def_available:
+                    weights[sym] = per_def
+
+        # ---- Zero out anything not allocated ----
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -2879,6 +3240,8 @@ THEME_STRATEGIES = {
     "korean_chaebols": KoreanChaebols,
     "rideshare_mobility": RideshareMobility,
     "nvidia_supply_chain": NvidiaSupplyChain,
+    "mag7_hidden_suppliers": Mag7HiddenSuppliers,
+    "mag7_domino_hedge": Mag7DominoHedge,
 }
 
 
