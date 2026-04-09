@@ -1,0 +1,67 @@
+{
+  "strategy_name": "nvidia_chain_diversified",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:03:58.206025",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "8.2%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "8.4%",
+    "max_drawdown_tolerance": "27.0%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "GLD",
+      "action": "BUY",
+      "current_position": 117.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.1% below entry",
+      "take_profit": "8.1% above entry",
+      "position_size": "8.5% of portfolio",
+      "trailing_stop": "16.9% trailing after 3.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "SHY",
+      "action": "BUY",
+      "current_position": 339.0,
+      "annual_volatility": "2%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.5% below entry",
+      "take_profit": "4.2% above entry",
+      "position_size": "16.4% of portfolio",
+      "trailing_stop": "8.8% trailing after 1.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SHY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SHY/"
+    },
+    {
+      "symbol": "TLT",
+      "action": "BUY",
+      "current_position": 431.0,
+      "annual_volatility": "13%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.2% below entry",
+      "take_profit": "4.4% above entry",
+      "position_size": "15.5% of portfolio",
+      "trailing_stop": "9.2% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo_url": "https://finance.yahoo.com/quote/TLT/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "85.79%",
+    "sharpe_ratio": "0.70",
+    "max_drawdown": "-26.96%",
+    "win_rate": "50.80%",
+    "alpha": "5.93%"
+  }
+}

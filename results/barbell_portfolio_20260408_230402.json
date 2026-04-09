@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 1.0222883246719752,
+    "cagr": 0.19308306578513634,
+    "annual_volatility": 0.15639120678271706,
+    "sharpe_ratio": 0.9600496586675518,
+    "sortino_ratio": 1.4294085340104867,
+    "calmar_ratio": 0.6993145339422983,
+    "max_drawdown": -0.27610332177232855,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5419161676646707,
+    "profit_factor": 1.2280027045725432,
+    "num_trading_days": 1002,
+    "skewness": 0.22090053976424961,
+    "kurtosis": 2.8783213235252143,
+    "best_day": 0.06105620421047453,
+    "worst_day": -0.035068272824197555,
+    "avg_daily_return": 0.0007514567068006041,
+    "black_swan_resilience": 75.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.08441536858676191,
+    "beta": 0.6318242436038785,
+    "information_ratio": 0.6693833466203134,
+    "tracking_error": 0.12610915555782995
+  },
+  "trade_metrics": {
+    "num_trades": 313,
+    "num_buys": 165,
+    "num_sells": 148,
+    "total_commission": 0.0,
+    "total_slippage": 1390.1141981191618,
+    "total_transaction_costs": 1390.1141981191618,
+    "avg_trade_size": 4441.259418911066
+  },
+  "final_positions": {
+    "SHY": {
+      "qty": 492.0,
+      "avg_cost": 80.02624444722741,
+      "realized_pnl": 1202.3651717834473
+    },
+    "TLT": {
+      "qty": 345.0,
+      "avg_cost": 86.11384023216438,
+      "realized_pnl": -4064.160521819793
+    },
+    "NVDA": {
+      "qty": 168.0,
+      "avg_cost": 125.2535201407333,
+      "realized_pnl": 38906.546086974195
+    },
+    "GLD": {
+      "qty": 52.0,
+      "avg_cost": 318.20591156935,
+      "realized_pnl": 7307.29834398901
+    },
+    "MSFT": {
+      "qty": 41.0,
+      "avg_cost": 446.1109768951736,
+      "realized_pnl": 5207.857379972633
+    },
+    "GOOGL": {
+      "qty": 64.0,
+      "avg_cost": 170.74682094626232,
+      "realized_pnl": 15306.83801394947
+    },
+    "AMZN": {
+      "qty": 86.0,
+      "avg_cost": 213.1426808478886,
+      "realized_pnl": 12067.994094178184
+    }
+  },
+  "source": "portfolio",
+  "description": "Short bonds + long bonds + growth equities \u2014 skip the middle",
+  "horizon": "4Y (2022-2025)"
+}

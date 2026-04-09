@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.07938283313392547,
+    "cagr": 0.019334319198779593,
+    "annual_volatility": 0.03463330097140669,
+    "sharpe_ratio": -0.5605075894502787,
+    "sortino_ratio": -0.7628833205598422,
+    "calmar_ratio": 0.27038085966072184,
+    "max_drawdown": -0.07150772145277073,
+    "max_drawdown_date": "2022-11-03",
+    "win_rate": 0.5269461077844312,
+    "profit_factor": 1.1019849787215232,
+    "num_trading_days": 1002,
+    "skewness": 0.0008937881585260089,
+    "kurtosis": 2.093452323713059,
+    "best_day": 0.011517140108606716,
+    "worst_day": -0.007529035479460489,
+    "avg_daily_return": 7.861721183019471e-05,
+    "black_swan_resilience": 83.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08933337799959484,
+    "beta": 0.08265219154024325,
+    "information_ratio": -0.5311903222194049,
+    "tracking_error": 0.1681758387960544
+  },
+  "trade_metrics": {
+    "num_trades": 331,
+    "num_buys": 162,
+    "num_sells": 169,
+    "total_commission": 0.0,
+    "total_slippage": 1018.2184726371771,
+    "total_transaction_costs": 1018.2184726371771,
+    "avg_trade_size": 3076.1887390851252
+  },
+  "final_positions": {
+    "SHY": {
+      "qty": 330.0,
+      "avg_cost": 75.12480941496287,
+      "realized_pnl": -20.530590205813397
+    },
+    "TIP": {
+      "qty": 147.0,
+      "avg_cost": 103.78790326765927,
+      "realized_pnl": -18.01527867507295
+    },
+    "VEA": {
+      "qty": 8.0,
+      "avg_cost": 60.13845443725586,
+      "realized_pnl": 414.08142852783294
+    },
+    "VTI": {
+      "qty": 11.0,
+      "avg_cost": 293.79782252456204,
+      "realized_pnl": 1710.6293955485016
+    },
+    "XLE": {
+      "qty": 71.0,
+      "avg_cost": 44.98017883300781,
+      "realized_pnl": 226.44106674194353
+    },
+    "IEF": {
+      "qty": 136.0,
+      "avg_cost": 93.37068144684842,
+      "realized_pnl": -976.8932695787144
+    },
+    "GLD": {
+      "qty": 8.0,
+      "avg_cost": 319.2930127312155,
+      "realized_pnl": 2126.47453397863
+    }
+  },
+  "source": "portfolio",
+  "description": "Updated Dalio All-Weather: reduced bonds, added TIPS + crypto exposure",
+  "horizon": "4Y (2022-2025)"
+}

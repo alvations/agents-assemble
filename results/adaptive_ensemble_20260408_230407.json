@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.5767694940465351,
+    "cagr": 0.12092818368077651,
+    "annual_volatility": 0.13585907532414623,
+    "sharpe_ratio": 0.6223072767884743,
+    "sortino_ratio": 0.8993696849424301,
+    "calmar_ratio": 0.5906519554945815,
+    "max_drawdown": -0.20473678713129373,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5419161676646707,
+    "profit_factor": 1.1696687740267233,
+    "num_trading_days": 1002,
+    "skewness": -0.015243493621946021,
+    "kurtosis": 2.535588322363693,
+    "best_day": 0.04519025233990459,
+    "worst_day": -0.036343013026145954,
+    "avg_daily_return": 0.0004911502246641581,
+    "black_swan_resilience": 76.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.012260486482402078,
+    "beta": 0.4485589460342966,
+    "information_ratio": 0.08304622899596659,
+    "tracking_error": 0.14763447576888228
+  },
+  "trade_metrics": {
+    "num_trades": 1292,
+    "num_buys": 666,
+    "num_sells": 626,
+    "total_commission": 0.0,
+    "total_slippage": 4923.905194580082,
+    "total_transaction_costs": 4923.905194580082,
+    "avg_trade_size": 3811.0721320279245
+  },
+  "final_positions": {
+    "QQQ": {
+      "qty": 64.0,
+      "avg_cost": 583.1352263104488,
+      "realized_pnl": 9080.488468243715
+    },
+    "NVDA": {
+      "qty": 126.0,
+      "avg_cost": 179.7631397825299,
+      "realized_pnl": 25289.410281788223
+    },
+    "MSFT": {
+      "qty": 49.0,
+      "avg_cost": 485.388849998007,
+      "realized_pnl": 874.1961364746076
+    },
+    "AMZN": {
+      "qty": 103.0,
+      "avg_cost": 233.67837010897122,
+      "realized_pnl": 7403.064099678632
+    },
+    "VIG": {
+      "qty": 72.0,
+      "avg_cost": 201.768261139182,
+      "realized_pnl": 3466.565641254506
+    },
+    "GLD": {
+      "qty": 20.0,
+      "avg_cost": 332.8948246332095,
+      "realized_pnl": 8678.104729358523
+    },
+    "SHY": {
+      "qty": 97.0,
+      "avg_cost": 81.79904961340206,
+      "realized_pnl": 379.3847808837855
+    }
+  },
+  "source": "portfolio",
+  "description": "Regime-switching: momentum in bulls, defensive in bears, quality in transitions",
+  "horizon": "4Y (2022-2025)"
+}

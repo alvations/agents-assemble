@@ -1,0 +1,54 @@
+{
+  "strategy_name": "dollar_weak_em_strong",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:03:24.324538",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "11.1%",
+    "stop_loss": "15.6%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "13.0%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "GLD",
+      "action": "BUY",
+      "current_position": 34.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "15.1% below entry",
+      "take_profit": "4.8% above entry",
+      "position_size": "11.5% of portfolio",
+      "trailing_stop": "10.5% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "EEM",
+      "action": "BUY",
+      "current_position": 246.0,
+      "annual_volatility": "19%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.3% below entry",
+      "take_profit": "3.9% above entry",
+      "position_size": "14.1% of portfolio",
+      "trailing_stop": "8.6% trailing after 1.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=EEM",
+      "yahoo_url": "https://finance.yahoo.com/quote/EEM/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "34.35%",
+    "sharpe_ratio": "0.52",
+    "max_drawdown": "-13.01%",
+    "win_rate": "54.89%",
+    "alpha": "-3.18%"
+  }
+}

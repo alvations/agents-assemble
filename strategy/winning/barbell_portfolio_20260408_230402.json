@@ -1,0 +1,119 @@
+{
+  "strategy_name": "barbell_portfolio",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:04:02.829002",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "10.1%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "9.7%",
+    "max_drawdown_tolerance": "27.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "SHY",
+      "action": "BUY",
+      "current_position": 492.0,
+      "annual_volatility": "2%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.5% below entry",
+      "take_profit": "4.8% above entry",
+      "position_size": "20.1% of portfolio",
+      "trailing_stop": "8.8% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SHY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SHY/"
+    },
+    {
+      "symbol": "TLT",
+      "action": "BUY",
+      "current_position": 345.0,
+      "annual_volatility": "13%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.2% below entry",
+      "take_profit": "5.1% above entry",
+      "position_size": "19.0% of portfolio",
+      "trailing_stop": "9.2% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo_url": "https://finance.yahoo.com/quote/TLT/"
+    },
+    {
+      "symbol": "NVDA",
+      "action": "BUY",
+      "current_position": 168.0,
+      "annual_volatility": "49%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "19.7% above entry",
+      "position_size": "4.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 7.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
+      "yahoo_url": "https://finance.yahoo.com/quote/NVDA/"
+    },
+    {
+      "symbol": "GLD",
+      "action": "BUY",
+      "current_position": 52.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.1% below entry",
+      "take_profit": "9.3% above entry",
+      "position_size": "10.4% of portfolio",
+      "trailing_stop": "16.9% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "MSFT",
+      "action": "BUY",
+      "current_position": 41.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "25.6% below entry",
+      "take_profit": "9.9% above entry",
+      "position_size": "9.8% of portfolio",
+      "trailing_stop": "17.9% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo_url": "https://finance.yahoo.com/quote/MSFT/"
+    },
+    {
+      "symbol": "GOOGL",
+      "action": "BUY",
+      "current_position": 64.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "31.4% below entry",
+      "take_profit": "12.1% above entry",
+      "position_size": "8.0% of portfolio",
+      "trailing_stop": "22.0% trailing after 4.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "AMZN",
+      "action": "BUY",
+      "current_position": 86.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "34.3% below entry",
+      "take_profit": "13.2% above entry",
+      "position_size": "7.3% of portfolio",
+      "trailing_stop": "24.0% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo_url": "https://finance.yahoo.com/quote/AMZN/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "102.23%",
+    "sharpe_ratio": "0.96",
+    "max_drawdown": "-27.61%",
+    "win_rate": "54.19%",
+    "alpha": "8.44%"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": 0.03083050651942787,
+    "cagr": 0.007641084437026047,
+    "annual_volatility": 0.15310718613577717,
+    "sharpe_ratio": -0.13010489152094543,
+    "sortino_ratio": -0.1894216040961163,
+    "calmar_ratio": 0.029859456299667835,
+    "max_drawdown": -0.2559016601086286,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.48502994011976047,
+    "profit_factor": 1.02306938013783,
+    "num_trading_days": 1002,
+    "skewness": 0.626323561095989,
+    "kurtosis": 8.490658163661951,
+    "best_day": 0.08624997353192354,
+    "worst_day": -0.051045314314478785,
+    "avg_daily_return": 7.660226817510213e-05,
+    "black_swan_resilience": 81.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.10102661276134839,
+    "beta": 0.6231974671636833,
+    "information_ratio": -0.8128574613791633,
+    "tracking_error": 0.12428576664589881
+  },
+  "trade_metrics": {
+    "num_trades": 1512,
+    "num_buys": 758,
+    "num_sells": 754,
+    "total_commission": 0.0,
+    "total_slippage": 6291.985408737182,
+    "total_transaction_costs": 6291.985408737182,
+    "avg_trade_size": 4161.3660110695655
+  },
+  "final_positions": {
+    "MDT": {
+      "qty": 130.0,
+      "avg_cost": 97.01913516704853,
+      "realized_pnl": -1717.114715576171
+    },
+    "PFE": {
+      "qty": 503.0,
+      "avg_cost": 24.096248336142462,
+      "realized_pnl": -5570.972220663623
+    }
+  },
+  "source": "unconventional",
+  "description": "Once-great blue chips at deep discounts: turnaround catalysts + dividend income",
+  "horizon": "4Y (2022-2025)"
+}

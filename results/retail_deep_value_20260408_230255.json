@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.08481745399341922,
+    "cagr": 0.020618491950872286,
+    "annual_volatility": 0.23809565431931123,
+    "sharpe_ratio": 0.039803239923830294,
+    "sortino_ratio": 0.05857679457951075,
+    "calmar_ratio": 0.06470928022072617,
+    "max_drawdown": -0.3186326888591824,
+    "max_drawdown_date": "2022-07-01",
+    "win_rate": 0.49800399201596807,
+    "profit_factor": 1.0393467337571964,
+    "num_trading_days": 1002,
+    "skewness": 0.4010985705281996,
+    "kurtosis": 6.247111035974437,
+    "best_day": 0.09999882672997518,
+    "worst_day": -0.09116145129313469,
+    "avg_daily_return": 0.00019325692014718704,
+    "black_swan_resilience": 75.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08804920524750215,
+    "beta": 0.7780596082981197,
+    "information_ratio": -0.44789791254266403,
+    "tracking_error": 0.1965832007290615
+  },
+  "trade_metrics": {
+    "num_trades": 966,
+    "num_buys": 480,
+    "num_sells": 486,
+    "total_commission": 0.0,
+    "total_slippage": 6022.381540777683,
+    "total_transaction_costs": 6022.381540777683,
+    "avg_trade_size": 6234.34942109491
+  },
+  "final_positions": {
+    "KSS": {
+      "qty": 790.0,
+      "avg_cost": 21.57745590692834,
+      "realized_pnl": -4090.4210066795404
+    },
+    "BURL": {
+      "qty": 57.0,
+      "avg_cost": 281.5400085449219,
+      "realized_pnl": -3222.269989013681
+    },
+    "BBWI": {
+      "qty": 806.0,
+      "avg_cost": 18.82835039026597,
+      "realized_pnl": -5194.188803585274
+    }
+  },
+  "source": "unconventional",
+  "description": "Contrarian brick-and-mortar: below liquidation value, buybacks, real estate",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": 0.343488104303199,
+    "cagr": 0.07682831961395187,
+    "annual_volatility": 0.0730613235912789,
+    "sharpe_ratio": 0.5161103029149552,
+    "sortino_ratio": 0.7755967469595446,
+    "calmar_ratio": 0.590354386484838,
+    "max_drawdown": -0.13013932202894718,
+    "max_drawdown_date": "2023-06-29",
+    "win_rate": 0.5489021956087824,
+    "profit_factor": 1.2521321796355946,
+    "num_trading_days": 1002,
+    "skewness": 0.5708673853630326,
+    "kurtosis": 9.669636877134234,
+    "best_day": 0.033241496909463875,
+    "worst_day": -0.022483030866807696,
+    "avg_daily_return": 0.00030528360029151083,
+    "black_swan_resilience": 87.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.03183937758442257,
+    "beta": 0.14545639555013198,
+    "information_ratio": -0.18911200073416054,
+    "tracking_error": 0.1683625442109302
+  },
+  "trade_metrics": {
+    "num_trades": 738,
+    "num_buys": 358,
+    "num_sells": 380,
+    "total_commission": 0.0,
+    "total_slippage": 1462.2091294207553,
+    "total_transaction_costs": 1462.2091294207553,
+    "avg_trade_size": 1981.313183496961
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 34.0,
+      "avg_cost": 243.31530651130402,
+      "realized_pnl": 4748.820503781798
+    },
+    "EEM": {
+      "qty": 246.0,
+      "avg_cost": 39.938935535138256,
+      "realized_pnl": -1070.8796578860251
+    }
+  },
+  "source": "unconventional",
+  "description": "USD weakens \u2192 EM stocks + commodities + gold outperform. Inverse dollar-to-EM signal.",
+  "horizon": "4Y (2022-2025)"
+}

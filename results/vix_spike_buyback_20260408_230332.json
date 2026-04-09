@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.3509032080539396,
+    "cagr": 0.07831516035147024,
+    "annual_volatility": 0.08617725887198832,
+    "sharpe_ratio": 0.46486431919160937,
+    "sortino_ratio": 0.8241783260902014,
+    "calmar_ratio": 0.6860629792869248,
+    "max_drawdown": -0.11415156146869909,
+    "max_drawdown_date": "2022-11-03",
+    "win_rate": 0.5349301397205589,
+    "profit_factor": 1.237663713909081,
+    "num_trading_days": 1002,
+    "skewness": 6.352308415843731,
+    "kurtosis": 120.4068796768542,
+    "best_day": 0.10068764988508683,
+    "worst_day": -0.03487571747314988,
+    "avg_daily_return": 0.0003146210245981117,
+    "black_swan_resilience": 94.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0303525368469042,
+    "beta": 0.38384356916738216,
+    "information_ratio": -0.24812160014868687,
+    "tracking_error": 0.12232928059755958
+  },
+  "trade_metrics": {
+    "num_trades": 531,
+    "num_buys": 241,
+    "num_sells": 290,
+    "total_commission": 0.0,
+    "total_slippage": 602.583593788147,
+    "total_transaction_costs": 602.583593788147,
+    "avg_trade_size": 1134.8090278496177
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 30.0,
+      "avg_cost": 198.67346367903605,
+      "realized_pnl": 3323.833701630847
+    },
+    "GOOGL": {
+      "qty": 26.0,
+      "avg_cost": 163.484645448946,
+      "realized_pnl": 3890.5898868972035
+    },
+    "META": {
+      "qty": 12.0,
+      "avg_cost": 540.9621844345099,
+      "realized_pnl": 5916.178789202891
+    },
+    "V": {
+      "qty": 23.0,
+      "avg_cost": 304.79464724244417,
+      "realized_pnl": 3518.317490213912
+    }
+  },
+  "source": "unconventional",
+  "description": "Fear spikes \u2192 buy companies with massive buyback programs. They buy themselves cheap in panics.",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,132 @@
+{
+  "strategy_name": "job_loss_tech_boom",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:03:18.715415",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "4.4%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "33.2%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "CRM",
+      "action": "BUY",
+      "current_position": 64.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "34.9% below entry",
+      "take_profit": "7.0% above entry",
+      "position_size": "3.2% of portfolio",
+      "trailing_stop": "24.4% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CRM",
+      "yahoo_url": "https://finance.yahoo.com/quote/CRM/"
+    },
+    {
+      "symbol": "NVDA",
+      "action": "BUY",
+      "current_position": 91.0,
+      "annual_volatility": "49%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.2% above entry",
+      "position_size": "2.2% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
+      "yahoo_url": "https://finance.yahoo.com/quote/NVDA/"
+    },
+    {
+      "symbol": "INTU",
+      "action": "BUY",
+      "current_position": 17.0,
+      "annual_volatility": "34%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "35.4% below entry",
+      "take_profit": "7.1% above entry",
+      "position_size": "3.1% of portfolio",
+      "trailing_stop": "24.8% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTU",
+      "yahoo_url": "https://finance.yahoo.com/quote/INTU/"
+    },
+    {
+      "symbol": "PANW",
+      "action": "BUY",
+      "current_position": 60.0,
+      "annual_volatility": "35%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "36.8% below entry",
+      "take_profit": "7.4% above entry",
+      "position_size": "3.0% of portfolio",
+      "trailing_stop": "25.8% trailing after 2.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PANW",
+      "yahoo_url": "https://finance.yahoo.com/quote/PANW/"
+    },
+    {
+      "symbol": "WDAY",
+      "action": "BUY",
+      "current_position": 51.0,
+      "annual_volatility": "36%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "38.0% below entry",
+      "take_profit": "7.6% above entry",
+      "position_size": "2.9% of portfolio",
+      "trailing_stop": "26.6% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=WDAY",
+      "yahoo_url": "https://finance.yahoo.com/quote/WDAY/"
+    },
+    {
+      "symbol": "HUBS",
+      "action": "BUY",
+      "current_position": 28.0,
+      "annual_volatility": "48%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.2% above entry",
+      "position_size": "2.2% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=HUBS",
+      "yahoo_url": "https://finance.yahoo.com/quote/HUBS/"
+    },
+    {
+      "symbol": "ZM",
+      "action": "BUY",
+      "current_position": 198.0,
+      "annual_volatility": "35%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "37.0% below entry",
+      "take_profit": "7.4% above entry",
+      "position_size": "3.0% of portfolio",
+      "trailing_stop": "25.9% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ZM",
+      "yahoo_url": "https://finance.yahoo.com/quote/ZM/"
+    },
+    {
+      "symbol": "PATH",
+      "action": "BUY",
+      "current_position": 1002.0,
+      "annual_volatility": "55%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.6% above entry",
+      "position_size": "1.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PATH",
+      "yahoo_url": "https://finance.yahoo.com/quote/PATH/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "41.26%",
+    "sharpe_ratio": "0.32",
+    "max_drawdown": "-33.16%",
+    "win_rate": "52.20%",
+    "alpha": "-1.82%"
+  }
+}

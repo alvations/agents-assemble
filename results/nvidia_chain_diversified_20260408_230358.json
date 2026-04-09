@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.857901492230495,
+    "cagr": 0.16799319477372543,
+    "annual_volatility": 0.19425631265673676,
+    "sharpe_ratio": 0.6966297574887627,
+    "sortino_ratio": 1.0840185505046167,
+    "calmar_ratio": 0.6231154995226804,
+    "max_drawdown": -0.2696020158420257,
+    "max_drawdown_date": "2022-10-24",
+    "win_rate": 0.5079840319361277,
+    "profit_factor": 1.1925777992722273,
+    "num_trading_days": 1002,
+    "skewness": 0.9277559075991981,
+    "kurtosis": 10.424969257427982,
+    "best_day": 0.10149636562374198,
+    "worst_day": -0.06976006197482987,
+    "avg_daily_return": 0.0006926527515877857,
+    "black_swan_resilience": 84.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.059325497575350994,
+    "beta": 0.35837523014337036,
+    "information_ratio": 0.27386318952651245,
+    "tracking_error": 0.21662457695727577
+  },
+  "trade_metrics": {
+    "num_trades": 4501,
+    "num_buys": 2268,
+    "num_sells": 2233,
+    "total_commission": 0.0,
+    "total_slippage": 13842.706324309347,
+    "total_transaction_costs": 13842.706324309347,
+    "avg_trade_size": 3075.4735223971006
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 117.0,
+      "avg_cost": 364.33843801589484,
+      "realized_pnl": 15469.769122859698
+    },
+    "SHY": {
+      "qty": 339.0,
+      "avg_cost": 81.39523550799412,
+      "realized_pnl": 903.806027090365
+    },
+    "TLT": {
+      "qty": 431.0,
+      "avg_cost": 87.30492167979745,
+      "realized_pnl": -7012.566983851544
+    }
+  },
+  "source": "unconventional",
+  "description": "Spread across NVDA supply chain but EXIT ALL if any link breaks SMA200 \u2014 domino detector",
+  "horizon": "4Y (2022-2025)"
+}

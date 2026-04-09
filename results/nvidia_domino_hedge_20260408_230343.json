@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": -0.1940945308184352,
+    "cagr": -0.05265819056310239,
+    "annual_volatility": 0.09556783385043151,
+    "sharpe_ratio": -0.9302177526761867,
+    "sortino_ratio": -1.2473633419788326,
+    "calmar_ratio": -0.25409058416457275,
+    "max_drawdown": -0.20724180211650833,
+    "max_drawdown_date": "2025-12-30",
+    "win_rate": 0.4940119760479042,
+    "profit_factor": 0.8647180268592489,
+    "num_trading_days": 1002,
+    "skewness": -1.2269358875908598,
+    "kurtosis": 43.18185299019445,
+    "best_day": 0.05405370022734024,
+    "worst_day": -0.07876764300787553,
+    "avg_daily_return": -0.0001971235325757197,
+    "black_swan_resilience": 64.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.16132588776147683,
+    "beta": -0.3630808342918304,
+    "information_ratio": -0.6320794502001893,
+    "tracking_error": 0.2552303950245217
+  },
+  "trade_metrics": {
+    "num_trades": 1679,
+    "num_buys": 849,
+    "num_sells": 830,
+    "total_commission": 0.0,
+    "total_slippage": 3123.2989164886385,
+    "total_transaction_costs": 3123.2989164886385,
+    "avg_trade_size": 1860.2137680099152
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 20.0,
+      "avg_cost": 387.61815728382857,
+      "realized_pnl": 5451.365388718568
+    },
+    "SQQQ": {
+      "qty": 95.0,
+      "avg_cost": 66.67561135678424,
+      "realized_pnl": -11280.471423974159
+    },
+    "TLT": {
+      "qty": 65.0,
+      "avg_cost": 86.97658016441144,
+      "realized_pnl": -680.5729866399186
+    },
+    "SHY": {
+      "qty": 49.0,
+      "avg_cost": 81.99723808614839,
+      "realized_pnl": 284.6351587749874
+    },
+    "UVXY": {
+      "qty": 112.0,
+      "avg_cost": 36.71912112988924,
+      "realized_pnl": -10233.898001018324
+    }
+  },
+  "source": "unconventional",
+  "description": "Profit when NVIDIA financing chain breaks: inverse ETFs + safe havens + vol, scaled by supply chain stress",
+  "horizon": "4Y (2022-2025)"
+}

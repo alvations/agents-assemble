@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": -0.14858114131768796,
+    "cagr": -0.03952100681844661,
+    "annual_volatility": 0.2534378452152888,
+    "sharpe_ratio": -0.1880322834914975,
+    "sortino_ratio": -0.26664224774814876,
+    "calmar_ratio": -0.0831471513738681,
+    "max_drawdown": -0.47531402056989136,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.5029940119760479,
+    "profit_factor": 0.9927625375688012,
+    "num_trading_days": 1002,
+    "skewness": 0.29619044148876866,
+    "kurtosis": 6.558368178538287,
+    "best_day": 0.10205166574449231,
+    "worst_day": -0.07243412455144438,
+    "avg_daily_return": -3.345528307776675e-05,
+    "black_swan_resilience": 66.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.14818870401682105,
+    "beta": 0.9613368108301084,
+    "information_ratio": -0.8002319563372274,
+    "tracking_error": 0.1851821872936708
+  },
+  "trade_metrics": {
+    "num_trades": 881,
+    "num_buys": 436,
+    "num_sells": 445,
+    "total_commission": 0.0,
+    "total_slippage": 2592.276584289548,
+    "total_transaction_costs": 2592.276584289548,
+    "avg_trade_size": 2942.4251808053923
+  },
+  "final_positions": {
+    "AMZN": {
+      "qty": 29.0,
+      "avg_cost": 204.2652727926015,
+      "realized_pnl": 3741.57435782382
+    },
+    "SHOP": {
+      "qty": 41.0,
+      "avg_cost": 110.39139232125297,
+      "realized_pnl": 3771.6411460691993
+    }
+  },
+  "source": "unconventional",
+  "description": "Brick-and-mortar crash accelerates e-commerce: XRT\u2193 = AMZN/SHOP/MELI\u2191",
+  "horizon": "4Y (2022-2025)"
+}

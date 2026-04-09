@@ -1,0 +1,106 @@
+{
+  "metrics": {
+    "total_return": 0.6622539908444749,
+    "cagr": 0.13586265215549642,
+    "annual_volatility": 0.12168763416046906,
+    "sharpe_ratio": 0.7888471249441059,
+    "sortino_ratio": 1.181122455127922,
+    "calmar_ratio": 0.7565421116138618,
+    "max_drawdown": -0.17958372715786186,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5399201596806387,
+    "profit_factor": 1.219417292114996,
+    "num_trading_days": 1002,
+    "skewness": 0.38319973241748634,
+    "kurtosis": 5.87166001218088,
+    "best_day": 0.05472561063628256,
+    "worst_day": -0.04102155819416897,
+    "avg_daily_return": 0.0005365742292545016,
+    "black_swan_resilience": 82.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.027194954957121986,
+    "beta": 0.5473769423507673,
+    "information_ratio": 0.25105968068909995,
+    "tracking_error": 0.10832067850352638
+  },
+  "trade_metrics": {
+    "num_trades": 1823,
+    "num_buys": 921,
+    "num_sells": 902,
+    "total_commission": 0.0,
+    "total_slippage": 4330.339445663456,
+    "total_transaction_costs": 4330.339445663456,
+    "avg_trade_size": 2375.391906562508
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 89.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 17982.45582389832
+    },
+    "AAPL": {
+      "qty": 61.0,
+      "avg_cost": 269.27835919780114,
+      "realized_pnl": 4416.686347223098
+    },
+    "META": {
+      "qty": 25.0,
+      "avg_cost": 660.9341430664062,
+      "realized_pnl": 8365.113830566408
+    },
+    "GLD": {
+      "qty": 21.0,
+      "avg_cost": 281.5208030320585,
+      "realized_pnl": 5005.645497096079
+    },
+    "SHY": {
+      "qty": 102.0,
+      "avg_cost": 78.11585694501014,
+      "realized_pnl": 295.5045040331304
+    },
+    "XLP": {
+      "qty": 86.0,
+      "avg_cost": 76.27114780427151,
+      "realized_pnl": 618.529053574585
+    },
+    "PG": {
+      "qty": 46.0,
+      "avg_cost": 156.1308709317336,
+      "realized_pnl": 171.65465300867768
+    },
+    "KO": {
+      "qty": 96.0,
+      "avg_cost": 65.86400203805492,
+      "realized_pnl": 1428.1447228444301
+    },
+    "WMT": {
+      "qty": 59.0,
+      "avg_cost": 84.27090132954751,
+      "realized_pnl": 4704.442689246529
+    },
+    "COST": {
+      "qty": 8.0,
+      "avg_cost": 892.4590369728501,
+      "realized_pnl": 3424.071465704673
+    },
+    "PEP": {
+      "qty": 47.0,
+      "avg_cost": 144.1075168942775,
+      "realized_pnl": -627.5301868039188
+    },
+    "GOOGL": {
+      "qty": 53.0,
+      "avg_cost": 285.60824472979425,
+      "realized_pnl": 9145.535959021383
+    },
+    "AMZN": {
+      "qty": 72.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 8313.759590148926
+    }
+  },
+  "source": "portfolio",
+  "description": "Growth core + consumer staples/dividend hedge + gold/bond buffer",
+  "horizon": "4Y (2022-2025)"
+}

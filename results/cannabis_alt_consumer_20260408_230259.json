@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": -0.36692002345307895,
+    "cagr": -0.10828026739681751,
+    "annual_volatility": 0.4635939548239546,
+    "sharpe_ratio": -0.10693860069139963,
+    "sortino_ratio": -0.1737950600290128,
+    "calmar_ratio": -0.17241780892100944,
+    "max_drawdown": -0.628010923433231,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.4590818363273453,
+    "profit_factor": 0.9958995756393484,
+    "num_trading_days": 1002,
+    "skewness": 1.5426463146780156,
+    "kurtosis": 8.670079393320396,
+    "best_day": 0.21828447641790838,
+    "worst_day": -0.10385777221996939,
+    "avg_daily_return": -4.1080648390743684e-05,
+    "black_swan_resilience": 67.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.21694796459519194,
+    "beta": 0.8641893907551803,
+    "information_ratio": -0.49603767347332467,
+    "tracking_error": 0.4373618702710465
+  },
+  "trade_metrics": {
+    "num_trades": 1443,
+    "num_buys": 767,
+    "num_sells": 676,
+    "total_commission": 0.0,
+    "total_slippage": 3005.5390345396395,
+    "total_transaction_costs": 3005.5390345396395,
+    "avg_trade_size": 2082.840633776604
+  },
+  "final_positions": {
+    "GTBIF": {
+      "qty": 965.0,
+      "avg_cost": 6.185049110767888,
+      "realized_pnl": -147.21776351975416
+    },
+    "SAM": {
+      "qty": 38.0,
+      "avg_cost": 203.8728528703962,
+      "realized_pnl": -5291.530992780411
+    }
+  },
+  "source": "unconventional",
+  "description": "Contrarian cannabis: pre-legalization value, binary regulatory catalyst",
+  "horizon": "4Y (2022-2025)"
+}

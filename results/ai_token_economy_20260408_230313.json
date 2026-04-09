@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 2.484347475012729,
+    "cagr": 0.36742162958646185,
+    "annual_volatility": 0.28250629553521145,
+    "sharpe_ratio": 1.1155273762409479,
+    "sortino_ratio": 1.6074456040029492,
+    "calmar_ratio": 1.2810928532049106,
+    "max_drawdown": -0.2868032778945593,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.5459081836327345,
+    "profit_factor": 1.2635724372738673,
+    "num_trading_days": 1002,
+    "skewness": -0.7029650563017575,
+    "kurtosis": 11.05057483570917,
+    "best_day": 0.09961648414457658,
+    "worst_day": -0.16975757357072663,
+    "avg_daily_return": 0.0014062193335450098,
+    "black_swan_resilience": 63.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.2587539323880874,
+    "beta": 0.8551690321933192,
+    "information_ratio": 1.086078100213235,
+    "tracking_error": 0.23824615590470427
+  },
+  "trade_metrics": {
+    "num_trades": 1586,
+    "num_buys": 792,
+    "num_sells": 794,
+    "total_commission": 0.0,
+    "total_slippage": 8341.218103868716,
+    "total_transaction_costs": 8341.218103868716,
+    "avg_trade_size": 5259.280015049636
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 222.0,
+      "avg_cost": 179.71167292594237,
+      "realized_pnl": 23644.44865159838
+    },
+    "AMD": {
+      "qty": 194.0,
+      "avg_cost": 186.36122124274038,
+      "realized_pnl": 8147.80916749057
+    },
+    "AVGO": {
+      "qty": 92.0,
+      "avg_cost": 303.83120910213324,
+      "realized_pnl": 29341.29742834476
+    },
+    "VST": {
+      "qty": 179.0,
+      "avg_cost": 161.3664682910429,
+      "realized_pnl": 40192.59468078614
+    },
+    "ANET": {
+      "qty": 240.0,
+      "avg_cost": 134.33356511713134,
+      "realized_pnl": 20956.12627630488
+    },
+    "MRVL": {
+      "qty": 488.0,
+      "avg_cost": 83.70458299605573,
+      "realized_pnl": 5408.693599700931
+    },
+    "VRT": {
+      "qty": 194.0,
+      "avg_cost": 146.90433500547022,
+      "realized_pnl": 33411.99296821883
+    },
+    "NRG": {
+      "qty": 261.0,
+      "avg_cost": 167.79861254019673,
+      "realized_pnl": 46206.37466345765
+    },
+    "CEG": {
+      "qty": 117.0,
+      "avg_cost": 335.3999371551033,
+      "realized_pnl": 13398.201880240373
+    }
+  },
+  "source": "unconventional",
+  "description": "AI compute demand signals: GPU makers, cloud, data center REITs, power, cooling",
+  "horizon": "4Y (2022-2025)"
+}

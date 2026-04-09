@@ -1,0 +1,80 @@
+{
+  "strategy_name": "vix_spike_buyback",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:03:32.366375",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "10.3%",
+    "stop_loss": "13.7%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "11.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "AAPL",
+      "action": "BUY",
+      "current_position": 30.0,
+      "annual_volatility": "29%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "16.5% below entry",
+      "take_profit": "6.0% above entry",
+      "position_size": "8.5% of portfolio",
+      "trailing_stop": "11.5% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "GOOGL",
+      "action": "BUY",
+      "current_position": 26.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "17.2% below entry",
+      "take_profit": "6.3% above entry",
+      "position_size": "8.2% of portfolio",
+      "trailing_stop": "12.0% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+      "yahoo_url": "https://finance.yahoo.com/quote/GOOGL/"
+    },
+    {
+      "symbol": "META",
+      "action": "BUY",
+      "current_position": 12.0,
+      "annual_volatility": "36%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "20.7% below entry",
+      "take_profit": "7.6% above entry",
+      "position_size": "6.8% of portfolio",
+      "trailing_stop": "14.5% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=META",
+      "yahoo_url": "https://finance.yahoo.com/quote/META/"
+    },
+    {
+      "symbol": "V",
+      "action": "BUY",
+      "current_position": 23.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.5% below entry",
+      "take_profit": "4.6% above entry",
+      "position_size": "11.3% of portfolio",
+      "trailing_stop": "8.7% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo_url": "https://finance.yahoo.com/quote/V/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "35.09%",
+    "sharpe_ratio": "0.46",
+    "max_drawdown": "-11.42%",
+    "win_rate": "53.49%",
+    "alpha": "-3.04%"
+  }
+}

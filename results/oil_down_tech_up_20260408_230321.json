@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.41093928504413,
+    "cagr": 0.09013352374687633,
+    "annual_volatility": 0.10921867623624942,
+    "sharpe_ratio": 0.48849191408556053,
+    "sortino_ratio": 0.6708438210073656,
+    "calmar_ratio": 0.33014058311127115,
+    "max_drawdown": -0.27301558292970474,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.5349301397205589,
+    "profit_factor": 1.1755854915133257,
+    "num_trading_days": 1002,
+    "skewness": -0.8973201930759763,
+    "kurtosis": 7.2113339308705,
+    "best_day": 0.026298291203534108,
+    "worst_day": -0.049767517201137035,
+    "avg_daily_return": 0.00036736589536482073,
+    "black_swan_resilience": 62.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.018534173451498104,
+    "beta": 0.4276620391822973,
+    "information_ratio": -0.14375324052687563,
+    "tracking_error": 0.12893047407882965
+  },
+  "trade_metrics": {
+    "num_trades": 787,
+    "num_buys": 359,
+    "num_sells": 428,
+    "total_commission": 0.0,
+    "total_slippage": 3162.9004916820513,
+    "total_transaction_costs": 3162.9004916820513,
+    "avg_trade_size": 4018.9332804092155
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 41.0,
+      "avg_cost": 230.0553800854935,
+      "realized_pnl": 862.8289941497596
+    },
+    "MSFT": {
+      "qty": 23.0,
+      "avg_cost": 490.8826011356957,
+      "realized_pnl": 3404.9824585672895
+    },
+    "GOOGL": {
+      "qty": 36.0,
+      "avg_cost": 194.08118777298978,
+      "realized_pnl": 2918.257484253914
+    }
+  },
+  "source": "unconventional",
+  "description": "When energy crashes, capital rotates to tech. Lower oil = lower costs + Fed easing expectations.",
+  "horizon": "4Y (2022-2025)"
+}

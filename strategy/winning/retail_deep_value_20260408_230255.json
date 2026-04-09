@@ -1,0 +1,67 @@
+{
+  "strategy_name": "retail_deep_value",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:02:55.184140",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "2.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "31.9%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "KSS",
+      "action": "BUY",
+      "current_position": 790.0,
+      "annual_volatility": "80%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "15.0% above entry",
+      "position_size": "0.7% of portfolio",
+      "trailing_stop": "28.0% trailing after 6.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KSS",
+      "yahoo_url": "https://finance.yahoo.com/quote/KSS/"
+    },
+    {
+      "symbol": "BURL",
+      "action": "BUY",
+      "current_position": 57.0,
+      "annual_volatility": "38%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "39.7% below entry",
+      "take_profit": "7.9% above entry",
+      "position_size": "1.3% of portfolio",
+      "trailing_stop": "27.8% trailing after 3.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BURL",
+      "yahoo_url": "https://finance.yahoo.com/quote/BURL/"
+    },
+    {
+      "symbol": "BBWI",
+      "action": "BUY",
+      "current_position": 806.0,
+      "annual_volatility": "55%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.6% above entry",
+      "position_size": "0.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BBWI",
+      "yahoo_url": "https://finance.yahoo.com/quote/BBWI/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "8.48%",
+    "sharpe_ratio": "0.04",
+    "max_drawdown": "-31.86%",
+    "win_rate": "49.80%",
+    "alpha": "-8.80%"
+  }
+}
