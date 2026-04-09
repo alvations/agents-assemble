@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.1306460131918905,
+    "cagr": 0.04192532550438122,
+    "annual_volatility": 0.2243969056609071,
+    "sharpe_ratio": 0.12005772490585886,
+    "sortino_ratio": 0.17920995582259505,
+    "calmar_ratio": 0.14039546293290556,
+    "max_drawdown": -0.29862307961060797,
+    "max_drawdown_date": "2023-01-09",
+    "win_rate": 0.386968085106383,
+    "profit_factor": 1.064152519358714,
+    "num_trading_days": 752,
+    "skewness": 0.6163852021740801,
+    "kurtosis": 6.65991605099023,
+    "best_day": 0.08886424812581395,
+    "worst_day": -0.07012831929014018,
+    "avg_daily_return": 0.00026255693409905304,
+    "black_swan_resilience": 79.3,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.04469925359538296,
+    "beta": 0.47990798398228174,
+    "information_ratio": -0.19680483672286053,
+    "tracking_error": 0.22712477162503988
+  },
+  "trade_metrics": {
+    "num_trades": 515,
+    "num_buys": 245,
+    "num_sells": 270,
+    "total_commission": 0.0,
+    "total_slippage": 3614.2241584110293,
+    "total_transaction_costs": 3614.2241584110293,
+    "avg_trade_size": 7017.910987205876
+  },
+  "final_positions": {
+    "DDOG": {
+      "qty": 101.0,
+      "avg_cost": 158.72742771866297,
+      "realized_pnl": 53.75232696533067
+    },
+    "NET": {
+      "qty": 134.0,
+      "avg_cost": 113.89507578380072,
+      "realized_pnl": 52.10170745849109
+    },
+    "RKLB": {
+      "qty": 554.0,
+      "avg_cost": 24.30707481710006,
+      "realized_pnl": 15594.161746036712
+    },
+    "HUBS": {
+      "qty": 21.0,
+      "avg_cost": 720.1500244140625,
+      "realized_pnl": 7076.097869873047
+    },
+    "UPWK": {
+      "qty": 878.0,
+      "avg_cost": 15.303763711936423,
+      "realized_pnl": -4606.383942822896
+    },
+    "TOST": {
+      "qty": 395.0,
+      "avg_cost": 41.325554591564035,
+      "realized_pnl": 8446.464703468824
+    },
+    "FVRR": {
+      "qty": 459.0,
+      "avg_cost": 30.14998260158314,
+      "realized_pnl": -5430.488022036669
+    }
+  },
+  "source": "theme",
+  "description": "Gig platforms + SaaS disruptors: growth at reasonable price, high beta"
+}

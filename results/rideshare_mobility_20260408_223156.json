@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": 0.24167003738877346,
+    "cagr": 0.07508550949565618,
+    "annual_volatility": 0.15140108797736923,
+    "sharpe_ratio": 0.29593381430740584,
+    "sortino_ratio": 0.41774089306277523,
+    "calmar_ratio": 0.31261858407618076,
+    "max_drawdown": -0.240182488566831,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.46675531914893614,
+    "profit_factor": 1.1106270434566214,
+    "num_trading_days": 752,
+    "skewness": -0.48270036923617127,
+    "kurtosis": 6.311445812916256,
+    "best_day": 0.03830532221057914,
+    "worst_day": -0.0745530396438725,
+    "avg_daily_return": 0.0003334462971382231,
+    "black_swan_resilience": 68.8,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.011539069604107999,
+    "beta": 0.39760209474489216,
+    "information_ratio": -0.06752783369576311,
+    "tracking_error": 0.17087871730189966
+  },
+  "trade_metrics": {
+    "num_trades": 656,
+    "num_buys": 296,
+    "num_sells": 360,
+    "total_commission": 0.0,
+    "total_slippage": 4778.159045222278,
+    "total_transaction_costs": 4778.159045222278,
+    "avg_trade_size": 7283.77903235104
+  },
+  "final_positions": {
+    "BKNG": {
+      "qty": 94.0,
+      "avg_cost": 202.1097462447648,
+      "realized_pnl": 6181.895027317957
+    },
+    "TCOM": {
+      "qty": 273.0,
+      "avg_cost": 72.03628179529211,
+      "realized_pnl": 7192.211204528816
+    },
+    "CPRT": {
+      "qty": 321.0,
+      "avg_cost": 61.9343326158519,
+      "realized_pnl": 8552.262976643417
+    },
+    "DASH": {
+      "qty": 110.0,
+      "avg_cost": 172.73591261717823,
+      "realized_pnl": 14320.076574260454
+    }
+  },
+  "source": "theme",
+  "description": "Mobility platforms: rideshare + delivery, profitability inflection"
+}

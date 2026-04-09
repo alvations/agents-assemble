@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": -0.04923443926629412,
+    "cagr": -0.016745260990412958,
+    "annual_volatility": 0.14905273359395219,
+    "sharpe_ratio": -0.3020551398233658,
+    "sortino_ratio": -0.4100074625236113,
+    "calmar_ratio": -0.07900262465195715,
+    "max_drawdown": -0.2119582870086092,
+    "max_drawdown_date": "2023-09-26",
+    "win_rate": 0.4162234042553192,
+    "profit_factor": 0.9923731644098489,
+    "num_trading_days": 752,
+    "skewness": -0.3293240045001969,
+    "kurtosis": 3.982087986726222,
+    "best_day": 0.046800705122341135,
+    "worst_day": -0.046354981127272876,
+    "avg_daily_return": -2.3009439934039216e-05,
+    "black_swan_resilience": 72.0,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.10336984009017713,
+    "beta": 0.4001448792742616,
+    "information_ratio": -0.6140568712805284,
+    "tracking_error": 0.1683391961311564
+  },
+  "trade_metrics": {
+    "num_trades": 575,
+    "num_buys": 275,
+    "num_sells": 300,
+    "total_commission": 0.0,
+    "total_slippage": 3746.781996086597,
+    "total_transaction_costs": 3746.781996086597,
+    "avg_trade_size": 6516.142601889735
+  },
+  "final_positions": {
+    "ANET": {
+      "qty": 128.0,
+      "avg_cost": 113.077183842659,
+      "realized_pnl": 8112.1952838897705
+    },
+    "LITE": {
+      "qty": 170.0,
+      "avg_cost": 80.9750070339827,
+      "realized_pnl": 2537.4529970771114
+    },
+    "MRVL": {
+      "qty": 128.0,
+      "avg_cost": 84.6331457427353,
+      "realized_pnl": -399.43430034370465
+    },
+    "VIAV": {
+      "qty": 1416.0,
+      "avg_cost": 8.81896501590117,
+      "realized_pnl": -5331.615111172454
+    }
+  },
+  "source": "theme",
+  "description": "5G infrastructure: equipment oligopoly + semiconductor + test & measurement"
+}

@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.34725336061664924,
+    "cagr": 0.10493727344659232,
+    "annual_volatility": 0.15152032634225374,
+    "sharpe_ratio": 0.4756578165091084,
+    "sortino_ratio": 0.9818110896913688,
+    "calmar_ratio": 0.6351247361067495,
+    "max_drawdown": -0.1652230931672528,
+    "max_drawdown_date": "2022-10-21",
+    "win_rate": 0.5033377837116155,
+    "profit_factor": 1.1861890762830496,
+    "num_trading_days": 749,
+    "skewness": 7.0710785677118935,
+    "kurtosis": 96.21687610261507,
+    "best_day": 0.14018288892424602,
+    "worst_day": -0.03179618562171738,
+    "avg_daily_return": 0.00044164917860358007,
+    "black_swan_resilience": 91.3,
+    "benchmark_total_return": 0.26388336696537795,
+    "benchmark_cagr": 0.08155830607091019,
+    "alpha": 0.022374983204452192,
+    "beta": 0.03833449801126618,
+    "information_ratio": 0.09790872859349517,
+    "tracking_error": 0.22852899354203987
+  },
+  "trade_metrics": {
+    "num_trades": 269,
+    "num_buys": 150,
+    "num_sells": 119,
+    "total_commission": 0.0,
+    "total_slippage": 597.9156966499838,
+    "total_transaction_costs": 597.9156966499838,
+    "avg_trade_size": 2222.7349317843255
+  },
+  "final_positions": {
+    "N2IU.SI": {
+      "qty": 11957.0,
+      "avg_cost": 1.1927576615597637,
+      "realized_pnl": -80.90280830860411
+    },
+    "H02.SI": {
+      "qty": 1087.0,
+      "avg_cost": 8.53321796889552,
+      "realized_pnl": -135.33751907017927
+    },
+    "F34.SI": {
+      "qty": 4606.0,
+      "avg_cost": 3.2339609009142145,
+      "realized_pnl": -80.3507019098957
+    },
+    "Y92.SI": {
+      "qty": 20735.0,
+      "avg_cost": 0.444406842810082,
+      "realized_pnl": 28285.774433295574
+    },
+    "A17U.SI": {
+      "qty": 5754.0,
+      "avg_cost": 2.3342529476057656,
+      "realized_pnl": 1357.903364667855
+    },
+    "C38U.SI": {
+      "qty": 7398.0,
+      "avg_cost": 1.739864099934226,
+      "realized_pnl": 1226.429181525768
+    },
+    "ME8U.SI": {
+      "qty": 6335.0,
+      "avg_cost": 2.01640002816449,
+      "realized_pnl": 871.1464370804545
+    }
+  },
+  "source": "theme",
+  "description": "Singapore heritage consumer + REITs: AAA-rated income + growth"
+}

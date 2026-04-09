@@ -1,0 +1,52 @@
+# LOSING Strategy: telecom_equipment_5g
+
+> **What it does:** 5G infrastructure: equipment oligopoly + semiconductor + test & measurement
+>
+> **Hypothesis:** Telecom Equipment & 5G 3Y
+
+**Generated:** 2026-04-08T22:31:45.861678
+**Assessment:** AVOID — Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.
+
+## Performance Summary
+- **total_return:** -4.92%
+- **sharpe_ratio:** -0.30
+- **max_drawdown:** -21.20%
+- **win_rate:** 41.62%
+- **alpha:** -10.34%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 0.0%
+- **stop_loss:** 25.0%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 21.2%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** Enter on any weekly rebalance day. No specific timing edge detected.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **ANET** | BUY | 53% | Market order (volatile) | 40.0% below entry | 11.0% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ANET) / [Yahoo](https://finance.yahoo.com/quote/ANET/) |
+| **LITE** | BUY | 77% | Market order (volatile) | 40.0% below entry | 15.0% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=LITE) / [Yahoo](https://finance.yahoo.com/quote/LITE/) |
+| **MRVL** | BUY | 65% | Market order (volatile) | 40.0% below entry | 13.7% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=MRVL) / [Yahoo](https://finance.yahoo.com/quote/MRVL/) |
+| **VIAV** | BUY | 49% | Market order (volatile) | 40.0% below entry | 10.4% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=VIAV) / [Yahoo](https://finance.yahoo.com/quote/VIAV/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.
+
+## Lessons Learned
+
+This strategy lost money. Key issues:
+- Sharpe ratio: -0.30 (target > 0.5)
+- Max drawdown: -21.20% (target > -20%)
+- Alpha: -10.34% (target > 0%)
+
+**DO NOT REPEAT** these patterns without fundamental strategy changes.

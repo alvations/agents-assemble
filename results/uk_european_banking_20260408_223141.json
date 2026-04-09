@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.2936060797294686,
+    "cagr": 0.08992177161753223,
+    "annual_volatility": 0.19977320336220472,
+    "sharpe_ratio": 0.33527945212282034,
+    "sortino_ratio": 0.4807657230707846,
+    "calmar_ratio": 0.38047662759657636,
+    "max_drawdown": -0.23633980406511934,
+    "max_drawdown_date": "2022-03-07",
+    "win_rate": 0.5412234042553191,
+    "profit_factor": 1.1084377056491896,
+    "num_trading_days": 752,
+    "skewness": 0.07073481104024097,
+    "kurtosis": 5.950627106121797,
+    "best_day": 0.06693687878563925,
+    "worst_day": -0.06865485447165764,
+    "avg_daily_return": 0.0004214429190297579,
+    "black_swan_resilience": 75.7,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.003297192517768055,
+    "beta": 0.6057369706957202,
+    "information_ratio": 0.018034040924575837,
+    "tracking_error": 0.18283159784088188
+  },
+  "trade_metrics": {
+    "num_trades": 825,
+    "num_buys": 415,
+    "num_sells": 410,
+    "total_commission": 0.0,
+    "total_slippage": 6972.10783139157,
+    "total_transaction_costs": 6972.10783139157,
+    "avg_trade_size": 8451.03979562615
+  },
+  "final_positions": {
+    "BNPQF": {
+      "qty": 343.0,
+      "avg_cost": 59.86053461466789,
+      "realized_pnl": -6339.98057477023
+    },
+    "HSBC": {
+      "qty": 425.0,
+      "avg_cost": 45.61589050292969,
+      "realized_pnl": 4329.784322738651
+    },
+    "NWG": {
+      "qty": 2094.0,
+      "avg_cost": 9.228385846047825,
+      "realized_pnl": 13082.561041116714
+    },
+    "LYG": {
+      "qty": 7087.0,
+      "avg_cost": 2.6271431598758186,
+      "realized_pnl": 6324.467159712298
+    },
+    "ING": {
+      "qty": 1306.0,
+      "avg_cost": 15.077771025526252,
+      "realized_pnl": 3868.6436616001665
+    }
+  },
+  "source": "theme",
+  "description": "European bank deep value: 0.5-0.8x book, 4-7% yield, rate normalization"
+}
