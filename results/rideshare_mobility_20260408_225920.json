@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.26718300518269134,
+    "cagr": 0.06115889267415464,
+    "annual_volatility": 0.14519601166446833,
+    "sharpe_ratio": 0.21276116363642342,
+    "sortino_ratio": 0.3012009392822506,
+    "calmar_ratio": 0.2546351028298931,
+    "max_drawdown": -0.240182488566831,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.468063872255489,
+    "profit_factor": 1.0939333461620233,
+    "num_trading_days": 1002,
+    "skewness": -0.3741328835881694,
+    "kurtosis": 5.858753497926254,
+    "best_day": 0.03830532221057914,
+    "worst_day": -0.0745530396438725,
+    "avg_daily_return": 0.0002782374516686437,
+    "black_swan_resilience": 70.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.047508804524219794,
+    "beta": 0.3576299049239356,
+    "information_ratio": -0.2728366818253362,
+    "tracking_error": 0.1741290951289088
+  },
+  "trade_metrics": {
+    "num_trades": 856,
+    "num_buys": 385,
+    "num_sells": 471,
+    "total_commission": 0.0,
+    "total_slippage": 6712.082806354043,
+    "total_transaction_costs": 6712.082806354043,
+    "avg_trade_size": 7841.218231722016
+  },
+  "final_positions": {
+    "UBER": {
+      "qty": 235.0,
+      "avg_cost": 81.5,
+      "realized_pnl": 9110.787586212162
+    },
+    "BKNG": {
+      "qty": 88.0,
+      "avg_cost": 215.78733825683594,
+      "realized_pnl": 5568.146949768072
+    },
+    "TCOM": {
+      "qty": 263.0,
+      "avg_cost": 71.39927696547127,
+      "realized_pnl": 7955.740257263191
+    },
+    "DASH": {
+      "qty": 83.0,
+      "avg_cost": 234.84325234286757,
+      "realized_pnl": 17331.755443572998
+    }
+  },
+  "source": "theme",
+  "description": "Mobility platforms: rideshare + delivery, profitability inflection",
+  "horizon": "4Y (2022-2025)"
+}

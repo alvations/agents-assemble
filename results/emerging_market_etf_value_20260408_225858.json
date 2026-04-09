@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.09419736706231063,
+    "cagr": 0.022823621737120492,
+    "annual_volatility": 0.13127406967065608,
+    "sharpe_ratio": -0.06088574969754791,
+    "sortino_ratio": -0.08634994341530254,
+    "calmar_ratio": 0.10193577979982998,
+    "max_drawdown": -0.22390196829748055,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5059880239520959,
+    "profit_factor": 1.0422376487714422,
+    "num_trading_days": 1002,
+    "skewness": 0.4113247517051653,
+    "kurtosis": 6.992423764244703,
+    "best_day": 0.07218156965552436,
+    "worst_day": -0.03526014874665706,
+    "avg_daily_return": 0.00012393271934782617,
+    "black_swan_resilience": 80.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08584407546125394,
+    "beta": 0.5301823542449561,
+    "information_ratio": -0.6945939306818203,
+    "tracking_error": 0.12358886490267565
+  },
+  "trade_metrics": {
+    "num_trades": 1347,
+    "num_buys": 663,
+    "num_sells": 684,
+    "total_commission": 0.0,
+    "total_slippage": 7720.988035990711,
+    "total_transaction_costs": 7720.988035990711,
+    "avg_trade_size": 5731.988148471207
+  },
+  "final_positions": {
+    "VNM": {
+      "qty": 868.0,
+      "avg_cost": 18.653214821617723,
+      "realized_pnl": 181.1481065750129
+    },
+    "EWT": {
+      "qty": 259.0,
+      "avg_cost": 62.16243228396854,
+      "realized_pnl": -1940.7954444885356
+    },
+    "EWY": {
+      "qty": 166.0,
+      "avg_cost": 93.21937820685623,
+      "realized_pnl": 4700.482974965084
+    },
+    "EWS": {
+      "qty": 593.0,
+      "avg_cost": 27.700000762939453,
+      "realized_pnl": 652.1264114379826
+    },
+    "EEM": {
+      "qty": 300.0,
+      "avg_cost": 54.10316520690918,
+      "realized_pnl": 2469.604808807364
+    },
+    "NU": {
+      "qty": 985.0,
+      "avg_cost": 16.11082888522417,
+      "realized_pnl": 3445.8647875934053
+    }
+  },
+  "source": "theme",
+  "description": "EM country ETFs at value prices: Vietnam, Korea, India, Taiwan, Singapore",
+  "horizon": "4Y (2022-2025)"
+}

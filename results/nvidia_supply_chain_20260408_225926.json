@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.2822039078690439,
+    "cagr": 0.06429830259375846,
+    "annual_volatility": 0.20982915640839378,
+    "sharpe_ratio": 0.2159575899031167,
+    "sortino_ratio": 0.30893366716064,
+    "calmar_ratio": 0.2346126612093227,
+    "max_drawdown": -0.27406152021945296,
+    "max_drawdown_date": "2025-04-25",
+    "win_rate": 0.47704590818363274,
+    "profit_factor": 1.0769375632105886,
+    "num_trading_days": 1002,
+    "skewness": -0.08950511741017138,
+    "kurtosis": 3.1508405356629448,
+    "best_day": 0.06470033507690642,
+    "worst_day": -0.06860485223313573,
+    "avg_daily_return": 0.0003354681124315836,
+    "black_swan_resilience": 71.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.044369394604615975,
+    "beta": 0.5608133582311858,
+    "information_ratio": -0.22162044802210432,
+    "tracking_error": 0.20020442608342076
+  },
+  "trade_metrics": {
+    "num_trades": 1327,
+    "num_buys": 646,
+    "num_sells": 681,
+    "total_commission": 0.0,
+    "total_slippage": 6675.01467508936,
+    "total_transaction_costs": 6675.01467508936,
+    "avg_trade_size": 5030.154238952042
+  },
+  "final_positions": {
+    "KLIC": {
+      "qty": 321.0,
+      "avg_cost": 46.11572265625,
+      "realized_pnl": 333.08017349243346
+    },
+    "FORM": {
+      "qty": 258.0,
+      "avg_cost": 56.44834440991394,
+      "realized_pnl": -2212.11588430763
+    },
+    "ONTO": {
+      "qty": 93.0,
+      "avg_cost": 156.02000427246094,
+      "realized_pnl": 1746.7988510131813
+    },
+    "TTMI": {
+      "qty": 208.0,
+      "avg_cost": 57.045809867901056,
+      "realized_pnl": 3205.310459740827
+    },
+    "AMKR": {
+      "qty": 370.0,
+      "avg_cost": 43.62060815614887,
+      "realized_pnl": 2618.4088980088454
+    },
+    "ENTG": {
+      "qty": 172.0,
+      "avg_cost": 85.8686294555664,
+      "realized_pnl": -660.5131530761721
+    },
+    "ASX": {
+      "qty": 924.0,
+      "avg_cost": 15.387385633615231,
+      "realized_pnl": 6792.366158021965
+    },
+    "COHU": {
+      "qty": 526.0,
+      "avg_cost": 23.6015729365458,
+      "realized_pnl": -4404.786925995808
+    }
+  },
+  "source": "theme",
+  "description": "Non-megacap companies NVIDIA depends on: packaging, testing, materials, cooling, power",
+  "horizon": "4Y (2022-2025)"
+}

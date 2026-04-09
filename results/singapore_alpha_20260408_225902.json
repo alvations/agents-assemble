@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.6720783551685574,
+    "cagr": 0.1375418587916517,
+    "annual_volatility": 0.14451222431279773,
+    "sharpe_ratio": 0.6932068919342114,
+    "sortino_ratio": 1.2851313787978789,
+    "calmar_ratio": 0.8543969168792067,
+    "max_drawdown": -0.16098122087570355,
+    "max_drawdown_date": "2022-10-21",
+    "win_rate": 0.530938123752495,
+    "profit_factor": 1.2382387015070249,
+    "num_trading_days": 1002,
+    "skewness": 6.049581188399829,
+    "kurtosis": 93.09502618539636,
+    "best_day": 0.14362543675947492,
+    "worst_day": -0.05436198516729518,
+    "avg_daily_return": 0.0005531771241498901,
+    "black_swan_resilience": 91.5,
+    "benchmark_total_return": 0.3996230535466314,
+    "benchmark_cagr": 0.08793509178087566,
+    "alpha": 0.04463585931544878,
+    "beta": 0.01950542879364284,
+    "information_ratio": 0.1943359396942837,
+    "tracking_error": 0.22968401720066256
+  },
+  "trade_metrics": {
+    "num_trades": 429,
+    "num_buys": 235,
+    "num_sells": 194,
+    "total_commission": 0.0,
+    "total_slippage": 922.0199645462937,
+    "total_transaction_costs": 922.0199645462937,
+    "avg_trade_size": 2149.2306865880955
+  },
+  "final_positions": {
+    "N2IU.SI": {
+      "qty": 9338.0,
+      "avg_cost": 1.419780969619751,
+      "realized_pnl": 1784.3922090530402
+    },
+    "F34.SI": {
+      "qty": 4079.0,
+      "avg_cost": 3.1402418879014258,
+      "realized_pnl": -431.77113095045314
+    },
+    "Y92.SI": {
+      "qty": 37114.0,
+      "avg_cost": 0.45570553876611136,
+      "realized_pnl": 27406.005756283164
+    },
+    "U11.SI": {
+      "qty": 485.0,
+      "avg_cost": 34.76904842069402,
+      "realized_pnl": 6535.873980176131
+    },
+    "O39.SI": {
+      "qty": 709.0,
+      "avg_cost": 11.466262211392866,
+      "realized_pnl": 4101.447391970257
+    },
+    "A17U.SI": {
+      "qty": 6218.0,
+      "avg_cost": 2.433140768200465,
+      "realized_pnl": 1693.5692031627293
+    },
+    "C38U.SI": {
+      "qty": 5798.0,
+      "avg_cost": 1.7531338323806052,
+      "realized_pnl": 1671.354441525118
+    },
+    "ME8U.SI": {
+      "qty": 8289.0,
+      "avg_cost": 1.9882036935185707,
+      "realized_pnl": 619.27244339697
+    },
+    "AJBU.SI": {
+      "qty": 7473.0,
+      "avg_cost": 2.118573744631816,
+      "realized_pnl": 1781.631340285208
+    }
+  },
+  "source": "theme",
+  "description": "Singapore heritage consumer + banks + REITs: AAA-rated income + growth",
+  "horizon": "4Y (2022-2025)"
+}

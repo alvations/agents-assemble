@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": -0.17371707928927227,
+    "cagr": -0.04670938823270876,
+    "annual_volatility": 0.2234232973783831,
+    "sharpe_ratio": -0.2785041091256622,
+    "sortino_ratio": -0.3825128655909238,
+    "calmar_ratio": -0.08995743459345251,
+    "max_drawdown": -0.5192387760256167,
+    "max_drawdown_date": "2022-12-28",
+    "win_rate": 0.49700598802395207,
+    "profit_factor": 0.9819415727011737,
+    "num_trading_days": 1002,
+    "skewness": -0.14730523558580114,
+    "kurtosis": 3.250939235028259,
+    "best_day": 0.066843275141522,
+    "worst_day": -0.08406284967210753,
+    "avg_daily_return": -9.127198797970736e-05,
+    "black_swan_resilience": 58.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1553770854310832,
+    "beta": 0.7134113901782595,
+    "information_ratio": -0.8181287865185117,
+    "tracking_error": 0.18991763643017529
+  },
+  "trade_metrics": {
+    "num_trades": 1479,
+    "num_buys": 738,
+    "num_sells": 741,
+    "total_commission": 0.0,
+    "total_slippage": 6830.098618311408,
+    "total_transaction_costs": 6830.098618311408,
+    "avg_trade_size": 4618.05180413212
+  },
+  "final_positions": {
+    "EXPE": {
+      "qty": 33.0,
+      "avg_cost": 228.7455721926999,
+      "realized_pnl": -1733.2781519426621
+    },
+    "MAR": {
+      "qty": 30.0,
+      "avg_cost": 275.89002615198,
+      "realized_pnl": 3591.229196424637
+    },
+    "DAL": {
+      "qty": 134.0,
+      "avg_cost": 69.34159088134766,
+      "realized_pnl": -2429.064624786381
+    },
+    "JBLU": {
+      "qty": 2054.0,
+      "avg_cost": 4.867039810485245,
+      "realized_pnl": -8268.820890903473
+    },
+    "UAL": {
+      "qty": 83.0,
+      "avg_cost": 102.2619640640091,
+      "realized_pnl": 602.4420911042556
+    },
+    "AAL": {
+      "qty": 614.0,
+      "avg_cost": 16.208925315533865,
+      "realized_pnl": -2396.452874183654
+    },
+    "LUV": {
+      "qty": 227.0,
+      "avg_cost": 40.943138122558594,
+      "realized_pnl": -7927.475767135623
+    },
+    "TCOM": {
+      "qty": 128.0,
+      "avg_cost": 70.35786243945877,
+      "realized_pnl": 2464.08461719579
+    }
+  },
+  "source": "theme",
+  "description": "Airlines and OTAs: DAL, UAL, BKNG, ABNB \u2014 post-pandemic travel demand",
+  "horizon": "4Y (2022-2025)"
+}

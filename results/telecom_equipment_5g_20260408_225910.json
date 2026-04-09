@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.26946816420424,
+    "cagr": 0.06163828929013748,
+    "annual_volatility": 0.16274182094589024,
+    "sharpe_ratio": 0.2094879466842941,
+    "sortino_ratio": 0.2867057332219877,
+    "calmar_ratio": 0.2908040063705524,
+    "max_drawdown": -0.21195818468744154,
+    "max_drawdown_date": "2023-09-26",
+    "win_rate": 0.44011976047904194,
+    "profit_factor": 1.0931848209051376,
+    "num_trading_days": 1002,
+    "skewness": -0.773726039838408,
+    "kurtosis": 7.550844229700178,
+    "best_day": 0.04680069586904678,
+    "worst_day": -0.08488272408589947,
+    "avg_daily_return": 0.00029093736243260244,
+    "black_swan_resilience": 66.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.04702940790823695,
+    "beta": 0.40385317873227283,
+    "information_ratio": -0.2599765764775408,
+    "tracking_error": 0.1808986353518652
+  },
+  "trade_metrics": {
+    "num_trades": 828,
+    "num_buys": 398,
+    "num_sells": 430,
+    "total_commission": 0.0,
+    "total_slippage": 5338.765380298138,
+    "total_transaction_costs": 5338.765380298138,
+    "avg_trade_size": 6447.784275722389
+  },
+  "final_positions": {
+    "NOK": {
+      "qty": 2913.0,
+      "avg_cost": 6.539999961853027,
+      "realized_pnl": -9144.37698221207
+    },
+    "LITE": {
+      "qty": 51.0,
+      "avg_cost": 244.6296147365196,
+      "realized_pnl": 21166.37740707398
+    },
+    "QCOM": {
+      "qty": 111.0,
+      "avg_cost": 174.1335847037179,
+      "realized_pnl": 2225.3921492440313
+    },
+    "KEYS": {
+      "qty": 93.0,
+      "avg_cost": 203.7100067138672,
+      "realized_pnl": -6494.6075439453125
+    },
+    "VIAV": {
+      "qty": 1059.0,
+      "avg_cost": 16.732661963401483,
+      "realized_pnl": 2831.3096139344025
+    },
+    "ERIC": {
+      "qty": 2007.0,
+      "avg_cost": 8.381567433146008,
+      "realized_pnl": 984.8593699707682
+    }
+  },
+  "source": "theme",
+  "description": "5G infrastructure: equipment oligopoly + semiconductor + test & measurement",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.003570083886824005,
+    "cagr": 0.0008937766809229419,
+    "annual_volatility": 0.2091698464899298,
+    "sharpe_ratio": -0.0785872870945411,
+    "sortino_ratio": -0.10936289411726194,
+    "calmar_ratio": 0.002321486913233168,
+    "max_drawdown": -0.38500181751107365,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5059880239520959,
+    "profit_factor": 1.0186348182052345,
+    "num_trading_days": 1002,
+    "skewness": -0.1528577893178716,
+    "kurtosis": 1.6708465925517713,
+    "best_day": 0.06253089035324333,
+    "worst_day": -0.05106905208889656,
+    "avg_daily_return": 9.041934383243263e-05,
+    "black_swan_resilience": 65.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1077739205174515,
+    "beta": 0.7471189263697331,
+    "information_ratio": -0.6473716854479935,
+    "tracking_error": 0.16647920034202593
+  },
+  "trade_metrics": {
+    "num_trades": 1731,
+    "num_buys": 854,
+    "num_sells": 877,
+    "total_commission": 0.0,
+    "total_slippage": 5265.471518823142,
+    "total_transaction_costs": 5265.471518823142,
+    "avg_trade_size": 3041.866850851038
+  },
+  "final_positions": {
+    "AJINY": {
+      "qty": 562.0,
+      "avg_cost": 23.383256935698455,
+      "realized_pnl": 2982.059824780563
+    },
+    "LSRCY": {
+      "qty": 315.0,
+      "avg_cost": 37.84086718112933,
+      "realized_pnl": 4475.007366920244
+    },
+    "TOELY": {
+      "qty": 110.0,
+      "avg_cost": 105.54217959317295,
+      "realized_pnl": -1931.732887268064
+    },
+    "ASML": {
+      "qty": 11.0,
+      "avg_cost": 1029.679830377752,
+      "realized_pnl": 884.5317535400416
+    },
+    "ENTG": {
+      "qty": 138.0,
+      "avg_cost": 83.5765985792917,
+      "realized_pnl": -2850.590505982064
+    },
+    "SHECY": {
+      "qty": 514.0,
+      "avg_cost": 15.318668704528314,
+      "realized_pnl": -103.76738001154608
+    },
+    "GLW": {
+      "qty": 112.0,
+      "avg_cost": 88.09287819029792,
+      "realized_pnl": 3016.140033933852
+    },
+    "AMKR": {
+      "qty": 198.0,
+      "avg_cost": 43.56264338327284,
+      "realized_pnl": 1877.9276628067275
+    },
+    "SUOPY": {
+      "qty": 350.0,
+      "avg_cost": 17.884985355789315,
+      "realized_pnl": -6656.048041771649
+    }
+  },
+  "source": "theme",
+  "description": "Hidden supply chain monopolies ALL Magnificent 7 depend on: ABF, EUV, wafers, capacitors",
+  "horizon": "4Y (2022-2025)"
+}

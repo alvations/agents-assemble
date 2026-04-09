@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.07880032769284195,
+    "cagr": 0.019196388915725837,
+    "annual_volatility": 0.21309400546985513,
+    "sharpe_ratio": 0.011461556936868384,
+    "sortino_ratio": 0.01686735917291228,
+    "calmar_ratio": 0.06428300498661098,
+    "max_drawdown": -0.29862307961060797,
+    "max_drawdown_date": "2023-01-09",
+    "win_rate": 0.40219560878243515,
+    "profit_factor": 1.04190741990687,
+    "num_trading_days": 1002,
+    "skewness": 0.5294032056357092,
+    "kurtosis": 6.857142461331326,
+    "best_day": 0.08886424812581395,
+    "worst_day": -0.07012831929014018,
+    "avg_daily_return": 0.00016534188293649332,
+    "black_swan_resilience": 78.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0894713082826486,
+    "beta": 0.4066124504287547,
+    "information_ratio": -0.39437483646255656,
+    "tracking_error": 0.22686870461914815
+  },
+  "trade_metrics": {
+    "num_trades": 690,
+    "num_buys": 324,
+    "num_sells": 366,
+    "total_commission": 0.0,
+    "total_slippage": 5178.482734599113,
+    "total_transaction_costs": 5178.482734599113,
+    "avg_trade_size": 7505.04744144799
+  },
+  "final_positions": {
+    "CFLT": {
+      "qty": 542.0,
+      "avg_cost": 30.100000381469727,
+      "realized_pnl": -7596.446414947511
+    },
+    "RKLB": {
+      "qty": 233.0,
+      "avg_cost": 70.12000274658203,
+      "realized_pnl": 16709.3221282959
+    },
+    "UPWK": {
+      "qty": 804.0,
+      "avg_cost": 18.62334501446776,
+      "realized_pnl": -5136.177548408505
+    },
+    "TOST": {
+      "qty": 447.0,
+      "avg_cost": 37.271385798784976,
+      "realized_pnl": 8165.128974914556
+    }
+  },
+  "source": "theme",
+  "description": "Gig platforms + SaaS disruptors: growth at reasonable price, high beta",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.6109836382446374,
+    "cagr": 0.12697664939807418,
+    "annual_volatility": 0.17944889581694498,
+    "sharpe_ratio": 0.5395063889661174,
+    "sortino_ratio": 0.7744041112406352,
+    "calmar_ratio": 0.4991092343183896,
+    "max_drawdown": -0.25440653201193586,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5289421157684631,
+    "profit_factor": 1.1404220391779347,
+    "num_trading_days": 1002,
+    "skewness": -0.0014768117667949832,
+    "kurtosis": 4.998672870921388,
+    "best_day": 0.07889309631417052,
+    "worst_day": -0.0609498065621733,
+    "avg_daily_return": 0.0005398317111490286,
+    "black_swan_resilience": 74.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.018308952199699746,
+    "beta": 0.5958699568341647,
+    "information_ratio": 0.11358999899805296,
+    "tracking_error": 0.16118454407252508
+  },
+  "trade_metrics": {
+    "num_trades": 397,
+    "num_buys": 183,
+    "num_sells": 214,
+    "total_commission": 0.0,
+    "total_slippage": 3118.440125775339,
+    "total_transaction_costs": 3118.440125775339,
+    "avg_trade_size": 7855.01291127289
+  },
+  "final_positions": {
+    "MITSY": {
+      "qty": 43.0,
+      "avg_cost": 528.9400024414062,
+      "realized_pnl": 12295.954788208013
+    },
+    "SMFG": {
+      "qty": 1249.0,
+      "avg_cost": 18.399999618530273,
+      "realized_pnl": 5910.48398303986
+    },
+    "NMR": {
+      "qty": 3009.0,
+      "avg_cost": 7.639999866485596,
+      "realized_pnl": 6754.3380031585675
+    },
+    "MUFG": {
+      "qty": 1444.0,
+      "avg_cost": 15.920000076293945,
+      "realized_pnl": 6455.278841495511
+    },
+    "ITOCY": {
+      "qty": 1948.0,
+      "avg_cost": 10.464892304696269,
+      "realized_pnl": 5678.642242514952
+    },
+    "EWJ": {
+      "qty": 289.0,
+      "avg_cost": 77.34028440693258,
+      "realized_pnl": 1918.538707733158
+    }
+  },
+  "source": "theme",
+  "description": "Japan governance reform: Toyota, Sony, Nomura, MUFG, trading houses",
+  "horizon": "4Y (2022-2025)"
+}

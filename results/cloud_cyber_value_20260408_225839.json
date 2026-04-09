@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": -0.13478779807233676,
+    "cagr": -0.03564374102725998,
+    "annual_volatility": 0.2615277307696228,
+    "sharpe_ratio": -0.1581628803248254,
+    "sortino_ratio": -0.21599967611066834,
+    "calmar_ratio": -0.08625747786525019,
+    "max_drawdown": -0.4132249389779511,
+    "max_drawdown_date": "2023-01-19",
+    "win_rate": 0.5089820359281437,
+    "profit_factor": 0.9985300507463625,
+    "num_trading_days": 1002,
+    "skewness": -0.200485992193563,
+    "kurtosis": 3.8266902466065966,
+    "best_day": 0.08839004531836281,
+    "worst_day": -0.09116403117410654,
+    "avg_daily_return": -8.492911745796733e-06,
+    "black_swan_resilience": 63.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.14431143822563441,
+    "beta": 0.8169982228366096,
+    "information_ratio": -0.659890819334128,
+    "tracking_error": 0.21868987110815374
+  },
+  "trade_metrics": {
+    "num_trades": 1095,
+    "num_buys": 542,
+    "num_sells": 553,
+    "total_commission": 0.0,
+    "total_slippage": 5619.462980584151,
+    "total_transaction_costs": 5619.462980584151,
+    "avg_trade_size": 5131.929662633922
+  },
+  "final_positions": {
+    "PANW": {
+      "qty": 70.0,
+      "avg_cost": 183.91842803955078,
+      "realized_pnl": 3968.6016235351562
+    },
+    "NET": {
+      "qty": 65.0,
+      "avg_cost": 205.7212126760772,
+      "realized_pnl": 3809.6272751779156
+    },
+    "FTNT": {
+      "qty": 162.0,
+      "avg_cost": 80.81999969482422,
+      "realized_pnl": 1591.606029510487
+    },
+    "SNOW": {
+      "qty": 59.0,
+      "avg_cost": 222.89999389648438,
+      "realized_pnl": -6858.541427612301
+    },
+    "S": {
+      "qty": 872.0,
+      "avg_cost": 15.029999732971191,
+      "realized_pnl": -12243.662686347958
+    }
+  },
+  "source": "theme",
+  "description": "Cloud/cyber non-discretionary spend: buy dips in Cloudflare, Datadog, CrowdStrike, Palo Alto",
+  "horizon": "4Y (2022-2025)"
+}

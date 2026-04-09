@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.4030108732130786,
+    "cagr": 0.0885946443036123,
+    "annual_volatility": 0.12642289899494497,
+    "sharpe_ratio": 0.4265715373291973,
+    "sortino_ratio": 0.616538293983299,
+    "calmar_ratio": 0.4585019813651829,
+    "max_drawdown": -0.19322630632876014,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5359281437125748,
+    "profit_factor": 1.1383466791501633,
+    "num_trading_days": 1002,
+    "skewness": 0.1461325599769636,
+    "kurtosis": 3.339853996064141,
+    "best_day": 0.048813403880273,
+    "worst_day": -0.03277150257893857,
+    "avg_daily_return": 0.00036965149127494334,
+    "black_swan_resilience": 79.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.020073052894762133,
+    "beta": 0.41344493962985035,
+    "information_ratio": -0.13658073840792198,
+    "tracking_error": 0.14696840219746427
+  },
+  "trade_metrics": {
+    "num_trades": 403,
+    "num_buys": 215,
+    "num_sells": 188,
+    "total_commission": 0.0,
+    "total_slippage": 1749.4731931324,
+    "total_transaction_costs": 1749.4731931324,
+    "avg_trade_size": 4341.124548715634
+  },
+  "final_positions": {
+    "TMUS": {
+      "qty": 83.0,
+      "avg_cost": 218.7905767104205,
+      "realized_pnl": 4381.655487509337
+    },
+    "DUK": {
+      "qty": 94.0,
+      "avg_cost": 120.23390067891872,
+      "realized_pnl": 3678.126571655278
+    },
+    "VZ": {
+      "qty": 282.0,
+      "avg_cost": 42.08824827233139,
+      "realized_pnl": 2457.9095437575343
+    },
+    "SO": {
+      "qty": 128.0,
+      "avg_cost": 92.29729397246179,
+      "realized_pnl": 6542.344125301277
+    },
+    "PPL": {
+      "qty": 321.0,
+      "avg_cost": 35.84162763791664,
+      "realized_pnl": 5605.0060501098615
+    },
+    "EQIX": {
+      "qty": 23.0,
+      "avg_cost": 784.1162530506041,
+      "realized_pnl": 5341.096793796703
+    },
+    "DLR": {
+      "qty": 73.0,
+      "avg_cost": 154.09884643554688,
+      "realized_pnl": 1588.805328369142
+    },
+    "COST": {
+      "qty": 19.0,
+      "avg_cost": 940.0451044732514,
+      "realized_pnl": 3617.9021204898227
+    }
+  },
+  "source": "theme",
+  "description": "Utilities, data centers, telecom: steady income, buy dips for yield",
+  "horizon": "4Y (2022-2025)"
+}

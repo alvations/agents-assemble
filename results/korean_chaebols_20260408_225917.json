@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.2547537065581271,
+    "cagr": 0.0585399826598858,
+    "annual_volatility": 0.1882101959712787,
+    "sharpe_ratio": 0.18864216432773392,
+    "sortino_ratio": 0.27557955154731306,
+    "calmar_ratio": 0.23342677714215007,
+    "max_drawdown": -0.25078520714972075,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5059880239520959,
+    "profit_factor": 1.0704921915709864,
+    "num_trading_days": 1002,
+    "skewness": 0.3421480133774332,
+    "kurtosis": 2.6355368532515735,
+    "best_day": 0.06858998891543444,
+    "worst_day": -0.0410193602041683,
+    "avg_daily_return": 0.0002965402545236793,
+    "black_swan_resilience": 78.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.05012771453848863,
+    "beta": 0.6885736110384427,
+    "information_ratio": -0.3292063543735675,
+    "tracking_error": 0.15226836867676655
+  },
+  "trade_metrics": {
+    "num_trades": 1401,
+    "num_buys": 730,
+    "num_sells": 671,
+    "total_commission": 0.0,
+    "total_slippage": 6876.682395074589,
+    "total_transaction_costs": 6876.682395074589,
+    "avg_trade_size": 4908.409989346614
+  },
+  "final_positions": {
+    "CPNG": {
+      "qty": 669.0,
+      "avg_cost": 26.631344742884725,
+      "realized_pnl": 3730.8985836811153
+    },
+    "PKX": {
+      "qty": 301.0,
+      "avg_cost": 54.349998474121094,
+      "realized_pnl": 871.4166145324541
+    },
+    "KB": {
+      "qty": 188.0,
+      "avg_cost": 83.69182536997059,
+      "realized_pnl": 5501.872873381376
+    },
+    "SHG": {
+      "qty": 301.0,
+      "avg_cost": 51.20855910802505,
+      "realized_pnl": 13861.6157137415
+    },
+    "EWY": {
+      "qty": 166.0,
+      "avg_cost": 93.55245435090183,
+      "realized_pnl": 1693.7461376122535
+    },
+    "SKM": {
+      "qty": 792.0,
+      "avg_cost": 21.018297535863564,
+      "realized_pnl": 2470.1959502380532
+    },
+    "LPL": {
+      "qty": 3850.0,
+      "avg_cost": 4.1087845502580915,
+      "realized_pnl": 453.0702321529334
+    }
+  },
+  "source": "theme",
+  "description": "Korea discount value: chaebols + fintech, governance reform catalyst",
+  "horizon": "4Y (2022-2025)"
+}

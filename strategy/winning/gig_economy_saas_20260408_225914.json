@@ -1,0 +1,80 @@
+{
+  "strategy_name": "gig_economy_saas",
+  "is_winning": true,
+  "generated_at": "2026-04-08T22:59:14.393709",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "2.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "29.9%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "CFLT",
+      "action": "BUY",
+      "current_position": 542.0,
+      "annual_volatility": "63%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "13.3% above entry",
+      "position_size": "0.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CFLT",
+      "yahoo_url": "https://finance.yahoo.com/quote/CFLT/"
+    },
+    {
+      "symbol": "RKLB",
+      "action": "BUY",
+      "current_position": 233.0,
+      "annual_volatility": "105%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "15.0% above entry",
+      "position_size": "0.7% of portfolio",
+      "trailing_stop": "28.0% trailing after 6.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=RKLB",
+      "yahoo_url": "https://finance.yahoo.com/quote/RKLB/"
+    },
+    {
+      "symbol": "UPWK",
+      "action": "BUY",
+      "current_position": 804.0,
+      "annual_volatility": "57%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "12.0% above entry",
+      "position_size": "0.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UPWK",
+      "yahoo_url": "https://finance.yahoo.com/quote/UPWK/"
+    },
+    {
+      "symbol": "TOST",
+      "action": "BUY",
+      "current_position": 447.0,
+      "annual_volatility": "46%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "9.7% above entry",
+      "position_size": "1.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TOST",
+      "yahoo_url": "https://finance.yahoo.com/quote/TOST/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "7.88%",
+    "sharpe_ratio": "0.01",
+    "max_drawdown": "-29.86%",
+    "win_rate": "40.22%",
+    "alpha": "-8.95%"
+  }
+}

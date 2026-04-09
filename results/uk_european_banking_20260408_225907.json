@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 1.0309396734077123,
+    "cagr": 0.1943605254457399,
+    "annual_volatility": 0.18869745266550655,
+    "sharpe_ratio": 0.8307681250226466,
+    "sortino_ratio": 1.2438409232132184,
+    "calmar_ratio": 0.8223773506507902,
+    "max_drawdown": -0.2363398326716224,
+    "max_drawdown_date": "2022-03-07",
+    "win_rate": 0.5479041916167665,
+    "profit_factor": 1.224268165285925,
+    "num_trading_days": 1002,
+    "skewness": 0.31812512722386516,
+    "kurtosis": 7.392669035836158,
+    "best_day": 0.07713651559398094,
+    "worst_day": -0.06865485067489807,
+    "avg_daily_return": 0.0007777285490907567,
+    "black_swan_resilience": 78.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.08569282824736546,
+    "beta": 0.5743439161466167,
+    "information_ratio": 0.48842132129570076,
+    "tracking_error": 0.17544858201529082
+  },
+  "trade_metrics": {
+    "num_trades": 1085,
+    "num_buys": 536,
+    "num_sells": 549,
+    "total_commission": 0.0,
+    "total_slippage": 11236.26434153485,
+    "total_transaction_costs": 11236.26434153485,
+    "avg_trade_size": 10356.00400141461
+  },
+  "final_positions": {
+    "DB": {
+      "qty": 788.0,
+      "avg_cost": 38.67984801742631,
+      "realized_pnl": 24678.870577812195
+    },
+    "BNPQF": {
+      "qty": 307.0,
+      "avg_cost": 94.97000122070312,
+      "realized_pnl": 8023.5222778320385
+    },
+    "NWG": {
+      "qty": 1807.0,
+      "avg_cost": 15.99935905313364,
+      "realized_pnl": 23021.34135530193
+    },
+    "LYG": {
+      "qty": 5728.0,
+      "avg_cost": 5.260000228881836,
+      "realized_pnl": 19303.409723997105
+    },
+    "ING": {
+      "qty": 1088.0,
+      "avg_cost": 28.10897119956858,
+      "realized_pnl": 14030.27479839326
+    }
+  },
+  "source": "theme",
+  "description": "European bank deep value: 0.5-0.8x book, 4-7% yield, rate normalization",
+  "horizon": "4Y (2022-2025)"
+}
