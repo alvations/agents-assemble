@@ -561,3 +561,4 @@ $ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yah
 $SQ: possibly delisted; no timezone found
 $TEM: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1718251200")
 DONE: 173/173 in 1158s
+PUSHED

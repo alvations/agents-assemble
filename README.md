@@ -1,11 +1,13 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **173 strategies** (113 winning, 98 losing), 720+ tickers, backtested on 4Y horizon (2022-2025).
+Trading agents and algorithms for publicly tradable instruments. **173 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
+> **Today's Pre-Market Research:** [knowledge/premarket-research/](knowledge/premarket-research/) — Daily analysis of futures, news, sector signals before market open
+>
 > **Start here:**
-> - **[LEADERBOARD.md](LEADERBOARD.md)** — Full rankings with Return + Sharpe + Max DD
+> - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (Avg Return × Consistency × Drawdown Protection)
 > - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
