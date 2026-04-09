@@ -1,0 +1,145 @@
+{
+  "strategy_name": "semiconductor_value",
+  "is_winning": true,
+  "generated_at": "2026-04-08T22:05:51.433099",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "3.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "38.3%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "CRSR",
+      "action": "BUY",
+      "current_position": 2148.0,
+      "annual_volatility": "73%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "15.0% above entry",
+      "position_size": "1.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 6.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CRSR",
+      "yahoo_url": "https://finance.yahoo.com/quote/CRSR/"
+    },
+    {
+      "symbol": "TSM",
+      "action": "BUY",
+      "current_position": 33.0,
+      "annual_volatility": "42%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "8.7% above entry",
+      "position_size": "1.7% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSM",
+      "yahoo_url": "https://finance.yahoo.com/quote/TSM/"
+    },
+    {
+      "symbol": "ASML",
+      "action": "BUY",
+      "current_position": 15.0,
+      "annual_volatility": "44%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "9.3% above entry",
+      "position_size": "1.6% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
+      "yahoo_url": "https://finance.yahoo.com/quote/ASML/"
+    },
+    {
+      "symbol": "MU",
+      "action": "BUY",
+      "current_position": 167.0,
+      "annual_volatility": "63%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "13.2% above entry",
+      "position_size": "1.1% of portfolio",
+      "trailing_stop": "28.0% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MU",
+      "yahoo_url": "https://finance.yahoo.com/quote/MU/"
+    },
+    {
+      "symbol": "LRCX",
+      "action": "BUY",
+      "current_position": 144.0,
+      "annual_volatility": "51%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.7% above entry",
+      "position_size": "1.4% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
+      "yahoo_url": "https://finance.yahoo.com/quote/LRCX/"
+    },
+    {
+      "symbol": "KLAC",
+      "action": "BUY",
+      "current_position": 21.0,
+      "annual_volatility": "48%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.0% above entry",
+      "position_size": "1.5% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
+      "yahoo_url": "https://finance.yahoo.com/quote/KLAC/"
+    },
+    {
+      "symbol": "AMAT",
+      "action": "BUY",
+      "current_position": 80.0,
+      "annual_volatility": "47%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.0% above entry",
+      "position_size": "1.5% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
+      "yahoo_url": "https://finance.yahoo.com/quote/AMAT/"
+    },
+    {
+      "symbol": "ON",
+      "action": "BUY",
+      "current_position": 162.0,
+      "annual_volatility": "55%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.5% above entry",
+      "position_size": "1.3% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ON",
+      "yahoo_url": "https://finance.yahoo.com/quote/ON/"
+    },
+    {
+      "symbol": "WDC",
+      "action": "BUY",
+      "current_position": 316.0,
+      "annual_volatility": "57%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "12.0% above entry",
+      "position_size": "1.2% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=WDC",
+      "yahoo_url": "https://finance.yahoo.com/quote/WDC/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "21.63%",
+    "sharpe_ratio": "0.24",
+    "max_drawdown": "-38.35%",
+    "win_rate": "50.27%",
+    "alpha": "-1.89%"
+  }
+}

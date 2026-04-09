@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.554680576518003,
+    "cagr": 0.15904356572455924,
+    "annual_volatility": 0.15829570979594135,
+    "sharpe_ratio": 0.7658548851285465,
+    "sortino_ratio": 1.0810165455524134,
+    "calmar_ratio": 1.055201536066894,
+    "max_drawdown": -0.1507234023913293,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.5438829787234043,
+    "profit_factor": 1.1935585546626777,
+    "num_trading_days": 752,
+    "skewness": -0.39234177666441145,
+    "kurtosis": 2.0323299446211016,
+    "best_day": 0.03303034020845419,
+    "worst_day": -0.049215967183332876,
+    "avg_daily_return": 0.0006367274129583754,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.07241898662479507,
+    "beta": 0.5422560050932558,
+    "information_ratio": 0.48314624810587753,
+    "tracking_error": 0.14989040463152897
+  },
+  "trade_metrics": {
+    "num_trades": 1003,
+    "num_buys": 495,
+    "num_sells": 508,
+    "total_commission": 0.0,
+    "total_slippage": 4186.78196473694,
+    "total_transaction_costs": 4186.78196473694,
+    "avg_trade_size": 4174.259187175412
+  },
+  "final_positions": {
+    "CRM": {
+      "qty": 56.0,
+      "avg_cost": 308.37306446931797,
+      "realized_pnl": 5658.706338065006
+    },
+    "PANW": {
+      "qty": 84.0,
+      "avg_cost": 179.04612031539128,
+      "realized_pnl": 7907.623290147649
+    },
+    "ADP": {
+      "qty": 61.0,
+      "avg_cost": 262.4180154002328,
+      "realized_pnl": -290.7178116844332
+    },
+    "NFLX": {
+      "qty": 173.0,
+      "avg_cost": 77.61320646616208,
+      "realized_pnl": 10671.976678790097
+    },
+    "FTNT": {
+      "qty": 197.0,
+      "avg_cost": 97.35015396660354,
+      "realized_pnl": 1137.4335899352996
+    },
+    "HUBS": {
+      "qty": 27.0,
+      "avg_cost": 727.1652066831235,
+      "realized_pnl": 3161.0634552001925
+    },
+    "SPOT": {
+      "qty": 42.0,
+      "avg_cost": 412.83881174750775,
+      "realized_pnl": 18102.352636730287
+    },
+    "ZM": {
+      "qty": 227.0,
+      "avg_cost": 83.48890181890143,
+      "realized_pnl": 2511.188121795656
+    }
+  },
+  "source": "theme",
+  "description": "Sticky subscriptions nobody cancels: CRM, ADP, NFLX, SPOT \u2014 predictable cash flow machines"
+}

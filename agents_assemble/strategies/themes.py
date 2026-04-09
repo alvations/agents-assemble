@@ -21,6 +21,11 @@ Themes:
 
 from __future__ import annotations
 
+
+def _is_missing(v):
+    """Check if value is None or NaN."""
+    return v is None or v != v
+
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 

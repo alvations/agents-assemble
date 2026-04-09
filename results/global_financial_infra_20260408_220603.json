@@ -1,0 +1,94 @@
+{
+  "metrics": {
+    "total_return": 0.29989064868301174,
+    "cagr": 0.09168998876719692,
+    "annual_volatility": 0.1076947528887244,
+    "sharpe_ratio": 0.48363185192052893,
+    "sortino_ratio": 0.6904422445308952,
+    "calmar_ratio": 0.5267167627847932,
+    "max_drawdown": -0.17407835718465592,
+    "max_drawdown_date": "2022-11-03",
+    "win_rate": 0.5342820181112549,
+    "profit_factor": 1.1646552459477661,
+    "num_trading_days": 773,
+    "skewness": 0.03741473289587319,
+    "kurtosis": 7.906867680110473,
+    "best_day": 0.05399785729243134,
+    "worst_day": -0.04043021982735573,
+    "avg_daily_return": 0.0003623348341472053,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.0030566779090810403,
+    "beta": 0.3321049405798667,
+    "information_ratio": 0.020513658109485734,
+    "tracking_error": 0.14900696369057648
+  },
+  "trade_metrics": {
+    "num_trades": 1290,
+    "num_buys": 598,
+    "num_sells": 692,
+    "total_commission": 0.0,
+    "total_slippage": 3304.4163176803613,
+    "total_transaction_costs": 3304.4163176803613,
+    "avg_trade_size": 2561.5630369615187
+  },
+  "final_positions": {
+    "MA": {
+      "qty": 19.0,
+      "avg_cost": 492.33886669769555,
+      "realized_pnl": -1510.1304414351944
+    },
+    "BK": {
+      "qty": 148.0,
+      "avg_cost": 69.0507300488288,
+      "realized_pnl": 2048.540533188577
+    },
+    "D05.SI": {
+      "qty": 238.0,
+      "avg_cost": 36.70376007362934,
+      "realized_pnl": 2717.4598328265174
+    },
+    "AXP": {
+      "qty": 33.0,
+      "avg_cost": 261.9733793051356,
+      "realized_pnl": 3336.113887674937
+    },
+    "JPM": {
+      "qty": 56.0,
+      "avg_cost": 222.97407603062496,
+      "realized_pnl": 6005.423028833157
+    },
+    "GS": {
+      "qty": 23.0,
+      "avg_cost": 502.83527210040484,
+      "realized_pnl": 120.42027320189561
+    },
+    "ITOCY": {
+      "qty": 1140.0,
+      "avg_cost": 9.73749828338623,
+      "realized_pnl": 2871.962969779968
+    },
+    "U11.SI": {
+      "qty": 381.0,
+      "avg_cost": 31.962869202377362,
+      "realized_pnl": 82.73534536603123
+    },
+    "COF": {
+      "qty": 63.0,
+      "avg_cost": 156.43597339571272,
+      "realized_pnl": 3177.572532731171
+    },
+    "O39.SI": {
+      "qty": 617.0,
+      "avg_cost": 13.833162198493367,
+      "realized_pnl": 2371.4154122553246
+    },
+    "V": {
+      "qty": 31.0,
+      "avg_cost": 287.34935546548576,
+      "realized_pnl": 1032.8915581263473
+    }
+  },
+  "source": "theme",
+  "description": "Payment rails + mega-banks + Japanese trading houses + Singapore banks \u2014 backbone of world finance"
+}
