@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": -0.08022947514811118,
+    "cagr": -0.020746925593399856,
+    "annual_volatility": 0.06269047106025888,
+    "sharpe_ratio": -0.9298412660633896,
+    "sortino_ratio": -1.2425625204644555,
+    "calmar_ratio": -0.13387569198998256,
+    "max_drawdown": -0.15497156567416492,
+    "max_drawdown_date": "2023-10-19",
+    "win_rate": 0.5079840319361277,
+    "profit_factor": 0.9521927502357387,
+    "num_trading_days": 1002,
+    "skewness": -0.07323846712511584,
+    "kurtosis": 0.8772317773078124,
+    "best_day": 0.016620865041280686,
+    "worst_day": -0.014374165776706804,
+    "avg_daily_return": -7.566833951342526e-05,
+    "black_swan_resilience": 78.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1294146227917743,
+    "beta": 0.06816885108116871,
+    "information_ratio": -0.7239744222396399,
+    "tracking_error": 0.1787557941500553
+  },
+  "trade_metrics": {
+    "num_trades": 708,
+    "num_buys": 340,
+    "num_sells": 368,
+    "total_commission": 0.0,
+    "total_slippage": 3041.906472858427,
+    "total_transaction_costs": 3041.906472858427,
+    "avg_trade_size": 4296.47806900908
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 371.0,
+      "avg_cost": 87.2444419871179,
+      "realized_pnl": -4435.484210584426
+    },
+    "IEF": {
+      "qty": 193.0,
+      "avg_cost": 92.39024823358736,
+      "realized_pnl": -1487.7582627926574
+    },
+    "HYG": {
+      "qty": 174.0,
+      "avg_cost": 79.4564208984375,
+      "realized_pnl": 2.4536323547326333
+    },
+    "SHY": {
+      "qty": 112.0,
+      "avg_cost": 80.01561402604,
+      "realized_pnl": 1720.1675560116933
+    },
+    "LQD": {
+      "qty": 84.0,
+      "avg_cost": 108.13068711894392,
+      "realized_pnl": -433.9303096576106
+    }
+  },
+  "source": "generic",
+  "description": "Bond duration/credit strategies via ETFs",
+  "horizon": "4Y (2022-2025)"
+}

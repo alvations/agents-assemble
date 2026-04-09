@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.20785300288715525,
+    "cagr": 0.04847917897664655,
+    "annual_volatility": 0.11986112636097004,
+    "sharpe_ratio": 0.12905545944121058,
+    "sortino_ratio": 0.1763721270282235,
+    "calmar_ratio": 0.20831751236919344,
+    "max_drawdown": -0.23271773181857458,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5279441117764471,
+    "profit_factor": 1.0862691755540628,
+    "num_trading_days": 1002,
+    "skewness": -0.5065385445633515,
+    "kurtosis": 4.04266840090714,
+    "best_day": 0.03375850318905127,
+    "worst_day": -0.044938050966565446,
+    "avg_daily_return": 0.0002170337228375167,
+    "black_swan_resilience": 69.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.06018851822172788,
+    "beta": 0.5164355494661603,
+    "information_ratio": -0.5218984818949697,
+    "tracking_error": 0.11532610327431575
+  },
+  "trade_metrics": {
+    "num_trades": 8277,
+    "num_buys": 4113,
+    "num_sells": 4164,
+    "total_commission": 0.0,
+    "total_slippage": 18558.245828730618,
+    "total_transaction_costs": 18558.245828730618,
+    "avg_trade_size": 2242.146409173684
+  },
+  "final_positions": {
+    "PG": {
+      "qty": 66.0,
+      "avg_cost": 144.01145190239734,
+      "realized_pnl": 1359.0370908170103
+    },
+    "JPM": {
+      "qty": 23.0,
+      "avg_cost": 312.6096921058439,
+      "realized_pnl": 2866.8445203020856
+    },
+    "V": {
+      "qty": 23.0,
+      "avg_cost": 346.50690328467704,
+      "realized_pnl": -43.035835048133606
+    },
+    "HD": {
+      "qty": 29.0,
+      "avg_cost": 349.4769606154976,
+      "realized_pnl": 46.04541986114191
+    },
+    "XOM": {
+      "qty": 82.0,
+      "avg_cost": 118.62517473174304,
+      "realized_pnl": 1074.1305389404338
+    },
+    "MSFT": {
+      "qty": 22.0,
+      "avg_cost": 486.31718105740015,
+      "realized_pnl": -1302.9779798719633
+    },
+    "META": {
+      "qty": 13.0,
+      "avg_cost": 641.7472155870066,
+      "realized_pnl": 1457.1754725529581
+    },
+    "MA": {
+      "qty": 16.0,
+      "avg_cost": 553.7198367263331,
+      "realized_pnl": 32.22399162524175
+    },
+    "CVX": {
+      "qty": 76.0,
+      "avg_cost": 149.2478894685444,
+      "realized_pnl": 859.2340011596623
+    },
+    "UNH": {
+      "qty": 23.0,
+      "avg_cost": 329.5976257324219,
+      "realized_pnl": -347.77798461914085
+    },
+    "AMZN": {
+      "qty": 47.0,
+      "avg_cost": 232.1461707581865,
+      "realized_pnl": 1412.5330429077155
+    },
+    "NVDA": {
+      "qty": 33.0,
+      "avg_cost": 184.4624356356534,
+      "realized_pnl": 4676.542986869827
+    }
+  },
+  "source": "famous",
+  "description": "Pure systematic: multi-factor composite, vol-weighted, daily rebalance",
+  "horizon": "4Y (2022-2025)"
+}

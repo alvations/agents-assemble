@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.4631640655971996,
+    "cagr": 0.10011149890287019,
+    "annual_volatility": 0.3099461702216566,
+    "sharpe_ratio": 0.33672343244655756,
+    "sortino_ratio": 0.4889655309475377,
+    "calmar_ratio": 0.20530741309265482,
+    "max_drawdown": -0.48761755552241104,
+    "max_drawdown_date": "2023-03-10",
+    "win_rate": 0.4491017964071856,
+    "profit_factor": 1.08921662199896,
+    "num_trading_days": 1002,
+    "skewness": 0.2544092083561896,
+    "kurtosis": 3.4303589771981136,
+    "best_day": 0.13608695531034165,
+    "worst_day": -0.06684243990948813,
+    "avg_daily_return": 0.0005698012052940454,
+    "black_swan_resilience": 65.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.008556198295504247,
+    "beta": 0.9313792858012593,
+    "information_ratio": -0.03279406610639101,
+    "tracking_error": 0.2609069051622357
+  },
+  "trade_metrics": {
+    "num_trades": 280,
+    "num_buys": 131,
+    "num_sells": 149,
+    "total_commission": 0.0,
+    "total_slippage": 3867.833388870239,
+    "total_transaction_costs": 3867.833388870239,
+    "avg_trade_size": 13813.690674536569
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 129.0,
+      "avg_cost": 282.8353576660156,
+      "realized_pnl": -2386.0254821777326
+    },
+    "AMZN": {
+      "qty": 155.0,
+      "avg_cost": 233.8800048828125,
+      "realized_pnl": 2243.3611526489276
+    },
+    "GOOGL": {
+      "qty": 116.0,
+      "avg_cost": 212.66068162589238,
+      "realized_pnl": 4993.679229736331
+    },
+    "SNOW": {
+      "qty": 144.0,
+      "avg_cost": 272.2516784667969,
+      "realized_pnl": 3505.91044616699
+    }
+  },
+  "source": "famous",
+  "description": "High-conviction tech platform bets: concentrated, momentum-driven",
+  "horizon": "4Y (2022-2025)"
+}

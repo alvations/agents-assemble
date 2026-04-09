@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": 0.2694594349170176,
+    "cagr": 0.061636459230112406,
+    "annual_volatility": 0.1569180594042785,
+    "sharpe_ratio": 0.21072610620429774,
+    "sortino_ratio": 0.31144761952326766,
+    "calmar_ratio": 0.2652202984703637,
+    "max_drawdown": -0.2323972169008014,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.35129740518962077,
+    "profit_factor": 1.11349866541451,
+    "num_trading_days": 1002,
+    "skewness": 0.35910370324914087,
+    "kurtosis": 16.97489781921545,
+    "best_day": 0.09180152280641463,
+    "worst_day": -0.08756589106386226,
+    "avg_daily_return": 0.0002868670518841131,
+    "black_swan_resilience": 79.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.04703123796826203,
+    "beta": 0.5446742085344232,
+    "information_ratio": -0.31909126778382724,
+    "tracking_error": 0.1473911783763509
+  },
+  "trade_metrics": {
+    "num_trades": 159,
+    "num_buys": 88,
+    "num_sells": 71,
+    "total_commission": 0.0,
+    "total_slippage": 2524.083597894193,
+    "total_transaction_costs": 2524.083597894193,
+    "avg_trade_size": 15874.739609397433
+  },
+  "final_positions": {
+    "LIN": {
+      "qty": 62.0,
+      "avg_cost": 409.2120346561555,
+      "realized_pnl": 3165.1730041503906
+    }
+  },
+  "source": "famous",
+  "description": "Emerging market industrials: materials, construction, global value",
+  "horizon": "4Y (2022-2025)"
+}

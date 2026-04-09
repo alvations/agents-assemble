@@ -1,0 +1,93 @@
+{
+  "strategy_name": "fixed_income",
+  "is_winning": false,
+  "generated_at": "2026-04-08T23:15:40.935514",
+  "overall_assessment": "AVOID \u2014 Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "18.6%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "15.5%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "TLT",
+      "action": "BUY",
+      "current_position": 371.0,
+      "annual_volatility": "13%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.8% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "6.9% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo_url": "https://finance.yahoo.com/quote/TLT/"
+    },
+    {
+      "symbol": "IEF",
+      "action": "BUY",
+      "current_position": 193.0,
+      "annual_volatility": "6%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.3% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "6.5% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=IEF",
+      "yahoo_url": "https://finance.yahoo.com/quote/IEF/"
+    },
+    {
+      "symbol": "HYG",
+      "action": "BUY",
+      "current_position": 174.0,
+      "annual_volatility": "5%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.3% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "6.5% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=HYG",
+      "yahoo_url": "https://finance.yahoo.com/quote/HYG/"
+    },
+    {
+      "symbol": "SHY",
+      "action": "BUY",
+      "current_position": 112.0,
+      "annual_volatility": "2%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.3% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "6.5% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SHY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SHY/"
+    },
+    {
+      "symbol": "LQD",
+      "action": "BUY",
+      "current_position": 84.0,
+      "annual_volatility": "7%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.3% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "6.5% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LQD",
+      "yahoo_url": "https://finance.yahoo.com/quote/LQD/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "-8.02%",
+    "sharpe_ratio": "-0.93",
+    "max_drawdown": "-15.50%",
+    "win_rate": "50.80%",
+    "alpha": "-12.94%"
+  }
+}

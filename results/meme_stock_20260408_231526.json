@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.3886355127407164,
+    "cagr": -0.11604861443844006,
+    "annual_volatility": 0.22143944208826033,
+    "sharpe_ratio": -0.6227083850749041,
+    "sortino_ratio": -0.8051243080855238,
+    "calmar_ratio": -0.28638847194629485,
+    "max_drawdown": -0.4052139866167592,
+    "max_drawdown_date": "2025-06-05",
+    "win_rate": 0.06387225548902195,
+    "profit_factor": 0.7977394384931845,
+    "num_trading_days": 1002,
+    "skewness": -1.870130834885505,
+    "kurtosis": 46.94629828852326,
+    "best_day": 0.11281343015723944,
+    "worst_day": -0.1467887376998952,
+    "avg_daily_return": -0.0003915413966320242,
+    "black_swan_resilience": 53.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.2247163116368145,
+    "beta": 0.17197505222492393,
+    "information_ratio": -0.8473980460508742,
+    "tracking_error": 0.26518389165995726
+  },
+  "trade_metrics": {
+    "num_trades": 305,
+    "num_buys": 152,
+    "num_sells": 153,
+    "total_commission": 0.0,
+    "total_slippage": 5906.043082009316,
+    "total_transaction_costs": 5906.043082009316,
+    "avg_trade_size": 19364.075678719066
+  },
+  "final_positions": {
+    "GME": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PLTR": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SOFI": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HOOD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RIVN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "COIN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MARA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RIOT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSTR": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "YOLO: volume spikes, dip buys, short squeezes",
+  "horizon": "4Y (2022-2025)"
+}

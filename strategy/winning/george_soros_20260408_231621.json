@@ -1,0 +1,93 @@
+{
+  "strategy_name": "george_soros",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:16:21.486222",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.7%",
+    "stop_loss": "22.4%",
+    "take_profit_target": "5.7%",
+    "max_drawdown_tolerance": "18.6%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "SPY",
+      "action": "BUY",
+      "current_position": 40.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "16.0% below entry",
+      "take_profit": "4.1% above entry",
+      "position_size": "9.4% of portfolio",
+      "trailing_stop": "11.2% trailing after 1.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SPY",
+      "yahoo_url": "https://finance.yahoo.com/quote/SPY/"
+    },
+    {
+      "symbol": "QQQ",
+      "action": "BUY",
+      "current_position": 45.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "20.3% below entry",
+      "take_profit": "5.2% above entry",
+      "position_size": "7.4% of portfolio",
+      "trailing_stop": "14.2% trailing after 2.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=QQQ",
+      "yahoo_url": "https://finance.yahoo.com/quote/QQQ/"
+    },
+    {
+      "symbol": "META",
+      "action": "BUY",
+      "current_position": 42.0,
+      "annual_volatility": "36%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "33.8% below entry",
+      "take_profit": "8.7% above entry",
+      "position_size": "4.5% of portfolio",
+      "trailing_stop": "23.6% trailing after 3.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=META",
+      "yahoo_url": "https://finance.yahoo.com/quote/META/"
+    },
+    {
+      "symbol": "GLD",
+      "action": "BUY",
+      "current_position": 92.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "21.6% below entry",
+      "take_profit": "5.5% above entry",
+      "position_size": "7.0% of portfolio",
+      "trailing_stop": "15.1% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "XLF",
+      "action": "BUY",
+      "current_position": 502.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "16.9% below entry",
+      "take_profit": "4.3% above entry",
+      "position_size": "8.9% of portfolio",
+      "trailing_stop": "11.8% trailing after 1.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XLF",
+      "yahoo_url": "https://finance.yahoo.com/quote/XLF/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "54.25%",
+    "sharpe_ratio": "0.54",
+    "max_drawdown": "-18.63%",
+    "win_rate": "45.71%",
+    "alpha": "0.61%"
+  }
+}

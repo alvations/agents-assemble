@@ -1,0 +1,67 @@
+{
+  "strategy_name": "growth",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:15:43.688138",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "2.1%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "36.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "NET",
+      "action": "BUY",
+      "current_position": 116.0,
+      "annual_volatility": "50%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.6% above entry",
+      "position_size": "1.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NET",
+      "yahoo_url": "https://finance.yahoo.com/quote/NET/"
+    },
+    {
+      "symbol": "SNOW",
+      "action": "BUY",
+      "current_position": 104.0,
+      "annual_volatility": "54%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.2% above entry",
+      "position_size": "0.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SNOW",
+      "yahoo_url": "https://finance.yahoo.com/quote/SNOW/"
+    },
+    {
+      "symbol": "PLTR",
+      "action": "BUY",
+      "current_position": 126.0,
+      "annual_volatility": "64%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "13.3% above entry",
+      "position_size": "0.8% of portfolio",
+      "trailing_stop": "28.0% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PLTR",
+      "yahoo_url": "https://finance.yahoo.com/quote/PLTR/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "14.45%",
+    "sharpe_ratio": "0.09",
+    "max_drawdown": "-36.36%",
+    "win_rate": "41.02%",
+    "alpha": "-7.43%"
+  }
+}

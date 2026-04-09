@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.04394552963821874,
+    "cagr": 0.010839674214377926,
+    "annual_volatility": 0.11968895156313113,
+    "sharpe_ratio": -0.17747804127463376,
+    "sortino_ratio": -0.2427752069114857,
+    "calmar_ratio": 0.056859328094536726,
+    "max_drawdown": -0.19064020940162052,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.5029940119760479,
+    "profit_factor": 1.0268266413335636,
+    "num_trading_days": 1002,
+    "skewness": -0.2350230713898288,
+    "kurtosis": 5.700586034890454,
+    "best_day": 0.05377453539038912,
+    "worst_day": -0.049909847830797105,
+    "avg_daily_return": 7.13555743561873e-05,
+    "black_swan_resilience": 74.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.09782802298399651,
+    "beta": 0.48175074262728607,
+    "information_ratio": -0.7855272106292772,
+    "tracking_error": 0.12453804484459241
+  },
+  "trade_metrics": {
+    "num_trades": 497,
+    "num_buys": 260,
+    "num_sells": 237,
+    "total_commission": 0.0,
+    "total_slippage": 3952.328379238126,
+    "total_transaction_costs": 3952.328379238126,
+    "avg_trade_size": 7952.370984382553
+  },
+  "final_positions": {
+    "LOW": {
+      "qty": 64.0,
+      "avg_cost": 245.2884063720703,
+      "realized_pnl": -4068.6023864746094
+    },
+    "MSFT": {
+      "qty": 32.0,
+      "avg_cost": 513.0603313446045,
+      "realized_pnl": 2679.7552490234375
+    },
+    "MCD": {
+      "qty": 52.0,
+      "avg_cost": 301.88360595703125,
+      "realized_pnl": -1215.4419860839837
+    },
+    "AMZN": {
+      "qty": 67.0,
+      "avg_cost": 233.8800048828125,
+      "realized_pnl": 6844.029785156252
+    }
+  },
+  "source": "famous",
+  "description": "Growth at reasonable price: moderate momentum, low vol, buy what you know",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.058868152079049496,
+    "cagr": -0.015094567845787443,
+    "annual_volatility": 0.11801573740964127,
+    "sharpe_ratio": -0.40259654940133016,
+    "sortino_ratio": -0.5558267505756681,
+    "calmar_ratio": -0.059698760030987674,
+    "max_drawdown": -0.25284558402808277,
+    "max_drawdown_date": "2022-10-11",
+    "win_rate": 0.27245508982035926,
+    "profit_factor": 0.9821326075504027,
+    "num_trading_days": 1002,
+    "skewness": -0.28770404181747644,
+    "kurtosis": 9.794924678970652,
+    "best_day": 0.043834296538392215,
+    "worst_day": -0.05211593508372414,
+    "avg_daily_return": -3.289271124117789e-05,
+    "black_swan_resilience": 70.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.12376226504416188,
+    "beta": 0.3578299543058244,
+    "information_ratio": -0.8133494630275776,
+    "tracking_error": 0.15216370166825274
+  },
+  "trade_metrics": {
+    "num_trades": 104,
+    "num_buys": 53,
+    "num_sells": 51,
+    "total_commission": 0.0,
+    "total_slippage": 1427.236354297638,
+    "total_transaction_costs": 1427.236354297638,
+    "avg_trade_size": 13723.426483631134
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PFE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "C": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WFC": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Deep value contrarian: buy capitulation, bet against consensus",
+  "horizon": "4Y (2022-2025)"
+}

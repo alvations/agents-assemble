@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.12770708781511542,
+    "cagr": 0.030587574570861698,
+    "annual_volatility": 0.11878314380410172,
+    "sharpe_ratio": -0.016492776933468987,
+    "sortino_ratio": -0.023762539223691537,
+    "calmar_ratio": 0.1645199649816961,
+    "max_drawdown": -0.18592013786451245,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5089820359281437,
+    "profit_factor": 1.0590256137296072,
+    "num_trading_days": 1002,
+    "skewness": 0.3317236900163507,
+    "kurtosis": 4.52256598358035,
+    "best_day": 0.05234842275889662,
+    "worst_day": -0.03551946466377487,
+    "avg_daily_return": 0.00014787579971897225,
+    "black_swan_resilience": 81.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.07808012262751274,
+    "beta": 0.3963676667706877,
+    "information_ratio": -0.5409382402827428,
+    "tracking_error": 0.14434202800434492
+  },
+  "trade_metrics": {
+    "num_trades": 323,
+    "num_buys": 169,
+    "num_sells": 154,
+    "total_commission": 0.0,
+    "total_slippage": 1884.3565334053042,
+    "total_transaction_costs": 1884.3565334053042,
+    "avg_trade_size": 5833.921156053572
+  },
+  "final_positions": {
+    "T": {
+      "qty": 669.0,
+      "avg_cost": 24.245742797851562,
+      "realized_pnl": -973.5655765533452
+    },
+    "VZ": {
+      "qty": 426.0,
+      "avg_cost": 38.79688262939453,
+      "realized_pnl": -2088.846755981447
+    },
+    "AMT": {
+      "qty": 98.0,
+      "avg_cost": 194.6960902311364,
+      "realized_pnl": 3350.544204711915
+    },
+    "XLRE": {
+      "qty": 423.0,
+      "avg_cost": 40.120754133725,
+      "realized_pnl": 2157.270069122311
+    },
+    "SO": {
+      "qty": 193.0,
+      "avg_cost": 88.31629180908203,
+      "realized_pnl": 1570.836006164551
+    }
+  },
+  "source": "famous",
+  "description": "Patient infrastructure/utility value: steady cash flows, geographic diversity",
+  "horizon": "4Y (2022-2025)"
+}

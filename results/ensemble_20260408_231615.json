@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.0018125200005251196,
+    "cagr": -0.0004546828880001019,
+    "annual_volatility": 0.008600495265169473,
+    "sharpe_ratio": -4.609393516847319,
+    "sortino_ratio": -5.7718045852612265,
+    "calmar_ratio": -0.03818676613196554,
+    "max_drawdown": -0.011906818357669047,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.013972055888223553,
+    "profit_factor": 0.9463841683074431,
+    "num_trading_days": 1002,
+    "skewness": -0.5140482127024404,
+    "kurtosis": 109.26480426724947,
+    "best_day": 0.006752859562422886,
+    "worst_day": -0.006412296116705685,
+    "avg_daily_return": -1.663895609325387e-06,
+    "black_swan_resilience": 80.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.10912238008637454,
+    "beta": 0.00898196994513847,
+    "information_ratio": -0.6106004418536656,
+    "tracking_error": 0.17871323472203848
+  },
+  "trade_metrics": {
+    "num_trades": 12,
+    "num_buys": 6,
+    "num_sells": 6,
+    "total_commission": 0.0,
+    "total_slippage": 84.07641812038422,
+    "total_transaction_costs": 84.07641812038422,
+    "avg_trade_size": 7006.368176698685
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AVGO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NFLX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CRM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PLTR": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "Multi-strategy consensus: momentum + value + growth + dividend",
+  "horizon": "4Y (2022-2025)"
+}

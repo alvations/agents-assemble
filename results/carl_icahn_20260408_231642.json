@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.19044546514732308,
+    "cagr": 0.04467051879977291,
+    "annual_volatility": 0.0812924010627497,
+    "sharpe_ratio": 0.09721953260984166,
+    "sortino_ratio": 0.15902178496707864,
+    "calmar_ratio": 0.6056640206253328,
+    "max_drawdown": -0.07375461853199028,
+    "max_drawdown_date": "2022-05-20",
+    "win_rate": 0.16666666666666666,
+    "profit_factor": 1.213299405671372,
+    "num_trading_days": 1002,
+    "skewness": 1.865409757795956,
+    "kurtosis": 20.135940674422503,
+    "best_day": 0.0453470586355087,
+    "worst_day": -0.027663509522494967,
+    "avg_daily_return": 0.00018701180420416884,
+    "black_swan_resilience": 95.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.06399717839860153,
+    "beta": 0.14110657945749203,
+    "information_ratio": -0.37011313850409877,
+    "tracking_error": 0.17291247389179837
+  },
+  "trade_metrics": {
+    "num_trades": 51,
+    "num_buys": 27,
+    "num_sells": 24,
+    "total_commission": 0.0,
+    "total_slippage": 1295.0697133712772,
+    "total_transaction_costs": 1295.0697133712772,
+    "avg_trade_size": 25393.523791593663
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "OXY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DVN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "C": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Concentrated deep value: buy beaten-down large caps showing recovery",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.06552506925067902,
+    "cagr": -0.016845631896076685,
+    "annual_volatility": 0.04986792672469646,
+    "sharpe_ratio": -1.1037803576210197,
+    "sortino_ratio": -1.8374486606791687,
+    "calmar_ratio": -0.11917235445489789,
+    "max_drawdown": -0.14135519914102312,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.11976047904191617,
+    "profit_factor": 0.8712578975855894,
+    "num_trading_days": 1002,
+    "skewness": 7.377843939026351,
+    "kurtosis": 158.57582392724677,
+    "best_day": 0.061865198063002724,
+    "worst_day": -0.023475921602135852,
+    "avg_daily_return": -6.277568480399223e-05,
+    "black_swan_resilience": 92.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.12551332909445112,
+    "beta": 0.13456007092280473,
+    "information_ratio": -0.7753956328660191,
+    "tracking_error": 0.16187004901037225
+  },
+  "trade_metrics": {
+    "num_trades": 692,
+    "num_buys": 400,
+    "num_sells": 292,
+    "total_commission": 0.0,
+    "total_slippage": 7598.431710681919,
+    "total_transaction_costs": 7598.431710681919,
+    "avg_trade_size": 10980.392645494097
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "Mean-reversion: buy oversold, sell overbought, size by vol",
+  "horizon": "4Y (2022-2025)"
+}

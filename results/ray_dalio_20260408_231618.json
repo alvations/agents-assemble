@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.16354728704878085,
+    "cagr": 0.03870245911219938,
+    "annual_volatility": 0.09078308437195305,
+    "sharpe_ratio": 0.032927816309321435,
+    "sortino_ratio": 0.046240413949972095,
+    "calmar_ratio": 0.22799196523464133,
+    "max_drawdown": -0.1697536098360667,
+    "max_drawdown_date": "2022-09-27",
+    "win_rate": 0.5279441117764471,
+    "profit_factor": 1.0819324590142583,
+    "num_trading_days": 1002,
+    "skewness": 0.08012507692721678,
+    "kurtosis": 2.819553583633968,
+    "best_day": 0.032843347618723984,
+    "worst_day": -0.028404967891640265,
+    "avg_daily_return": 0.0001675121196412362,
+    "black_swan_resilience": 79.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.06996523808617505,
+    "beta": 0.30519567438804707,
+    "information_ratio": -0.4841527882439811,
+    "tracking_error": 0.1445106581745372
+  },
+  "trade_metrics": {
+    "num_trades": 231,
+    "num_buys": 122,
+    "num_sells": 109,
+    "total_commission": 0.0,
+    "total_slippage": 495.70049722290025,
+    "total_transaction_costs": 495.70049722290025,
+    "avg_trade_size": 2145.8895983675343
+  },
+  "final_positions": {
+    "IEF": {
+      "qty": 382.0,
+      "avg_cost": 92.10718386855746,
+      "realized_pnl": -2153.626830021104
+    },
+    "TLT": {
+      "qty": 364.0,
+      "avg_cost": 96.5949019109427,
+      "realized_pnl": -4293.626572336798
+    },
+    "VTI": {
+      "qty": 64.0,
+      "avg_cost": 267.4933438408214,
+      "realized_pnl": 5443.683991164129
+    },
+    "GLD": {
+      "qty": 27.0,
+      "avg_cost": 283.15928089154283,
+      "realized_pnl": 7491.62020992615
+    },
+    "XLE": {
+      "qty": 238.0,
+      "avg_cost": 40.524208430315255,
+      "realized_pnl": 4582.675928314444
+    }
+  },
+  "source": "famous",
+  "description": "Risk parity: balance across growth/inflation regimes via ETFs",
+  "horizon": "4Y (2022-2025)"
+}

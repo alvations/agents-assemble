@@ -1,0 +1,53 @@
+{
+  "metrics": {
+    "total_return": 0.08388222967895476,
+    "cagr": 0.02039784722406046,
+    "annual_volatility": 0.0805434393670214,
+    "sharpe_ratio": -0.19597535814057712,
+    "sortino_ratio": -0.33086790621758794,
+    "calmar_ratio": 0.24676914453066318,
+    "max_drawdown": -0.08265963422151368,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.05888223552894212,
+    "profit_factor": 1.1803620195951539,
+    "num_trading_days": 1002,
+    "skewness": 5.938967320353684,
+    "kurtosis": 136.06500137576458,
+    "best_day": 0.09499992124551504,
+    "worst_day": -0.03872586227354902,
+    "avg_daily_return": 9.301284145862044e-05,
+    "black_swan_resilience": 95.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08826984997431397,
+    "beta": 0.2494879386014054,
+    "information_ratio": -0.5852987604067511,
+    "tracking_error": 0.1508116127103553
+  },
+  "trade_metrics": {
+    "num_trades": 174,
+    "num_buys": 84,
+    "num_sells": 90,
+    "total_commission": 0.0,
+    "total_slippage": 1380.9690487060548,
+    "total_transaction_costs": 1380.9690487060548,
+    "avg_trade_size": 7936.603728195717
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "QQQ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IWM": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy SPY/QQQ when vol spikes >30 (proxy). 81.5% win at 3 weeks",
+  "horizon": "4Y (2022-2025)"
+}
