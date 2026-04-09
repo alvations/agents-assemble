@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.5057770174725669,
+    "cagr": 0.14671907121153005,
+    "annual_volatility": 0.18711141313894716,
+    "sharpe_ratio": 0.6172444367849799,
+    "sortino_ratio": 0.8844777673012829,
+    "calmar_ratio": 1.0108392132398625,
+    "max_drawdown": -0.1451458048815475,
+    "max_drawdown_date": "2023-03-17",
+    "win_rate": 0.5345744680851063,
+    "profit_factor": 1.1549967059932928,
+    "num_trading_days": 752,
+    "skewness": -0.27383649736163496,
+    "kurtosis": 4.852947899818499,
+    "best_day": 0.06407645257193417,
+    "worst_day": -0.07273957852370905,
+    "avg_daily_return": 0.0006139573184221799,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.060094492111765874,
+    "beta": 0.41418731659826485,
+    "information_ratio": 0.2994589643808418,
+    "tracking_error": 0.20067688484803456
+  },
+  "trade_metrics": {
+    "num_trades": 201,
+    "num_buys": 95,
+    "num_sells": 106,
+    "total_commission": 0.0,
+    "total_slippage": 1235.8800595707892,
+    "total_transaction_costs": 1235.8800595707892,
+    "avg_trade_size": 6148.657012789997
+  },
+  "final_positions": {
+    "KNSL": {
+      "qty": 44.0,
+      "avg_cost": 498.1429443359375,
+      "realized_pnl": 7031.45152282715
+    },
+    "RLI": {
+      "qty": 263.0,
+      "avg_cost": 66.94321105502391,
+      "realized_pnl": -300.3872289789123
+    },
+    "WRB": {
+      "qty": 312.0,
+      "avg_cost": 48.08694731541945,
+      "realized_pnl": 9676.003291018047
+    },
+    "RYAN": {
+      "qty": 299.0,
+      "avg_cost": 73.2369613647461,
+      "realized_pnl": 7163.262928009031
+    },
+    "PLMR": {
+      "qty": 175.0,
+      "avg_cost": 109.02999877929688,
+      "realized_pnl": 3846.688816070557
+    },
+    "OSCR": {
+      "qty": 1038.0,
+      "avg_cost": 18.05033685239546,
+      "realized_pnl": 15018.461085720299
+    },
+    "HCI": {
+      "qty": 157.0,
+      "avg_cost": 106.09407308827276,
+      "realized_pnl": 12324.339886540947
+    },
+    "ROOT": {
+      "qty": 193.0,
+      "avg_cost": 71.01000213623047,
+      "realized_pnl": -578.9509782791156
+    }
+  },
+  "source": "unconventional",
+  "description": "Niche insurers with 25%+ ROE: construction, cyber, hurricane \u2014 nobody else will touch these risks"
+}

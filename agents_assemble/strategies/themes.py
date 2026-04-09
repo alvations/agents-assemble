@@ -835,6 +835,337 @@ class RoboticsAutonomous(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 13. Semiconductor Value (not AI hype — supply chain deep value)
+# ---------------------------------------------------------------------------
+class SemiconductorValue(BasePersona):
+    """Buy the semiconductor PICKS AND SHOVELS at value prices, not AI hype.
+
+    Everyone chases NVDA. Smart money buys the companies NVDA depends on:
+    TSMC (makes the chips), ASML (makes the machines that make the chips),
+    memory companies at cyclical lows (WDC, MU), and equipment companies (LRCX, KLAC).
+
+    Edge: Semi cycles are predictable — buy at low RSI when inventory clears.
+    Memory is a commodity cycle: oversupply → crash → consolidation → undersupply → boom.
+    Equipment companies have 80%+ recurring service revenue nobody prices in.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Semiconductor Value (Picks & Shovels)",
+            description="Semi supply chain at value prices: TSMC, ASML, memory at cyclical lows, equipment recurring revenue",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "TSM",    # TSMC — makes 90% of advanced chips
+                "ASML",   # ASML — monopoly on EUV lithography
+                "AVGO",   # Broadcom — custom AI chips + VMware
+                "SSNLF",  # Samsung (OTC) — memory + foundry
+                "WDC",    # Western Digital — NAND flash, cyclical low
+                "MU",     # Micron — DRAM/NAND, HBM for AI
+                "LRCX",   # Lam Research — etch equipment
+                "KLAC",   # KLA Corp — inspection equipment
+                "AMAT",   # Applied Materials — deposition equipment
+                "CRSR",   # Corsair Gaming — peripherals, undervalued
+                "ON",     # ON Semi — auto/industrial chips
+                "MRVL",   # Marvell — data center networking
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # VALUE: buy below SMA200 (cyclical low)
+            if price < sma200 * 0.90:
+                score += 3.0  # Deep cyclical discount
+            elif price < sma200:
+                score += 1.5
+            # Also ride uptrends (secular growth)
+            elif price > sma200 and sma50 is not None and sma50 > sma200:
+                score += 1.5
+            # RSI value zone
+            if rsi < 35:
+                score += 2.5  # Max fear in semis = best entry
+            elif rsi < 50:
+                score += 1.0
+            # MACD reversal
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if score >= 2.5:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 14. Subscription Monopoly (Recurring Revenue Moats)
+# ---------------------------------------------------------------------------
+class SubscriptionMonopoly(BasePersona):
+    """Companies with sticky subscriptions that customers never cancel.
+
+    CRM (Salesforce): once your sales team is on it, switching cost is enormous.
+    ADP: every company's payroll — 40M employees processed, never switches.
+    NFLX: 260M subscribers, content moat deepening.
+    SPOT: 600M users, podcasts + music + audiobooks ecosystem.
+    ADBE: every designer/marketer on Creative Cloud.
+
+    Edge: Subscription = predictable revenue + negative churn (upselling).
+    These trade at high multiples but actually DESERVE it because cash flow
+    visibility is 95%+. Buy dips — they always recover.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Subscription Monopoly (Recurring Revenue)",
+            description="Sticky subscriptions nobody cancels: CRM, ADP, NFLX, SPOT — predictable cash flow machines",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "CRM",    # Salesforce — enterprise CRM monopoly
+                "ADP",    # Automatic Data Processing — payroll monopoly
+                "NFLX",   # Netflix — content + scale moat
+                "SPOT",   # Spotify — audio ecosystem
+                "ADBE",   # Adobe — Creative Cloud lock-in
+                "INTU",   # Intuit — TurboTax + QuickBooks (tax monopoly)
+                "HRB",    # H&R Block — tax prep for masses
+                "VEEV",   # Veeva Systems — pharma CRM monopoly
+                "HUBS",   # HubSpot — SMB marketing automation
+                "ZM",     # Zoom — enterprise video (sticky post-COVID)
+                "PANW",   # Palo Alto — cybersecurity subscription pivot
+                "FTNT",   # Fortinet — network security subscriptions
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Uptrend = growing subscribers
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            # Buy pullbacks (subscriptions = reliable recovery)
+            if 30 < rsi < 45 and price > sma200:
+                score += 2.5
+            elif 45 <= rsi < 60:
+                score += 1.0
+            # Low vol preferred (stable subscription base)
+            vol = inds["vol_20"]
+            if vol is not None and not _is_missing(vol) and vol < 0.020:
+                score += 0.5
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 15. Contrastive Pairs (Long Value vs Short Hype within same sector)
+# ---------------------------------------------------------------------------
+class ContrastivePairs(BasePersona):
+    """Long the cheap, short the expensive within the same theme.
+
+    Within every hot sector, there's a value stock and a hype stock.
+    This strategy goes long the undervalued one and avoids/shorts the overvalued one.
+    Since we can't short in our backtester, we just concentrate in the VALUE side
+    of each pair and avoid the hype side entirely.
+
+    Pairs: WDC (value) vs NVDA (hype), HRB (value) vs SNOW (hype),
+    ADP (value) vs WDAY (hype), NFLX (value) vs ROKU (hype).
+
+    Edge: Mean reversion within sectors. The value side catches up.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Contrastive Pairs (Value Side of Hype Sectors)",
+            description="Long the cheap stock in every hot sector: WDC not NVDA, HRB not SNOW, ADP not WDAY",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Semi value (not NVDA)
+                "WDC", "MU", "ON",
+                # Tax/payroll value (not cloud hype)
+                "HRB", "ADP", "PAYX",
+                # Streaming value (not money-burners)
+                "NFLX", "WBD",
+                # Enterprise value (not overpriced SaaS)
+                "ORCL", "IBM",
+                # Fintech value (not speculative)
+                "FISV", "FIS",
+                # Hardware value (not meme)
+                "HPQ", "DELL",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # VALUE signal: below SMA200 or recently recovered
+            if price < sma200:
+                score += 2.0  # In value zone
+                if rsi < 40:
+                    score += 2.0  # Deep value
+            # Momentum recovery signal
+            if price > sma200:
+                score += 1.0
+            if sma50 is not None and price > sma50 > sma200:
+                score += 1.5  # Breaking out of value zone
+            # MACD reversal from below
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if 40 < rsi < 65:
+                score += 0.5
+            if score >= 2.5:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 16. Global Financial Infrastructure
+# ---------------------------------------------------------------------------
+class GlobalFinancialInfra(BasePersona):
+    """Payment rails + global banks + trading houses = backbone of world finance.
+
+    Combines US payment monopolies (V, MA, AXP), US mega-banks (JPM, GS, BK),
+    Japanese trading houses (Marubeni/MRBEY, Mitsubishi/MITSY),
+    and Singapore banks (D05.SI, U11.SI, O39.SI).
+
+    Edge: Cross-geography diversification with correlated upside (global growth)
+    but uncorrelated downside (different regulatory/economic cycles).
+    Singapore banks yield 5%+ with pristine asset quality. Japanese sogo shoshas
+    trade at book value with 15%+ ROE. US payments grow with global digitization.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Global Financial Infrastructure",
+            description="Payment rails + mega-banks + Japanese trading houses + Singapore banks — backbone of world finance",
+            risk_tolerance=0.5,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # US payment monopolies
+                "V", "MA", "AXP",
+                # US mega-banks
+                "JPM", "GS", "BK",
+                # Capital One (consumer credit cycle play)
+                "COF",
+                # Japanese sogo shoshas (Buffett-approved)
+                "MRBEY",  # Marubeni
+                "MITSY",  # Mitsubishi Corp
+                "ITOCY",  # Itochu
+                # Singapore banks (5%+ dividend, AAA country)
+                "D05.SI",  # DBS
+                "U11.SI",  # UOB
+                "O39.SI",  # OCBC
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Uptrend
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            # Buy dips in financials (they recover with rate cycles)
+            if 30 < rsi < 50 and price > sma200:
+                score += 2.0
+            elif 50 <= rsi < 65:
+                score += 0.5
+            # MACD momentum
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -848,6 +1179,10 @@ THEME_STRATEGIES = {
     "aging_population": AgingPopulation,
     "glp1_obesity": GLP1Obesity,
     "robotics_autonomous": RoboticsAutonomous,
+    "semiconductor_value": SemiconductorValue,
+    "subscription_monopoly": SubscriptionMonopoly,
+    "contrastive_pairs": ContrastivePairs,
+    "global_financial_infra": GlobalFinancialInfra,
 }
 
 

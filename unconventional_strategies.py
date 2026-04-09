@@ -1043,6 +1043,383 @@ class BoringCompounder(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 15. Billboard & Outdoor Media Monopoly
+# ---------------------------------------------------------------------------
+class BillboardMonopoly(BasePersona):
+    """Lamar, Clear Channel, Outfront — they OWN the physical ad space.
+
+    Billboard companies have irreplaceable physical assets (you can't build
+    new billboards on highways — permits are frozen). Digital conversion
+    doubles revenue per board. Inflation = higher ad rates on same asset.
+    LAMR has 50-year track record of raising dividends.
+
+    Also includes airport/transit ad monopolies and experiential venues.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Billboard & Outdoor Media Monopoly",
+            description="Irreplaceable physical ad assets: billboards, airports, transit — frozen permits = moat",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "LAMR",   # Lamar Advertising — #1 US billboard operator
+                "CCO",    # Clear Channel Outdoor — #2, post-bankruptcy lean
+                "OUT",    # Outfront Media — NYC subway/transit ads
+                "MSGS",   # MSG Sports — owns MSG arena (irreplaceable NYC asset)
+                "LYV",    # Live Nation — owns Ticketmaster + venues
+                "SPOT",   # Spotify — audio ad monopoly (different but related)
+                "MGNI",   # Magnite — programmatic outdoor/CTV ads
+                "PUBM",   # PubMatic — ad infrastructure
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            if 35 < rsi < 55 and price > sma200:
+                score += 2.0
+            elif 55 <= rsi < 70:
+                score += 0.5
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 16. Specialty Insurance & Niche Underwriters
+# ---------------------------------------------------------------------------
+class SpecialtyInsurance(BasePersona):
+    """Kinsale, RLI, Palomar, HCI — niche underwriters with massive ROE.
+
+    These aren't your parent's insurance companies. They specialize in
+    risks nobody else will touch: construction defect, cannabis, cyber,
+    hurricane. KNSL has 25%+ ROE because they price risk better than
+    generalists. Small enough to grow 20%+ for years. Most people
+    have never heard of any of them.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Specialty Insurance Niche Underwriters",
+            description="Niche insurers with 25%+ ROE: construction, cyber, hurricane — nobody else will touch these risks",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "KNSL",   # Kinsale Capital — E&S specialty, 25%+ ROE
+                "RLI",    # RLI Corp — niche casualty, 50+ year profitability streak
+                "PLMR",   # Palomar Holdings — earthquake/hurricane specialty
+                "HCI",    # HCI Group — Florida hurricane specialist
+                "RYAN",   # Ryan Specialty — wholesale specialty broker
+                "WRB",    # W.R. Berkley — specialty lines
+                "OSCR",   # Oscar Health — tech-enabled health insurance
+                "ROOT",   # Root Insurance — telematics-based auto
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            if price > sma200:
+                score += 2.5
+            sma50 = inds["sma_50"]
+            if sma50 is not None and price > sma50:
+                score += 1.0
+            if 30 < rsi < 50 and price > sma200:
+                score += 2.0
+            elif 50 <= rsi < 65:
+                score += 0.5
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 17. Uranium & Nuclear Renaissance
+# ---------------------------------------------------------------------------
+class UraniumRenaissance(BasePersona):
+    """UUUU, CCJ, LEU, NXE, UEC — nuclear is back and uranium is scarce.
+
+    Post-Fukushima uranium mines closed. Now 60+ reactors being built globally,
+    existing reactors extending life, and SMRs coming online. Supply deficit
+    is structural — takes 10+ years to open a new mine. UUUU is the ONLY
+    US uranium producer AND processes rare earths.
+
+    Edge: Supply/demand imbalance takes years to fix. Price must go up
+    for mines to be economically viable. This is a multi-year secular trend
+    that most retail investors are completely unaware of.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Uranium & Nuclear Renaissance",
+            description="Structural uranium supply deficit: only US producer (UUUU), SMRs, 60+ reactors building",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "UUUU",   # Energy Fuels — ONLY US uranium + rare earth producer
+                "CCJ",    # Cameco — largest pure-play uranium miner
+                "LEU",    # Centrus Energy — HALEU enrichment monopoly
+                "UEC",    # Uranium Energy Corp
+                "NXE",    # NexGen Energy — flagship Arrow deposit
+                "DNN",    # Denison Mines — ISR uranium
+                "URA",    # Global X Uranium ETF
+                "SMR",    # NuScale Power — SMR technology leader
+                "OKLO",   # Oklo — micro-reactor startup
+                "VST",    # Vistra — nuclear fleet operator
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "volume_sma_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Secular uptrend
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and sma50 > sma200:
+                score += 1.5
+            # MACD momentum
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            # RSI: buy momentum, not overbought
+            if 45 < rsi < 75:
+                score += 1.0
+            # Volume confirmation
+            vol_sma = inds["volume_sma_20"]
+            if vol_sma is not None and not _is_missing(vol_sma) and sym in data:
+                try:
+                    cur_vol = data[sym].loc[:date, "Volume"].iloc[-1]
+                    if cur_vol > vol_sma * 1.3:
+                        score += 1.0
+                except Exception:
+                    pass
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 18. Fallen Luxury & Aspirational Brands
+# ---------------------------------------------------------------------------
+class FallenLuxury(BasePersona):
+    """Kering, Tapestry/Coach, Capri/Versace, Burberry — luxury selloff.
+
+    Luxury sold off hard in 2023-2024 on China slowdown + "quiet luxury"
+    trend shift. But these brands have 100+ year moats, 60%+ gross margins,
+    and pricing power. TPR (Coach) just won the Capri acquisition fight.
+    PPRUY (Kering/Gucci) is at 2017 prices despite 2x the revenue.
+
+    Edge: Luxury always comes back. Brand equity doesn't depreciate.
+    These are trading at decade-low multiples on cyclical fears.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Fallen Luxury & Aspirational Brands",
+            description="Luxury brands at decade-low multiples: Kering, Coach, Burberry — brand equity doesn't depreciate",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "TPR",    # Tapestry (Coach, Kate Spade, Stuart Weitzman)
+                "CPRI",   # Capri Holdings (Versace, Jimmy Choo, Michael Kors)
+                "PPRUY",  # Kering (Gucci, YSL, Balenciaga, Bottega Veneta)
+                "BURBY",  # Burberry
+                "RL",     # Ralph Lauren (turnaround working)
+                "LVMUY",  # LVMH (if it dips)
+                "HESAY",  # Hermes (ultimate luxury moat)
+                "RMS.PA", # Richemont if needed
+                "EL",     # Estee Lauder (China recovery play)
+                "LULU",   # Lululemon (aspirational athleisure)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "bb_lower"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Deep discount = opportunity (contrarian luxury)
+            if price < sma200 * 0.85:
+                score += 3.0
+            elif price < sma200:
+                score += 1.5
+            elif price > sma200:
+                score += 0.5  # Already recovering
+            # RSI oversold
+            if rsi < 35:
+                score += 2.5
+            elif rsi < 45:
+                score += 1.5
+            elif rsi > 50:
+                score += 0.5
+            # Bollinger band support
+            bb_low = inds["bb_lower"]
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.03:
+                score += 1.0
+            if score >= 2.5:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 19. Muni Bond & Tax-Free Income
+# ---------------------------------------------------------------------------
+class MuniBondIncome(BasePersona):
+    """MUB, HYD, VTEB — municipal bonds are the ultimate stealth income play.
+
+    Most retail investors don't know muni bond interest is FEDERAL TAX FREE
+    (and state tax free if in-state). A 4% muni yield = 6%+ taxable equivalent
+    for high earners. Munis almost never default (<0.1% historically).
+
+    Mix with high-yield munis (HYD) and closed-end funds (NUV, NEA) that
+    trade at discounts to NAV for extra yield + capital appreciation.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Muni Bond Tax-Free Income",
+            description="Tax-free municipal bonds: 4% muni = 6%+ taxable. Near-zero default risk.",
+            risk_tolerance=0.2,
+            max_position_size=0.20,
+            max_positions=6,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "MUB",    # iShares National Muni Bond ETF
+                "VTEB",   # Vanguard Tax-Exempt Bond ETF
+                "HYD",    # VanEck High Yield Muni ETF (higher yield)
+                "TFI",    # SPDR Nuveen Bloomberg Municipal Bond ETF
+                "NUV",    # Nuveen Municipal Value Fund (closed-end, discount to NAV)
+                "NEA",    # Nuveen AMT-Free Quality Muni (closed-end)
+                "SHM",    # SPDR Short-Term Muni Bond (low duration)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        # For bonds: buy when price dips (yields rise), simple mean-reversion
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Buy when price is low (yields are high) — income play
+            if price < sma200:
+                score += 2.0  # Below long-term = higher yield
+            if rsi < 40:
+                score += 2.0  # Oversold = best yield entry
+            elif rsi < 50:
+                score += 1.0
+            # Also hold in uptrend (rates falling = price rising)
+            if price > sma200:
+                score += 1.0
+            if sma50 is not None and price > sma50:
+                score += 0.5
+            score += 1.0  # Always some allocation (it's income)
+            scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
 UNCONVENTIONAL_STRATEGIES = {
     "sell_in_may": SellInMayGoAway,
     "turn_of_month": TurnOfMonth,
@@ -1058,6 +1435,11 @@ UNCONVENTIONAL_STRATEGIES = {
     "beaten_down_staples": BeatenDownStaples,
     "insurance_float": InsuranceFloat,
     "boring_compounder": BoringCompounder,
+    "billboard_monopoly": BillboardMonopoly,
+    "specialty_insurance": SpecialtyInsurance,
+    "uranium_renaissance": UraniumRenaissance,
+    "fallen_luxury": FallenLuxury,
+    "muni_bond_income": MuniBondIncome,
 }
 
 

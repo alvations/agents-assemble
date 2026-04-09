@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.024154479179226085,
+    "cagr": 0.008015061984726568,
+    "annual_volatility": 0.19157885190666235,
+    "sharpe_ratio": -0.06935736298716869,
+    "sortino_ratio": -0.10889239275061355,
+    "calmar_ratio": 0.028601117747889475,
+    "max_drawdown": -0.28023597033434167,
+    "max_drawdown_date": "2024-08-12",
+    "win_rate": 0.4715762273901809,
+    "profit_factor": 1.0264597004968719,
+    "num_trading_days": 774,
+    "skewness": 1.171797041762549,
+    "kurtosis": 6.985991733653312,
+    "best_day": 0.0758727218350721,
+    "worst_day": -0.04764455322005878,
+    "avg_daily_return": 0.00010292206925016989,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08078240797320113,
+    "beta": 0.6475014817943985,
+    "information_ratio": -0.4766241296715009,
+    "tracking_error": 0.16948870807039923
+  },
+  "trade_metrics": {
+    "num_trades": 917,
+    "num_buys": 508,
+    "num_sells": 409,
+    "total_commission": 0.0,
+    "total_slippage": 4640.663864326476,
+    "total_transaction_costs": 4640.663864326476,
+    "avg_trade_size": 5060.702142122657
+  },
+  "final_positions": {
+    "LULU": {
+      "qty": 31.0,
+      "avg_cost": 384.04998779296875,
+      "realized_pnl": 3604.47102355957
+    },
+    "EL": {
+      "qty": 169.0,
+      "avg_cost": 99.80099397551113,
+      "realized_pnl": -1763.8882856862201
+    },
+    "LVMUY": {
+      "qty": 95.0,
+      "avg_cost": 129.23606872558594,
+      "realized_pnl": 2333.4321670532177
+    },
+    "PPRUY": {
+      "qty": 516.0,
+      "avg_cost": 29.543066310952064,
+      "realized_pnl": -8417.944201624288
+    },
+    "CPRI": {
+      "qty": 600.0,
+      "avg_cost": 21.39884185577644,
+      "realized_pnl": 2445.985016496259
+    }
+  },
+  "source": "unconventional",
+  "description": "Luxury brands at decade-low multiples: Kering, Coach, Burberry \u2014 brand equity doesn't depreciate"
+}

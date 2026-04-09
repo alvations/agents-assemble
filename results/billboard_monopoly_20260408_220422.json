@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": -0.07629479493304514,
+    "cagr": -0.026195725025537575,
+    "annual_volatility": 0.1821967560829289,
+    "sharpe_ratio": -0.2700415661454416,
+    "sortino_ratio": -0.36822945842998067,
+    "calmar_ratio": -0.08067104314895032,
+    "max_drawdown": -0.32472277539748695,
+    "max_drawdown_date": "2023-08-21",
+    "win_rate": 0.523936170212766,
+    "profit_factor": 0.9903369027591905,
+    "num_trading_days": 752,
+    "skewness": -0.25915731983485396,
+    "kurtosis": 4.123506200974429,
+    "best_day": 0.057251179952063636,
+    "worst_day": -0.07096021402645813,
+    "avg_daily_return": -3.9590999745455995e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11282030412530175,
+    "beta": 0.5792461593709308,
+    "information_ratio": -0.6702011813995464,
+    "tracking_error": 0.16833796665309506
+  },
+  "trade_metrics": {
+    "num_trades": 170,
+    "num_buys": 78,
+    "num_sells": 92,
+    "total_commission": 0.0,
+    "total_slippage": 752.3947210295203,
+    "total_transaction_costs": 752.3947210295203,
+    "avg_trade_size": 4425.851300173647
+  },
+  "final_positions": {
+    "CCO": {
+      "qty": 9389.0,
+      "avg_cost": 1.5700000524520874,
+      "realized_pnl": -12577.76991379261
+    },
+    "OUT": {
+      "qty": 669.0,
+      "avg_cost": 12.308207944359673,
+      "realized_pnl": -3879.2873607940555
+    },
+    "LAMR": {
+      "qty": 112.0,
+      "avg_cost": 102.34663882269327,
+      "realized_pnl": -5350.6831962431215
+    },
+    "LYV": {
+      "qty": 89.0,
+      "avg_cost": 94.49370784144247,
+      "realized_pnl": -2937.078839086717
+    },
+    "MSGS": {
+      "qty": 60.0,
+      "avg_cost": 190.72395380655925,
+      "realized_pnl": 29.473529052734193
+    },
+    "MGNI": {
+      "qty": 801.0,
+      "avg_cost": 12.901767819077177,
+      "realized_pnl": -3142.57429960442
+    },
+    "SPOT": {
+      "qty": 25.0,
+      "avg_cost": 200.70909659130655,
+      "realized_pnl": 9871.047345812938
+    }
+  },
+  "source": "unconventional",
+  "description": "Irreplaceable physical ad assets: billboards, airports, transit \u2014 frozen permits = moat"
+}

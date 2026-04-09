@@ -1,0 +1,58 @@
+# LOSING Strategy: contrastive_pairs
+
+> **What it does:** Long the cheap stock in every hot sector: WDC not NVDA, HRB not SNOW, ADP not WDAY
+>
+> **Hypothesis:** Contrastive Pairs (Value Side of Hype Sectors) 3Y
+
+**Generated:** 2026-04-08T22:04:55.045941
+**Assessment:** NEUTRAL — Mixed signals. Paper trade before committing capital.
+
+## Performance Summary
+- **total_return:** 0.00%
+- **sharpe_ratio:** 0.00
+- **max_drawdown:** 0.00%
+- **win_rate:** 0.00%
+- **alpha:** -8.66%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 0.0%
+- **stop_loss:** 2.0%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 0.0%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** Strategy has low win rate — enter only on strong setup days. Be patient.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **WDC** | FLAT | 57% | Market order (volatile) | 4.8% below entry | 12.0% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=WDC) / [Yahoo](https://finance.yahoo.com/quote/WDC/) |
+| **MU** | FLAT | 63% | Market order (volatile) | 5.3% below entry | 13.2% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=MU) / [Yahoo](https://finance.yahoo.com/quote/MU/) |
+| **ON** | FLAT | 55% | Market order (volatile) | 4.6% below entry | 11.5% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ON) / [Yahoo](https://finance.yahoo.com/quote/ON/) |
+| **HRB** | FLAT | 30% | Market order (volatile) | 2.6% below entry | 6.4% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=HRB) / [Yahoo](https://finance.yahoo.com/quote/HRB/) |
+| **ADP** | FLAT | 20% | Limit 0.5% below market | 1.7% below entry | 4.2% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ADP) / [Yahoo](https://finance.yahoo.com/quote/ADP/) |
+| **PAYX** | FLAT | 24% | Limit 0.5% below market | 2.0% below entry | 5.0% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=PAYX) / [Yahoo](https://finance.yahoo.com/quote/PAYX/) |
+| **NFLX** | FLAT | 33% | Market order (volatile) | 2.8% below entry | 6.9% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=NFLX) / [Yahoo](https://finance.yahoo.com/quote/NFLX/) |
+| **WBD** | FLAT | 55% | Market order (volatile) | 4.6% below entry | 11.5% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=WBD) / [Yahoo](https://finance.yahoo.com/quote/WBD/) |
+| **ORCL** | FLAT | 53% | Market order (volatile) | 4.5% below entry | 11.2% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ORCL) / [Yahoo](https://finance.yahoo.com/quote/ORCL/) |
+| **IBM** | FLAT | 30% | Market order (volatile) | 2.6% below entry | 6.4% above entry | 0.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=IBM) / [Yahoo](https://finance.yahoo.com/quote/IBM/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.
+
+## Lessons Learned
+
+This strategy lost money. Key issues:
+- Sharpe ratio: 0.00 (target > 0.5)
+- Max drawdown: 0.00% (target > -20%)
+- Alpha: -8.66% (target > 0%)
+
+**DO NOT REPEAT** these patterns without fundamental strategy changes.

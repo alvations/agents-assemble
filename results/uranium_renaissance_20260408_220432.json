@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": 0.28898087296778696,
+    "cagr": 0.08861677481830399,
+    "annual_volatility": 0.37239383222323397,
+    "sharpe_ratio": 0.3071786433485146,
+    "sortino_ratio": 0.4629717173857262,
+    "calmar_ratio": 0.17237263618259746,
+    "max_drawdown": -0.5141000148331585,
+    "max_drawdown_date": "2023-05-30",
+    "win_rate": 0.511968085106383,
+    "profit_factor": 1.0807682938387067,
+    "num_trading_days": 752,
+    "skewness": 0.804797931177034,
+    "kurtosis": 8.860430017229968,
+    "best_day": 0.19989503515920615,
+    "worst_day": -0.10245519873914788,
+    "avg_daily_return": 0.0006095841174487523,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.001992195718539813,
+    "beta": 0.868969769787172,
+    "information_ratio": 0.005847816170113764,
+    "tracking_error": 0.34067345152217
+  },
+  "trade_metrics": {
+    "num_trades": 1017,
+    "num_buys": 511,
+    "num_sells": 506,
+    "total_commission": 0.0,
+    "total_slippage": 3241.289622176647,
+    "total_transaction_costs": 3241.289622176647,
+    "avg_trade_size": 3187.1087730350514
+  },
+  "final_positions": {
+    "CCJ": {
+      "qty": 355.0,
+      "avg_cost": 51.093756250925516,
+      "realized_pnl": 662.1236962056298
+    },
+    "LEU": {
+      "qty": 268.0,
+      "avg_cost": 71.52524815552624,
+      "realized_pnl": -4760.633274592407
+    },
+    "UEC": {
+      "qty": 2869.0,
+      "avg_cost": 7.706376019887699,
+      "realized_pnl": 356.62465497206836
+    },
+    "VST": {
+      "qty": 131.0,
+      "avg_cost": 109.4680061742555,
+      "realized_pnl": 16302.09676697261
+    },
+    "OKLO": {
+      "qty": 833.0,
+      "avg_cost": 20.087453280683388,
+      "realized_pnl": 14910.922178809935
+    },
+    "SMR": {
+      "qty": 1000.0,
+      "avg_cost": 21.182039360046385,
+      "realized_pnl": 32667.05086708069
+    }
+  },
+  "source": "unconventional",
+  "description": "Structural uranium supply deficit: only US producer (UUUU), SMRs, 60+ reactors building"
+}

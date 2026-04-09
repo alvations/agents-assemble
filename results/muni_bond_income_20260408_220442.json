@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": -0.04048979501056926,
+    "cagr": -0.013742129771229239,
+    "annual_volatility": 0.05398111238256423,
+    "sharpe_ratio": -0.9565859736700305,
+    "sortino_ratio": -1.2970856423984922,
+    "calmar_ratio": -0.09300307483743048,
+    "max_drawdown": -0.14775995089679028,
+    "max_drawdown_date": "2022-10-31",
+    "win_rate": 0.5086551264980027,
+    "profit_factor": 0.9614890176472032,
+    "num_trading_days": 751,
+    "skewness": 0.057533186383126,
+    "kurtosis": 4.2214045027192535,
+    "best_day": 0.021237346448666372,
+    "worst_day": -0.021570143584147772,
+    "avg_daily_return": -4.9261148908207584e-05,
+    "benchmark_total_return": 0.2866221187402662,
+    "benchmark_cagr": 0.08803411767458291,
+    "alpha": -0.10177624744581215,
+    "beta": 0.10904406187612942,
+    "information_ratio": -0.620445969839051,
+    "tracking_error": 0.16403724480991275
+  },
+  "trade_metrics": {
+    "num_trades": 225,
+    "num_buys": 119,
+    "num_sells": 106,
+    "total_commission": 0.0,
+    "total_slippage": 897.7754261765485,
+    "total_transaction_costs": 897.7754261765485,
+    "avg_trade_size": 3990.1130052291023
+  },
+  "final_positions": {
+    "MUB": {
+      "qty": 150.0,
+      "avg_cost": 99.78869495536063,
+      "realized_pnl": -756.9178178531312
+    },
+    "VTEB": {
+      "qty": 319.0,
+      "avg_cost": 47.10993045354634,
+      "realized_pnl": -732.9867393043146
+    },
+    "HYD": {
+      "qty": 313.0,
+      "avg_cost": 47.51316485687942,
+      "realized_pnl": -577.1026969158846
+    },
+    "TFI": {
+      "qty": 350.0,
+      "avg_cost": 43.046180459723736,
+      "realized_pnl": -879.1274312902951
+    },
+    "NUV": {
+      "qty": 1833.0,
+      "avg_cost": 7.904045749636296,
+      "realized_pnl": -958.0701937158908
+    },
+    "NEA": {
+      "qty": 1447.0,
+      "avg_cost": 10.094186169659375,
+      "realized_pnl": -1097.3197740247915
+    }
+  },
+  "source": "unconventional",
+  "description": "Tax-free municipal bonds: 4% muni = 6%+ taxable. Near-zero default risk."
+}

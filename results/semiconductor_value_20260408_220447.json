@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.0,
+    "cagr": 0.0,
+    "annual_volatility": 0.0,
+    "sharpe_ratio": -Infinity,
+    "sortino_ratio": -15.874507866387544,
+    "calmar_ratio": 0,
+    "max_drawdown": 0.0,
+    "max_drawdown_date": null,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "num_trading_days": 752,
+    "skewness": 0.0,
+    "kurtosis": 0.0,
+    "best_day": 0.0,
+    "worst_day": 0.0,
+    "avg_daily_return": 0.0,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.08662457909976418,
+    "beta": 0.0,
+    "information_ratio": -0.494785628755081,
+    "tracking_error": 0.17507496997784341
+  },
+  "trade_metrics": {
+    "num_trades": 0,
+    "num_buys": 0,
+    "num_sells": 0,
+    "total_commission": 0.0,
+    "total_slippage": 0.0,
+    "total_transaction_costs": 0.0,
+    "avg_trade_size": 0.0
+  },
+  "final_positions": {
+    "TSM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ASML": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AVGO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SSNLF": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WDC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MU": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LRCX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KLAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMAT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CRSR": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "theme",
+  "description": "Semi supply chain at value prices: TSMC, ASML, memory at cyclical lows, equipment recurring revenue"
+}
