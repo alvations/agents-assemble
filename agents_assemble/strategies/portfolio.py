@@ -325,7 +325,7 @@ class CoreSatellite(BasePersona):
             rebalance_frequency="monthly",
             universe=universe or [
                 "SPY", "BND",  # Core
-                "NVDA", "AVGO", "LLY", "PLTR",  # Satellite: momentum
+                "NVDA", "AVGO", "LLY", "PLTR", "AMZN", "MSFT",  # Satellite: momentum
                 "GLD", "XLE",  # Satellite: alternatives
             ],
         )
@@ -383,7 +383,7 @@ class IncomeShield(BasePersona):
                 # High-dividend stocks
                 "VIG", "SCHD", "DVY", "HDV",
                 # Dividend aristocrats
-                "JNJ", "PG", "KO", "ABBV", "O",
+                "JNJ", "PG", "KO", "ABBV", "XOM", "CVX", "MMM",
                 # Bond income
                 "BND", "LQD", "HYG", "TIP",
                 # REITs
@@ -673,9 +673,11 @@ class DividendAristocratBlueChips(BasePersona):
                 "MMM",    # 3M (restructuring, 65yr dividend streak)
                 "UPS",    # UPS (logistics duopoly, 4%+ yield)
                 "FDX",    # FedEx (logistics duopoly, restructuring)
-                "F",      # Ford Motor (turnaround, 5%+ yield)
                 "KHC",    # Kraft Heinz (consumer staples, 4%+ yield)
                 "JNJ",    # Johnson & Johnson (healthcare gold standard)
+                "PG",     # Procter & Gamble (69yr dividend streak)
+                "KO",     # Coca-Cola (62yr dividend streak)
+                "PEP",    # PepsiCo (52yr dividend streak)
                 "ENB",    # Enbridge (pipeline, 6%+ yield)
                 "ABBV",   # AbbVie (pharma pipeline + 4% yield)
                 "XOM",    # Exxon Mobil (energy cash machine)

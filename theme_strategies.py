@@ -40,6 +40,8 @@ Themes:
     + KoreanChaebols             — Korean chaebol conglomerates + fintech
     + RideshareMobility          — Rideshare & mobility platforms
     + NvidiaSupplyChain          — NVIDIA peripheral supply chain (non-megacap)
+    + Mag7HiddenSuppliers        — Hidden supply chain monopolies ALL Mag7 depend on
+    + Mag7DominoHedge            — Supply chain stress early-warning hedge
 """
 
 from __future__ import annotations
@@ -281,10 +283,10 @@ class BiotechBreakout(BasePersona):
             rebalance_frequency="weekly",
             universe=universe or [
                 "MRNA", "REGN", "VRTX", "GILD", "BIIB",  # Large biotech
-                "SGEN", "ALNY", "IONS", "BMRN",  # Mid biotech
+                "ALNY", "IONS", "BMRN", "ARGX",  # Mid biotech (SGEN acquired by PFE)
                 "XBI", "IBB", "BBH",  # Biotech ETFs
                 "ISRG", "DXCM", "HIMS",  # MedTech
-                "LLY", "ABBV", "MRK",  # Big pharma with biotech pipelines
+                "LLY", "ABBV", "MRK", "AMGN",  # Big pharma with biotech pipelines
             ],
         )
         super().__init__(config)
@@ -354,6 +356,7 @@ class ChinaTechRebound(BasePersona):
             universe=universe or [
                 "BABA", "JD", "PDD", "BIDU", "NIO", "XPEV", "LI",
                 "TME", "BILI", "NTES", "IQ", "WB",
+                "TCOM", "ZTO", "FUTU",  # Travel, logistics, fintech
                 "KWEB", "MCHI", "FXI",  # China ETFs
             ],
         )
@@ -415,7 +418,8 @@ class LatAmGrowth(BasePersona):
             universe=universe or [
                 "MELI", "NU", "STNE", "PAGS",  # Fintech/e-commerce
                 "VALE", "PBR", "ITUB", "BSBR",  # Brazilian blue chips
-                "SQM", "GGAL",  # Chile/Argentina
+                "SQM", "GGAL", "CRESY",  # Chile/Argentina
+                "AMX", "FMX", "BSMX",  # Mexican blue chips
                 "EWZ", "EWW", "ILF",  # LatAm ETFs
             ],
         )
@@ -753,9 +757,11 @@ class GLP1Obesity(BasePersona):
             max_positions=8,
             rebalance_frequency="weekly",
             universe=universe or [
-                "LLY", "NVO", "AMGN", "VKTX",
-                "PFE", "ABBV", "JNJ", "MRK",
-                "HIMS", "PLNT",
+                "LLY", "NVO", "AMGN", "VKTX",  # GLP-1 leaders
+                "ZEAL",  # Zealand Pharma (GLP-1 pipeline)
+                "PFE", "ABBV", "MRK",  # Big pharma with obesity programs
+                "HIMS", "PLNT",  # Weight loss ecosystem
+                "ISRG",  # Bariatric surgery (competitive angle)
             ],
         )
         super().__init__(config)

@@ -228,6 +228,7 @@ class DogsOfTheDow(BasePersona):
                 "V", "CRM", "DIS", "NKE", "BA", "CAT", "JPM",
                 "IBM", "JNJ", "KO", "PG", "WMT", "MRK",
                 "MMM", "CVX", "DOW", "INTC", "VZ",
+                "TRV", "HON", "AXP", "SHW", "AMGN",  # Additional Dow components
             ],
         )
         super().__init__(config)

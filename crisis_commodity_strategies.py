@@ -211,9 +211,10 @@ class GamingContentCatalyst(BasePersona):
             universe=universe or [
                 "NTDOY", "TTWO", "EA",  # Game publishers (strongest signal)
                 "RBLX", "U",  # Gaming platforms
-                "DKNG",  # Gaming/betting
+                "DKNG", "FLUT",  # Gaming/betting (DraftKings + Flutter/FanDuel)
                 "DIS", "NFLX",  # Entertainment (earnings plays)
                 "CMCSA", "WBD",  # Media
+                "SONY",  # PlayStation + entertainment conglomerate
             ],
         )
         super().__init__(config)
@@ -286,6 +287,7 @@ class SmallCapValueRotation(BasePersona):
                 "IWM", "IWN",  # Small cap broad + value
                 "GRC", "UCTT", "WTTR", "EVLV",  # Individual picks
                 "SAIA", "DECK", "LULU", "CELH",  # Small cap winners
+                "CAVA", "DUOL", "CWAN",  # Small cap growth picks
             ],
         )
         super().__init__(config)

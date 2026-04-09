@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.15250046086343705,
+    "cagr": 0.04861869413820763,
+    "annual_volatility": 0.12275530956774336,
+    "sharpe_ratio": 0.12937256930749821,
+    "sortino_ratio": 0.17698848001458384,
+    "calmar_ratio": 0.3420392536734944,
+    "max_drawdown": -0.1421436095887939,
+    "max_drawdown_date": "2023-10-26",
+    "win_rate": 0.5319148936170213,
+    "profit_factor": 1.0830529860103335,
+    "num_trading_days": 752,
+    "skewness": -0.3480912585171518,
+    "kurtosis": 3.1310115633009263,
+    "best_day": 0.04269812841556897,
+    "worst_day": -0.0364385573269449,
+    "avg_daily_return": 0.0002186703778504544,
+    "black_swan_resilience": 75.5,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.038005884961556546,
+    "beta": 0.498221705643224,
+    "information_ratio": -0.30849298547347165,
+    "tracking_error": 0.12319853854448434
+  },
+  "trade_metrics": {
+    "num_trades": 856,
+    "num_buys": 427,
+    "num_sells": 429,
+    "total_commission": 0.0,
+    "total_slippage": 2643.5590236358653,
+    "total_transaction_costs": 2643.5590236358653,
+    "avg_trade_size": 3088.269887425075
+  },
+  "final_positions": {
+    "COST": {
+      "qty": 12.0,
+      "avg_cost": 834.3134300377453,
+      "realized_pnl": 5275.501852591618
+    },
+    "AAPL": {
+      "qty": 55.0,
+      "avg_cost": 223.05419900952984,
+      "realized_pnl": 89.40860360519773
+    },
+    "AMZN": {
+      "qty": 63.0,
+      "avg_cost": 189.82339681014008,
+      "realized_pnl": 4945.245809951911
+    },
+    "GS": {
+      "qty": 25.0,
+      "avg_cost": 496.186517194627,
+      "realized_pnl": 1579.9802821605917
+    },
+    "MS": {
+      "qty": 114.0,
+      "avg_cost": 107.11019847733066,
+      "realized_pnl": 1029.933193737475
+    },
+    "BX": {
+      "qty": 69.0,
+      "avg_cost": 145.7206512048226,
+      "realized_pnl": 5217.828563198678
+    },
+    "LULU": {
+      "qty": 30.0,
+      "avg_cost": 350.3524971008301,
+      "realized_pnl": 584.5551376342753
+    },
+    "RH": {
+      "qty": 35.0,
+      "avg_cost": 349.5030302983072,
+      "realized_pnl": -5749.095080916668
+    }
+  },
+  "source": "recession",
+  "description": "Rich richer, poor poorer: luxury+tech UP while dollar stores DOWN. Long the top arm of K."
+}

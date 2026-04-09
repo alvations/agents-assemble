@@ -291,8 +291,8 @@ class FDACatalyst(BasePersona):
             universe=universe or [
                 # Large-cap biotech (FDA pipeline-driven)
                 "AMGN", "GILD", "REGN", "VRTX", "MRNA", "BIIB",
-                # Mid-cap biotech (higher event sensitivity)
-                "SGEN", "BMRN", "ALNY", "INCY",
+                # Mid-cap biotech (higher event sensitivity; SGEN acquired by PFE)
+                "ARGX", "BMRN", "ALNY", "INCY", "IONS",
                 # Pharma (steady pipeline)
                 "LLY", "ABBV", "MRK", "PFE", "JNJ",
                 # Biotech ETF (for sector-wide moves)

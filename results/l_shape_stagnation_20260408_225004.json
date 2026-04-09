@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": 0.05909192937646468,
+    "cagr": 0.01938857257311488,
+    "annual_volatility": 0.057326887659251556,
+    "sharpe_ratio": -0.31998257991922063,
+    "sortino_ratio": -0.446895378663206,
+    "calmar_ratio": 0.188020666015789,
+    "max_drawdown": -0.10311936971591584,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.550531914893617,
+    "profit_factor": 1.0796173066703016,
+    "num_trading_days": 752,
+    "skewness": 0.16604304049381108,
+    "kurtosis": 9.82237365624749,
+    "best_day": 0.02637378816254432,
+    "worst_day": -0.02235362598196322,
+    "avg_daily_return": 8.285777782322058e-05,
+    "black_swan_resilience": 84.1,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0672360065266493,
+    "beta": 0.21397453145407938,
+    "information_ratio": -0.4659688673736569,
+    "tracking_error": 0.14429291575982747
+  },
+  "trade_metrics": {
+    "num_trades": 127,
+    "num_buys": 59,
+    "num_sells": 68,
+    "total_commission": 0.0,
+    "total_slippage": 340.8714185600284,
+    "total_transaction_costs": 340.8714185600284,
+    "avg_trade_size": 2684.0269177954965
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 44.0,
+      "avg_cost": 174.64338928104968,
+      "realized_pnl": 1478.7182012421547
+    },
+    "SCHD": {
+      "qty": 385.0,
+      "avg_cost": 22.297636924728685,
+      "realized_pnl": 460.71291003604597
+    },
+    "XLU": {
+      "qty": 138.0,
+      "avg_cost": 31.019559856400505,
+      "realized_pnl": 501.4246916255268
+    }
+  },
+  "source": "recession",
+  "description": "Persistent crash with no recovery (Japan 1990s). Gold + utilities + short bonds + dividends only."
+}

@@ -15,6 +15,9 @@ Recession-Proof Strategies:
 5. YieldCurveInversion      — Yield curve inversion as recession leading indicator
 6. ConsumerCreditStress     — Consumer discretionary weakness as subprime proxy
 7. UnemploymentMomentum     — Unemployment claims momentum via sector rotation
+8. VShapeRecovery           — High-beta bounce on V-shape recovery signal
+9. KShapeEconomy            — Inequality trade: long luxury+tech when dollar stores crash
+10. LShapeStagnation        — Worst-case: gold + utilities + short bonds
 """
 
 from __future__ import annotations
@@ -22,6 +25,11 @@ from __future__ import annotations
 import pandas as pd
 
 from personas import BasePersona, PersonaConfig
+
+
+def _is_missing(v):
+    """Check if value is None or NaN."""
+    return v is None or v != v
 
 
 # ---------------------------------------------------------------------------
@@ -331,8 +339,8 @@ class GoldBug(BasePersona):
             rebalance_frequency="weekly",
             universe=universe or [
                 "GLD", "SLV",  # Physical gold/silver ETFs
-                "GDX",  # Gold miners
-                "NEM",  # Individual miners
+                "GDX", "GDXJ",  # Gold miners (senior + junior)
+                "NEM", "GOLD", "AEM",  # Individual miners (Newmont, Barrick, Agnico Eagle)
                 "IAU",  # Alternative gold ETF
                 "SPY", "TLT",  # Required for recession regime detection
             ],

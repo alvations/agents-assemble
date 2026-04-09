@@ -1,0 +1,132 @@
+{
+  "strategy_name": "k_shape_economy",
+  "is_winning": true,
+  "generated_at": "2026-04-08T22:50:03.280061",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "4.1%",
+    "stop_loss": "17.1%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "14.2%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "COST",
+      "action": "BUY",
+      "current_position": 12.0,
+      "annual_volatility": "20%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "14.7% below entry",
+      "take_profit": "4.3% above entry",
+      "position_size": "4.7% of portfolio",
+      "trailing_stop": "10.3% trailing after 1.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=COST",
+      "yahoo_url": "https://finance.yahoo.com/quote/COST/"
+    },
+    {
+      "symbol": "AAPL",
+      "action": "BUY",
+      "current_position": 55.0,
+      "annual_volatility": "29%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "20.5% below entry",
+      "take_profit": "6.0% above entry",
+      "position_size": "3.4% of portfolio",
+      "trailing_stop": "14.4% trailing after 2.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
+      "yahoo_url": "https://finance.yahoo.com/quote/AAPL/"
+    },
+    {
+      "symbol": "AMZN",
+      "action": "BUY",
+      "current_position": 63.0,
+      "annual_volatility": "33%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "23.4% below entry",
+      "take_profit": "6.9% above entry",
+      "position_size": "3.0% of portfolio",
+      "trailing_stop": "16.4% trailing after 2.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMZN",
+      "yahoo_url": "https://finance.yahoo.com/quote/AMZN/"
+    },
+    {
+      "symbol": "GS",
+      "action": "BUY",
+      "current_position": 25.0,
+      "annual_volatility": "31%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "22.3% below entry",
+      "take_profit": "6.5% above entry",
+      "position_size": "3.1% of portfolio",
+      "trailing_stop": "15.6% trailing after 2.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GS",
+      "yahoo_url": "https://finance.yahoo.com/quote/GS/"
+    },
+    {
+      "symbol": "MS",
+      "action": "BUY",
+      "current_position": 114.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "21.7% below entry",
+      "take_profit": "6.4% above entry",
+      "position_size": "3.2% of portfolio",
+      "trailing_stop": "15.2% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MS",
+      "yahoo_url": "https://finance.yahoo.com/quote/MS/"
+    },
+    {
+      "symbol": "BX",
+      "action": "BUY",
+      "current_position": 69.0,
+      "annual_volatility": "36%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "25.7% below entry",
+      "take_profit": "7.5% above entry",
+      "position_size": "2.7% of portfolio",
+      "trailing_stop": "18.0% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BX",
+      "yahoo_url": "https://finance.yahoo.com/quote/BX/"
+    },
+    {
+      "symbol": "LULU",
+      "action": "BUY",
+      "current_position": 30.0,
+      "annual_volatility": "46%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "32.9% below entry",
+      "take_profit": "9.6% above entry",
+      "position_size": "2.1% of portfolio",
+      "trailing_stop": "23.0% trailing after 3.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LULU",
+      "yahoo_url": "https://finance.yahoo.com/quote/LULU/"
+    },
+    {
+      "symbol": "RH",
+      "action": "BUY",
+      "current_position": 35.0,
+      "annual_volatility": "75%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "15.0% above entry",
+      "position_size": "1.4% of portfolio",
+      "trailing_stop": "28.0% trailing after 6.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=RH",
+      "yahoo_url": "https://finance.yahoo.com/quote/RH/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "15.25%",
+    "sharpe_ratio": "0.13",
+    "max_drawdown": "-14.21%",
+    "win_rate": "53.19%",
+    "alpha": "-3.80%"
+  }
+}
