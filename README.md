@@ -8,6 +8,7 @@ Trading agents and algorithms for publicly tradable instruments. **173 strategie
 > - **[LEADERBOARD.md](LEADERBOARD.md)** — Full rankings with Return + Sharpe + Max DD
 > - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
+> - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
 > - **[knowledge/](knowledge/)** — 54 research files with backtested findings
 
