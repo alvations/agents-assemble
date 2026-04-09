@@ -1591,8 +1591,8 @@ def fetch_google_trends(
         )
 
     try:
-        # Initialize with retry/backoff for rate limiting
-        pytrends = TrendReq(hl="en-US", tz=360, retries=3, backoff_factor=1.0)
+        # Initialize — avoid passing retry params that may break on older urllib3
+        pytrends = TrendReq(hl="en-US", tz=360)
         pytrends.build_payload(keywords[:5], cat=0, timeframe=timeframe, geo=geo)
         df = pytrends.interest_over_time()
 
@@ -1622,7 +1622,7 @@ def fetch_google_trends_related(
         raise ImportError("pytrends is required: pip install pytrends")
 
     try:
-        pytrends = TrendReq(hl="en-US", tz=360, retries=3, backoff_factor=1.0)
+        pytrends = TrendReq(hl="en-US", tz=360)
         pytrends.build_payload([keyword], cat=0, timeframe=timeframe, geo=geo)
         related = pytrends.related_queries()
         result = {}

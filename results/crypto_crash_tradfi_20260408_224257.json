@@ -1,0 +1,50 @@
+{
+  "metrics": {
+    "total_return": 0.04004673130318093,
+    "cagr": 0.013220118795618463,
+    "annual_volatility": 0.1145650864906504,
+    "sharpe_ratio": -0.1704647348146115,
+    "sortino_ratio": -0.24696216195131956,
+    "calmar_ratio": 0.07548627723495124,
+    "max_drawdown": -0.17513274306097792,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5492021276595744,
+    "profit_factor": 1.0396776013758289,
+    "num_trading_days": 752,
+    "skewness": 0.6106307908208659,
+    "kurtosis": 8.307082164334716,
+    "best_day": 0.046094030651641305,
+    "worst_day": -0.03079996040215016,
+    "avg_daily_return": 7.815261244347809e-05,
+    "black_swan_resilience": 85.8,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07340446030414571,
+    "beta": 0.47469401300647784,
+    "information_ratio": -0.6059147296784823,
+    "tracking_error": 0.12114651898807026
+  },
+  "trade_metrics": {
+    "num_trades": 469,
+    "num_buys": 215,
+    "num_sells": 254,
+    "total_commission": 0.0,
+    "total_slippage": 2111.0267547550216,
+    "total_transaction_costs": 2111.0267547550216,
+    "avg_trade_size": 4501.123144466994
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 36.0,
+      "avg_cost": 165.63106140554868,
+      "realized_pnl": 3007.1254371622513
+    },
+    "BLK": {
+      "qty": 8.0,
+      "avg_cost": 753.2323395702847,
+      "realized_pnl": 1623.576489999779
+    }
+  },
+  "source": "unconventional",
+  "description": "Crypto collapse drives capital to traditional banks, brokers, asset managers."
+}

@@ -2650,6 +2650,181 @@ class RideshareMobility(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 35. NVIDIA Supply Chain (Non-Megacap Peripheral Suppliers)
+# ---------------------------------------------------------------------------
+class NvidiaSupplyChain(BasePersona):
+    """NVIDIA peripheral supply chain: the non-megacap companies NVIDIA
+    depends on for packaging, testing, materials, cooling, and power delivery.
+
+    Thesis: Everyone buys NVDA directly. But NVIDIA's GPUs require an entire
+    ecosystem of smaller, less-followed companies: ABF substrate makers
+    (Ajinomoto, Ibiden), advanced packaging OSATs (Amkor, ASE), semiconductor
+    test equipment (Cohu, FormFactor, Onto Innovation), chip chemicals and
+    filtration (Entegris), power delivery ICs (Monolithic Power), PCB/substrate
+    fabricators (TTM Technologies), data center cooling (Modine, nVent), and
+    rare earth magnets (MP Materials). These companies have high NVIDIA revenue
+    exposure but trade at fraction of NVDA's multiple.
+
+    Signal: NVDA-led momentum. When NVDA is in a strong uptrend (above its
+    SMA50 and SMA200), supply chain companies accelerate with a lag. Buy
+    supply chain names that are in uptrends with healthy RSI when NVDA is
+    strong. Sell when NVDA breaks down or individual names get overbought.
+
+    Edge: Supply chain multiplier effect -- a 20% increase in NVDA GPU shipments
+    can mean 30-50% revenue growth for a substrate or packaging company that
+    has 40%+ exposure. Market prices NVDA efficiently but under-covers these
+    smaller names.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="NVIDIA Supply Chain (Peripheral)",
+            description="Non-megacap companies NVIDIA depends on: packaging, testing, materials, cooling, power",
+            risk_tolerance=0.7,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Chip Packaging & OSAT (Outsourced Assembly & Test)
+                "AMKR",   # Amkor Technology — #2 OSAT, advanced packaging for NVDA GPUs (~$12B mkt cap)
+                "ASX",    # ASE Technology — #1 OSAT globally, CoWoS packaging partner (~$20B mkt cap)
+                "KLIC",   # Kulicke & Soffa — wire/wedge bonding equipment for packaging (~$3.4B mkt cap)
+                # Semiconductor Test Equipment
+                "COHU",   # Cohu — ATE for chip testing, automotive + AI exposure (~$1.7B mkt cap)
+                "FORM",   # FormFactor — probe cards for wafer testing, HBM test (~$7.2B mkt cap)
+                "ONTO",   # Onto Innovation — process control & lithography for advanced nodes (~$10.7B mkt cap)
+                # Semiconductor Chemicals & Materials
+                "ENTG",   # Entegris — filters, chemicals, CMP slurries for fabs (~$17.7B mkt cap)
+                # Power Delivery for AI GPUs
+                "MPWR",   # Monolithic Power Systems — DC-DC power for AI GPU server racks (~$30B mkt cap)
+                # PCB & Substrate Fabrication
+                "TTMI",   # TTM Technologies — high-layer-count PCBs for AI servers (~$5B mkt cap)
+                # Data Center Cooling (AI GPU thermal management)
+                "MOD",    # Modine Manufacturing — liquid cooling, 119% DC sales growth (~$12B mkt cap)
+                "NVT",    # nVent Electric — power distribution + cooling for NVDA racks (~$18B mkt cap)
+                # Rare Earth & Strategic Materials
+                "MP",     # MP Materials — rare earth magnets for motors/electronics (~$9B mkt cap)
+                # ABF Substrate (Japan ADRs — lower liquidity but critical supply chain)
+                "AJINY",  # Ajinomoto — invented ABF substrate film, monopoly supplier (~$28B mkt cap)
+                "IBIDY",  # Ibiden — #2 ABF substrate maker, NVDA GPU packaging (~$14B mkt cap)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        # ---- NVDA leader signal ----
+        # Check if NVDA (the demand driver) is in an uptrend
+        nvda_strong = False
+        nvda_bullish_score = 0.0
+        if "NVDA" in prices:
+            nvda_inds = self._get_indicators(
+                data, "NVDA",
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            nvda_price = prices["NVDA"]
+            nvda_sma50 = nvda_inds["sma_50"]
+            nvda_sma200 = nvda_inds["sma_200"]
+            nvda_rsi = nvda_inds["rsi_14"]
+            nvda_macd = nvda_inds["macd"]
+            nvda_macd_sig = nvda_inds["macd_signal"]
+
+            if not _is_missing(nvda_sma50) and not _is_missing(nvda_sma200):
+                if nvda_price > nvda_sma50 > nvda_sma200:
+                    nvda_bullish_score = 3.0  # Full uptrend
+                    nvda_strong = True
+                elif nvda_price > nvda_sma50:
+                    nvda_bullish_score = 1.5  # Partial uptrend
+                    nvda_strong = True
+                elif nvda_price > nvda_sma200:
+                    nvda_bullish_score = 0.5  # Above long-term trend
+
+            if not _is_missing(nvda_macd) and not _is_missing(nvda_macd_sig):
+                if nvda_macd > nvda_macd_sig:
+                    nvda_bullish_score += 0.5
+
+        # ---- Score each supply chain name ----
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma50) or _is_missing(rsi):
+                continue
+
+            # Hard exit: overbought
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Hard exit: collapsed below SMA200 (supply chain broken)
+            if not _is_missing(sma200) and price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # NVDA-linked momentum boost: supply chain follows the leader
+            if nvda_strong:
+                score += min(nvda_bullish_score * 0.5, 1.5)
+
+            # Own-stock trend alignment
+            if not _is_missing(sma200) and price > sma50 > sma200:
+                score += 2.5  # Full uptrend
+            elif price > sma50:
+                score += 1.0
+
+            # MACD bullish crossover
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                score += 1.0
+
+            # Volume surge confirmation
+            if not _is_missing(volume) and not _is_missing(vol_avg) and vol_avg > 0:
+                vol_ratio = volume / vol_avg
+                if vol_ratio > 1.5:
+                    score += 0.5
+
+            # RSI sweet spot (not overbought, not oversold)
+            if 30 < rsi < 65:
+                score += 0.5
+
+            # Oversold dip-buy when NVDA is strong (supply chain lagging = opportunity)
+            if nvda_strong and rsi < 35 and not _is_missing(sma200) and price > sma200 * 0.85:
+                score += 2.0  # High conviction: oversold supply chain + strong NVDA
+
+            # Minimum threshold
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.90, self.config.max_position_size)
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -2685,6 +2860,7 @@ THEME_STRATEGIES = {
     "gig_economy_saas": GigEconomySaaSDisruptors,
     "korean_chaebols": KoreanChaebols,
     "rideshare_mobility": RideshareMobility,
+    "nvidia_supply_chain": NvidiaSupplyChain,
 }
 
 

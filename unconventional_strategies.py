@@ -2612,6 +2612,138 @@ class BondsDownBanksUp(BasePersona):
         return weights
 
 
+class RetailCrashEcommerce(BasePersona):
+    """When brick-and-mortar retail crashes, e-commerce accelerates.
+    XRT (retail ETF) drops → AMZN, SHOP, MELI, SE, CPNG rise.
+    Every retail recession accelerates the secular shift to online."""
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Retail Crash → E-commerce Boom",
+            description="Brick-and-mortar crash accelerates e-commerce: XRT↓ = AMZN/SHOP/MELI↑",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=8, rebalance_frequency="weekly",
+            universe=universe or ["XRT","AMZN","SHOP","MELI","SE","CPNG","ETSY","W","BABA","EBAY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        retail_weak = False
+        if "XRT" in data and "XRT" in prices:
+            inds = self._get_indicators(data, "XRT", ["sma_200"], date)
+            if not _is_missing(inds["sma_200"]) and prices["XRT"] < inds["sma_200"]:
+                retail_weak = True
+        targets = ["AMZN","SHOP","MELI","SE","CPNG","ETSY","W","BABA","EBAY"]
+        if retail_weak:
+            scored = []
+            for sym in targets:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                sc = 0.0
+                if prices[sym] > inds["sma_200"]: sc += 2.0
+                if 35 < inds["rsi_14"] < 65: sc += 1.0
+                if sc >= 1: scored.append((sym, sc))
+            scored.sort(key=lambda x: -x[1])
+            if scored:
+                total = sum(s for _,s in scored[:8])
+                for sym, sc in scored[:8]:
+                    weights[sym] = min((sc/total)*0.95, self.config.max_position_size)
+        else:
+            for sym in ["AMZN","SHOP"]:
+                if sym in prices: weights[sym] = 0.08
+        return weights
+
+
+class VIXSpikeBuyback(BasePersona):
+    """When VIX spikes (fear), buy cash-rich companies doing buybacks.
+    Companies with massive cash piles (AAPL, GOOGL, META) buy back stock
+    during panics, creating a floor. They're essentially buying themselves cheap."""
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="VIX Spike → Cash-Rich Buyback",
+            description="Fear spikes → buy companies with massive buyback programs. They buy themselves cheap in panics.",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                "VXX",  # VIX indicator
+                "AAPL","GOOGL","META","MSFT",  # Mega buyback machines
+                "BRK-B","JPM","V","MA",  # Cash-rich compounders
+                "QCOM","TXN",  # Semi buyback kings
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        vix_high = False
+        if "VXX" in data and "VXX" in prices:
+            inds = self._get_indicators(data, "VXX", ["sma_50","sma_200"], date)
+            s200 = inds["sma_200"]
+            if not _is_missing(s200) and prices["VXX"] > s200 * 1.3:
+                vix_high = True
+        targets = ["AAPL","GOOGL","META","MSFT","BRK-B","JPM","V","MA","QCOM","TXN"]
+        if vix_high:
+            for sym in targets:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                if inds["rsi_14"] < 40:
+                    weights[sym] = 0.12  # Max allocation on fear + oversold
+                elif inds["rsi_14"] < 50:
+                    weights[sym] = 0.08
+        else:
+            for sym in ["AAPL","GOOGL","META","V"]:
+                if sym in prices: weights[sym] = 0.06
+        return weights
+
+
+class CryptoCrashTradFi(BasePersona):
+    """When crypto crashes, capital flows back to traditional finance.
+    GBTC/COIN drops → JPM, GS, BLK, SCHW benefit from "flight to safety"
+    and crypto refugees opening brokerage accounts."""
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Crypto Crash → TradFi Flight",
+            description="Crypto collapse drives capital to traditional banks, brokers, asset managers.",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=8, rebalance_frequency="weekly",
+            universe=universe or [
+                "COIN","GBTC",  # Crypto indicators (INVERSE)
+                "JPM","GS","MS",  # Banks
+                "BLK","BX","KKR",  # Asset managers
+                "SCHW","IBKR",  # Brokers
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        crypto_crash = 0
+        for sym in ["COIN","GBTC"]:
+            if sym not in data or sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_200","rsi_14"], date)
+            if not _is_missing(inds["sma_200"]) and prices[sym] < inds["sma_200"] * 0.80:
+                crypto_crash += 1
+        targets = ["JPM","GS","MS","BLK","BX","KKR","SCHW","IBKR"]
+        if crypto_crash >= 1:
+            scored = []
+            for sym in targets:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                sc = 0.0
+                if prices[sym] > inds["sma_200"]: sc += 2.0
+                if 35 < inds["rsi_14"] < 65: sc += 1.0
+                if sc >= 1: scored.append((sym, sc))
+            scored.sort(key=lambda x: -x[1])
+            if scored:
+                total = sum(s for _,s in scored[:8])
+                for sym, sc in scored[:8]:
+                    weights[sym] = min((sc/total)*0.95, self.config.max_position_size)
+        else:
+            for sym in ["JPM","BLK"]:
+                if sym in prices: weights[sym] = 0.08
+        return weights
+
+
 # Add all strategies defined after the registry dict
 UNCONVENTIONAL_STRATEGIES["economic_indicators"] = EconomicIndicatorProxy
 UNCONVENTIONAL_STRATEGIES["ai_token_economy"] = AITokenEconomy
@@ -2619,6 +2751,9 @@ UNCONVENTIONAL_STRATEGIES["job_loss_tech_boom"] = JobLossTechBoom
 UNCONVENTIONAL_STRATEGIES["oil_down_tech_up"] = OilDownTechUp
 UNCONVENTIONAL_STRATEGIES["dollar_weak_em_strong"] = DollarWeakEMStrong
 UNCONVENTIONAL_STRATEGIES["bonds_down_banks_up"] = BondsDownBanksUp
+UNCONVENTIONAL_STRATEGIES["retail_crash_ecommerce"] = RetailCrashEcommerce
+UNCONVENTIONAL_STRATEGIES["vix_spike_buyback"] = VIXSpikeBuyback
+UNCONVENTIONAL_STRATEGIES["crypto_crash_tradfi"] = CryptoCrashTradFi
 
 
 def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:

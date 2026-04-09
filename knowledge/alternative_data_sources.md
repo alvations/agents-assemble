@@ -79,10 +79,11 @@ Research date: 2026-04-08. All sources verified for programmatic access.
 
 ### TSA Checkpoint Passenger Data (FREE)
 - **What**: Daily count of travelers screened at TSA checkpoints. Updated Mon-Fri by 9am.
-- **URL**: `https://www.tsa.gov/travel/passenger-volumes` (HTML table, scrapeable with pandas.read_html).
+- **URL**: `https://www.tsa.gov/travel/passenger-volumes` (HTML table, but Akamai CDN blocks programmatic access as of 2026-04).
+- **Fallback**: FRED series LOADFACTOR (airline load factor %) and TSIFRGHT (freight transport index) via `fetch_air_travel_index()`. Always accessible, no key needed.
 - **Signal**: Air travel recovery/growth indicator. Compare to prior year same day.
 - **Sectors**: Airlines (DAL, UAL, LUV, AAL, JBLU), airports, hotels (MAR, HLT, H), travel platforms (BKNG, EXPE).
-- **Verdict**: FREE, no key needed. IMPLEMENTED in data_fetcher.py.
+- **Verdict**: TSA direct scraping blocked by CDN. FRED fallback IMPLEMENTED in data_fetcher.py.
 
 ### NOAA Climate Data (FREE)
 - **What**: Historical weather, temperature, precipitation, storm data.
