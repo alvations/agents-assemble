@@ -1,0 +1,137 @@
+[
+  {
+    "key": "sell_in_may",
+    "action": "no_improvement",
+    "original_size": 5,
+    "candidates_tested": 8,
+    "original_composite": 0.1132,
+    "elapsed": 4
+  },
+  {
+    "key": "turn_of_month",
+    "action": "no_improvement",
+    "original_size": 3,
+    "candidates_tested": 8,
+    "original_composite": 0.0297,
+    "elapsed": 3
+  },
+  {
+    "key": "vix_mean_reversion",
+    "action": "no_improvement",
+    "original_size": 5,
+    "candidates_tested": 8,
+    "original_composite": 0.1765,
+    "elapsed": 8
+  },
+  {
+    "key": "muni_bond_income",
+    "action": "would_add",
+    "tickers": [
+      "JNJ",
+      "PG",
+      "ABBV",
+      "MO",
+      "PM"
+    ],
+    "new_size": 12,
+    "new_composite": 0.2403,
+    "elapsed": 8
+  },
+  {
+    "key": "news_media_monopoly",
+    "action": "would_add",
+    "tickers": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN",
+      "META",
+      "NVDA",
+      "AVGO"
+    ],
+    "new_size": 14,
+    "new_composite": 0.6402,
+    "elapsed": 18
+  },
+  {
+    "key": "bogle_three_fund",
+    "action": "no_improvement",
+    "original_size": 6,
+    "candidates_tested": 8,
+    "original_composite": 0.2664,
+    "elapsed": 5
+  },
+  {
+    "key": "permanent_portfolio",
+    "action": "no_improvement",
+    "original_size": 4,
+    "candidates_tested": 8,
+    "original_composite": 0.1559,
+    "elapsed": 5
+  },
+  {
+    "key": "all_weather_passive",
+    "action": "no_improvement",
+    "original_size": 5,
+    "candidates_tested": 8,
+    "original_composite": 0.0605,
+    "elapsed": 5
+  },
+  {
+    "key": "crisis_alpha",
+    "action": "no_improvement",
+    "original_size": 5,
+    "candidates_tested": 8,
+    "original_composite": 0.0913,
+    "elapsed": 12
+  },
+  {
+    "key": "treasury_safe",
+    "action": "no_improvement",
+    "original_size": 6,
+    "candidates_tested": 8,
+    "original_composite": 0.0134,
+    "elapsed": 10
+  },
+  {
+    "key": "energy_seasonal",
+    "action": "no_improvement",
+    "original_size": 6,
+    "candidates_tested": 8,
+    "original_composite": 0.1146,
+    "elapsed": 10
+  },
+  {
+    "key": "gap_fill_spy",
+    "action": "no_improvement",
+    "original_size": 1,
+    "candidates_tested": 8,
+    "original_composite": -0.0,
+    "elapsed": 4
+  },
+  {
+    "key": "vix_fear_buy",
+    "action": "no_improvement",
+    "original_size": 3,
+    "candidates_tested": 8,
+    "original_composite": 0.0,
+    "elapsed": 8
+  },
+  {
+    "key": "ray_dalio",
+    "action": "would_add",
+    "tickers": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN",
+      "META",
+      "NVDA",
+      "AVGO",
+      "CRM"
+    ],
+    "new_size": 13,
+    "new_composite": 0.6003,
+    "elapsed": 9
+  }
+]
