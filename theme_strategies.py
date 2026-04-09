@@ -5,18 +5,34 @@ individual investor philosophies. Each theme targets a specific sector
 thesis with its own universe and timing signals.
 
 Themes:
-    1. AIRevolution      — AI/ML infrastructure and applications
-    2. CleanEnergy       — Renewables, EVs, batteries, grid
-    3. DefenseAerospace  — Defense contractors, space, cybersecurity
-    4. BiotechBreakout   — Biotech/pharma innovation and FDA catalysts
-    5. ChinaTechRebound  — China tech ADRs recovery play
-    6. LatAmGrowth       — Latin American growth (fintech, commodities)
-    7. InfrastructureBoom — Infrastructure spending (bridges, 5G, data centers)
-    8. SmallCapValue     — Small cap deep value (IWM universe)
-    9. CryptoEcosystem   — Crypto-adjacent public companies
-    10. AgingPopulation  — Healthcare, senior living, pharma for aging demographics
-    11. GLP1Obesity      — GLP-1 / weight loss drug megatrend
-    12. RoboticsAutonomous — Humanoid robots + autonomous vehicles
+    1. AIRevolution              — AI/ML infrastructure and applications
+    2. CleanEnergy               — Renewables, EVs, batteries, grid
+    3. DefenseAerospace          — Defense contractors, space, cybersecurity
+    4. BiotechBreakout           — Biotech/pharma innovation and FDA catalysts
+    5. ChinaTechRebound          — China tech ADRs recovery play
+    6. LatAmGrowth               — Latin American growth (fintech, commodities)
+    7. InfrastructureBoom        — Infrastructure spending (bridges, 5G, data centers)
+    8. SmallCapValue             — Small cap deep value (IWM universe)
+    9. CryptoEcosystem           — Crypto-adjacent public companies
+    10. AgingPopulation          — Healthcare, senior living, pharma for aging demographics
+    11. GLP1Obesity              — GLP-1 / weight loss drug megatrend
+    12. RoboticsAutonomous       — Humanoid robots + autonomous vehicles
+    + SemiconductorValue         — Semi picks-and-shovels at value
+    + SubscriptionMonopoly       — Sticky subscription moats
+    + ContrastivePairs           — Long value side of hype sectors
+    + GlobalFinancialInfra       — Financial infrastructure monopolies
+    + ReshoringIndustrial        — US reshoring beneficiaries
+    + WaterMonopoly              — Water utility monopolies
+    + RegulatedData              — Regulated data monopolies
+    + ChinaADRDeepValue          — China ADR deep value
+    + CloudCyberValue            — Cloud & cybersecurity value entries
+    + GlobalAirlinesTravel       — Airlines & travel recovery / momentum
+    + UtilityInfraIncome         — Utility & infrastructure income
+    + JapanIndustrialFinance     — Japan industrial & finance reform
+    + DefensePrimeContractors    — Defense prime contractors (NATO spend)
+    + GlobalConsumerStaples      — Global consumer staples income
+    + EmergingMarketETFValue     — Emerging market ETF value
+    + GlobalPharmaPipeline       — Global pharma pipeline value
 """
 
 from __future__ import annotations
@@ -1350,6 +1366,644 @@ class ChinaADRDeepValue(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Cloud & Cybersecurity Value
+# ---------------------------------------------------------------------------
+class CloudCyberValue(BasePersona):
+    """Cloud and cybersecurity value strategy.
+
+    Thesis: Cloud infrastructure and cybersecurity are non-discretionary spend.
+    Companies like Cloudflare, Datadog, CrowdStrike have durable moats via
+    network effects and switching costs. Buy on pullbacks to SMA200 with
+    MACD reversal for value entries in secular growth names.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Cloud & Cybersecurity Value",
+            description="Cloud/cyber non-discretionary spend: buy dips in Cloudflare, Datadog, CrowdStrike, Palo Alto",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "NET", "DDOG", "SNOW", "CRWD",  # Cloud/observability
+                "PANW", "FTNT", "ZS", "S",  # Cybersecurity
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "vol_20"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+
+            if any(_is_missing(v) for v in [sma200, rsi]):
+                continue
+
+            # Broken trend: >15% below SMA200 (growth names can gap down)
+            if price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            # Value entry: below SMA200 with low RSI
+            if price < sma200 and rsi < 45:
+                score += 2.5  # Below long-term avg = value zone
+            # Uptrend confirmation
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.0
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+            # MACD reversal (key signal for value entry timing)
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+            # Not overbought
+            if 30 < rsi < 65:
+                score += 0.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Global Airlines & Travel
+# ---------------------------------------------------------------------------
+class GlobalAirlinesTravel(BasePersona):
+    """Global airlines and travel recovery / momentum strategy.
+
+    Thesis: Post-pandemic travel demand is structural. Airlines are cyclical
+    but international travel (BKNG, TCOM) has durable pricing power.
+    Buy on pullbacks using SMA200 support with golden cross confirmation.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Global Airlines & Travel",
+            description="Airlines and OTAs: DAL, UAL, BKNG, ABNB — post-pandemic travel demand",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "DAL", "LUV", "UAL", "JBLU",  # US airlines
+                "BKNG", "ABNB", "EXPE",  # OTAs / travel platforms
+                "TCOM",  # Trip.com (China/Asia travel)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+            bb_lower = inds["bb_lower"]
+
+            if any(_is_missing(v) for v in [sma50, rsi]):
+                continue
+
+            # Airlines are cyclical — cut at >20% below SMA200
+            if sma200 is not None and price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+            if rsi > 78:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            # Golden cross: strong momentum signal for cyclicals
+            if sma200 is not None and sma50 > sma200 and price > sma50:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+            # Pullback entry near Bollinger lower band
+            if bb_lower is not None and not _is_missing(bb_lower) and price < bb_lower * 1.03:
+                score += 1.5
+            # MACD confirmation
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            # RSI sweet spot
+            if 30 < rsi < 60:
+                score += 0.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Utility & Infrastructure Income
+# ---------------------------------------------------------------------------
+class UtilityInfraIncome(BasePersona):
+    """Utility and infrastructure income strategy.
+
+    Thesis: Regulated utilities, data center REITs, and defensive consumer
+    names provide steady income with inflation-linked pricing.
+    Always maintain some allocation; buy more on dips below SMA200.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Utility & Infrastructure Income",
+            description="Utilities, data centers, telecom: steady income, buy dips for yield",
+            risk_tolerance=0.2,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "SO", "D", "DUK", "PPL",  # Regulated utilities
+                "EQIX",  # Data center REIT
+                "TMUS",  # T-Mobile (telecom)
+                "COST",  # Costco (defensive consumer)
+                "SCHW",  # Schwab (financial infrastructure)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14", "sma_50"], date)
+            sma200, rsi, sma50 = inds["sma_200"], inds["rsi_14"], inds["sma_50"]
+            if _is_missing(sma200):
+                continue
+
+            # Income: always some allocation (base weight)
+            base_weight = 0.08
+            # Buy more on dips below SMA200
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            if discount > 0.05:
+                # 5%+ below SMA200 = accumulate aggressively
+                score = 2.0 + discount * 5
+                if rsi is not None and rsi < 35:
+                    score += 1.0
+                candidates.append((sym, score, 0.12))
+            elif discount > -0.05:
+                # Near SMA200 = normal income allocation
+                score = 1.5
+                if rsi is not None and rsi < 45:
+                    score += 0.5
+                candidates.append((sym, score, base_weight))
+            elif discount > -0.15:
+                # Up to 15% above SMA200 = reduced but still hold for income
+                candidates.append((sym, 1.0, 0.06))
+            # More than 15% above SMA200 and RSI overbought = trim
+            elif rsi is not None and rsi > 75:
+                weights[sym] = 0.0
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        for sym, _, wt in top:
+            weights[sym] = min(wt, self.config.max_position_size)
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Japan Industrial & Finance
+# ---------------------------------------------------------------------------
+class JapanIndustrialFinance(BasePersona):
+    """Japan industrial and financial sector strategy.
+
+    Thesis: Japan's corporate governance reform (TSE push for ROE > 8%)
+    is unlocking value in keiretsu conglomerates and megabanks.
+    Buy ADRs of quality Japanese industrials and financials on dips.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Japan Industrial & Finance",
+            description="Japan governance reform: Toyota, Sony, Nomura, MUFG, trading houses",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "MKTAY", "NMR", "SMFG", "MUFG",  # Finance / industrial
+                "ITOCY", "MITSY",  # Trading houses (Buffett favorites)
+                "TM", "SONY",  # Consumer / auto
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+
+            if any(_is_missing(v) for v in [sma200, rsi]):
+                continue
+
+            # Japan ADRs can be volatile — cut at >20% below SMA200
+            if price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            # Value entry: below SMA200 with low RSI (governance reform unlocks value)
+            if price < sma200 and rsi < 45:
+                score += 2.5
+            # Uptrend = reform thesis working
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.0
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+            # MACD reversal
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            # Not overbought
+            if 30 < rsi < 65:
+                score += 0.5
+            # Deep oversold = contrarian buy
+            if rsi < 30:
+                score += 1.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Defense Prime Contractors
+# ---------------------------------------------------------------------------
+class DefensePrimeContractors(BasePersona):
+    """Defense prime contractors focused strategy.
+
+    Thesis: NATO 2%+ GDP spending targets, geopolitical tensions, and
+    long-duration defense contracts create predictable revenue streams.
+    Primes have cost-plus contracts = guaranteed margins.
+    Buy on value dips, hold for steady compounding.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Defense Prime Contractors",
+            description="NATO spending boom: LMT, NOC, RTX, BAE, GD — cost-plus contracts = guaranteed margins",
+            risk_tolerance=0.3,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "LMT", "NOC", "RTX", "BAESY",  # Top primes
+                "GD", "HII", "LHX", "LDOS",  # Second tier primes
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14", "sma_50", "vol_20"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
+            sma50, vol = inds["sma_50"], inds["vol_20"]
+            if _is_missing(sma200):
+                continue
+
+            # Defense primes are stable — cut only at >15% below SMA200
+            if price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            score = 0.0
+
+            # Value: buy near or below SMA200
+            if discount > 0:
+                score += 2.0 + discount * 5  # More discount = higher score
+            elif discount > -0.10:
+                score += 1.0
+
+            # Low RSI = oversold (defense rarely stays oversold)
+            if rsi is not None and rsi < 40:
+                score += 1.5
+            elif rsi is not None and rsi < 55:
+                score += 0.5
+            elif rsi is not None and rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            # Low vol bonus (stable defense contractor = good)
+            if vol is not None and not _is_missing(vol) and vol < 0.015:
+                score += 0.5
+
+            if score >= 1.5:
+                candidates.append((sym, score))
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Global Consumer Staples
+# ---------------------------------------------------------------------------
+class GlobalConsumerStaples(BasePersona):
+    """Global consumer staples strategy.
+
+    Thesis: Global staples (Unilever, Nestle, P&G, KO) have pricing power
+    across economic cycles. Buy for income and stability — always maintain
+    some allocation, accumulate on dips.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Global Consumer Staples",
+            description="Global pricing power: Unilever, Nestle, P&G, KO, Deere — income + stability",
+            risk_tolerance=0.2,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "UL", "MKC", "DE", "NVO",  # International staples/health
+                "PG", "KO", "NSRGY", "COST",  # US/global staples
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "rsi_14", "sma_50"], date)
+            sma200, rsi, sma50 = inds["sma_200"], inds["rsi_14"], inds["sma_50"]
+            if _is_missing(sma200):
+                continue
+
+            # Income strategy: always hold some, buy more on dips
+            base_weight = 0.08
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            if discount > 0.05:
+                # >5% below SMA200: accumulate (staples always recover)
+                wt = 0.13
+                score = 2.5
+                if rsi is not None and rsi < 35:
+                    score += 1.0
+                    wt = 0.15
+                candidates.append((sym, score, wt))
+            elif discount > -0.05:
+                # Near SMA200: normal income allocation
+                score = 1.5
+                if rsi is not None and rsi < 45:
+                    score += 0.5
+                candidates.append((sym, score, base_weight))
+            elif discount > -0.12:
+                # Moderate uptrend: smaller allocation
+                candidates.append((sym, 1.0, 0.06))
+            else:
+                # Extended above SMA200 + overbought: trim
+                if rsi is not None and rsi > 75:
+                    weights[sym] = 0.0
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        for sym, _, wt in top:
+            weights[sym] = min(wt, self.config.max_position_size)
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Emerging Market ETF Value
+# ---------------------------------------------------------------------------
+class EmergingMarketETFValue(BasePersona):
+    """Emerging market ETF value strategy.
+
+    Thesis: EM equities are structurally undervalued vs DM. Country ETFs
+    (Vietnam, Korea, Singapore, India, Taiwan) provide diversified EM
+    exposure. Buy when RSI is low and price is below SMA200 for value entries.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Emerging Market ETF Value",
+            description="EM country ETFs at value prices: Vietnam, Korea, India, Taiwan, Singapore",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "NU", "VNM", "EWY", "EWS",  # LatAm fintech, Vietnam, Korea, Singapore
+                "EPI", "INDA", "EEM", "EWT",  # India, broad EM, Taiwan
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+
+            if any(_is_missing(v) for v in [sma200, rsi]):
+                continue
+
+            # EM can freefall — cut at >20% below SMA200
+            if price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+            if rsi > 78:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            # Value: below SMA200 with low RSI
+            if price < sma200 and rsi < 40:
+                score += 3.0  # Deep EM value
+            elif price < sma200 and rsi < 55:
+                score += 2.0
+            # Momentum recovery: above SMA200 with golden cross
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.0
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+            # MACD reversal = turning point
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            # Deep oversold bounce
+            if rsi < 25:
+                score += 1.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Global Pharma Pipeline
+# ---------------------------------------------------------------------------
+class GlobalPharmaPipeline(BasePersona):
+    """Global pharma pipeline strategy.
+
+    Thesis: Big pharma companies with deep pipelines (Roche, AstraZeneca,
+    Merck, GSK, Takeda) trade at value multiples despite having
+    blockbuster drugs in late-stage trials. Buy on patent cliff fears.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Global Pharma Pipeline",
+            description="Global pharma at value: Roche, AZN, MRK, GSK, TAK — deep pipelines, patent cliff fears",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "RHHBY", "MRK", "BAYRY", "NVS",  # Global pharma
+                "AZN", "GSK", "TAK", "SNY",  # EU/Japan pharma
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+            bb_lower = inds["bb_lower"]
+
+            if any(_is_missing(v) for v in [sma200, rsi]):
+                continue
+
+            # Pharma can gap on FDA news — cut at >20% below SMA200
+            if price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            # Value: below SMA200 (patent cliff fears = opportunity)
+            if price < sma200 * 0.90:
+                score += 3.0
+            elif price < sma200:
+                score += 2.0
+            # RSI oversold (pharma recovers when pipeline delivers)
+            if rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+            # MACD reversal = pipeline catalyst turning sentiment
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+            # Bollinger lower = statistical extreme
+            if bb_lower is not None and not _is_missing(bb_lower) and price < bb_lower * 1.02:
+                score += 1.0
+            # Also buy uptrending pharma (pipeline thesis confirmed)
+            if sma50 is not None and price > sma50 > sma200:
+                score += 1.5
+            elif rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -1371,6 +2025,14 @@ THEME_STRATEGIES = {
     "water_monopoly": WaterMonopoly,
     "regulated_data": RegulatedData,
     "china_adr_deep_value": ChinaADRDeepValue,
+    "cloud_cyber_value": CloudCyberValue,
+    "global_airlines_travel": GlobalAirlinesTravel,
+    "utility_infra_income": UtilityInfraIncome,
+    "japan_industrial_finance": JapanIndustrialFinance,
+    "defense_prime_contractors": DefensePrimeContractors,
+    "global_consumer_staples": GlobalConsumerStaples,
+    "emerging_market_etf_value": EmergingMarketETFValue,
+    "global_pharma_pipeline": GlobalPharmaPipeline,
 }
 
 

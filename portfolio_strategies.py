@@ -420,6 +420,100 @@ class IncomeShield(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 7. Bond & Fixed Income Portfolio
+# ---------------------------------------------------------------------------
+class BondFixedIncome(BasePersona):
+    """Diversified bond and fixed income portfolio.
+
+    Thesis: Bonds provide income, diversification, and crisis protection.
+    Allocate across duration ladder (short to long), credit spectrum
+    (investment grade to high yield), and geography (US + EM).
+    Shift duration based on volatility regime.
+
+    Target: 3-5% yield, max drawdown < 8%.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Bond & Fixed Income Portfolio",
+            description="Diversified bonds: duration ladder + credit spectrum + EM, 3-5% yield target",
+            risk_tolerance=0.15,
+            max_position_size=0.20,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "FBND", "SPBO",  # Core bond / corporate
+                "SCHI",  # Intermediate corporate
+                "VWOB",  # EM sovereign bonds
+                "VTEB",  # Tax-exempt munis
+                "AGG", "BND",  # Broad US aggregate
+                "TLT",  # Long-duration treasuries
+                "HYG",  # High yield corporate
+                "LQD",  # Investment grade corporate
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Use AGG volatility as regime indicator
+        agg_vol = self._get_indicator(data, "AGG", "vol_20", date)
+        agg_rsi = self._get_indicator(data, "AGG", "rsi_14", date)
+
+        if agg_vol is not None:
+            ann_vol = agg_vol * (252 ** 0.5)
+        else:
+            ann_vol = 0.05  # Default bond vol assumption
+
+        if ann_vol > 0.10:
+            # High bond vol: shorten duration, reduce credit risk
+            # Overweight short-duration and high-quality
+            weights["FBND"] = 0.15
+            weights["SPBO"] = 0.10
+            weights["SCHI"] = 0.10
+            weights["AGG"] = 0.15
+            weights["BND"] = 0.15
+            weights["VTEB"] = 0.10
+            weights["TLT"] = 0.05  # Reduce long duration
+            weights["HYG"] = 0.05  # Reduce credit risk
+            weights["LQD"] = 0.10
+            weights["VWOB"] = 0.05  # Reduce EM exposure
+        elif ann_vol < 0.04:
+            # Very low vol: extend duration for yield, add credit
+            weights["TLT"] = 0.15
+            weights["HYG"] = 0.12
+            weights["LQD"] = 0.15
+            weights["VWOB"] = 0.12
+            weights["SCHI"] = 0.10
+            weights["VTEB"] = 0.10
+            weights["AGG"] = 0.08
+            weights["BND"] = 0.08
+            weights["FBND"] = 0.05
+            weights["SPBO"] = 0.05
+        else:
+            # Normal vol: balanced allocation
+            weights["AGG"] = 0.12
+            weights["BND"] = 0.12
+            weights["LQD"] = 0.12
+            weights["FBND"] = 0.10
+            weights["SCHI"] = 0.10
+            weights["VTEB"] = 0.10
+            weights["TLT"] = 0.10
+            weights["VWOB"] = 0.08
+            weights["HYG"] = 0.08
+            weights["SPBO"] = 0.08
+
+        # Oversold bonds = accumulate (income strategy always buys dips)
+        if agg_rsi is not None and agg_rsi < 30:
+            # Boost allocation across the board on bond selloff
+            for sym in weights:
+                weights[sym] = min(weights[sym] * 1.1, self.config.max_position_size)
+
+        return {k: v for k, v in weights.items() if k in prices}
+
+
 PORTFOLIO_STRATEGIES = {
     "staples_hedged_growth": StaplesHedgedGrowth,
     "barbell_portfolio": BarbellPortfolio,
@@ -427,6 +521,7 @@ PORTFOLIO_STRATEGIES = {
     "adaptive_ensemble": AdaptiveEnsemble,
     "core_satellite": CoreSatellite,
     "income_shield": IncomeShield,
+    "bond_fixed_income": BondFixedIncome,
 }
 
 

@@ -35,6 +35,22 @@ User requested strategies incorporating these tickers. Group into thematic strat
 - [ ] **Global Consumer Brands**: UL, MKC, DE, NVO, PG, COST, EL
 - [ ] **Emerging Market Value**: NU, VNM, EWY, EWS, EPI
 - [ ] **Pharma & Biotech Pipeline**: RHHBY (Roche), MRK, BAYRY (Bayer), NVS, UBS
+- [ ] **Singapore Heritage Consumer**: H02.SI (Haw Par/Tiger Balm), F34.SI (Wilmar), Y92.SI (Thai Bev)
+- [ ] **Product Tanker Shipping**: TRMD (TORM), FRO (Frontline), STNG (Scorpio), INSW (International Seaways)
+- [ ] **UK & European Banking Value**: NWG (NatWest), BARC (Barclays), HSBC, UBS, BNPQF, DB
+- [ ] **Retail Deep Value**: KSS (Kohl's), M (Macy's), JWN (Nordstrom), DDS (Dillard's), BURL
+- [ ] **Telecom Equipment & 5G**: ERIC (Ericsson), NOK (Nokia), QCOM, MRVL, KEYS
+- [ ] **Gig Economy & SaaS Disruptors**: UPWK (Upwork), FVRR (Fiverr), TOST (Toast), RKLB (Rocket Lab)
+- [ ] **Cannabis & Alt Consumer**: TLRY (Tilray), CGC (Canopy), MJ ETF
+- [ ] **Cloud & Cybersecurity Value**: NET, DDOG, SNOW, CRWD, CRM, ZS, S (SentinelOne)
+- [ ] **Airlines & Travel Recovery**: DAL, LUV, UAL, C6L.SI (SIA), RKUNY (ANA), TCOM, BKNG
+- [ ] **Korean Chaebols & Fintech**: CPNG (Coupang), SKM (SK Telecom), SSNLF (Samsung), KB (Kookmin), SHG (Shinhan), PKX (POSCO)
+- [ ] **Fallen Blue Chip Value**: PFE (Pfizer), INTC (Intel), WMT (Walmart), SBUX (Starbucks), NKE (Nike), CSCO (Cisco), VZ (Verizon), TGT (Target)
+- [ ] **Rideshare & Mobility**: UBER, LYFT, GRAB, DASH (DoorDash)
+- [ ] **High-Yield REIT & BDC Income**: O (Realty Income), AGNC, ARMOUR (ARR), ORC (Orchid), NLY (Annaly), DX (Dynex), PSEC (Prospect), MAIN (Main Street), HTGC (Horizon), STAG, ARCC (Ares Capital), EFC (Ellington), PNNT (PennantPark)
+- [ ] **Singapore REITs**: A17U.SI (CapitaLand Ascendas), N2IU.SI (Mapletree Pan Asia), C38U.SI (CapitaLand Integrated), ME8U.SI, AJBU.SI (Keppel DC REIT)
+- [ ] **Real Estate Tech**: Z (Zillow), RDFN (Redfin)
+- [ ] **Dividend Aristocrat Blue Chips**: MO (Altria), PM (Philip Morris), MMM (3M), UPS, FDX, F (Ford), KHC (Kraft), JNJ, ENB (Enbridge), ABBV, XOM (Exxon), SCHD (Schwab Dividend ETF)
 
 ### Completed 2026-04-08 batch 2
 - [x] rare_earth_minerals (crisis_commodity) — -1.8% ret, LOSE

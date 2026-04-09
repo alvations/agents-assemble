@@ -1700,6 +1700,107 @@ class ConstellationContrarian(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# News & Media Monopoly
+# ---------------------------------------------------------------------------
+class NewsMediaMonopoly(BasePersona):
+    """News and media monopoly strategy.
+
+    Thesis: Legacy media companies own irreplaceable content libraries and
+    distribution networks. NYT has proven digital subscription model.
+    GOOG owns YouTube (largest video platform). DIS owns unmatched IP.
+    These trade at discounts due to cord-cutting fears but content is king.
+    Buy beaten-down media names with MACD reversal signals.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="News & Media Monopoly",
+            description="Irreplaceable media IP and distribution: NYT, DIS, GOOG (YouTube), CMCSA",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=7,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "NYT",  # New York Times (digital subscription leader)
+                "CMCSA",  # Comcast (NBCUniversal + cable infrastructure)
+                "DIS",  # Disney (IP moat: Marvel, Star Wars, Pixar, ESPN)
+                "PARA",  # Paramount (content library)
+                "WBD",  # Warner Bros Discovery (HBO, CNN)
+                "NWSA",  # News Corp (WSJ, Dow Jones)
+                "GOOG",  # Alphabet (YouTube = video monopoly)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            score = 0.0
+
+            # Deep value: media names crushed by cord-cutting narrative
+            if price < sma200 * 0.90:
+                score += 3.0  # >10% below long-term avg
+            elif price < sma200:
+                score += 1.5
+
+            # RSI oversold = maximum pessimism on media
+            if rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+
+            # MACD reversal = sentiment turning (content wins eventually)
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+
+            # Bollinger lower band = statistical extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+
+            # Also ride momentum if uptrend established (NYT, GOOG)
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.0
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+
+            # Overbought: take profits on media (cyclical)
+            if rsi > 75 and price > sma200:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
 UNCONVENTIONAL_STRATEGIES = {
     "sell_in_may": SellInMayGoAway,
     "turn_of_month": TurnOfMonth,
@@ -1724,6 +1825,7 @@ UNCONVENTIONAL_STRATEGIES = {
     "patent_cliff_pharma": PatentCliffPharma,
     "midstream_toll_road": MidstreamTollRoad,
     "constellation_contrarian": ConstellationContrarian,
+    "news_media_monopoly": NewsMediaMonopoly,
 }
 
 
