@@ -1,6 +1,6 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **99 strategies** (55 winning, 44 losing), 630+ tickers, backtested across 9 horizons (1W to 10Y).
+Trading agents and algorithms for publicly tradable instruments. **173 strategies** (101 winning, 72 losing), 900+ tickers, backtested on 4Y horizon (2022-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
@@ -11,17 +11,19 @@ Trading agents and algorithms for publicly tradable instruments. **99 strategies
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
 > - **[knowledge/](knowledge/)** — 42 research files with backtested findings
 
-## Top 5 Strategies (Return + Sharpe + Max DD)
+## Top 5 Strategies (4Y: 2022-2025)
 
-| Rank | Strategy | 3Y Return | 3Y Sharpe | 3Y Max DD | 10Y Return |
-|------|----------|-----------|-----------|-----------|-----------|
-| 1 | **AI Revolution** | **183.6%** | **1.41** | -22.0% | 783% |
-| 2 | **Concentrate Winners** | **135.6%** | **1.28** | -18.0% | 818% |
-| 3 | **Momentum** | **135.0%** | **1.36** | -17.9% | 570% |
-| 4 | **Momentum Crash-Hedged** | **117.1%** | **1.26** | -20.8% | 743% |
-| 5 | **GLP-1 Obesity** | **80.7%** | **0.92** | -12.5% | — |
+| Rank | Strategy | 4Y Return | Sharpe | Max DD | Type |
+|------|----------|-----------|--------|--------|------|
+| 1 | **AI Token Economy** | **248.4%** | **1.12** | -24.8% | NVDA compute demand proxy |
+| 2 | **Uranium Renaissance** | **156.9%** | **0.67** | -51.4% | Nuclear supply deficit |
+| 3 | **Midstream Toll Road** | **112.5%** | **0.86** | -19.9% | Pipeline fee-based income |
+| 4 | **David Tepper** | **108.1%** | **0.82** | -16.2% | Appaloosa macro + growth |
+| 5 | **UK European Banking** | **103.1%** | **0.83** | -23.6% | NWG, HSBC, UBS value |
 
-**NEW:** Williams %R(2) on SPY: 77% win rate, +96% 10Y, invested only 22% of the time → [LEADERBOARD.md](LEADERBOARD.md)
+**Regime Orchestrator:** Conservative version: +70.0%, 1.17 Sharpe, -16.7% DD — auto-switches between bull/bear/rotation/crisis/K-shape.
+
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 173 strategies with full rankings.
 
 ## Quick Start
 
@@ -90,7 +92,7 @@ for rec in result["recommendations"]:
 | SUGGESTED | GOOGL | BUY | 30% | 10.9% | 4.3% | 5.4% |
 | SUGGESTED | AMZN | BUY | 33% | 12.0% | 4.8% | 4.9% |
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 99 strategies with full rankings.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 173 strategies with full rankings.
 
 ## 99 Strategies Across 13 Categories
 
