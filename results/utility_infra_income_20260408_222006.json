@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.2957937832692319,
+    "cagr": 0.09053794806654403,
+    "annual_volatility": 0.10728208027358938,
+    "sharpe_ratio": 0.4974671822448862,
+    "sortino_ratio": 0.7238475728604972,
+    "calmar_ratio": 0.6329636294351584,
+    "max_drawdown": -0.1430381523616735,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.5146276595744681,
+    "profit_factor": 1.164892531343332,
+    "num_trading_days": 752,
+    "skewness": 0.053353409350891244,
+    "kurtosis": 2.1712658823472855,
+    "best_day": 0.03090490364657028,
+    "worst_day": -0.02516545655690139,
+    "avg_daily_return": 0.0003674328555653588,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.003913368966779851,
+    "beta": 0.40210632640517807,
+    "information_ratio": 0.029573358373124158,
+    "tracking_error": 0.13232751307461463
+  },
+  "trade_metrics": {
+    "num_trades": 242,
+    "num_buys": 118,
+    "num_sells": 124,
+    "total_commission": 0.0,
+    "total_slippage": 744.9569817161554,
+    "total_transaction_costs": 744.9569817161554,
+    "avg_trade_size": 3078.334635190727
+  },
+  "final_positions": {
+    "D": {
+      "qty": 145.0,
+      "avg_cost": 54.15338897705078,
+      "realized_pnl": -1151.3426132202171
+    },
+    "DUK": {
+      "qty": 71.0,
+      "avg_cost": 106.81039428710938,
+      "realized_pnl": 2407.915367126464
+    },
+    "SO": {
+      "qty": 93.0,
+      "avg_cost": 84.30789381457913,
+      "realized_pnl": 4794.134933471683
+    }
+  },
+  "source": "theme",
+  "description": "Utilities, data centers, telecom: steady income, buy dips for yield"
+}

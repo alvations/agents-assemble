@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": -0.295434380165704,
+    "cagr": -0.11052639180262336,
+    "annual_volatility": 0.19526198324495372,
+    "sharpe_ratio": -0.7037050401559428,
+    "sortino_ratio": -0.9212091617641076,
+    "calmar_ratio": -0.210639954322633,
+    "max_drawdown": -0.5247171276600844,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.4946808510638298,
+    "profit_factor": 0.9137868405333731,
+    "num_trading_days": 752,
+    "skewness": -0.5187439629029534,
+    "kurtosis": 3.3286640548570836,
+    "best_day": 0.049383340800515985,
+    "worst_day": -0.07718170712453443,
+    "avg_daily_return": -0.00038961538228936884,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.19715097090238753,
+    "beta": 0.6057020401736992,
+    "information_ratio": -1.108229231869513,
+    "tracking_error": 0.17789728445423358
+  },
+  "trade_metrics": {
+    "num_trades": 791,
+    "num_buys": 381,
+    "num_sells": 410,
+    "total_commission": 0.0,
+    "total_slippage": 3679.0062397794754,
+    "total_transaction_costs": 3679.0062397794754,
+    "avg_trade_size": 4651.082477597311
+  },
+  "final_positions": {
+    "EXPE": {
+      "qty": 49.0,
+      "avg_cost": 163.1879023722393,
+      "realized_pnl": -4685.649274849141
+    },
+    "JBLU": {
+      "qty": 1132.0,
+      "avg_cost": 6.8791612218690394,
+      "realized_pnl": -9508.021100466687
+    },
+    "UAL": {
+      "qty": 92.0,
+      "avg_cost": 96.39608432935631,
+      "realized_pnl": -1031.9799919128359
+    },
+    "BKNG": {
+      "qty": 46.0,
+      "avg_cost": 201.79275910750678,
+      "realized_pnl": -96.33229064941247
+    },
+    "LUV": {
+      "qty": 277.0,
+      "avg_cost": 29.02187248501936,
+      "realized_pnl": -11024.857100763405
+    },
+    "ABNB": {
+      "qty": 69.0,
+      "avg_cost": 131.80999755859375,
+      "realized_pnl": -1349.2499923706062
+    },
+    "TCOM": {
+      "qty": 133.0,
+      "avg_cost": 72.06413423925414,
+      "realized_pnl": 3099.1554412841806
+    }
+  },
+  "source": "theme",
+  "description": "Airlines and OTAs: DAL, UAL, BKNG, ABNB \u2014 post-pandemic travel demand"
+}

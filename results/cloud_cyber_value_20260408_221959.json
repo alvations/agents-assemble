@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": -0.1356761421027911,
+    "cagr": -0.04759935401337778,
+    "annual_volatility": 0.2605899617600411,
+    "sharpe_ratio": -0.20714967846832424,
+    "sortino_ratio": -0.27840067284508724,
+    "calmar_ratio": -0.11518993536814968,
+    "max_drawdown": -0.4132249389779511,
+    "max_drawdown_date": "2023-01-19",
+    "win_rate": 0.49601063829787234,
+    "profit_factor": 0.9898901951071243,
+    "num_trading_days": 752,
+    "skewness": -0.43080426590074555,
+    "kurtosis": 3.79002224379744,
+    "best_day": 0.08177505020546572,
+    "worst_day": -0.09116403117410654,
+    "avg_daily_return": -5.856095780661584e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.13422393311314196,
+    "beta": 0.7771611826103002,
+    "information_ratio": -0.5948409665850493,
+    "tracking_error": 0.22564675375960486
+  },
+  "trade_metrics": {
+    "num_trades": 794,
+    "num_buys": 390,
+    "num_sells": 404,
+    "total_commission": 0.0,
+    "total_slippage": 3768.5209627218223,
+    "total_transaction_costs": 3768.5209627218223,
+    "avg_trade_size": 4746.248063881391
+  },
+  "final_positions": {
+    "NET": {
+      "qty": 103.0,
+      "avg_cost": 114.26625156402588,
+      "realized_pnl": 251.33298397063754
+    },
+    "FTNT": {
+      "qty": 118.0,
+      "avg_cost": 83.1256087311098,
+      "realized_pnl": 4735.148120401566
+    },
+    "ZS": {
+      "qty": 61.0,
+      "avg_cost": 183.1300048828125,
+      "realized_pnl": -2891.2494506835938
+    },
+    "SNOW": {
+      "qty": 72.0,
+      "avg_cost": 170.7424110504518,
+      "realized_pnl": -6865.758486276646
+    },
+    "DDOG": {
+      "qty": 78.0,
+      "avg_cost": 159.07769540640024,
+      "realized_pnl": 1249.4073333740218
+    },
+    "CRWD": {
+      "qty": 32.0,
+      "avg_cost": 348.38281612911743,
+      "realized_pnl": -6132.938139178299
+    },
+    "S": {
+      "qty": 500.0,
+      "avg_cost": 22.43000030517578,
+      "realized_pnl": -3152.4815778732273
+    }
+  },
+  "source": "theme",
+  "description": "Cloud/cyber non-discretionary spend: buy dips in Cloudflare, Datadog, CrowdStrike, Palo Alto"
+}

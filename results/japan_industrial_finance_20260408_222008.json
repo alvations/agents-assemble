@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "total_return": 0.2935715745122063,
+    "cagr": 0.08991204751594584,
+    "annual_volatility": 0.15855349857427606,
+    "sharpe_ratio": 0.3759965587367152,
+    "sortino_ratio": 0.5317906707438526,
+    "calmar_ratio": 0.3550952860709706,
+    "max_drawdown": -0.2532054100486586,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5226063829787234,
+    "profit_factor": 1.1100785705020035,
+    "num_trading_days": 752,
+    "skewness": -0.1811663498113493,
+    "kurtosis": 1.9067786111746012,
+    "best_day": 0.043624078469928884,
+    "worst_day": -0.05168807052023372,
+    "avg_daily_return": 0.00039221958437695516,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.0032874684161816603,
+    "beta": 0.47276036686554224,
+    "information_ratio": 0.020078012524596938,
+    "tracking_error": 0.1637347527378164
+  },
+  "trade_metrics": {
+    "num_trades": 241,
+    "num_buys": 110,
+    "num_sells": 131,
+    "total_commission": 0.0,
+    "total_slippage": 1829.2139937388895,
+    "total_transaction_costs": 1829.2139937388895,
+    "avg_trade_size": 7590.09955908253
+  },
+  "final_positions": {
+    "MITSY": {
+      "qty": 47.0,
+      "avg_cost": 440.6372862470911,
+      "realized_pnl": 10464.958557128904
+    },
+    "SONY": {
+      "qty": 990.0,
+      "avg_cost": 19.954172134399414,
+      "realized_pnl": 1139.707032203676
+    },
+    "SMFG": {
+      "qty": 1314.0,
+      "avg_cost": 12.646032333374023,
+      "realized_pnl": 3812.3603367805495
+    },
+    "NMR": {
+      "qty": 3325.0,
+      "avg_cost": 5.054460048675537,
+      "realized_pnl": 2061.3334853649167
+    },
+    "MUFG": {
+      "qty": 1657.0,
+      "avg_cost": 10.442277297770973,
+      "realized_pnl": 3007.4709936789363
+    }
+  },
+  "source": "theme",
+  "description": "Japan governance reform: Toyota, Sony, Nomura, MUFG, trading houses"
+}
