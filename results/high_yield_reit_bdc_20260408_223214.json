@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "total_return": 0.03960496502416877,
+    "cagr": 0.013076148633410778,
+    "annual_volatility": 0.13684955523847542,
+    "sharpe_ratio": -0.12310251482798468,
+    "sortino_ratio": -0.1692502711901733,
+    "calmar_ratio": 0.053692938579608454,
+    "max_drawdown": -0.24353572330602236,
+    "max_drawdown_date": "2022-10-10",
+    "win_rate": 0.526595744680851,
+    "profit_factor": 1.0301283512387636,
+    "num_trading_days": 752,
+    "skewness": -0.14909172643138305,
+    "kurtosis": 4.727968432525218,
+    "best_day": 0.047480753429407274,
+    "worst_day": -0.04421442354152916,
+    "avg_daily_return": 8.879857547797896e-05,
+    "black_swan_resilience": 72.8,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0735484304663534,
+    "beta": 0.5606823353388235,
+    "information_ratio": -0.6003638956022094,
+    "tracking_error": 0.1225064181992138
+  },
+  "trade_metrics": {
+    "num_trades": 359,
+    "num_buys": 178,
+    "num_sells": 181,
+    "total_commission": 0.0,
+    "total_slippage": 590.3837702121727,
+    "total_transaction_costs": 590.3837702121727,
+    "avg_trade_size": 1644.5230368027117
+  },
+  "final_positions": {
+    "HTGC": {
+      "qty": 384.0,
+      "avg_cost": 16.356204678614933,
+      "realized_pnl": 3040.034474372865
+    },
+    "O": {
+      "qty": 162.0,
+      "avg_cost": 53.90156307926885,
+      "realized_pnl": 696.0942611694376
+    },
+    "ARCC": {
+      "qty": 332.0,
+      "avg_cost": 15.100727497993327,
+      "realized_pnl": 952.412354529098
+    },
+    "VNQ": {
+      "qty": 70.0,
+      "avg_cost": 77.70881258705408,
+      "realized_pnl": -484.147759714317
+    },
+    "AGNC": {
+      "qty": 672.0,
+      "avg_cost": 8.104555564071193,
+      "realized_pnl": -170.83939565484968
+    },
+    "ARR": {
+      "qty": 419.0,
+      "avg_cost": 13.482287639430414,
+      "realized_pnl": -1892.513200613386
+    },
+    "NLY": {
+      "qty": 328.0,
+      "avg_cost": 14.457263894624642,
+      "realized_pnl": -1059.9863680391936
+    },
+    "DX": {
+      "qty": 522.0,
+      "avg_cost": 9.12759172739252,
+      "realized_pnl": -655.9031321713434
+    },
+    "STAG": {
+      "qty": 247.0,
+      "avg_cost": 33.6777150616706,
+      "realized_pnl": -394.5250588597659
+    },
+    "Z": {
+      "qty": 76.0,
+      "avg_cost": 83.69999694824219,
+      "realized_pnl": 209.02042388915947
+    }
+  },
+  "source": "portfolio",
+  "description": "REITs + BDCs + RE tech: 6-8% yield, monthly income, dip accumulation"
+}

@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": -0.38630441333058074,
+    "cagr": -0.15067298349748415,
+    "annual_volatility": 0.45078261427835375,
+    "sharpe_ratio": -0.23039426045556416,
+    "sortino_ratio": -0.3712471484086745,
+    "calmar_ratio": -0.25427255990415093,
+    "max_drawdown": -0.59256485856862,
+    "max_drawdown_date": "2023-07-25",
+    "win_rate": 0.4574468085106383,
+    "profit_factor": 0.9739396784278097,
+    "num_trading_days": 752,
+    "skewness": 1.5630807104538664,
+    "kurtosis": 9.40821257328399,
+    "best_day": 0.21828447641790838,
+    "worst_day": -0.10385777221996939,
+    "avg_daily_return": -0.00025648397468051154,
+    "black_swan_resilience": 68.8,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.23729756259724832,
+    "beta": 0.9091539317293373,
+    "information_ratio": -0.5622552353118356,
+    "tracking_error": 0.42204598142272404
+  },
+  "trade_metrics": {
+    "num_trades": 1095,
+    "num_buys": 591,
+    "num_sells": 504,
+    "total_commission": 0.0,
+    "total_slippage": 2320.827210526347,
+    "total_transaction_costs": 2320.827210526347,
+    "avg_trade_size": 2119.4769045902713
+  },
+  "final_positions": {
+    "TLRY": {
+      "qty": 479.0,
+      "avg_cost": 15.90662020000254,
+      "realized_pnl": 932.5712075990086
+    },
+    "CURLF": {
+      "qty": 4356.0,
+      "avg_cost": 2.581421054551241,
+      "realized_pnl": -1792.023737964954
+    },
+    "CGC": {
+      "qty": 2377.0,
+      "avg_cost": 4.58739791460204,
+      "realized_pnl": -5010.2638413876975
+    },
+    "MJ": {
+      "qty": 253.0,
+      "avg_cost": 28.537234742641687,
+      "realized_pnl": -8679.08202862972
+    },
+    "CRON": {
+      "qty": 3339.0,
+      "avg_cost": 1.9376691245943083,
+      "realized_pnl": 1776.93829462873
+    },
+    "MSOS": {
+      "qty": 1824.0,
+      "avg_cost": 4.0440422722963865,
+      "realized_pnl": -5009.226586283695
+    },
+    "GTBIF": {
+      "qty": 816.0,
+      "avg_cost": 7.875682015497313,
+      "realized_pnl": -3212.6591592912673
+    },
+    "SAM": {
+      "qty": 22.0,
+      "avg_cost": 298.1499938964844,
+      "realized_pnl": -3738.2801513671848
+    }
+  },
+  "source": "unconventional",
+  "description": "Contrarian cannabis: pre-legalization value, binary regulatory catalyst"
+}

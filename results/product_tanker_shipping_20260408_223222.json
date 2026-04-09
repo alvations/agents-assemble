@@ -1,0 +1,45 @@
+{
+  "metrics": {
+    "total_return": 0.9321946952658933,
+    "cagr": 0.24670996731464978,
+    "annual_volatility": 0.25540136460150503,
+    "sharpe_ratio": 0.8399701458920179,
+    "sortino_ratio": 1.2296606674143669,
+    "calmar_ratio": 1.0850229613715971,
+    "max_drawdown": -0.227377646462688,
+    "max_drawdown_date": "2023-07-06",
+    "win_rate": 0.4540612516644474,
+    "profit_factor": 1.2136392425764506,
+    "num_trading_days": 751,
+    "skewness": -0.22051915222737214,
+    "kurtosis": 3.8121861327384563,
+    "best_day": 0.058195667454030264,
+    "worst_day": -0.0914022904311782,
+    "avg_daily_return": 0.0010069574877331145,
+    "black_swan_resilience": 72.3,
+    "benchmark_total_return": 0.2866221187402662,
+    "benchmark_cagr": 0.08803411767458291,
+    "alpha": 0.15867584964006687,
+    "beta": 0.2940949238881434,
+    "information_ratio": 0.5686359352256144,
+    "tracking_error": 0.27904646859349463
+  },
+  "trade_metrics": {
+    "num_trades": 707,
+    "num_buys": 350,
+    "num_sells": 357,
+    "total_commission": 0.0,
+    "total_slippage": 7436.911072990888,
+    "total_transaction_costs": 7436.911072990888,
+    "avg_trade_size": 10518.968985842848
+  },
+  "final_positions": {
+    "HAFN": {
+      "qty": 6147.0,
+      "avg_cost": 4.5841064453125,
+      "realized_pnl": -5356.069051265716
+    }
+  },
+  "source": "crisis",
+  "description": "Product tanker cycle: aging fleet + ton-mile growth, 30-50% FCF yields at peak"
+}
