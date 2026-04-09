@@ -340,8 +340,8 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 
 ## Full Rankings (175 Strategies)
 
-| # | Strategy | 3Y Ret | 3Y Sharpe | 3Y DD | Pos | Avg Ret | Composite | Consistency |
-|---|----------|--------|-----------|-------|-----|---------|-----------|------------|
+| # | Strategy | 3Y Ret | 3Y Sharpe | 3Y DD | Pos | Consistency | Avg Ret | Composite |
+|---|----------|--------|-----------|-------|-----|------------|---------|-----------|
 | 1 | [**ai_token_economy**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_token_economy_20260409_093426.md) | 335.2% | 1.64 | -28.7% | 9 | 222.2% | 1.53 | 92% |
 | 2 | [**uranium_renaissance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260409_093418.md) | 343.6% | 1.25 | -37.4% | 8 | 189.5% | 0.96 | 92% |
 | 3 | [**concentrate_winners**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/concentrate_winners_20260409_093412.md) | 154.1% | 1.18 | -29.7% | 5 | 123.1% | 0.83 | 92% |
