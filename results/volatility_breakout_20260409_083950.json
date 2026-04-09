@@ -1,0 +1,124 @@
+{
+  "metrics": {
+    "total_return": -0.013277395898388611,
+    "cagr": -0.004460764253281679,
+    "annual_volatility": 0.025012523273890988,
+    "sharpe_ratio": -1.7349822867144575,
+    "sortino_ratio": -2.286282659651115,
+    "calmar_ratio": -0.0891098660318327,
+    "max_drawdown": -0.050059151157158754,
+    "max_drawdown_date": "2024-05-17",
+    "win_rate": 0.21438082556591212,
+    "profit_factor": 0.9554673379027251,
+    "num_trading_days": 751,
+    "skewness": -0.42349038521625376,
+    "kurtosis": 14.456773011333906,
+    "best_day": 0.009260969635140448,
+    "worst_day": -0.012069961760331038,
+    "avg_daily_return": -1.6557616677919603e-05,
+    "black_swan_resilience": 79.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.23576691163020014,
+    "beta": 0.028338539178588203,
+    "information_ratio": -1.559543931813798,
+    "tracking_error": 0.1511768324192034
+  },
+  "trade_metrics": {
+    "num_trades": 718,
+    "num_buys": 337,
+    "num_sells": 381,
+    "total_commission": 0.0,
+    "total_slippage": 6300.9379058761515,
+    "total_transaction_costs": 6300.9379058761515,
+    "avg_trade_size": 8775.679534646462
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GLD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TLT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "QQQ": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "math",
+  "description": "Donchian breakout with ATR position sizing (Turtle Trading)",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.0,
+  "windows_tested": 6,
+  "composite_score": -0.0,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0167,
+      "sh": -1.84,
+      "dd": -0.039
+    },
+    "1Y_2024": {
+      "ret": 0.0191,
+      "sh": -0.86,
+      "dd": -0.0185
+    },
+    "1Y_2025": {
+      "ret": -0.0149,
+      "sh": -2.61,
+      "dd": -0.0292
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0131,
+      "sh": -1.79,
+      "dd": -0.0531
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0133,
+      "sh": -1.73,
+      "dd": -0.0501
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0064,
+      "sh": -1.54,
+      "dd": -0.0629
+    }
+  }
+}

@@ -1,0 +1,563 @@
+$ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1694577600")
+$ARM: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1694577600")
+$ARM: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1694577600")
+$PATH: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-20) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618891200")
+$ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1694577600")
+$ARM: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1694577600")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$AI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607403600")
+$PATH: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-20) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618891200")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$RIVN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-11-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1636434000")
+$RIVN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-11-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1636434000")
+$LCID: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-17) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600315200")
+$LI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-07-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1595995200")
+$XPEV: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-08-26) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1598414400")
+$LUNR: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-11-16) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1637038800")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$RKLB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-11-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1606107600")
+$ASTS: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-10-31) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1572494400")
+$LUNR: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-11-16) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1637038800")
+$HIMS: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$XPEV: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-08-26) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1598414400")
+$LI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-07-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1595995200")
+$FUTU: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-03-07) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1551934800")
+$BSMX: possibly delisted; no timezone found
+$BSMX: possibly delisted; no timezone found
+$BSMX: possibly delisted; no timezone found
+$NU: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-12-08) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1638939600")
+$BSMX: possibly delisted; no timezone found
+$BSMX: possibly delisted; no timezone found
+$NU: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1638939600")
+$BSMX: possibly delisted; no timezone found
+$CAVA: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1686715200")
+$CEIX: possibly delisted; no timezone found
+$CAVA: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1686715200")
+$CEIX: possibly delisted; no timezone found
+$CEIX: possibly delisted; no timezone found
+$CAVA: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1686715200")
+$DUOL: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-27) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1627358400")
+$RELY: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-09-22) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1632283200")
+$CWAN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-09-23) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1632369600")
+$CEIX: possibly delisted; no timezone found
+$CAVA: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1686715200")
+$CEIX: possibly delisted; no timezone found
+$CAVA: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1686715200")
+$DUOL: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-27) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1627358400")
+$RELY: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-09-22) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1632283200")
+$CWAN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-09-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1632369600")
+$CEIX: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$IBIT: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1704862800")
+$SQ: possibly delisted; no timezone found
+$IBIT: possibly delisted; no price data found  (1d 2023-01-01 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1704862800")
+$SQ: possibly delisted; no timezone found
+$IBIT: possibly delisted; no price data found  (1d 2024-01-02 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1704171600, endDate = 1704862800")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$BITO: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-10-19) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1634616000")
+$IBIT: possibly delisted; no price data found  (1d 2021-01-01 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1704862800")
+$SQ: possibly delisted; no timezone found
+$IBIT: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1704862800")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$BITO: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-10-19) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1634616000")
+$IBIT: possibly delisted; no price data found  (1d 2019-01-01 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1704862800")
+[10/173] 46s
+$ZEAL: possibly delisted; no timezone found
+$ZEAL: possibly delisted; no timezone found
+$ZEAL: possibly delisted; no timezone found
+$ZEAL: possibly delisted; no timezone found
+$ZEAL: possibly delisted; no timezone found
+$ZEAL: possibly delisted; no timezone found
+$HIMS: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$ABB: possibly delisted; no timezone found
+$ABB: possibly delisted; no timezone found
+$ABB: possibly delisted; no timezone found
+$ABB: possibly delisted; no timezone found
+$ABB: possibly delisted; no timezone found
+$ABB: possibly delisted; no timezone found
+$CRSR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-22) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600747200")
+$ZM: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-04-17) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1555473600")
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$XPEV: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-08-26) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1598414400")
+$LI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-07-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1595995200")
+$MNSO: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-10-14) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1602648000")
+[20/173] 74s
+$S: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-06-29) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1624939200")
+$NET: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$S: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-06-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1624939200")
+$ABNB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607490000")
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$NU: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-12-08) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1638939600")
+$NU: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1638939600")
+$BARC: possibly delisted; no timezone found
+$BARC: possibly delisted; no timezone found
+$BARC: possibly delisted; no timezone found
+$BARC: possibly delisted; no timezone found
+$BARC: possibly delisted; no timezone found
+$BARC: possibly delisted; no timezone found
+[30/173] 91s
+$TOST: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-09-21) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1632196800")
+$CFLT: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-06-23) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1624420800")
+$FVRR: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560312000")
+$TOST: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-09-21) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1632196800")
+$RKLB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-11-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1606107600")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$NET: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$CFLT: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-06-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1624420800")
+$CPNG: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-10) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615352400")
+$CPNG: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-10) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615352400")
+$UBER: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-05-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1557374400")
+$LYFT: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-03-28) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1553745600")
+$GRAB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-11-30) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1606712400")
+$DASH: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607403600")
+$ABNB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607490000")
+$IBIDY: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1675227600")
+$IBIDY: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1675227600")
+$IBIDY: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1675227600")
+$IBIDY: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1675227600")
+$ONTO: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-10-27) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1572148800")
+$MP: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-06-21) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1592712000")
+$IBIDY: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1675227600")
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$IBIDY: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1675227600")
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$IBIDY: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1675227600")
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$IBIDY: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1675227600")
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$IBIDY: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1675227600")
+$LSRCY: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-10) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1599710400")
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$IBIDY: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1675227600")
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$LSRCY: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-10) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1599710400")
+$DSCOY: possibly delisted; no timezone found
+[40/173] 116s
+$DOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-03-19) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1552968000")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$OTIS: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-03-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1584504000")
+$CARR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-03-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1584504000")
+[50/173] 184s
+$PUBM: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607403600")
+$RYAN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-21) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1626840000")
+$OSCR: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-02) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1614661200")
+$PLMR: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-04-16) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1555387200")
+$RYAN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-21) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1626840000")
+$OSCR: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-02) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1614661200")
+$ROOT: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-10-27) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1603771200")
+$SMR: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-02-28) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1646024400")
+$SMR: possibly delisted; no price data found  (1d 2021-01-01 -> 2022-02-28) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1646024400")
+$OKLO: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-07) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1625630400")
+$SMR: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-02-28) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1646024400")
+$SMR: possibly delisted; no price data found  (1d 2019-01-01 -> 2022-02-28) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1646024400")
+$OKLO: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-07) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1625630400")
+$BF.B: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-12-31)
+$BF.B: possibly delisted; no price data found  (1d 2023-01-01 -> 2024-12-31)
+$BF.B: possibly delisted; no price data found  (1d 2024-01-02 -> 2025-12-31)
+$BF.B: possibly delisted; no price data found  (1d 2021-01-01 -> 2024-12-31)
+$BF.B: possibly delisted; no price data found  (1d 2022-01-01 -> 2025-12-31)
+$BF.B: possibly delisted; no price data found  (1d 2019-01-01 -> 2024-12-31)
+[60/173] 206s
+$PARA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$MSOS: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-01) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1598932800")
+$HBI: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$CEG: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-01-18) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1642482000")
+$CEG: possibly delisted; no price data found  (1d 2021-01-01 -> 2022-01-18) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1642482000")
+$CEG: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-01-18) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1642482000")
+$CEG: possibly delisted; no price data found  (1d 2019-01-01 -> 2022-01-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1642482000")
+$PATH: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-20) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618891200")
+$ZM: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-04-17) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1555473600")
+$PATH: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-20) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618891200")
+$AI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607403600")
+[70/173] 230s
+$CPNG: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-10) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615352400")
+$CPNG: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-10) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615352400")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+[80/173] 260s
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$SCHI: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-10-10) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1570680000")
+$RDFN: possibly delisted; no timezone found
+$RDFN: possibly delisted; no timezone found
+$RDFN: possibly delisted; no timezone found
+$RDFN: possibly delisted; no timezone found
+$RDFN: possibly delisted; no timezone found
+$RDFN: possibly delisted; no timezone found
+$CTVA: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-05-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1558584000")
+$RBLX: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615266000")
+$RBLX: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615266000")
+$U: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-17) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600315200")
+$DKNG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-07-24) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1563940800")
+$DFSV: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-02-23) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1645592400")
+$CAVA: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1686715200")
+$CAVA: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1686715200")
+$DFSV: possibly delisted; no price data found  (1d 2021-01-01 -> 2022-02-23) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1645592400")
+$CAVA: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1686715200")
+$DUOL: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-27) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1627358400")
+$CWAN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-09-23) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1632369600")
+$DFSV: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-02-23) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1645592400")
+$CAVA: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1686715200")
+$AVUV: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-25) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1569384000")
+$DFSV: possibly delisted; no price data found  (1d 2019-01-01 -> 2022-02-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1645592400")
+$EVLV: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-21) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600660800")
+$CAVA: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1686715200")
+$DUOL: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-27) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1627358400")
+$CWAN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-09-23) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1632369600")
+[90/173] 288s
+$LAC: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-10-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1696132800")
+$ALTM: possibly delisted; no timezone found
+$LAC: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-10-01) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1696132800")
+$ALTM: possibly delisted; no timezone found
+$ALTM: possibly delisted; no timezone found
+$LAC: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-10-01) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1696132800")
+$ALTM: possibly delisted; no timezone found
+$LAC: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-10-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1696132800")
+$ALTM: possibly delisted; no timezone found
+$MP: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-06-21) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1592712000")
+$LAC: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-10-01) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1696132800")
+$ALTM: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2022-01-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1744689600")
+$SEA: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-01-19) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1642568400")
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2023-01-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1744689600")
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2024-01-02 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1704171600, endDate = 1744689600")
+$ZIM: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-01-27) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1611723600")
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2021-01-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1744689600")
+$SEA: possibly delisted; no price data found  (1d 2021-01-01 -> 2022-01-19) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1642568400")
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2022-01-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1744689600")
+$SEA: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-01-19) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1642568400")
+$ZIM: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-01-27) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1611723600")
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2019-01-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1744689600")
+$FLNG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-16) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560657600")
+$SEA: possibly delisted; no price data found  (1d 2019-01-01 -> 2022-01-19) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1642568400")
+$HAFN: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1712635200")
+$HAFN: possibly delisted; no price data found  (1d 2023-01-01 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1712635200")
+$HAFN: possibly delisted; no price data found  (1d 2024-01-02 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1704171600, endDate = 1712635200")
+$HAFN: possibly delisted; no price data found  (1d 2021-01-01 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1712635200")
+$HAFN: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1712635200")
+$HAFN: possibly delisted; no price data found  (1d 2019-01-01 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1712635200")
+$HIMS: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$LI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-07-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1595995200")
+$FUTU: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-03-07) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1551934800")
+$GRAB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-11-30) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1606712400")
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$RBLX: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615266000")
+$SQ: possibly delisted; no timezone found
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$SQ: possibly delisted; no timezone found
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$RBLX: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615266000")
+$UBER: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-05-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1557374400")
+[100/173] 392s
+$PARA: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$DOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-03-19) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1552968000")
+$WBA: possibly delisted; no timezone found
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$PCOR: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-05-19) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1621396800")
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$PCOR: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-05-19) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1621396800")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+[110/173] 482s
+$HAYS: possibly delisted; no timezone found
+$HAYS: possibly delisted; no timezone found
+$HAYS: possibly delisted; no timezone found
+$HAYS: possibly delisted; no timezone found
+$HAYS: possibly delisted; no timezone found
+$HAYS: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SOFI: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-01-03) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1609650000")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SOFI: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-01-03) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1609650000")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+[120/173] 526s
+[130/173] 645s
+$UBER: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-05-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1557374400")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$HOOD: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-28) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1627444800")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$HOOD: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-28) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1627444800")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$AI: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-12-08) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1607403600")
+[140/173] 767s
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$SOFI: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-01-03) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1609650000")
+$HOOD: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-28) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1627444800")
+$RIVN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-11-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1636434000")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$SOFI: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-01-03) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1609650000")
+$HOOD: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-28) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1627444800")
+$RIVN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-11-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1636434000")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$RBLX: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615266000")
+$SQ: possibly delisted; no timezone found
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$NET: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$RBLX: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615266000")
+[150/173] 803s
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$RBLX: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615266000")
+$SQ: possibly delisted; no timezone found
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$SQ: possibly delisted; no timezone found
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$NET: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$RBLX: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615266000")
+$SQ: possibly delisted; no timezone found
+$ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1694577600")
+$SQ: possibly delisted; no timezone found
+$ARM: possibly delisted; no price data found  (1d 2023-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1694577600")
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$ARM: possibly delisted; no price data found  (1d 2021-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1694577600")
+$SQ: possibly delisted; no timezone found
+$ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1694577600")
+$SQ: possibly delisted; no timezone found
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$ARM: possibly delisted; no price data found  (1d 2019-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1694577600")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$NET: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-12) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568260800")
+$DOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-03-19) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1552968000")
+[160/173] 865s
+$UBER: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-05-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1557374400")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$CRWD: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-06-11) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1560225600")
+$SNOW: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1600142400")
+$SQ: possibly delisted; no timezone found
+$TEM: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1718251200")
+$SQ: possibly delisted; no timezone found
+$TEM: possibly delisted; no price data found  (1d 2023-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1672549200, endDate = 1718251200")
+$SQ: possibly delisted; no timezone found
+$TEM: possibly delisted; no price data found  (1d 2024-01-02 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1704171600, endDate = 1718251200")
+$RBLX: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1615266000")
+$COIN: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618286400")
+$PATH: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-20) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618891200")
+$SQ: possibly delisted; no timezone found
+$HOOD: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-07-28) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1627444800")
+$TEM: possibly delisted; no price data found  (1d 2021-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1718251200")
+$RXRX: possibly delisted; no price data found  (1d 2021-01-01 -> 2021-04-15) (Yahoo error = "Data doesn't exist for startDate = 1609477200, endDate = 1618459200")
+$SQ: possibly delisted; no timezone found
+$TEM: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1718251200")
+$PLTR: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-09-29) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1601352000")
+$RBLX: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-03-09) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1615266000")
+$COIN: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618286400")
+$DDOG: possibly delisted; no price data found  (1d 2019-01-01 -> 2019-09-18) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1568779200")
+$PATH: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-20) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618891200")
+$SQ: possibly delisted; no timezone found
+$HOOD: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-07-28) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1627444800")
+$TEM: possibly delisted; no price data found  (1d 2019-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1718251200")
+$RXRX: possibly delisted; no price data found  (1d 2019-01-01 -> 2021-04-15) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1618459200")
+$GRAB: possibly delisted; no price data found  (1d 2019-01-01 -> 2020-11-30) (Yahoo error = "Data doesn't exist for startDate = 1546318800, endDate = 1606712400")
+[170/173] 905s
+$ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1694577600")
+$BSMX: possibly delisted; no timezone found
+$CAVA: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1686715200")
+$CEIX: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$IBIT: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-01-10) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1704862800")
+$SQ: possibly delisted; no timezone found
+$ZEAL: possibly delisted; no timezone found
+$ABB: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$ENV: possibly delisted; no timezone found
+$MRBEY: possibly delisted; no timezone found
+$BARC: possibly delisted; no timezone found
+$CFLT: possibly delisted; no price data found  (1d 2026-03-18 -> 2026-04-09)
+$IBIDY: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1675227600")
+$DSCOY: possibly delisted; no timezone found
+$HXSCF: possibly delisted; no timezone found
+$IBIDY: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-02-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1675227600")
+$HXSCF: possibly delisted; no timezone found
+$DSCOY: possibly delisted; no timezone found
+$SMR: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-02-28) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1646024400")
+$BF.B: possibly delisted; no price data found  (1d 2022-01-01 -> 2025-12-31)
+$PARA: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$CEG: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-01-18) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1642482000")
+$RDFN: possibly delisted; no timezone found
+$DFSV: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-02-23) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1645592400")
+$CAVA: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-06-14) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1686715200")
+$LAC: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-10-01) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1696132800")
+$ALTM: possibly delisted; no timezone found
+$WTR: possibly delisted; no timezone found
+$SJW: possibly delisted; no timezone found
+$GOGL: possibly delisted; no timezone found
+$EGLE: possibly delisted; no price data found  (1d 2022-01-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1744689600")
+$SEA: possibly delisted; no price data found  (1d 2022-01-01 -> 2022-01-19) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1642568400")
+$EGLE: possibly delisted; no price data found  (1d 2024-06-01 -> 2025-04-15) (Yahoo error = "Data doesn't exist for startDate = 1717214400, endDate = 1744689600")
+$HAFN: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-04-09) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1712635200")
+$SQ: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+$PARA: possibly delisted; no timezone found
+$FORG: possibly delisted; no timezone found
+$ZEN: possibly delisted; no timezone found
+$HAYS: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$SQ: possibly delisted; no timezone found
+$ARM: possibly delisted; no price data found  (1d 2022-01-01 -> 2023-09-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1694577600")
+$SQ: possibly delisted; no timezone found
+$TEM: possibly delisted; no price data found  (1d 2022-01-01 -> 2024-06-13) (Yahoo error = "Data doesn't exist for startDate = 1641013200, endDate = 1718251200")
+DONE: 173/173 in 1158s

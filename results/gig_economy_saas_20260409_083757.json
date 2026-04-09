@@ -1,0 +1,96 @@
+{
+  "metrics": {
+    "total_return": 0.5197516081450886,
+    "cagr": 0.15026774976781176,
+    "annual_volatility": 0.2317210418303279,
+    "sharpe_ratio": 0.5519912905046138,
+    "sortino_ratio": 0.8517512883102665,
+    "calmar_ratio": 0.6462803264610122,
+    "max_drawdown": -0.2325117191647592,
+    "max_drawdown_date": "2024-09-06",
+    "win_rate": 0.47270306258322237,
+    "profit_factor": 1.1524286004927096,
+    "num_trading_days": 751,
+    "skewness": 0.6473894824469568,
+    "kurtosis": 5.678032892223751,
+    "best_day": 0.08894923508180819,
+    "worst_day": -0.07017584005630773,
+    "avg_daily_return": 0.0006632212791285498,
+    "black_swan_resilience": 83.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.0810383976091067,
+    "beta": 0.5740051268751614,
+    "information_ratio": -0.36166731139552727,
+    "tracking_error": 0.22406890270622587
+  },
+  "trade_metrics": {
+    "num_trades": 641,
+    "num_buys": 304,
+    "num_sells": 337,
+    "total_commission": 0.0,
+    "total_slippage": 6455.916938081264,
+    "total_transaction_costs": 6455.916938081264,
+    "avg_trade_size": 10071.633288738321
+  },
+  "final_positions": {
+    "TOST": {
+      "qty": 629.0,
+      "avg_cost": 37.272653782879416,
+      "realized_pnl": 16901.49004364014
+    },
+    "CFLT": {
+      "qty": 763.0,
+      "avg_cost": 30.100000381469727,
+      "realized_pnl": -1393.6014328002898
+    },
+    "RKLB": {
+      "qty": 328.0,
+      "avg_cost": 70.12000274658203,
+      "realized_pnl": 28543.151071071625
+    },
+    "UPWK": {
+      "qty": 1132.0,
+      "avg_cost": 18.62306461401626,
+      "realized_pnl": -3589.867158889767
+    }
+  },
+  "source": "theme",
+  "description": "Gig platforms + SaaS disruptors: growth at reasonable price, high beta",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.2103,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2728,
+      "sh": 0.89,
+      "dd": -0.1806
+    },
+    "1Y_2024": {
+      "ret": 0.2853,
+      "sh": 1.01,
+      "dd": -0.2323
+    },
+    "1Y_2025": {
+      "ret": -0.0556,
+      "sh": -0.47,
+      "dd": -0.162
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1265,
+      "sh": 0.11,
+      "dd": -0.2986
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5198,
+      "sh": 0.55,
+      "dd": -0.2325
+    },
+    "5Y_2020_2024": {
+      "ret": 0.8968,
+      "sh": 0.5,
+      "dd": -0.4351
+    }
+  }
+}

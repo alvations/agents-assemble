@@ -1,0 +1,124 @@
+{
+  "metrics": {
+    "total_return": 0.10662370443780556,
+    "cagr": 0.034467908733808894,
+    "annual_volatility": 0.07584171612938834,
+    "sharpe_ratio": -0.030896244323536066,
+    "sortino_ratio": -0.04379588447730133,
+    "calmar_ratio": 0.4508832777453401,
+    "max_drawdown": -0.07644530288674056,
+    "max_drawdown_date": "2024-08-07",
+    "win_rate": 0.24900133155792276,
+    "profit_factor": 1.142994202580566,
+    "num_trading_days": 751,
+    "skewness": -1.0495277078515484,
+    "kurtosis": 23.665070420511128,
+    "best_day": 0.02250478014671553,
+    "worst_day": -0.052096661176396664,
+    "avg_daily_return": 0.00014635135409503324,
+    "black_swan_resilience": 70.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.19683823864310956,
+    "beta": 0.1646030630461119,
+    "information_ratio": -1.3405937283809617,
+    "tracking_error": 0.1468291507531007
+  },
+  "trade_metrics": {
+    "num_trades": 49,
+    "num_buys": 25,
+    "num_sells": 24,
+    "total_commission": 0.0,
+    "total_slippage": 959.2277698707579,
+    "total_transaction_costs": 959.2277698707579,
+    "avg_trade_size": 19576.07693613792
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PFE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "C": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WFC": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Deep value contrarian: buy capitulation, bet against consensus",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.33,
+  "windows_tested": 6,
+  "composite_score": -0.0037,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1264,
+      "sh": 0.84,
+      "dd": -0.0526
+    },
+    "1Y_2024": {
+      "ret": -0.0559,
+      "sh": -1.41,
+      "dd": -0.0765
+    },
+    "1Y_2025": {
+      "ret": 0.0406,
+      "sh": 0.05,
+      "dd": -0.0307
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0956,
+      "sh": -0.48,
+      "dd": -0.2528
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1066,
+      "sh": -0.03,
+      "dd": -0.0764
+    },
+    "5Y_2020_2024": {
+      "ret": -0.201,
+      "sh": -0.36,
+      "dd": -0.3439
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "strategy_name": "small_cap_value_rotation",
+  "is_winning": true,
+  "generated_at": "2026-04-09T08:38:55.381799",
+  "overall_assessment": "HOLD \u2014 Positive but underwhelming returns. Use as diversifier, not primary strategy.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "4.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "27.5%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "DECK",
+      "action": "BUY",
+      "current_position": 134.0,
+      "annual_volatility": "50%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.4% above entry",
+      "position_size": "1.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=DECK",
+      "yahoo_url": "https://finance.yahoo.com/quote/DECK/"
+    },
+    {
+      "symbol": "AVUV",
+      "action": "BUY",
+      "current_position": 135.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.7% below entry",
+      "take_profit": "4.7% above entry",
+      "position_size": "4.2% of portfolio",
+      "trailing_stop": "16.6% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AVUV",
+      "yahoo_url": "https://finance.yahoo.com/quote/AVUV/"
+    },
+    {
+      "symbol": "DFSV",
+      "action": "BUY",
+      "current_position": 420.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.5% below entry",
+      "take_profit": "4.7% above entry",
+      "position_size": "4.2% of portfolio",
+      "trailing_stop": "16.5% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=DFSV",
+      "yahoo_url": "https://finance.yahoo.com/quote/DFSV/"
+    },
+    {
+      "symbol": "VBR",
+      "action": "BUY",
+      "current_position": 65.0,
+      "annual_volatility": "19%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "20.1% below entry",
+      "take_profit": "4.0% above entry",
+      "position_size": "4.9% of portfolio",
+      "trailing_stop": "14.1% trailing after 1.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=VBR",
+      "yahoo_url": "https://finance.yahoo.com/quote/VBR/"
+    },
+    {
+      "symbol": "SAIA",
+      "action": "BUY",
+      "current_position": 42.0,
+      "annual_volatility": "57%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "12.0% above entry",
+      "position_size": "1.7% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=SAIA",
+      "yahoo_url": "https://finance.yahoo.com/quote/SAIA/"
+    },
+    {
+      "symbol": "GRC",
+      "action": "BUY",
+      "current_position": 283.0,
+      "annual_volatility": "30%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "32.0% below entry",
+      "take_profit": "6.4% above entry",
+      "position_size": "3.1% of portfolio",
+      "trailing_stop": "22.4% trailing after 2.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GRC",
+      "yahoo_url": "https://finance.yahoo.com/quote/GRC/"
+    },
+    {
+      "symbol": "IWM",
+      "action": "BUY",
+      "current_position": 56.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.4% below entry",
+      "take_profit": "4.7% above entry",
+      "position_size": "4.2% of portfolio",
+      "trailing_stop": "16.4% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=IWM",
+      "yahoo_url": "https://finance.yahoo.com/quote/IWM/"
+    },
+    {
+      "symbol": "IWN",
+      "action": "BUY",
+      "current_position": 76.0,
+      "annual_volatility": "21%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "22.4% below entry",
+      "take_profit": "4.5% above entry",
+      "position_size": "4.4% of portfolio",
+      "trailing_stop": "15.7% trailing after 1.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=IWN",
+      "yahoo_url": "https://finance.yahoo.com/quote/IWN/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "22.17%",
+    "sharpe_ratio": "0.25",
+    "max_drawdown": "-27.46%",
+    "win_rate": "50.60%",
+    "alpha": "-16.20%"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "metrics": {
+    "total_return": 3.3523299970085336,
+    "cagr": 0.6354542878123759,
+    "annual_volatility": 0.3072189452230076,
+    "sharpe_ratio": 1.6352744208101189,
+    "sortino_ratio": 2.385349939490991,
+    "calmar_ratio": 2.216855725800595,
+    "max_drawdown": -0.2866466592375505,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.559254327563249,
+    "profit_factor": 1.376758885565825,
+    "num_trading_days": 751,
+    "skewness": -0.7895364843163049,
+    "kurtosis": 10.238203020854144,
+    "best_day": 0.09980635077870348,
+    "worst_day": -0.16969269848728252,
+    "avg_daily_return": 0.0021492501910112998,
+    "black_swan_resilience": 62.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.40414814043545744,
+    "beta": 1.1834948977032944,
+    "information_ratio": 1.6208613087768742,
+    "tracking_error": 0.2493415927982349
+  },
+  "trade_metrics": {
+    "num_trades": 1415,
+    "num_buys": 700,
+    "num_sells": 715,
+    "total_commission": 0.0,
+    "total_slippage": 9532.974884612075,
+    "total_transaction_costs": 9532.974884612075,
+    "avg_trade_size": 6737.08472410748
+  },
+  "final_positions": {
+    "VRT": {
+      "qty": 243.0,
+      "avg_cost": 146.91387303678437,
+      "realized_pnl": 45236.91246320809
+    },
+    "CEG": {
+      "qty": 146.0,
+      "avg_cost": 335.39549212366285,
+      "realized_pnl": 18165.140234149017
+    },
+    "ANET": {
+      "qty": 300.0,
+      "avg_cost": 134.36455146662698,
+      "realized_pnl": 30704.013770676556
+    },
+    "AVGO": {
+      "qty": 115.0,
+      "avg_cost": 303.3533750644352,
+      "realized_pnl": 39156.428350763315
+    },
+    "NVDA": {
+      "qty": 278.0,
+      "avg_cost": 179.67968777445031,
+      "realized_pnl": 35756.978336337466
+    },
+    "AMD": {
+      "qty": 242.0,
+      "avg_cost": 185.98757072045404,
+      "realized_pnl": 14776.465655609649
+    },
+    "VST": {
+      "qty": 224.0,
+      "avg_cost": 161.3667507171631,
+      "realized_pnl": 47685.97513961792
+    },
+    "MRVL": {
+      "qty": 610.0,
+      "avg_cost": 83.70530788234022,
+      "realized_pnl": 13152.888950347906
+    },
+    "NRG": {
+      "qty": 326.0,
+      "avg_cost": 167.85062710169836,
+      "realized_pnl": 58515.86864032336
+    }
+  },
+  "source": "unconventional",
+  "description": "AI compute demand signals: GPU makers, cloud, data center REITs, power, cooling",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 1.5987,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 1.0746,
+      "sh": 2.92,
+      "dd": -0.0887
+    },
+    "1Y_2024": {
+      "ret": 0.937,
+      "sh": 2.01,
+      "dd": -0.2059
+    },
+    "1Y_2025": {
+      "ret": 0.0695,
+      "sh": 0.26,
+      "dd": -0.2868
+    },
+    "3Y_2022_2024": {
+      "ret": 2.1634,
+      "sh": 1.43,
+      "dd": -0.2531
+    },
+    "3Y_2023_2025": {
+      "ret": 3.3523,
+      "sh": 1.64,
+      "dd": -0.2866
+    },
+    "5Y_2020_2024": {
+      "ret": 4.8632,
+      "sh": 1.34,
+      "dd": -0.2598
+    }
+  }
+}

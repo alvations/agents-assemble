@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.1020469108365234,
+    "cagr": 0.033034913902997065,
+    "annual_volatility": 0.0402988397966082,
+    "sharpe_ratio": -0.14405704606395628,
+    "sortino_ratio": -0.2017671443709035,
+    "calmar_ratio": 0.9078080749247122,
+    "max_drawdown": -0.03638975551714141,
+    "max_drawdown_date": "2025-05-07",
+    "win_rate": 0.5046604527296937,
+    "profit_factor": 1.1683020926774894,
+    "num_trading_days": 751,
+    "skewness": -0.06992334824818426,
+    "kurtosis": 3.367642809603092,
+    "best_day": 0.012385816989627596,
+    "worst_day": -0.010618856519361564,
+    "avg_daily_return": 0.00013261283175592956,
+    "black_swan_resilience": 84.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1982712334739214,
+    "beta": 0.113275663810238,
+    "information_ratio": -1.4072827409821536,
+    "tracking_error": 0.14088940885862522
+  },
+  "trade_metrics": {
+    "num_trades": 1409,
+    "num_buys": 741,
+    "num_sells": 668,
+    "total_commission": 0.0,
+    "total_slippage": 7443.1452035122,
+    "total_transaction_costs": 7443.1452035122,
+    "avg_trade_size": 5282.57289106614
+  },
+  "final_positions": {
+    "PG": {
+      "qty": 78.0,
+      "avg_cost": 141.6840362548828,
+      "realized_pnl": 1506.6318817138633
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Short-term mean reversion across sector pairs, Renaissance-inspired",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.5,
+  "windows_tested": 6,
+  "composite_score": 0.04,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.006,
+      "sh": -0.99,
+      "dd": -0.0355
+    },
+    "1Y_2024": {
+      "ret": 0.0406,
+      "sh": 0.04,
+      "dd": -0.0321
+    },
+    "1Y_2025": {
+      "ret": 0.0466,
+      "sh": 0.16,
+      "dd": -0.0366
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0872,
+      "sh": -0.28,
+      "dd": -0.038
+    },
+    "3Y_2023_2025": {
+      "ret": 0.102,
+      "sh": -0.14,
+      "dd": -0.0364
+    },
+    "5Y_2020_2024": {
+      "ret": 0.215,
+      "sh": 0.02,
+      "dd": -0.0378
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "total_return": 0.25910471236991084,
+    "cagr": 0.080111249768414,
+    "annual_volatility": 0.13368886390893595,
+    "sharpe_ratio": 0.35210119843859927,
+    "sortino_ratio": 0.48169227725080527,
+    "calmar_ratio": 0.35715186008556415,
+    "max_drawdown": -0.22430584499607942,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.132064309647311,
+    "num_trading_days": 751,
+    "skewness": -0.9119536302046589,
+    "kurtosis": 13.882938063045389,
+    "best_day": 0.054190713688022196,
+    "worst_day": -0.07939279467728122,
+    "avg_daily_return": 0.00034244355009376736,
+    "black_swan_resilience": 64.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.15119489760850446,
+    "beta": 0.5673036995013115,
+    "information_ratio": -1.2470016660391465,
+    "tracking_error": 0.12124674868217704
+  },
+  "trade_metrics": {
+    "num_trades": 723,
+    "num_buys": 326,
+    "num_sells": 397,
+    "total_commission": 0.0,
+    "total_slippage": 1607.6229088706984,
+    "total_transaction_costs": 1607.6229088706984,
+    "avg_trade_size": 2223.544825547299
+  },
+  "final_positions": {
+    "WMT": {
+      "qty": 90.0,
+      "avg_cost": 83.02788126898497,
+      "realized_pnl": 9372.498526244784
+    },
+    "TJX": {
+      "qty": 65.0,
+      "avg_cost": 126.90860176768929,
+      "realized_pnl": 6879.292910065816
+    },
+    "COST": {
+      "qty": 12.0,
+      "avg_cost": 926.8322041829427,
+      "realized_pnl": 8248.997741699219
+    }
+  },
+  "source": "unconventional",
+  "description": "DLTR/DG crash signals K-shaped economy \u2192 long Costco + luxury (rich don't care)",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.1201,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0909,
+      "sh": 0.44,
+      "dd": -0.0985
+    },
+    "1Y_2024": {
+      "ret": 0.2669,
+      "sh": 1.66,
+      "dd": -0.0834
+    },
+    "1Y_2025": {
+      "ret": -0.0844,
+      "sh": -0.81,
+      "dd": -0.2237
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2168,
+      "sh": 0.28,
+      "dd": -0.1429
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2591,
+      "sh": 0.35,
+      "dd": -0.2243
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2903,
+      "sh": 0.16,
+      "dd": -0.2181
+    }
+  }
+}

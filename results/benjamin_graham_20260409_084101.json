@@ -1,0 +1,124 @@
+{
+  "metrics": {
+    "total_return": 0.03103873446093508,
+    "cagr": 0.010276356929395769,
+    "annual_volatility": 0.02773543854422421,
+    "sharpe_ratio": -1.0304469026663698,
+    "sortino_ratio": -1.313820174394819,
+    "calmar_ratio": 0.2053623342618417,
+    "max_drawdown": -0.05004012525633439,
+    "max_drawdown_date": "2024-11-15",
+    "win_rate": 0.07989347536617843,
+    "profit_factor": 1.2389519625735885,
+    "num_trading_days": 751,
+    "skewness": -6.071161690747261,
+    "kurtosis": 151.89567036364602,
+    "best_day": 0.014911309826453056,
+    "worst_day": -0.031299135681264745,
+    "avg_daily_return": 4.223757413257519e-05,
+    "black_swan_resilience": 72.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2210297904475227,
+    "beta": 0.041750825523268226,
+    "information_ratio": -1.477940845313217,
+    "tracking_error": 0.149552528538908
+  },
+  "trade_metrics": {
+    "num_trades": 14,
+    "num_buys": 7,
+    "num_sells": 7,
+    "total_commission": 0.0,
+    "total_slippage": 176.84701450920107,
+    "total_transaction_costs": 176.84701450920107,
+    "avg_trade_size": 12631.929607800075
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "C": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WFC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PFE": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Father of value investing: buy extreme oversold with capitulation volume",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.17,
+  "windows_tested": 6,
+  "composite_score": 0.0059,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0722,
+      "sh": 1.12,
+      "dd": -0.0121
+    },
+    "1Y_2024": {
+      "ret": -0.0384,
+      "sh": -2.02,
+      "dd": -0.0501
+    },
+    "1Y_2025": {
+      "ret": 0.0,
+      "sh": -Infinity,
+      "dd": 0.0
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0671,
+      "sh": -0.41,
+      "dd": -0.05
+    },
+    "3Y_2023_2025": {
+      "ret": 0.031,
+      "sh": -1.03,
+      "dd": -0.05
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0828,
+      "sh": -0.54,
+      "dd": -0.0668
+    }
+  }
+}

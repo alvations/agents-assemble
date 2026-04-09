@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.2350640319117514,
+    "cagr": 0.07316898761587565,
+    "annual_volatility": 0.1250792870630822,
+    "sharpe_ratio": 0.31535533928711745,
+    "sortino_ratio": 0.444435256229424,
+    "calmar_ratio": 0.46296182532041236,
+    "max_drawdown": -0.15804540161650682,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5299600532623169,
+    "profit_factor": 1.1095889426122445,
+    "num_trading_days": 751,
+    "skewness": -0.11440203991686311,
+    "kurtosis": 2.39303535923134,
+    "best_day": 0.03953226238807206,
+    "worst_day": -0.036899901294093373,
+    "avg_daily_return": 0.0003121753429879653,
+    "black_swan_resilience": 77.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1581371597610428,
+    "beta": 0.5727452135514605,
+    "information_ratio": -1.4307430166177186,
+    "tracking_error": 0.11052799693887697
+  },
+  "trade_metrics": {
+    "num_trades": 293,
+    "num_buys": 134,
+    "num_sells": 159,
+    "total_commission": 0.0,
+    "total_slippage": 1568.3855034294143,
+    "total_transaction_costs": 1568.3855034294143,
+    "avg_trade_size": 5352.851547540658
+  },
+  "final_positions": {
+    "HEI": {
+      "qty": 47.0,
+      "avg_cost": 259.3721761500582,
+      "realized_pnl": 6008.346969604492
+    },
+    "IEX": {
+      "qty": 83.0,
+      "avg_cost": 174.00511169433594,
+      "realized_pnl": -4603.810089111328
+    },
+    "AME": {
+      "qty": 74.0,
+      "avg_cost": 182.24188114557023,
+      "realized_pnl": 372.54881719895536
+    },
+    "NDSN": {
+      "qty": 62.0,
+      "avg_cost": 220.4363250732422,
+      "realized_pnl": -7575.757598876954
+    },
+    "DHR": {
+      "qty": 65.0,
+      "avg_cost": 213.3093719482422,
+      "realized_pnl": -522.6099395751946
+    }
+  },
+  "source": "unconventional",
+  "description": "TDG/HEI/ROP: 15-25% CAGR machines that look expensive on P/E but are cheap on FCF",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.33,
+  "windows_tested": 6,
+  "composite_score": 0.0343,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2268,
+      "sh": 1.27,
+      "dd": -0.0828
+    },
+    "1Y_2024": {
+      "ret": 0.0043,
+      "sh": -0.22,
+      "dd": -0.1015
+    },
+    "1Y_2025": {
+      "ret": 0.0294,
+      "sh": -0.03,
+      "dd": -0.0806
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0921,
+      "sh": -0.02,
+      "dd": -0.1235
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2351,
+      "sh": 0.32,
+      "dd": -0.158
+    },
+    "5Y_2020_2024": {
+      "ret": 0.1383,
+      "sh": -0.01,
+      "dd": -0.3007
+    }
+  }
+}

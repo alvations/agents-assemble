@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.05995491465241809,
+    "cagr": 0.01966632595450224,
+    "annual_volatility": 0.12089564057803266,
+    "sharpe_ratio": -0.102399955128745,
+    "sortino_ratio": -0.14094665009548926,
+    "calmar_ratio": 0.09951910958476821,
+    "max_drawdown": -0.19761356423462462,
+    "max_drawdown_date": "2024-01-18",
+    "win_rate": 0.5246338215712384,
+    "profit_factor": 1.0464943315572488,
+    "num_trading_days": 751,
+    "skewness": -0.1780172897690093,
+    "kurtosis": 3.875547408683386,
+    "best_day": 0.03493514579388135,
+    "worst_day": -0.03407094449290626,
+    "avg_daily_return": 0.00010652403671804286,
+    "black_swan_resilience": 74.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.21163982142241622,
+    "beta": 0.11310548756291329,
+    "information_ratio": -1.1677027677500815,
+    "tracking_error": 0.18124460031057543
+  },
+  "trade_metrics": {
+    "num_trades": 117,
+    "num_buys": 50,
+    "num_sells": 67,
+    "total_commission": 0.0,
+    "total_slippage": 1449.2185628356935,
+    "total_transaction_costs": 1449.2185628356935,
+    "avg_trade_size": 12386.483443040113
+  },
+  "final_positions": {
+    "CVX": {
+      "qty": 127.0,
+      "avg_cost": 157.9847938669571,
+      "realized_pnl": 1299.7811318945721
+    },
+    "XOM": {
+      "qty": 166.0,
+      "avg_cost": 112.94512052738077,
+      "realized_pnl": 3919.777946998334
+    },
+    "XLE": {
+      "qty": 426.0,
+      "avg_cost": 44.21068812983697,
+      "realized_pnl": 3393.615406036378
+    },
+    "OXY": {
+      "qty": 458.0,
+      "avg_cost": 41.89651107788086,
+      "realized_pnl": -6249.45660018921
+    },
+    "DVN": {
+      "qty": 513.0,
+      "avg_cost": 35.635377702578694,
+      "realized_pnl": 171.2353825166159
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy energy Sep-Oct, sell Apr. CVX 82% win, +245% 10Y",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.67,
+  "windows_tested": 6,
+  "composite_score": 0.0923,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.1105,
+      "sh": -1.15,
+      "dd": -0.1727
+    },
+    "1Y_2024": {
+      "ret": 0.1055,
+      "sh": 0.65,
+      "dd": -0.0941
+    },
+    "1Y_2025": {
+      "ret": 0.0638,
+      "sh": 0.25,
+      "dd": -0.0811
+    },
+    "3Y_2022_2024": {
+      "ret": 0.4119,
+      "sh": 0.53,
+      "dd": -0.248
+    },
+    "3Y_2023_2025": {
+      "ret": 0.06,
+      "sh": -0.1,
+      "dd": -0.1976
+    },
+    "5Y_2020_2024": {
+      "ret": 0.525,
+      "sh": 0.31,
+      "dd": -0.5086
+    }
+  }
+}

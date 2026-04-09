@@ -1,0 +1,96 @@
+{
+  "metrics": {
+    "total_return": -0.34936978853968803,
+    "cagr": -0.13390725436859452,
+    "annual_volatility": 0.1166240080073258,
+    "sharpe_ratio": -1.5142090766162515,
+    "sortino_ratio": -1.9333741849945356,
+    "calmar_ratio": -0.3687636189185118,
+    "max_drawdown": -0.36312490576296497,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.4673768308921438,
+    "profit_factor": 0.8103872534245408,
+    "num_trading_days": 751,
+    "skewness": -0.5454527798188843,
+    "kurtosis": 3.801835934381802,
+    "best_day": 0.024968034705227682,
+    "worst_day": -0.05058538528627121,
+    "avg_daily_return": -0.0005451165319550035,
+    "black_swan_resilience": 62.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.365213401745513,
+    "beta": 0.2655651679216473,
+    "information_ratio": -2.3261633721404564,
+    "tracking_error": 0.15700247287853047
+  },
+  "trade_metrics": {
+    "num_trades": 799,
+    "num_buys": 370,
+    "num_sells": 429,
+    "total_commission": 0.0,
+    "total_slippage": 5314.014981019976,
+    "total_transaction_costs": 5314.014981019976,
+    "avg_trade_size": 6650.832266608228
+  },
+  "final_positions": {
+    "DBA": {
+      "qty": 382.0,
+      "avg_cost": 25.649999618530273,
+      "realized_pnl": 1090.130788803096
+    },
+    "NTR": {
+      "qty": 157.0,
+      "avg_cost": 59.59324926353363,
+      "realized_pnl": -3237.0580277040763
+    },
+    "MOO": {
+      "qty": 134.0,
+      "avg_cost": 71.39722409455672,
+      "realized_pnl": -1784.4875475012739
+    },
+    "CTVA": {
+      "qty": 145.0,
+      "avg_cost": 65.28553827551028,
+      "realized_pnl": -5437.703185555162
+    }
+  },
+  "source": "crisis",
+  "description": "Fertilizer + agriculture: food crisis beneficiaries",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.17,
+  "windows_tested": 6,
+  "composite_score": -0.0097,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.1033,
+      "sh": -1.4,
+      "dd": -0.1378
+    },
+    "1Y_2024": {
+      "ret": -0.1959,
+      "sh": -2.13,
+      "dd": -0.1981
+    },
+    "1Y_2025": {
+      "ret": -0.1059,
+      "sh": -1.13,
+      "dd": -0.156
+    },
+    "3Y_2022_2024": {
+      "ret": -0.2246,
+      "sh": -0.79,
+      "dd": -0.4263
+    },
+    "3Y_2023_2025": {
+      "ret": -0.3494,
+      "sh": -1.51,
+      "dd": -0.3631
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4999,
+      "sh": 0.34,
+      "dd": -0.4266
+    }
+  }
+}

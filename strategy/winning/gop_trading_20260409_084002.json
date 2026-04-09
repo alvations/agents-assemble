@@ -1,0 +1,145 @@
+{
+  "strategy_name": "gop_trading",
+  "is_winning": true,
+  "generated_at": "2026-04-09T08:40:02.574748",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "14.1%",
+    "stop_loss": "14.1%",
+    "take_profit_target": "10.1%",
+    "max_drawdown_tolerance": "11.7%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "MSFT",
+      "action": "BUY",
+      "current_position": 35.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "14.4% below entry",
+      "take_profit": "10.3% above entry",
+      "position_size": "13.8% of portfolio",
+      "trailing_stop": "10.1% trailing after 4.1% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
+      "yahoo_url": "https://finance.yahoo.com/quote/MSFT/"
+    },
+    {
+      "symbol": "UNP",
+      "action": "BUY",
+      "current_position": 74.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.8% below entry",
+      "take_profit": "9.1% above entry",
+      "position_size": "15.5% of portfolio",
+      "trailing_stop": "8.9% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UNP",
+      "yahoo_url": "https://finance.yahoo.com/quote/UNP/"
+    },
+    {
+      "symbol": "UNH",
+      "action": "BUY",
+      "current_position": 53.0,
+      "annual_volatility": "43%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "25.5% below entry",
+      "take_profit": "18.2% above entry",
+      "position_size": "7.8% of portfolio",
+      "trailing_stop": "17.9% trailing after 7.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UNH",
+      "yahoo_url": "https://finance.yahoo.com/quote/UNH/"
+    },
+    {
+      "symbol": "V",
+      "action": "BUY",
+      "current_position": 51.0,
+      "annual_volatility": "22%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.8% below entry",
+      "take_profit": "9.2% above entry",
+      "position_size": "15.5% of portfolio",
+      "trailing_stop": "9.0% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=V",
+      "yahoo_url": "https://finance.yahoo.com/quote/V/"
+    },
+    {
+      "symbol": "BRK-B",
+      "action": "BUY",
+      "current_position": 33.0,
+      "annual_volatility": "18%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "10.4% below entry",
+      "take_profit": "7.4% above entry",
+      "position_size": "19.1% of portfolio",
+      "trailing_stop": "7.3% trailing after 3.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=BRK-B",
+      "yahoo_url": "https://finance.yahoo.com/quote/BRK-B/"
+    },
+    {
+      "symbol": "LMT",
+      "action": "BUY",
+      "current_position": 39.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "14.8% below entry",
+      "take_profit": "10.6% above entry",
+      "position_size": "13.4% of portfolio",
+      "trailing_stop": "10.4% trailing after 4.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LMT",
+      "yahoo_url": "https://finance.yahoo.com/quote/LMT/"
+    },
+    {
+      "symbol": "CVX",
+      "action": "BUY",
+      "current_position": 112.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.8% below entry",
+      "take_profit": "9.9% above entry",
+      "position_size": "14.3% of portfolio",
+      "trailing_stop": "9.7% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CVX",
+      "yahoo_url": "https://finance.yahoo.com/quote/CVX/"
+    },
+    {
+      "symbol": "HON",
+      "action": "BUY",
+      "current_position": 89.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.7% below entry",
+      "take_profit": "9.8% above entry",
+      "position_size": "14.4% of portfolio",
+      "trailing_stop": "9.6% trailing after 3.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=HON",
+      "yahoo_url": "https://finance.yahoo.com/quote/HON/"
+    },
+    {
+      "symbol": "XOM",
+      "action": "BUY",
+      "current_position": 146.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.9% below entry",
+      "take_profit": "10.0% above entry",
+      "position_size": "14.2% of portfolio",
+      "trailing_stop": "9.7% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=XOM",
+      "yahoo_url": "https://finance.yahoo.com/quote/XOM/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "73.02%",
+    "sharpe_ratio": "1.26",
+    "max_drawdown": "-11.73%",
+    "win_rate": "56.06%",
+    "alpha": "-3.00%"
+  }
+}

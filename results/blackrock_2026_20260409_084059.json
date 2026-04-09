@@ -1,0 +1,116 @@
+{
+  "metrics": {
+    "total_return": 0.67928832181932,
+    "cagr": 0.18932200482974615,
+    "annual_volatility": 0.11606381521694979,
+    "sharpe_ratio": 1.2188478842456296,
+    "sortino_ratio": 1.8520167907285103,
+    "calmar_ratio": 1.5937866870222945,
+    "max_drawdown": -0.1187875431331783,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5765645805592543,
+    "profit_factor": 1.3433426296733117,
+    "num_trading_days": 751,
+    "skewness": 1.1718654677410483,
+    "kurtosis": 21.419861430890805,
+    "best_day": 0.08006372201339418,
+    "worst_day": -0.041819348519747446,
+    "avg_daily_return": 0.0007170154803097348,
+    "black_swan_resilience": 93.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.04198414254717231,
+    "beta": 0.6335012250977535,
+    "information_ratio": -0.4955087611717449,
+    "tracking_error": 0.08472936471979044
+  },
+  "trade_metrics": {
+    "num_trades": 339,
+    "num_buys": 185,
+    "num_sells": 154,
+    "total_commission": 0.0,
+    "total_slippage": 1916.2830924568177,
+    "total_transaction_costs": 1916.2830924568177,
+    "avg_trade_size": 5652.752485123356
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 214.0,
+      "avg_cost": 85.43315768824407,
+      "realized_pnl": -436.28105372699906
+    },
+    "MSFT": {
+      "qty": 39.0,
+      "avg_cost": 485.6315612792969,
+      "realized_pnl": 5604.069961547852
+    },
+    "INDA": {
+      "qty": 345.0,
+      "avg_cost": 55.354160525127014,
+      "realized_pnl": 943.4244635052465
+    },
+    "UNH": {
+      "qty": 59.0,
+      "avg_cost": 342.60152848040474,
+      "realized_pnl": 1548.7578195040333
+    },
+    "V": {
+      "qty": 57.0,
+      "avg_cost": 352.1072010104939,
+      "realized_pnl": 6425.944899736824
+    },
+    "BRK-B": {
+      "qty": 37.0,
+      "avg_cost": 498.7763532142499,
+      "realized_pnl": 6682.264955401859
+    },
+    "META": {
+      "qty": 29.0,
+      "avg_cost": 708.4490139868951,
+      "realized_pnl": 2714.932782573084
+    },
+    "AMZN": {
+      "qty": 80.0,
+      "avg_cost": 233.8800048828125,
+      "realized_pnl": 7564.13832855225
+    }
+  },
+  "source": "famous",
+  "description": "Institutional consensus: AI leaders + cash-flow assets + EM",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.2858,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2665,
+      "sh": 2.18,
+      "dd": -0.063
+    },
+    "1Y_2024": {
+      "ret": 0.1437,
+      "sh": 1.09,
+      "dd": -0.0453
+    },
+    "1Y_2025": {
+      "ret": 0.1626,
+      "sh": 0.82,
+      "dd": -0.1183
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1778,
+      "sh": 0.19,
+      "dd": -0.2107
+    },
+    "3Y_2023_2025": {
+      "ret": 0.6793,
+      "sh": 1.22,
+      "dd": -0.1188
+    },
+    "5Y_2020_2024": {
+      "ret": 0.5609,
+      "sh": 0.39,
+      "dd": -0.276
+    }
+  }
+}

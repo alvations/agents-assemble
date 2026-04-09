@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.4357477632939246,
+    "cagr": 0.1285977714426556,
+    "annual_volatility": 0.14444601260745876,
+    "sharpe_ratio": 0.6403365749811578,
+    "sortino_ratio": 1.0125364345049765,
+    "calmar_ratio": 0.7180596304578004,
+    "max_drawdown": -0.1790906576389315,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5139813581890812,
+    "profit_factor": 1.1874766272003048,
+    "num_trading_days": 751,
+    "skewness": 1.5451302392043609,
+    "kurtosis": 18.009226575120138,
+    "best_day": 0.09559561923224424,
+    "worst_day": -0.04641240459633367,
+    "avg_daily_return": 0.0005226898031989823,
+    "black_swan_resilience": 90.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10270837593426285,
+    "beta": 0.6340916893630484,
+    "information_ratio": -0.8516238653261361,
+    "tracking_error": 0.12060297992580313
+  },
+  "trade_metrics": {
+    "num_trades": 724,
+    "num_buys": 371,
+    "num_sells": 353,
+    "total_commission": 0.0,
+    "total_slippage": 6059.318621105674,
+    "total_transaction_costs": 6059.318621105674,
+    "avg_trade_size": 8369.224614786839
+  },
+  "final_positions": {
+    "CMCSA": {
+      "qty": 787.0,
+      "avg_cost": 30.49995807166787,
+      "realized_pnl": -309.2250313650781
+    },
+    "NWSA": {
+      "qty": 824.0,
+      "avg_cost": 25.417727042170405,
+      "realized_pnl": 472.4658851623558
+    }
+  },
+  "source": "unconventional",
+  "description": "Irreplaceable media IP and distribution: NYT, DIS, GOOG (YouTube), CMCSA",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.5,
+  "windows_tested": 6,
+  "composite_score": 0.0538,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1692,
+      "sh": 0.94,
+      "dd": -0.1106
+    },
+    "1Y_2024": {
+      "ret": 0.0254,
+      "sh": -0.05,
+      "dd": -0.091
+    },
+    "1Y_2025": {
+      "ret": 0.2066,
+      "sh": 0.96,
+      "dd": -0.1443
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1263,
+      "sh": -0.37,
+      "dd": -0.3329
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4357,
+      "sh": 0.64,
+      "dd": -0.1791
+    },
+    "5Y_2020_2024": {
+      "ret": 0.1056,
+      "sh": -0.0,
+      "dd": -0.3961
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "metrics": {
+    "total_return": 0.0847841358177539,
+    "cagr": 0.027594013576914822,
+    "annual_volatility": 0.05762578539337195,
+    "sharpe_ratio": -0.17842525408229068,
+    "sortino_ratio": -0.29781791547299824,
+    "calmar_ratio": 0.5358146988683276,
+    "max_drawdown": -0.05149917244748048,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.47003994673768307,
+    "profit_factor": 1.1601766519741539,
+    "num_trading_days": 751,
+    "skewness": 6.697482688860463,
+    "kurtosis": 153.25315442822333,
+    "best_day": 0.06570889503199773,
+    "worst_day": -0.03372537175653689,
+    "avg_daily_return": 0.0001148486905670408,
+    "black_swan_resilience": 97.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.20371213380000364,
+    "beta": 0.21031764480902929,
+    "information_ratio": -1.5636386102563995,
+    "tracking_error": 0.1302808286158908
+  },
+  "trade_metrics": {
+    "num_trades": 489,
+    "num_buys": 279,
+    "num_sells": 210,
+    "total_commission": 0.0,
+    "total_slippage": 3441.3387108573916,
+    "total_transaction_costs": 3441.3387108573916,
+    "avg_trade_size": 7037.502476190984
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "math",
+  "description": "Buy at Z < -2 (statistically oversold), sell at Z > 0",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.17,
+  "windows_tested": 6,
+  "composite_score": 0.0046,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0017,
+      "sh": -1.18,
+      "dd": -0.0298
+    },
+    "1Y_2024": {
+      "ret": 0.0164,
+      "sh": -0.68,
+      "dd": -0.0307
+    },
+    "1Y_2025": {
+      "ret": 0.0667,
+      "sh": 0.34,
+      "dd": -0.0513
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0062,
+      "sh": -0.58,
+      "dd": -0.0561
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0848,
+      "sh": -0.18,
+      "dd": -0.0515
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0016,
+      "sh": -0.34,
+      "dd": -0.1294
+    }
+  }
+}

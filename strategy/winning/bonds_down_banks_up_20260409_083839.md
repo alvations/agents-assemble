@@ -1,0 +1,42 @@
+# WINNING Strategy: bonds_down_banks_up
+
+> **What it does:** Rising rates crush bonds but boost banks (wider NIM) + insurance (float income). TLT↓ = XLF↑.
+>
+> **Hypothesis:** Bonds Down → Banks Up (Rate Rotation) — consistency: 67% across 6 windows
+
+**Generated:** 2026-04-09T08:38:39.579602
+**Assessment:** BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
+
+## Performance Summary
+- **total_return:** 33.99%
+- **sharpe_ratio:** 0.51
+- **max_drawdown:** -20.35%
+- **win_rate:** 54.46%
+- **alpha:** -12.85%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 8.5%
+- **stop_loss:** 24.4%
+- **take_profit_target:** 5.1%
+- **max_drawdown_tolerance:** 20.3%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** SAFE TO BUY. Even better: add more when interest rates are rising — banks earn wider margins on loans.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **JPM** | BUY | 26% | Limit 0.5% below market | 26.2% below entry | 5.5% above entry | 7.9% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=JPM) / [Yahoo](https://finance.yahoo.com/quote/JPM/) |
+| **GS** | BUY | 31% | Market order (volatile) | 32.1% below entry | 6.8% above entry | 6.5% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=GS) / [Yahoo](https://finance.yahoo.com/quote/GS/) |
+| **TLT** | BUY | 13% | Limit 0.5% below market | 12.9% below entry | 3.0% above entry | 16.1% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=TLT) / [Yahoo](https://finance.yahoo.com/quote/TLT/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.

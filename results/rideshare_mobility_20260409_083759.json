@@ -1,0 +1,96 @@
+{
+  "metrics": {
+    "total_return": 0.4827091468214697,
+    "cagr": 0.14081299976581274,
+    "annual_volatility": 0.1502879079374722,
+    "sharpe_ratio": 0.6939447244888676,
+    "sortino_ratio": 0.9934406250686192,
+    "calmar_ratio": 1.0556866849988815,
+    "max_drawdown": -0.13338521908700773,
+    "max_drawdown_date": "2023-10-20",
+    "win_rate": 0.5033288948069241,
+    "profit_factor": 1.1867749439825748,
+    "num_trading_days": 751,
+    "skewness": -0.5645448289638577,
+    "kurtosis": 5.921715028495253,
+    "best_day": 0.03006567887612399,
+    "worst_day": -0.07459703265232898,
+    "avg_daily_return": 0.0005695050249645859,
+    "black_swan_resilience": 73.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.09049314761110572,
+    "beta": 0.4495838234342557,
+    "information_ratio": -0.5727585802966962,
+    "tracking_error": 0.15799527187218934
+  },
+  "trade_metrics": {
+    "num_trades": 753,
+    "num_buys": 344,
+    "num_sells": 409,
+    "total_commission": 0.0,
+    "total_slippage": 6860.085913572787,
+    "total_transaction_costs": 6860.085913572787,
+    "avg_trade_size": 9110.3398586624
+  },
+  "final_positions": {
+    "TCOM": {
+      "qty": 308.0,
+      "avg_cost": 71.40188251842152,
+      "realized_pnl": 12177.529235839846
+    },
+    "BKNG": {
+      "qty": 103.0,
+      "avg_cost": 215.78733825683594,
+      "realized_pnl": 9334.636024475105
+    },
+    "UBER": {
+      "qty": 275.0,
+      "avg_cost": 81.5,
+      "realized_pnl": 14372.237834930422
+    },
+    "DASH": {
+      "qty": 97.0,
+      "avg_cost": 234.84999933931016,
+      "realized_pnl": 21794.12465286255
+    }
+  },
+  "source": "theme",
+  "description": "Mobility platforms: rideshare + delivery, profitability inflection",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.67,
+  "windows_tested": 6,
+  "composite_score": 0.1149,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1799,
+      "sh": 0.83,
+      "dd": -0.1334
+    },
+    "1Y_2024": {
+      "ret": 0.2725,
+      "sh": 1.46,
+      "dd": -0.0908
+    },
+    "1Y_2025": {
+      "ret": 0.0311,
+      "sh": -0.0,
+      "dd": -0.0855
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2396,
+      "sh": 0.29,
+      "dd": -0.2402
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4827,
+      "sh": 0.69,
+      "dd": -0.1334
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0486,
+      "sh": -0.13,
+      "dd": -0.3961
+    }
+  }
+}

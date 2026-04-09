@@ -1,0 +1,124 @@
+{
+  "metrics": {
+    "total_return": 0.07398063757608431,
+    "cagr": 0.024159580232540723,
+    "annual_volatility": 0.02793546155323333,
+    "sharpe_ratio": -0.53285639641943,
+    "sortino_ratio": -0.9677050968618032,
+    "calmar_ratio": 0.9241017257405694,
+    "max_drawdown": -0.026143853603540657,
+    "max_drawdown_date": "2024-05-16",
+    "win_rate": 0.07856191744340879,
+    "profit_factor": 1.4640722802908401,
+    "num_trading_days": 751,
+    "skewness": 3.6694387145354703,
+    "kurtosis": 37.83005693906385,
+    "best_day": 0.018238141254416806,
+    "worst_day": -0.008472843214776371,
+    "avg_daily_return": 9.658006368186025e-05,
+    "black_swan_resilience": 98.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.20714656714437774,
+    "beta": 0.029474750288794288,
+    "information_ratio": -1.367202808225861,
+    "tracking_error": 0.1515112212307256
+  },
+  "trade_metrics": {
+    "num_trades": 242,
+    "num_buys": 115,
+    "num_sells": 127,
+    "total_commission": 0.0,
+    "total_slippage": 2851.7906258602147,
+    "total_transaction_costs": 2851.7906258602147,
+    "avg_trade_size": 11784.25878454634
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LLY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AVGO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "news_event",
+  "description": "PEAD proxy: buy after >3% gap-up on 2x volume, ride drift 20-60 days",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.0,
+  "windows_tested": 6,
+  "composite_score": 0.0,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0233,
+      "sh": -0.6,
+      "dd": -0.0188
+    },
+    "1Y_2024": {
+      "ret": 0.0247,
+      "sh": -0.44,
+      "dd": -0.0199
+    },
+    "1Y_2025": {
+      "ret": 0.0234,
+      "sh": -0.61,
+      "dd": -0.0154
+    },
+    "3Y_2022_2024": {
+      "ret": 0.036,
+      "sh": -1.12,
+      "dd": -0.0261
+    },
+    "3Y_2023_2025": {
+      "ret": 0.074,
+      "sh": -0.53,
+      "dd": -0.0261
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0343,
+      "sh": -1.07,
+      "dd": -0.0478
+    }
+  }
+}

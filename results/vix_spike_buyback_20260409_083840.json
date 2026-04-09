@@ -1,0 +1,96 @@
+{
+  "metrics": {
+    "total_return": 0.48721438378019166,
+    "cagr": 0.14197125726791504,
+    "annual_volatility": 0.08565419350721354,
+    "sharpe_ratio": 1.138889639444339,
+    "sortino_ratio": 2.3572592028934873,
+    "calmar_ratio": 2.062442268868595,
+    "max_drawdown": -0.06883647576996033,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5619174434087882,
+    "profit_factor": 1.535267547850293,
+    "num_trading_days": 751,
+    "skewness": 8.585515943011155,
+    "kurtosis": 161.70830733449094,
+    "best_day": 0.1004767031120275,
+    "worst_day": -0.03474267303012801,
+    "avg_daily_return": 0.0005427557102528742,
+    "black_swan_resilience": 96.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.08933489010900342,
+    "beta": 0.4350425513776092,
+    "information_ratio": -0.8760847732319975,
+    "tracking_error": 0.10197060015029674
+  },
+  "trade_metrics": {
+    "num_trades": 394,
+    "num_buys": 164,
+    "num_sells": 230,
+    "total_commission": 0.0,
+    "total_slippage": 618.2397037506098,
+    "total_transaction_costs": 618.2397037506098,
+    "avg_trade_size": 1569.1363039355592
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 33.0,
+      "avg_cost": 197.517346782152,
+      "realized_pnl": 5729.249171105938
+    },
+    "GOOGL": {
+      "qty": 29.0,
+      "avg_cost": 164.2207362135978,
+      "realized_pnl": 7064.226164037115
+    },
+    "META": {
+      "qty": 14.0,
+      "avg_cost": 551.3755355755142,
+      "realized_pnl": 11581.640783579654
+    },
+    "V": {
+      "qty": 25.0,
+      "avg_cost": 306.25702637454623,
+      "realized_pnl": 4078.6726991585742
+    }
+  },
+  "source": "unconventional",
+  "description": "Fear spikes \u2192 buy companies with massive buyback programs. They buy themselves cheap in panics.",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.2196,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1478,
+      "sh": 2.0,
+      "dd": -0.0238
+    },
+    "1Y_2024": {
+      "ret": 0.1228,
+      "sh": 1.54,
+      "dd": -0.0261
+    },
+    "1Y_2025": {
+      "ret": 0.1614,
+      "sh": 0.93,
+      "dd": -0.0688
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1644,
+      "sh": 0.21,
+      "dd": -0.1142
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4872,
+      "sh": 1.14,
+      "dd": -0.0688
+    },
+    "5Y_2020_2024": {
+      "ret": 0.3557,
+      "sh": 0.23,
+      "dd": -0.2054
+    }
+  }
+}

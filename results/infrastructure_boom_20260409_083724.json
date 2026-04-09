@@ -1,0 +1,126 @@
+{
+  "metrics": {
+    "total_return": 0.3659469390903487,
+    "cagr": 0.10994034899059035,
+    "annual_volatility": 0.13685346333039813,
+    "sharpe_ratio": 0.5464272373958456,
+    "sortino_ratio": 0.7991250176138016,
+    "calmar_ratio": 0.8700683687080559,
+    "max_drawdown": -0.12635828739968813,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.5086551264980027,
+    "profit_factor": 1.1510930725581954,
+    "num_trading_days": 751,
+    "skewness": 0.15570330342156763,
+    "kurtosis": 2.5405709989760803,
+    "best_day": 0.05224216815473226,
+    "worst_day": -0.0384535149343308,
+    "avg_daily_return": 0.00045239771952016404,
+    "black_swan_resilience": 82.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1213657983863281,
+    "beta": 0.504191061407524,
+    "information_ratio": -0.8915439888233518,
+    "tracking_error": 0.1361299048704317
+  },
+  "trade_metrics": {
+    "num_trades": 383,
+    "num_buys": 207,
+    "num_sells": 176,
+    "total_commission": 0.0,
+    "total_slippage": 2740.409522695539,
+    "total_transaction_costs": 2740.409522695539,
+    "avg_trade_size": 7155.116247246844
+  },
+  "final_positions": {
+    "DLR": {
+      "qty": 80.0,
+      "avg_cost": 154.09884643554688,
+      "realized_pnl": 4487.40351867676
+    },
+    "CCI": {
+      "qty": 143.0,
+      "avg_cost": 94.35831904911495,
+      "realized_pnl": -1140.720100402832
+    },
+    "AMT": {
+      "qty": 71.0,
+      "avg_cost": 205.07063100035762,
+      "realized_pnl": 2508.4992065429674
+    },
+    "VZ": {
+      "qty": 308.0,
+      "avg_cost": 41.39945323096312,
+      "realized_pnl": 4647.142141248699
+    },
+    "DUK": {
+      "qty": 103.0,
+      "avg_cost": 115.78559616345184,
+      "realized_pnl": 2121.1087495010693
+    },
+    "SO": {
+      "qty": 140.0,
+      "avg_cost": 90.5442087990897,
+      "realized_pnl": 5757.438606262207
+    },
+    "TMUS": {
+      "qty": 60.0,
+      "avg_cost": 233.5517315061289,
+      "realized_pnl": -954.2908545053135
+    },
+    "T": {
+      "qty": 484.0,
+      "avg_cost": 26.7561143848994,
+      "realized_pnl": -16.77890179255307
+    },
+    "EQIX": {
+      "qty": 17.0,
+      "avg_cost": 842.0971046104562,
+      "realized_pnl": 2069.554281795727
+    },
+    "DE": {
+      "qty": 27.0,
+      "avg_cost": 470.49914761247305,
+      "realized_pnl": 5679.17464789029
+    }
+  },
+  "source": "theme",
+  "description": "Infrastructure spending: construction, 5G, data centers, utilities",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.2156,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0618,
+      "sh": 0.22,
+      "dd": -0.1264
+    },
+    "1Y_2024": {
+      "ret": 0.2171,
+      "sh": 1.35,
+      "dd": -0.0632
+    },
+    "1Y_2025": {
+      "ret": 0.0647,
+      "sh": 0.24,
+      "dd": -0.0984
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2622,
+      "sh": 0.32,
+      "dd": -0.2218
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3659,
+      "sh": 0.55,
+      "dd": -0.1264
+    },
+    "5Y_2020_2024": {
+      "ret": 0.5679,
+      "sh": 0.36,
+      "dd": -0.3217
+    }
+  }
+}

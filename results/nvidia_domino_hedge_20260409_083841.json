@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": -0.13666957344134711,
+    "cagr": -0.047965635358233505,
+    "annual_volatility": 0.10011560102099067,
+    "sharpe_ratio": -0.833955986401033,
+    "sortino_ratio": -1.1311257422872683,
+    "calmar_ratio": -0.29484987487228154,
+    "max_drawdown": -0.16267816080644604,
+    "max_drawdown_date": "2025-12-30",
+    "win_rate": 0.4793608521970706,
+    "profit_factor": 0.8682570785977244,
+    "num_trading_days": 751,
+    "skewness": -1.3387419548520392,
+    "kurtosis": 47.490884160876426,
+    "best_day": 0.0540918259034775,
+    "worst_day": -0.07872579197769025,
+    "avg_daily_return": -0.00017566761658807266,
+    "black_swan_resilience": 66.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.27927178273515196,
+    "beta": -0.4723402704137603,
+    "information_ratio": -1.1817403748447721,
+    "tracking_error": 0.23632245176681538
+  },
+  "trade_metrics": {
+    "num_trades": 1220,
+    "num_buys": 615,
+    "num_sells": 605,
+    "total_commission": 0.0,
+    "total_slippage": 2040.507410919188,
+    "total_transaction_costs": 2040.507410919188,
+    "avg_trade_size": 1672.5470581304833
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 22.0,
+      "avg_cost": 388.68944343957395,
+      "realized_pnl": 6035.10897881516
+    },
+    "SQQQ": {
+      "qty": 102.0,
+      "avg_cost": 66.6912313093999,
+      "realized_pnl": -12495.856447914603
+    },
+    "TLT": {
+      "qty": 70.0,
+      "avg_cost": 86.96268911634289,
+      "realized_pnl": 577.9376155854061
+    },
+    "UVXY": {
+      "qty": 120.0,
+      "avg_cost": 36.72180160147245,
+      "realized_pnl": -6366.943359062328
+    },
+    "SHY": {
+      "qty": 53.0,
+      "avg_cost": 82.0035510880076,
+      "realized_pnl": 440.9115963362812
+    }
+  },
+  "source": "unconventional",
+  "description": "Profit when NVIDIA financing chain breaks: inverse ETFs + safe havens + vol, scaled by supply chain stress",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.0,
+  "windows_tested": 6,
+  "composite_score": -0.0,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0404,
+      "sh": -3.46,
+      "dd": -0.0476
+    },
+    "1Y_2024": {
+      "ret": -0.0857,
+      "sh": -1.42,
+      "dd": -0.1113
+    },
+    "1Y_2025": {
+      "ret": -0.0195,
+      "sh": -0.33,
+      "dd": -0.1623
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1813,
+      "sh": -1.48,
+      "dd": -0.2055
+    },
+    "3Y_2023_2025": {
+      "ret": -0.1367,
+      "sh": -0.83,
+      "dd": -0.1627
+    },
+    "5Y_2020_2024": {
+      "ret": -0.2775,
+      "sh": -1.39,
+      "dd": -0.3235
+    }
+  }
+}

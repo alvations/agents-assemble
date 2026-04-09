@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.5067660417525932,
+    "cagr": 0.1469709409631259,
+    "annual_volatility": 0.10765043475124207,
+    "sharpe_ratio": 0.9666702859924189,
+    "sortino_ratio": 1.9470588011019063,
+    "calmar_ratio": 2.630944830262969,
+    "max_drawdown": -0.0558624184257166,
+    "max_drawdown_date": "2025-06-05",
+    "win_rate": 0.5739014647137151,
+    "profit_factor": 1.6876295863393147,
+    "num_trading_days": 751,
+    "skewness": 4.026426701567011,
+    "kurtosis": 39.0227998177523,
+    "best_day": 0.06757455767657627,
+    "worst_day": -0.03448897854070487,
+    "avg_daily_return": 0.0005685961982999589,
+    "black_swan_resilience": 96.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.08433520641379255,
+    "beta": 0.23802958576913055,
+    "information_ratio": -0.5451206639484095,
+    "tracking_error": 0.1547092451108661
+  },
+  "trade_metrics": {
+    "num_trades": 183,
+    "num_buys": 87,
+    "num_sells": 96,
+    "total_commission": 0.0,
+    "total_slippage": 642.4777125005718,
+    "total_transaction_costs": 642.4777125005718,
+    "avg_trade_size": 3510.8071721342744
+  },
+  "final_positions": {
+    "QQQ": {
+      "qty": 24.0,
+      "avg_cost": 554.8750834430459,
+      "realized_pnl": 7389.251361763961
+    }
+  },
+  "source": "recession",
+  "description": "Sharp crash \u2192 sharp rebound. Buy high-beta growth on confirmed V-recovery signal.",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.5,
+  "windows_tested": 6,
+  "composite_score": 0.0432,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.1332,
+      "sh": 0.83,
+      "dd": -0.052
+    },
+    "1Y_2024": {
+      "ret": 0.0265,
+      "sh": -0.72,
+      "dd": -0.0142
+    },
+    "1Y_2025": {
+      "ret": 0.2984,
+      "sh": 1.6,
+      "dd": -0.0558
+    },
+    "3Y_2022_2024": {
+      "ret": -0.261,
+      "sh": -0.65,
+      "dd": -0.4462
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5068,
+      "sh": 0.97,
+      "dd": -0.0559
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0728,
+      "sh": -0.27,
+      "dd": -0.4467
+    }
+  }
+}

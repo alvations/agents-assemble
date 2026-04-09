@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.8344539550040961,
+    "cagr": 0.2250032428928832,
+    "annual_volatility": 0.15034076909738844,
+    "sharpe_ratio": 1.168360477810113,
+    "sortino_ratio": 1.9071334704622431,
+    "calmar_ratio": 1.5572665290232521,
+    "max_drawdown": -0.14448602002253885,
+    "max_drawdown_date": "2025-09-02",
+    "win_rate": 0.5046604527296937,
+    "profit_factor": 1.311194126894313,
+    "num_trading_days": 751,
+    "skewness": 1.1858053162534132,
+    "kurtosis": 9.600996258697027,
+    "best_day": 0.07021525644662807,
+    "worst_day": -0.036398114419997296,
+    "avg_daily_return": 0.0008526824533347732,
+    "black_swan_resilience": 92.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.006302904484035254,
+    "beta": 0.512629758366396,
+    "information_ratio": -0.04248729647294584,
+    "tracking_error": 0.14834797709589934
+  },
+  "trade_metrics": {
+    "num_trades": 785,
+    "num_buys": 385,
+    "num_sells": 400,
+    "total_commission": 0.0,
+    "total_slippage": 21703.294973627075,
+    "total_transaction_costs": 21703.294973627075,
+    "avg_trade_size": 27647.509520544063
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 110.0,
+      "avg_cost": 398.6000061035156,
+      "realized_pnl": 8808.201965332015
+    },
+    "META": {
+      "qty": 50.0,
+      "avg_cost": 658.1265258789062,
+      "realized_pnl": 27061.577804565433
+    },
+    "XLF": {
+      "qty": 598.0,
+      "avg_cost": 54.520259057021725,
+      "realized_pnl": -3075.364148842422
+    },
+    "SPY": {
+      "qty": 48.0,
+      "avg_cost": 685.9765625,
+      "realized_pnl": 3939.5405273437555
+    },
+    "QQQ": {
+      "qty": 53.0,
+      "avg_cost": 620.088134765625,
+      "realized_pnl": 1113.7715148925759
+    }
+  },
+  "source": "famous",
+  "description": "Macro momentum: ride reflexive trends, concentrate bets, fade extremes",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.4652,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3318,
+      "sh": 1.75,
+      "dd": -0.0721
+    },
+    "1Y_2024": {
+      "ret": 0.5171,
+      "sh": 2.33,
+      "dd": -0.0731
+    },
+    "1Y_2025": {
+      "ret": -0.084,
+      "sh": -0.93,
+      "dd": -0.1434
+    },
+    "3Y_2022_2024": {
+      "ret": 0.684,
+      "sh": 0.96,
+      "dd": -0.1863
+    },
+    "3Y_2023_2025": {
+      "ret": 0.8345,
+      "sh": 1.17,
+      "dd": -0.1445
+    },
+    "5Y_2020_2024": {
+      "ret": 1.6633,
+      "sh": 1.04,
+      "dd": -0.2683
+    }
+  }
+}

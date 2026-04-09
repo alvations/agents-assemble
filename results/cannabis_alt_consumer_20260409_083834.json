@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.09845229318759463,
+    "cagr": 0.03190665911888857,
+    "annual_volatility": 0.45356850752469674,
+    "sharpe_ratio": 0.20288158592164005,
+    "sortino_ratio": 0.34505244953432623,
+    "calmar_ratio": 0.05533306817774722,
+    "max_drawdown": -0.5766291328070647,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.4540612516644474,
+    "profit_factor": 1.0570821204582252,
+    "num_trading_days": 751,
+    "skewness": 1.7445968163870877,
+    "kurtosis": 9.887371659280264,
+    "best_day": 0.2183348535227203,
+    "worst_day": -0.10392152016866252,
+    "avg_daily_return": 0.0005208113633100001,
+    "black_swan_resilience": 69.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1993994882580299,
+    "beta": 0.7228816443749075,
+    "information_ratio": -0.451296115079635,
+    "tracking_error": 0.44183736929099016
+  },
+  "trade_metrics": {
+    "num_trades": 1073,
+    "num_buys": 562,
+    "num_sells": 511,
+    "total_commission": 0.0,
+    "total_slippage": 4295.001846248502,
+    "total_transaction_costs": 4295.001846248502,
+    "avg_trade_size": 4002.797619989289
+  },
+  "final_positions": {
+    "SAM": {
+      "qty": 67.0,
+      "avg_cost": 203.6166092031497,
+      "realized_pnl": -2634.925174721976
+    },
+    "GTBIF": {
+      "qty": 1674.0,
+      "avg_cost": 6.184759842466675,
+      "realized_pnl": 11269.823993707125
+    }
+  },
+  "source": "unconventional",
+  "description": "Contrarian cannabis: pre-legalization value, binary regulatory catalyst",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.67,
+  "windows_tested": 6,
+  "composite_score": -0.0378,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0029,
+      "sh": 0.12,
+      "dd": -0.3573
+    },
+    "1Y_2024": {
+      "ret": 0.0971,
+      "sh": 0.33,
+      "dd": -0.3156
+    },
+    "1Y_2025": {
+      "ret": -0.0198,
+      "sh": 0.12,
+      "dd": -0.4253
+    },
+    "3Y_2022_2024": {
+      "ret": -0.3751,
+      "sh": -0.22,
+      "dd": -0.5926
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0985,
+      "sh": 0.2,
+      "dd": -0.5766
+    },
+    "5Y_2020_2024": {
+      "ret": -0.4943,
+      "sh": -0.2,
+      "dd": -0.7912
+    }
+  }
+}

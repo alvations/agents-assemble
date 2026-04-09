@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.46518537226668144,
+    "cagr": 0.1362853831806552,
+    "annual_volatility": 0.08954907587777142,
+    "sharpe_ratio": 1.0382349302748355,
+    "sortino_ratio": 1.6866909649813002,
+    "calmar_ratio": 1.3318685452341767,
+    "max_drawdown": -0.10232645231267379,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.3581890812250333,
+    "profit_factor": 1.375329184168009,
+    "num_trading_days": 751,
+    "skewness": 0.8942220089833485,
+    "kurtosis": 5.575408231899919,
+    "best_day": 0.03729127108864261,
+    "worst_day": -0.020514988399573664,
+    "avg_daily_return": 0.0005245902538632229,
+    "black_swan_resilience": 93.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.09502076419626326,
+    "beta": 0.32639727106764144,
+    "information_ratio": -0.7465371760437249,
+    "tracking_error": 0.1272820259264595
+  },
+  "trade_metrics": {
+    "num_trades": 95,
+    "num_buys": 52,
+    "num_sells": 43,
+    "total_commission": 0.0,
+    "total_slippage": 1970.2693139228818,
+    "total_transaction_costs": 1970.2693139228818,
+    "avg_trade_size": 20739.676988661915
+  },
+  "final_positions": {
+    "DIS": {
+      "qty": 270.0,
+      "avg_cost": 106.05245971679688,
+      "realized_pnl": 4567.351287841798
+    },
+    "MA": {
+      "qty": 53.0,
+      "avg_cost": 543.2539672851562,
+      "realized_pnl": 2308.361328125
+    }
+  },
+  "source": "famous",
+  "description": "Global blue-chip contrarian: buy iconic brands during crises",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.1591,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3313,
+      "sh": 2.35,
+      "dd": -0.1023
+    },
+    "1Y_2024": {
+      "ret": -0.0006,
+      "sh": -0.73,
+      "dd": -0.0665
+    },
+    "1Y_2025": {
+      "ret": 0.1015,
+      "sh": 0.65,
+      "dd": -0.0928
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2329,
+      "sh": 0.28,
+      "dd": -0.2125
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4652,
+      "sh": 1.04,
+      "dd": -0.1023
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2239,
+      "sh": 0.1,
+      "dd": -0.3289
+    }
+  }
+}

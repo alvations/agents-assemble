@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.041171530882355034,
+    "cagr": 0.013586503601955346,
+    "annual_volatility": 0.06008390999820089,
+    "sharpe_ratio": -0.3974748546901587,
+    "sortino_ratio": -0.5434097365791634,
+    "calmar_ratio": 0.19708200616695554,
+    "max_drawdown": -0.06893832606131334,
+    "max_drawdown_date": "2023-10-19",
+    "win_rate": 0.5166444740346205,
+    "profit_factor": 1.0422522788960122,
+    "num_trading_days": 751,
+    "skewness": -0.13169736591036244,
+    "kurtosis": 1.0895780203901788,
+    "best_day": 0.016619658613313604,
+    "worst_day": -0.013867040404392683,
+    "avg_daily_return": 6.0880642966852225e-05,
+    "black_swan_resilience": 82.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2177196437749631,
+    "beta": 0.04574517229899957,
+    "information_ratio": -1.3764698519780665,
+    "tracking_error": 0.15817247538119883
+  },
+  "trade_metrics": {
+    "num_trades": 524,
+    "num_buys": 254,
+    "num_sells": 270,
+    "total_commission": 0.0,
+    "total_slippage": 2695.2795656509406,
+    "total_transaction_costs": 2695.2795656509406,
+    "avg_trade_size": 5143.663293226985
+  },
+  "final_positions": {
+    "SHY": {
+      "qty": 127.0,
+      "avg_cost": 80.02585513779957,
+      "realized_pnl": 3053.8102138286836
+    },
+    "LQD": {
+      "qty": 95.0,
+      "avg_cost": 108.12686281038566,
+      "realized_pnl": 2441.4958451604703
+    },
+    "TLT": {
+      "qty": 420.0,
+      "avg_cost": 87.24379821759949,
+      "realized_pnl": -1751.5105484739452
+    },
+    "IEF": {
+      "qty": 219.0,
+      "avg_cost": 92.28253549280262,
+      "realized_pnl": 1303.178136998495
+    },
+    "HYG": {
+      "qty": 197.0,
+      "avg_cost": 79.4564208984375,
+      "realized_pnl": 1466.901298522955
+    }
+  },
+  "source": "generic",
+  "description": "Bond duration/credit strategies via ETFs",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.0,
+  "windows_tested": 6,
+  "composite_score": -0.0,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0206,
+      "sh": -0.26,
+      "dd": -0.0689
+    },
+    "1Y_2024": {
+      "ret": -0.0064,
+      "sh": -0.61,
+      "dd": -0.06
+    },
+    "1Y_2025": {
+      "ret": 0.0296,
+      "sh": -0.22,
+      "dd": -0.0218
+    },
+    "3Y_2022_2024": {
+      "ret": -0.107,
+      "sh": -1.09,
+      "dd": -0.155
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0412,
+      "sh": -0.4,
+      "dd": -0.0689
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0407,
+      "sh": -0.61,
+      "dd": -0.2017
+    }
+  }
+}

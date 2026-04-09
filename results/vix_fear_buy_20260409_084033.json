@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": 0.09025947352569541,
+    "cagr": 0.02932593718979204,
+    "annual_volatility": 0.06916971751245053,
+    "sharpe_ratio": -0.1144882749961261,
+    "sortino_ratio": -0.23962793360002368,
+    "calmar_ratio": 0.5429200044470054,
+    "max_drawdown": -0.054015208409316506,
+    "max_drawdown_date": "2025-04-21",
+    "win_rate": 0.018641810918774968,
+    "profit_factor": 1.6835474905522563,
+    "num_trading_days": 751,
+    "skewness": 12.924778543410385,
+    "kurtosis": 314.20502022611953,
+    "best_day": 0.09512370200464293,
+    "worst_day": -0.03879754072149377,
+    "avg_daily_return": 0.00012422477691836678,
+    "black_swan_resilience": 97.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.20198021018712642,
+    "beta": 0.23232525668440104,
+    "information_ratio": -1.5312246515926595,
+    "tracking_error": 0.1319076269945383
+  },
+  "trade_metrics": {
+    "num_trades": 28,
+    "num_buys": 14,
+    "num_sells": 14,
+    "total_commission": 0.0,
+    "total_slippage": 193.6287277526855,
+    "total_transaction_costs": 193.6287277526855,
+    "avg_trade_size": 6915.311705453055
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "QQQ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IWM": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy SPY/QQQ when vol spikes >30 (proxy). 81.5% win at 3 weeks",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.17,
+  "windows_tested": 6,
+  "composite_score": 0.0045,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0,
+      "sh": -Infinity,
+      "dd": 0.0
+    },
+    "1Y_2024": {
+      "ret": 0.0,
+      "sh": -Infinity,
+      "dd": 0.0
+    },
+    "1Y_2025": {
+      "ret": 0.0903,
+      "sh": 0.46,
+      "dd": -0.054
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0059,
+      "sh": -0.63,
+      "dd": -0.0827
+    },
+    "3Y_2023_2025": {
+      "ret": 0.0903,
+      "sh": -0.11,
+      "dd": -0.054
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0023,
+      "sh": -0.25,
+      "dd": -0.2497
+    }
+  }
+}

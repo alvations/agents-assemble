@@ -1,0 +1,141 @@
+{
+  "metrics": {
+    "total_return": 0.8777236425337955,
+    "cagr": 0.23459291759102952,
+    "annual_volatility": 0.1082905085298507,
+    "sharpe_ratio": 1.6447528652990961,
+    "sortino_ratio": 2.659758615643205,
+    "calmar_ratio": 2.348889148447721,
+    "max_drawdown": -0.0998739841537698,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5672436750998668,
+    "profit_factor": 1.4386030936138026,
+    "num_trading_days": 751,
+    "skewness": 0.9118069339875624,
+    "kurtosis": 8.512827658860292,
+    "best_day": 0.05440059355153526,
+    "worst_day": -0.03212234168511596,
+    "avg_daily_return": 0.0008624400381451045,
+    "black_swan_resilience": 93.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.0032867702141110566,
+    "beta": 0.5273299116218543,
+    "information_ratio": 0.03216946549035778,
+    "tracking_error": 0.10217049503344115
+  },
+  "trade_metrics": {
+    "num_trades": 1429,
+    "num_buys": 738,
+    "num_sells": 691,
+    "total_commission": 0.0,
+    "total_slippage": 4685.413903806685,
+    "total_transaction_costs": 4685.413903806685,
+    "avg_trade_size": 3278.806090837429
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 24.0,
+      "avg_cost": 281.2653560621357,
+      "realized_pnl": 5527.407379109423
+    },
+    "SHY": {
+      "qty": 115.0,
+      "avg_cost": 77.94744108355701,
+      "realized_pnl": 593.5048121334659
+    },
+    "NVDA": {
+      "qty": 100.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 24253.4950466156
+    },
+    "AAPL": {
+      "qty": 69.0,
+      "avg_cost": 269.3683874157892,
+      "realized_pnl": 8528.108947753914
+    },
+    "XLP": {
+      "qty": 97.0,
+      "avg_cost": 76.34819990640302,
+      "realized_pnl": 649.5780146698683
+    },
+    "PG": {
+      "qty": 52.0,
+      "avg_cost": 156.78935900803708,
+      "realized_pnl": 327.99821413326265
+    },
+    "KO": {
+      "qty": 108.0,
+      "avg_cost": 65.93930453388417,
+      "realized_pnl": 968.3598447986489
+    },
+    "WMT": {
+      "qty": 67.0,
+      "avg_cost": 84.06820958946193,
+      "realized_pnl": 4789.130078199516
+    },
+    "COST": {
+      "qty": 9.0,
+      "avg_cost": 885.4524132713153,
+      "realized_pnl": 4994.6711151937925
+    },
+    "PEP": {
+      "qty": 53.0,
+      "avg_cost": 144.24499181678618,
+      "realized_pnl": -1295.0707697088628
+    },
+    "GOOGL": {
+      "qty": 60.0,
+      "avg_cost": 285.97839673684825,
+      "realized_pnl": 10344.708038524861
+    },
+    "AMZN": {
+      "qty": 81.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 9369.52953338623
+    },
+    "META": {
+      "qty": 29.0,
+      "avg_cost": 660.8373286806304,
+      "realized_pnl": 9764.123092651369
+    }
+  },
+  "source": "portfolio",
+  "description": "Growth core + consumer staples/dividend hedge + gold/bond buffer",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.4573,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3816,
+      "sh": 2.35,
+      "dd": -0.068
+    },
+    "1Y_2024": {
+      "ret": 0.2261,
+      "sh": 1.77,
+      "dd": -0.0601
+    },
+    "1Y_2025": {
+      "ret": 0.1165,
+      "sh": 0.77,
+      "dd": -0.0809
+    },
+    "3Y_2022_2024": {
+      "ret": 0.4899,
+      "sh": 0.8,
+      "dd": -0.1796
+    },
+    "3Y_2023_2025": {
+      "ret": 0.8777,
+      "sh": 1.64,
+      "dd": -0.0999
+    },
+    "5Y_2020_2024": {
+      "ret": 1.017,
+      "sh": 0.79,
+      "dd": -0.2163
+    }
+  }
+}

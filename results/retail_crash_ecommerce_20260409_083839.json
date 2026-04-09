@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.5012140232106468,
+    "cagr": 0.14555560887713082,
+    "annual_volatility": 0.1447463389675126,
+    "sharpe_ratio": 0.7430967180626608,
+    "sortino_ratio": 1.1144567608416938,
+    "calmar_ratio": 0.7057104572583506,
+    "max_drawdown": -0.2062540059879614,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5299600532623169,
+    "profit_factor": 1.249376582679066,
+    "num_trading_days": 751,
+    "skewness": 0.6758194367717898,
+    "kurtosis": 17.109863252106344,
+    "best_day": 0.0891849798761446,
+    "worst_day": -0.05594976771275373,
+    "avg_daily_return": 0.0005824773605624693,
+    "black_swan_resilience": 84.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.08575053849978764,
+    "beta": 0.6715261555724257,
+    "information_ratio": -0.7559386157266642,
+    "tracking_error": 0.11343584877901478
+  },
+  "trade_metrics": {
+    "num_trades": 542,
+    "num_buys": 260,
+    "num_sells": 282,
+    "total_commission": 0.0,
+    "total_slippage": 1952.8154764595013,
+    "total_transaction_costs": 1952.8154764595013,
+    "avg_trade_size": 3602.980583873622
+  },
+  "final_positions": {
+    "AMZN": {
+      "qty": 52.0,
+      "avg_cost": 205.25405031545128,
+      "realized_pnl": 10183.311103158836
+    },
+    "SHOP": {
+      "qty": 72.0,
+      "avg_cost": 110.53769300474971,
+      "realized_pnl": 14422.522100992855
+    }
+  },
+  "source": "unconventional",
+  "description": "Brick-and-mortar crash accelerates e-commerce: XRT\u2193 = AMZN/SHOP/MELI\u2191",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.0864,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2832,
+      "sh": 1.36,
+      "dd": -0.1435
+    },
+    "1Y_2024": {
+      "ret": 0.1084,
+      "sh": 1.08,
+      "dd": -0.0436
+    },
+    "1Y_2025": {
+      "ret": 0.0602,
+      "sh": 0.2,
+      "dd": -0.2058
+    },
+    "3Y_2022_2024": {
+      "ret": -0.1989,
+      "sh": -0.28,
+      "dd": -0.4753
+    },
+    "3Y_2023_2025": {
+      "ret": 0.5012,
+      "sh": 0.74,
+      "dd": -0.2063
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0939,
+      "sh": 0.03,
+      "dd": -0.5042
+    }
+  }
+}

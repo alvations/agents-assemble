@@ -1,0 +1,48 @@
+# WINNING Strategy: high_yield_reit_bdc
+
+> **What it does:** REITs + BDCs + RE tech: 6-8% yield, monthly income, dip accumulation
+>
+> **Hypothesis:** High-Yield REIT, BDC & Real Estate — consistency: 83% across 6 windows
+
+**Generated:** 2026-04-09T08:38:49.157018
+**Assessment:** HOLD — Positive but underwhelming returns. Use as diversifier, not primary strategy.
+
+## Performance Summary
+- **total_return:** 28.54%
+- **sharpe_ratio:** 0.49
+- **max_drawdown:** -14.84%
+- **win_rate:** 54.06%
+- **alpha:** -14.37%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 7.8%
+- **stop_loss:** 17.8%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 14.8%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **VNQ** | BUY | 15% | Limit 0.5% below market | 11.3% below entry | 3.2% above entry | 12.2% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=VNQ) / [Yahoo](https://finance.yahoo.com/quote/VNQ/) |
+| **O** | BUY | 17% | Limit 0.5% below market | 12.8% below entry | 3.6% above entry | 10.8% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=O) / [Yahoo](https://finance.yahoo.com/quote/O/) |
+| **STAG** | BUY | 22% | Limit 0.5% below market | 16.3% below entry | 4.6% above entry | 8.5% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=STAG) / [Yahoo](https://finance.yahoo.com/quote/STAG/) |
+| **MAIN** | BUY | 22% | Limit 0.5% below market | 16.4% below entry | 4.6% above entry | 8.5% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=MAIN) / [Yahoo](https://finance.yahoo.com/quote/MAIN/) |
+| **ARCC** | BUY | 20% | Limit 0.5% below market | 14.8% below entry | 4.2% above entry | 9.3% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ARCC) / [Yahoo](https://finance.yahoo.com/quote/ARCC/) |
+| **ARR** | BUY | 24% | Limit 0.5% below market | 17.7% below entry | 5.0% above entry | 7.8% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=ARR) / [Yahoo](https://finance.yahoo.com/quote/ARR/) |
+| **DX** | BUY | 19% | Limit 0.5% below market | 14.0% below entry | 3.9% above entry | 9.9% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=DX) / [Yahoo](https://finance.yahoo.com/quote/DX/) |
+| **HTGC** | BUY | 25% | Limit 0.5% below market | 18.6% below entry | 5.2% above entry | 7.4% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=HTGC) / [Yahoo](https://finance.yahoo.com/quote/HTGC/) |
+| **AGNC** | BUY | 21% | Limit 0.5% below market | 15.5% below entry | 4.4% above entry | 8.9% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=AGNC) / [Yahoo](https://finance.yahoo.com/quote/AGNC/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.

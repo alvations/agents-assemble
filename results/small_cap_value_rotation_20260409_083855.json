@@ -1,0 +1,116 @@
+{
+  "metrics": {
+    "total_return": 0.22171933513040054,
+    "cagr": 0.06927653786466403,
+    "annual_volatility": 0.17578389298126149,
+    "sharpe_ratio": 0.24698019467489285,
+    "sortino_ratio": 0.35213297885392375,
+    "calmar_ratio": 0.25226221956068445,
+    "max_drawdown": -0.27462113821605694,
+    "max_drawdown_date": "2025-03-17",
+    "win_rate": 0.5059920106524634,
+    "profit_factor": 1.0850370889432854,
+    "num_trading_days": 751,
+    "skewness": -0.032338704308708034,
+    "kurtosis": 2.2189802404799686,
+    "best_day": 0.05505163061671681,
+    "worst_day": -0.050737420772144604,
+    "avg_daily_return": 0.000327932164811987,
+    "black_swan_resilience": 72.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16202960951225442,
+    "beta": 0.6062094067782676,
+    "information_ratio": -1.00691066188317,
+    "tracking_error": 0.16091756264574583
+  },
+  "trade_metrics": {
+    "num_trades": 1284,
+    "num_buys": 624,
+    "num_sells": 660,
+    "total_commission": 0.0,
+    "total_slippage": 8748.16382013702,
+    "total_transaction_costs": 8748.16382013702,
+    "avg_trade_size": 6813.211697926031
+  },
+  "final_positions": {
+    "DECK": {
+      "qty": 134.0,
+      "avg_cost": 103.70999908447266,
+      "realized_pnl": 4617.4792098999005
+    },
+    "AVUV": {
+      "qty": 135.0,
+      "avg_cost": 103.96223449707031,
+      "realized_pnl": 803.0407409667997
+    },
+    "DFSV": {
+      "qty": 420.0,
+      "avg_cost": 33.36736297607422,
+      "realized_pnl": 451.5848808288606
+    },
+    "VBR": {
+      "qty": 65.0,
+      "avg_cost": 209.26894627061,
+      "realized_pnl": 621.9192517302725
+    },
+    "SAIA": {
+      "qty": 42.0,
+      "avg_cost": 330.6300048828125,
+      "realized_pnl": 2954.248931884762
+    },
+    "GRC": {
+      "qty": 283.0,
+      "avg_cost": 49.797996520996094,
+      "realized_pnl": 3783.7571525573703
+    },
+    "IWM": {
+      "qty": 56.0,
+      "avg_cost": 245.29590993384792,
+      "realized_pnl": -1247.2975587191668
+    },
+    "IWN": {
+      "qty": 76.0,
+      "avg_cost": 180.25991528443615,
+      "realized_pnl": -1489.159081815467
+    }
+  },
+  "source": "crisis",
+  "description": "Small caps at 50-year cheap: AVUV + momentum picks, 18% YTD 2026",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.1757,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2878,
+      "sh": 1.32,
+      "dd": -0.1159
+    },
+    "1Y_2024": {
+      "ret": 0.0769,
+      "sh": 0.29,
+      "dd": -0.1044
+    },
+    "1Y_2025": {
+      "ret": -0.0988,
+      "sh": -0.76,
+      "dd": -0.2142
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0717,
+      "sh": 0.02,
+      "dd": -0.2569
+    },
+    "3Y_2023_2025": {
+      "ret": 0.2217,
+      "sh": 0.25,
+      "dd": -0.2746
+    },
+    "5Y_2020_2024": {
+      "ret": 1.0774,
+      "sh": 0.62,
+      "dd": -0.3789
+    }
+  }
+}

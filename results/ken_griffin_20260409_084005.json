@@ -1,0 +1,106 @@
+{
+  "metrics": {
+    "total_return": 1.1878809230678495,
+    "cagr": 0.2993628580832808,
+    "annual_volatility": 0.1794181741447785,
+    "sharpe_ratio": 1.335836876341372,
+    "sortino_ratio": 2.034642488682706,
+    "calmar_ratio": 1.8242274519237942,
+    "max_drawdown": -0.16410391027038795,
+    "max_drawdown_date": "2025-04-21",
+    "win_rate": 0.5406125166444741,
+    "profit_factor": 1.3061409517312008,
+    "num_trading_days": 751,
+    "skewness": 0.13112146781617073,
+    "kurtosis": 1.8492579196075685,
+    "best_day": 0.04951885762005248,
+    "worst_day": -0.04329991250469989,
+    "avg_daily_return": 0.0011067348362374266,
+    "black_swan_resilience": 80.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.06805671070636232,
+    "beta": 0.8110080043888989,
+    "information_ratio": 0.513969150947949,
+    "tracking_error": 0.1324139991297933
+  },
+  "trade_metrics": {
+    "num_trades": 296,
+    "num_buys": 145,
+    "num_sells": 151,
+    "total_commission": 0.0,
+    "total_slippage": 3906.1763850994125,
+    "total_transaction_costs": 3906.1763850994125,
+    "avg_trade_size": 13196.541841552063
+  },
+  "final_positions": {
+    "AVGO": {
+      "qty": 93.0,
+      "avg_cost": 288.07023744832173,
+      "realized_pnl": 7338.684048788886
+    },
+    "SPY": {
+      "qty": 53.0,
+      "avg_cost": 635.3294131630346,
+      "realized_pnl": 5681.804387142782
+    },
+    "AMZN": {
+      "qty": 102.0,
+      "avg_cost": 253.01372572954963,
+      "realized_pnl": 2357.3544006347606
+    },
+    "GOOGL": {
+      "qty": 113.0,
+      "avg_cost": 222.6115510276768,
+      "realized_pnl": 3453.920291457064
+    },
+    "AAPL": {
+      "qty": 126.0,
+      "avg_cost": 262.48486812531,
+      "realized_pnl": 611.7706604003881
+    },
+    "QQQ": {
+      "qty": 58.0,
+      "avg_cost": 566.6240756330819,
+      "realized_pnl": 5823.442541503906
+    }
+  },
+  "source": "political",
+  "description": "Mega-cap AI concentration: $4B NVDA + $3.2B AMZN, $67B AUM",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.4847,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.376,
+      "sh": 1.72,
+      "dd": -0.0965
+    },
+    "1Y_2024": {
+      "ret": 0.371,
+      "sh": 1.53,
+      "dd": -0.1134
+    },
+    "1Y_2025": {
+      "ret": 0.1781,
+      "sh": 0.83,
+      "dd": -0.1637
+    },
+    "3Y_2022_2024": {
+      "ret": 0.2151,
+      "sh": 0.23,
+      "dd": -0.3622
+    },
+    "3Y_2023_2025": {
+      "ret": 1.1879,
+      "sh": 1.34,
+      "dd": -0.1641
+    },
+    "5Y_2020_2024": {
+      "ret": 1.3592,
+      "sh": 0.7,
+      "dd": -0.3676
+    }
+  }
+}

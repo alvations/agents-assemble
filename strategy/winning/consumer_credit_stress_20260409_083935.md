@@ -1,0 +1,46 @@
+# WINNING Strategy: consumer_credit_stress
+
+> **What it does:** Consumer discretionary vs staples ratio as credit stress indicator
+>
+> **Hypothesis:** Consumer Credit Stress (Subprime Proxy) — consistency: 83% across 6 windows
+
+**Generated:** 2026-04-09T08:39:35.151273
+**Assessment:** BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
+
+## Performance Summary
+- **total_return:** 32.35%
+- **sharpe_ratio:** 0.51
+- **max_drawdown:** -16.72%
+- **win_rate:** 53.66%
+- **alpha:** -13.30%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 7.2%
+- **stop_loss:** 20.1%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 16.7%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **TLT** | BUY | 13% | Limit 0.5% below market | 10.6% below entry | 3.0% above entry | 13.6% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=TLT) / [Yahoo](https://finance.yahoo.com/quote/TLT/) |
+| **GLD** | BUY | 23% | Limit 0.5% below market | 19.3% below entry | 4.8% above entry | 7.4% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=GLD) / [Yahoo](https://finance.yahoo.com/quote/GLD/) |
+| **SPY** | BUY | 17% | Limit 0.5% below market | 14.4% below entry | 3.6% above entry | 10.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=SPY) / [Yahoo](https://finance.yahoo.com/quote/SPY/) |
+| **QQQ** | BUY | 22% | Limit 0.5% below market | 18.3% below entry | 4.6% above entry | 7.9% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=QQQ) / [Yahoo](https://finance.yahoo.com/quote/QQQ/) |
+| **XLY** | BUY | 23% | Limit 0.5% below market | 19.1% below entry | 4.8% above entry | 7.5% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=XLY) / [Yahoo](https://finance.yahoo.com/quote/XLY/) |
+| **KRE** | BUY | 29% | Limit 0.5% below market | 24.2% below entry | 6.0% above entry | 5.9% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=KRE) / [Yahoo](https://finance.yahoo.com/quote/KRE/) |
+| **HYG** | BUY | 5% | Limit 0.5% below market | 10.0% below entry | 3.0% above entry | 14.3% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=HYG) / [Yahoo](https://finance.yahoo.com/quote/HYG/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.

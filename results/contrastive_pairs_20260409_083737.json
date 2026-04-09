@@ -1,0 +1,126 @@
+{
+  "metrics": {
+    "total_return": 1.1778521916597837,
+    "cagr": 0.29736766943408366,
+    "annual_volatility": 0.2023399167231088,
+    "sharpe_ratio": 1.1980058582421458,
+    "sortino_ratio": 1.8406501107971458,
+    "calmar_ratio": 1.169574826759613,
+    "max_drawdown": -0.2542527956573425,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5419440745672437,
+    "profit_factor": 1.2790597362117975,
+    "num_trading_days": 751,
+    "skewness": 0.7301974271860732,
+    "kurtosis": 13.323851697323496,
+    "best_day": 0.12265826437548077,
+    "worst_day": -0.07111357490614967,
+    "avg_daily_return": 0.0011175721071980573,
+    "black_swan_resilience": 83.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.0660615220571652,
+    "beta": 1.0821476922692321,
+    "information_ratio": 0.5684500683065262,
+    "tracking_error": 0.1162134121189739
+  },
+  "trade_metrics": {
+    "num_trades": 1798,
+    "num_buys": 858,
+    "num_sells": 940,
+    "total_commission": 0.0,
+    "total_slippage": 11001.731345273005,
+    "total_transaction_costs": 11001.731345273005,
+    "avg_trade_size": 6118.8717159471735
+  },
+  "final_positions": {
+    "WBD": {
+      "qty": 589.0,
+      "avg_cost": 28.790000915527344,
+      "realized_pnl": 13832.95689487458
+    },
+    "WDC": {
+      "qty": 94.0,
+      "avg_cost": 159.3132703857422,
+      "realized_pnl": 30079.040172531128
+    },
+    "MU": {
+      "qty": 67.0,
+      "avg_cost": 243.8924628567983,
+      "realized_pnl": 27345.657544974816
+    },
+    "HRB": {
+      "qty": 394.0,
+      "avg_cost": 42.34773254394531,
+      "realized_pnl": 752.5527820587158
+    },
+    "PAYX": {
+      "qty": 175.0,
+      "avg_cost": 113.69770050048828,
+      "realized_pnl": -5716.904441833509
+    },
+    "ORCL": {
+      "qty": 136.0,
+      "avg_cost": 187.11728219424978,
+      "realized_pnl": 7644.024391174321
+    },
+    "FISV": {
+      "qty": 294.0,
+      "avg_cost": 67.27999877929688,
+      "realized_pnl": 1294.5728111267106
+    },
+    "HPQ": {
+      "qty": 1011.0,
+      "avg_cost": 23.821906743488256,
+      "realized_pnl": 902.7915916442844
+    },
+    "NFLX": {
+      "qty": 281.0,
+      "avg_cost": 96.16195817180376,
+      "realized_pnl": 5367.17214393616
+    },
+    "ADP": {
+      "qty": 77.0,
+      "avg_cost": 257.6114807128906,
+      "realized_pnl": 1126.3028717041027
+    }
+  },
+  "source": "theme",
+  "description": "Long the cheap stock in every hot sector: WDC not NVDA, HRB not SNOW, ADP not WDAY",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.4704,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.3908,
+      "sh": 1.78,
+      "dd": -0.1025
+    },
+    "1Y_2024": {
+      "ret": 0.3017,
+      "sh": 1.38,
+      "dd": -0.1023
+    },
+    "1Y_2025": {
+      "ret": 0.2209,
+      "sh": 0.77,
+      "dd": -0.217
+    },
+    "3Y_2022_2024": {
+      "ret": 0.4029,
+      "sh": 0.44,
+      "dd": -0.2892
+    },
+    "3Y_2023_2025": {
+      "ret": 1.1779,
+      "sh": 1.2,
+      "dd": -0.2543
+    },
+    "5Y_2020_2024": {
+      "ret": 1.1293,
+      "sh": 0.56,
+      "dd": -0.3612
+    }
+  }
+}

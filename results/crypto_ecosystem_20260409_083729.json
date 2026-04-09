@@ -1,0 +1,116 @@
+{
+  "metrics": {
+    "total_return": 0.4682438991995108,
+    "cagr": 0.13707820083576783,
+    "annual_volatility": 0.29082117081606723,
+    "sharpe_ratio": 0.4519402719463988,
+    "sortino_ratio": 0.7215534493213484,
+    "calmar_ratio": 0.48854265768157534,
+    "max_drawdown": -0.28058594000017356,
+    "max_drawdown_date": "2025-04-11",
+    "win_rate": 0.23834886817576564,
+    "profit_factor": 1.1796543162898634,
+    "num_trading_days": 751,
+    "skewness": 1.1153274334560128,
+    "kurtosis": 15.104879415953905,
+    "best_day": 0.15133221377470019,
+    "worst_day": -0.11035883604408858,
+    "avg_daily_return": 0.0006772125573404037,
+    "black_swan_resilience": 84.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.09422794654115063,
+    "beta": 0.4178072036742626,
+    "information_ratio": -0.31683222345544076,
+    "tracking_error": 0.2974064491088699
+  },
+  "trade_metrics": {
+    "num_trades": 1249,
+    "num_buys": 599,
+    "num_sells": 650,
+    "total_commission": 0.0,
+    "total_slippage": 27227.56609167453,
+    "total_transaction_costs": 27227.56609167453,
+    "avg_trade_size": 21799.492467313503
+  },
+  "final_positions": {
+    "COIN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MARA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RIOT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CLSK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSTR": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HUT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SQ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PYPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BITO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "IBIT": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "theme",
+  "description": "Crypto-adjacent: miners, exchanges, BTC treasury companies",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.4349,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.5332,
+      "sh": 1.24,
+      "dd": -0.1943
+    },
+    "1Y_2024": {
+      "ret": 0.1735,
+      "sh": 0.59,
+      "dd": -0.1215
+    },
+    "1Y_2025": {
+      "ret": -0.1673,
+      "sh": -0.96,
+      "dd": -0.2646
+    },
+    "3Y_2022_2024": {
+      "ret": 0.7358,
+      "sh": 0.63,
+      "dd": -0.21
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4682,
+      "sh": 0.45,
+      "dd": -0.2806
+    },
+    "5Y_2020_2024": {
+      "ret": 2.264,
+      "sh": 0.78,
+      "dd": -0.2217
+    }
+  }
+}

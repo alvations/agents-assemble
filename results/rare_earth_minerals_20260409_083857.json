@@ -1,0 +1,116 @@
+{
+  "metrics": {
+    "total_return": 0.6227673098690432,
+    "cagr": 0.17578007084480274,
+    "annual_volatility": 0.1907887729951447,
+    "sharpe_ratio": 0.7404804876614666,
+    "sortino_ratio": 1.1885271122681824,
+    "calmar_ratio": 1.1389991849486811,
+    "max_drawdown": -0.15432853084326192,
+    "max_drawdown_date": "2025-11-06",
+    "win_rate": 0.47536617842876167,
+    "profit_factor": 1.2094678919087487,
+    "num_trading_days": 751,
+    "skewness": 1.2651160645066823,
+    "kurtosis": 9.748485641078954,
+    "best_day": 0.0900384003444692,
+    "worst_day": -0.046056070992151144,
+    "avg_daily_return": 0.0007162663852824437,
+    "black_swan_resilience": 91.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.05552607653211572,
+    "beta": 0.31779503917704716,
+    "information_ratio": -0.26178895608541053,
+    "tracking_error": 0.21210244069272324
+  },
+  "trade_metrics": {
+    "num_trades": 825,
+    "num_buys": 379,
+    "num_sells": 446,
+    "total_commission": 0.0,
+    "total_slippage": 5045.254229527244,
+    "total_transaction_costs": 5045.254229527244,
+    "avg_trade_size": 6115.459672154224
+  },
+  "final_positions": {
+    "SCCO": {
+      "qty": 129.0,
+      "avg_cost": 129.44843038184547,
+      "realized_pnl": 5336.442715028328
+    },
+    "FCX": {
+      "qty": 359.0,
+      "avg_cost": 51.352046966552734,
+      "realized_pnl": -1862.9455337524414
+    },
+    "PICK": {
+      "qty": 361.0,
+      "avg_cost": 51.06999969482422,
+      "realized_pnl": 1907.346164703365
+    },
+    "XME": {
+      "qty": 175.0,
+      "avg_cost": 98.01880645751953,
+      "realized_pnl": 2354.4748115539505
+    },
+    "CCJ": {
+      "qty": 199.0,
+      "avg_cost": 91.70999908447266,
+      "realized_pnl": 11874.193387985233
+    },
+    "REMX": {
+      "qty": 249.0,
+      "avg_cost": 74.30999755859375,
+      "realized_pnl": 3123.1700668335006
+    },
+    "SQM": {
+      "qty": 263.0,
+      "avg_cost": 70.22000122070312,
+      "realized_pnl": -2121.009529113771
+    },
+    "ALB": {
+      "qty": 128.0,
+      "avg_cost": 92.8383574243117,
+      "realized_pnl": 611.5934798651155
+    }
+  },
+  "source": "crisis",
+  "description": "Critical minerals supply chain: rare earth miners + battery metals",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.67,
+  "windows_tested": 6,
+  "composite_score": 0.2274,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0763,
+      "sh": 0.34,
+      "dd": -0.1381
+    },
+    "1Y_2024": {
+      "ret": -0.0293,
+      "sh": -0.33,
+      "dd": -0.1334
+    },
+    "1Y_2025": {
+      "ret": 0.571,
+      "sh": 1.75,
+      "dd": -0.1544
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0176,
+      "sh": -0.19,
+      "dd": -0.1816
+    },
+    "3Y_2023_2025": {
+      "ret": 0.6228,
+      "sh": 0.74,
+      "dd": -0.1543
+    },
+    "5Y_2020_2024": {
+      "ret": 1.1933,
+      "sh": 0.71,
+      "dd": -0.1816
+    }
+  }
+}

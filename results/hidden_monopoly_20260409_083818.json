@@ -1,0 +1,106 @@
+{
+  "metrics": {
+    "total_return": 0.3426799297777754,
+    "cagr": 0.1035804230773747,
+    "annual_volatility": 0.13092867378804482,
+    "sharpe_ratio": 0.52121249488851,
+    "sortino_ratio": 0.7411177169178539,
+    "calmar_ratio": 0.7145047878773604,
+    "max_drawdown": -0.14496813014380183,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.521970705725699,
+    "profit_factor": 1.150857859848458,
+    "num_trading_days": 751,
+    "skewness": -0.2360637440037132,
+    "kurtosis": 5.684127202663046,
+    "best_day": 0.05351776455456925,
+    "worst_day": -0.059348537724957295,
+    "avg_daily_return": 0.0004264501037337656,
+    "black_swan_resilience": 76.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12772572429954376,
+    "beta": 0.6172418544663376,
+    "information_ratio": -1.1850428324978033,
+    "tracking_error": 0.10778152552539111
+  },
+  "trade_metrics": {
+    "num_trades": 423,
+    "num_buys": 225,
+    "num_sells": 198,
+    "total_commission": 0.0,
+    "total_slippage": 2052.651002197265,
+    "total_transaction_costs": 2052.651002197265,
+    "avg_trade_size": 4852.602842073914
+  },
+  "final_positions": {
+    "TT": {
+      "qty": 39.0,
+      "avg_cost": 430.9952627328726,
+      "realized_pnl": 6923.899749755859
+    },
+    "NSC": {
+      "qty": 55.0,
+      "avg_cost": 256.6333053873514,
+      "realized_pnl": -821.0864928802439
+    },
+    "MSCI": {
+      "qty": 29.0,
+      "avg_cost": 576.3279019059806,
+      "realized_pnl": -2093.648773193359
+    },
+    "SPGI": {
+      "qty": 27.0,
+      "avg_cost": 494.12139892578125,
+      "realized_pnl": 628.6571350097654
+    },
+    "CSX": {
+      "qty": 458.0,
+      "avg_cost": 34.75640794179325,
+      "realized_pnl": -2161.12701034546
+    },
+    "MCO": {
+      "qty": 33.0,
+      "avg_cost": 483.94140625,
+      "realized_pnl": 2824.4925231933553
+    }
+  },
+  "source": "unconventional",
+  "description": "Natural monopolies in boring industries: credit ratings, data, waste, rail, HVAC",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.67,
+  "windows_tested": 6,
+  "composite_score": 0.1189,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.194,
+      "sh": 1.11,
+      "dd": -0.0978
+    },
+    "1Y_2024": {
+      "ret": 0.1293,
+      "sh": 0.76,
+      "dd": -0.0873
+    },
+    "1Y_2025": {
+      "ret": 0.0132,
+      "sh": -0.12,
+      "dd": -0.1109
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0706,
+      "sh": -0.06,
+      "dd": -0.207
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3427,
+      "sh": 0.52,
+      "dd": -0.145
+    },
+    "5Y_2020_2024": {
+      "ret": 0.5239,
+      "sh": 0.33,
+      "dd": -0.3379
+    }
+  }
+}

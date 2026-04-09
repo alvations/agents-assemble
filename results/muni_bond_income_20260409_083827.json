@@ -1,0 +1,106 @@
+{
+  "metrics": {
+    "total_return": 0.10978976875427482,
+    "cagr": 0.03545689752458259,
+    "annual_volatility": 0.04669599199397205,
+    "sharpe_ratio": -0.06802347161207538,
+    "sortino_ratio": -0.09131474821496179,
+    "calmar_ratio": 0.48000906177798314,
+    "max_drawdown": -0.07386714199362832,
+    "max_drawdown_date": "2023-10-25",
+    "win_rate": 0.5459387483355526,
+    "profit_factor": 1.143255145175052,
+    "num_trading_days": 751,
+    "skewness": -0.7119710611132221,
+    "kurtosis": 5.166790815372963,
+    "best_day": 0.0105878953001588,
+    "worst_day": -0.021085988783575482,
+    "avg_daily_return": 0.0001430450076888832,
+    "black_swan_resilience": 74.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.19584924985233587,
+    "beta": 0.07475301671152428,
+    "information_ratio": -1.31380716840522,
+    "tracking_error": 0.14907001161370564
+  },
+  "trade_metrics": {
+    "num_trades": 230,
+    "num_buys": 127,
+    "num_sells": 103,
+    "total_commission": 0.0,
+    "total_slippage": 1071.5071076188085,
+    "total_transaction_costs": 1071.5071076188085,
+    "avg_trade_size": 4658.726554864385
+  },
+  "final_positions": {
+    "HYD": {
+      "qty": 290.0,
+      "avg_cost": 49.00576157055005,
+      "realized_pnl": 2770.8178853362283
+    },
+    "TFI": {
+      "qty": 451.0,
+      "avg_cost": 44.31652717972288,
+      "realized_pnl": 807.4566808760699
+    },
+    "VTEB": {
+      "qty": 410.0,
+      "avg_cost": 47.45573889035086,
+      "realized_pnl": 728.132524206452
+    },
+    "NUV": {
+      "qty": 1626.0,
+      "avg_cost": 8.328354416321186,
+      "realized_pnl": 2261.7896020785397
+    },
+    "NEA": {
+      "qty": 1296.0,
+      "avg_cost": 11.225072860717773,
+      "realized_pnl": -127.08623981476478
+    },
+    "MUB": {
+      "qty": 193.0,
+      "avg_cost": 101.15427226834468,
+      "realized_pnl": 535.9921457519508
+    }
+  },
+  "source": "unconventional",
+  "description": "Tax-free municipal bonds: 4% muni = 6%+ taxable. Near-zero default risk.",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.0,
+  "windows_tested": 6,
+  "composite_score": 0.0,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0383,
+      "sh": 0.0,
+      "dd": -0.0739
+    },
+    "1Y_2024": {
+      "ret": 0.0267,
+      "sh": -0.28,
+      "dd": -0.0321
+    },
+    "1Y_2025": {
+      "ret": 0.0384,
+      "sh": -0.0,
+      "dd": -0.0538
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0381,
+      "sh": -0.94,
+      "dd": -0.1478
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1098,
+      "sh": -0.07,
+      "dd": -0.0739
+    },
+    "5Y_2020_2024": {
+      "ret": 0.0042,
+      "sh": -0.45,
+      "dd": -0.1799
+    }
+  }
+}

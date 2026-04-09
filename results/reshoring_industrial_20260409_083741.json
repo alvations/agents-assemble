@@ -1,0 +1,131 @@
+{
+  "metrics": {
+    "total_return": 0.6084734757712476,
+    "cagr": 0.17230580143207663,
+    "annual_volatility": 0.17520865202028196,
+    "sharpe_ratio": 0.7744015394942438,
+    "sortino_ratio": 1.0864259669049814,
+    "calmar_ratio": 0.821455646113364,
+    "max_drawdown": -0.209756670670321,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5432756324900133,
+    "profit_factor": 1.1804860591504671,
+    "num_trading_days": 751,
+    "skewness": -0.44008018241150415,
+    "kurtosis": 2.2143877710128796,
+    "best_day": 0.048271859064658695,
+    "worst_day": -0.05267571709351293,
+    "avg_daily_return": 0.0006940699019072057,
+    "black_swan_resilience": 70.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.059000345944841825,
+    "beta": 0.8156592939651206,
+    "information_ratio": -0.46906328412661713,
+    "tracking_error": 0.1257833387123847
+  },
+  "trade_metrics": {
+    "num_trades": 1635,
+    "num_buys": 777,
+    "num_sells": 858,
+    "total_commission": 0.0,
+    "total_slippage": 5326.622995090478,
+    "total_transaction_costs": 5326.622995090478,
+    "avg_trade_size": 3257.873391492651
+  },
+  "final_positions": {
+    "EMR": {
+      "qty": 117.0,
+      "avg_cost": 131.05869644050358,
+      "realized_pnl": 362.45809785776976
+    },
+    "ROK": {
+      "qty": 40.0,
+      "avg_cost": 369.9908053747983,
+      "realized_pnl": -601.1928735090473
+    },
+    "AME": {
+      "qty": 68.0,
+      "avg_cost": 188.0926345798595,
+      "realized_pnl": -1414.4780397316617
+    },
+    "TT": {
+      "qty": 32.0,
+      "avg_cost": 393.241455078125,
+      "realized_pnl": 9230.761840820312
+    },
+    "URI": {
+      "qty": 17.0,
+      "avg_cost": 798.5831356956845,
+      "realized_pnl": 9731.016181582494
+    },
+    "GE": {
+      "qty": 46.0,
+      "avg_cost": 268.2215012535067,
+      "realized_pnl": 18686.366917921318
+    },
+    "CAT": {
+      "qty": 27.0,
+      "avg_cost": 498.38083953720457,
+      "realized_pnl": 7938.883131371717
+    },
+    "STLD": {
+      "qty": 64.0,
+      "avg_cost": 139.99609310900206,
+      "realized_pnl": 2023.0311860879428
+    },
+    "VMC": {
+      "qty": 54.0,
+      "avg_cost": 290.3278326242804,
+      "realized_pnl": 1707.225209025603
+    },
+    "MLM": {
+      "qty": 22.0,
+      "avg_cost": 588.7210128049201,
+      "realized_pnl": 5381.033149628169
+    },
+    "NUE": {
+      "qty": 67.0,
+      "avg_cost": 140.2605582339268,
+      "realized_pnl": 2309.5831493537607
+    }
+  },
+  "source": "theme",
+  "description": "CHIPS Act + IRA + reshoring: 2% implemented, 98% of orders still coming. ETN, CAT, NUE, URI.",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.3707,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.2856,
+      "sh": 1.24,
+      "dd": -0.1399
+    },
+    "1Y_2024": {
+      "ret": 0.1482,
+      "sh": 0.65,
+      "dd": -0.1168
+    },
+    "1Y_2025": {
+      "ret": 0.0997,
+      "sh": 0.44,
+      "dd": -0.1744
+    },
+    "3Y_2022_2024": {
+      "ret": 0.42,
+      "sh": 0.54,
+      "dd": -0.1411
+    },
+    "3Y_2023_2025": {
+      "ret": 0.6085,
+      "sh": 0.77,
+      "dd": -0.2098
+    },
+    "5Y_2020_2024": {
+      "ret": 1.1191,
+      "sh": 0.68,
+      "dd": -0.2404
+    }
+  }
+}

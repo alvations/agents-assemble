@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": -0.0827373836360148,
+    "cagr": -0.02847279818471682,
+    "annual_volatility": 0.030450252166387734,
+    "sharpe_ratio": -2.2245093105029734,
+    "sortino_ratio": -2.7298114549209034,
+    "calmar_ratio": -0.3441346212973899,
+    "max_drawdown": -0.0827373836360148,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.18508655126498003,
+    "profit_factor": 0.7465805706342595,
+    "num_trading_days": 751,
+    "skewness": -1.6343202223749906,
+    "kurtosis": 36.39909387437305,
+    "best_day": 0.017007969514443166,
+    "worst_day": -0.02140341291085346,
+    "avg_daily_return": -0.00011314723820593102,
+    "black_swan_resilience": 70.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2597789455616353,
+    "beta": 0.031541565931485355,
+    "information_ratio": -1.7127428179872894,
+    "tracking_error": 0.15167422851430293
+  },
+  "trade_metrics": {
+    "num_trades": 396,
+    "num_buys": 198,
+    "num_sells": 198,
+    "total_commission": 0.0,
+    "total_slippage": 2911.6486342926028,
+    "total_transaction_costs": 2911.6486342926028,
+    "avg_trade_size": 7352.648066395461
+  },
+  "final_positions": {
+    "IEX": {
+      "qty": 62.0,
+      "avg_cost": 178.86351382347846,
+      "realized_pnl": -1710.5879974365253
+    }
+  },
+  "source": "news_event",
+  "description": "M&A deal spread capture: buy targets at discount to deal price",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.0,
+  "windows_tested": 6,
+  "composite_score": -0.0,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": -0.0194,
+      "sh": -2.38,
+      "dd": -0.0434
+    },
+    "1Y_2024": {
+      "ret": -0.0239,
+      "sh": -1.6,
+      "dd": -0.0457
+    },
+    "1Y_2025": {
+      "ret": -0.0452,
+      "sh": -3.46,
+      "dd": -0.0452
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0574,
+      "sh": -2.12,
+      "dd": -0.0783
+    },
+    "3Y_2023_2025": {
+      "ret": -0.0827,
+      "sh": -2.22,
+      "dd": -0.0827
+    },
+    "5Y_2020_2024": {
+      "ret": -0.0893,
+      "sh": -2.14,
+      "dd": -0.1274
+    }
+  }
+}

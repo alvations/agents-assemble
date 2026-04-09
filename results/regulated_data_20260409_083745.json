@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "total_return": 0.1105882224975201,
+    "cagr": 0.03570601529655826,
+    "annual_volatility": 0.10116226117499491,
+    "sharpe_ratio": 0.010816587314977937,
+    "sortino_ratio": 0.014539465757706703,
+    "calmar_ratio": 0.27284820495282364,
+    "max_drawdown": -0.1308640286005618,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5619174434087882,
+    "profit_factor": 1.0750998699914396,
+    "num_trading_days": 751,
+    "skewness": -0.41942542960164964,
+    "kurtosis": 8.565183499670198,
+    "best_day": 0.04728077044047452,
+    "worst_day": -0.046479890805376955,
+    "avg_daily_return": 0.00015999204704118317,
+    "black_swan_resilience": 75.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1956001320803602,
+    "beta": 0.4238419113763922,
+    "information_ratio": -1.6636708236964057,
+    "tracking_error": 0.11757141454567831
+  },
+  "trade_metrics": {
+    "num_trades": 180,
+    "num_buys": 81,
+    "num_sells": 99,
+    "total_commission": 0.0,
+    "total_slippage": 1066.62401600647,
+    "total_transaction_costs": 1066.62401600647,
+    "avg_trade_size": 5925.688977813721
+  },
+  "final_positions": {
+    "MSCI": {
+      "qty": 23.0,
+      "avg_cost": 577.0016479492188,
+      "realized_pnl": -2780.547271728516
+    },
+    "NDAQ": {
+      "qty": 147.0,
+      "avg_cost": 92.45655872947292,
+      "realized_pnl": 4020.4102300342743
+    },
+    "MCO": {
+      "qty": 27.0,
+      "avg_cost": 483.94140625,
+      "realized_pnl": 4381.390167236328
+    }
+  },
+  "source": "theme",
+  "description": "VRSK/SPGI/MSCI: regulatory-required data monopolies, 85-95% subscription, 100%+ NRR",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.67,
+  "windows_tested": 6,
+  "composite_score": 0.0687,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0535,
+      "sh": 0.21,
+      "dd": -0.0648
+    },
+    "1Y_2024": {
+      "ret": 0.0968,
+      "sh": 0.58,
+      "dd": -0.0596
+    },
+    "1Y_2025": {
+      "ret": -0.0183,
+      "sh": -0.43,
+      "dd": -0.1168
+    },
+    "3Y_2022_2024": {
+      "ret": 0.0274,
+      "sh": -0.3,
+      "dd": -0.1413
+    },
+    "3Y_2023_2025": {
+      "ret": 0.1106,
+      "sh": 0.01,
+      "dd": -0.1309
+    },
+    "5Y_2020_2024": {
+      "ret": 0.4402,
+      "sh": 0.3,
+      "dd": -0.2921
+    }
+  }
+}

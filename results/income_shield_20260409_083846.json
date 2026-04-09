@@ -1,0 +1,136 @@
+{
+  "metrics": {
+    "total_return": 0.30073417950001846,
+    "cagr": 0.09192688998398957,
+    "annual_volatility": 0.08340031790130464,
+    "sharpe_ratio": 0.6293879104480087,
+    "sortino_ratio": 0.9126512924307695,
+    "calmar_ratio": 1.1803508735320367,
+    "max_drawdown": -0.0778809861078944,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.5272969374167776,
+    "profit_factor": 1.203605439411215,
+    "num_trading_days": 751,
+    "skewness": -0.06721017485356172,
+    "kurtosis": 3.427423090801958,
+    "best_day": 0.02894517418689868,
+    "worst_day": -0.03266209732265035,
+    "avg_daily_return": 0.0003639480842777778,
+    "black_swan_resilience": 82.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1393792573929289,
+    "beta": 0.3062514118278929,
+    "information_ratio": -1.0989150923970272,
+    "tracking_error": 0.12683350911934926
+  },
+  "trade_metrics": {
+    "num_trades": 433,
+    "num_buys": 250,
+    "num_sells": 183,
+    "total_commission": 0.0,
+    "total_slippage": 1357.541861938477,
+    "total_transaction_costs": 1357.541861938477,
+    "avg_trade_size": 3135.200604938745
+  },
+  "final_positions": {
+    "VNQ": {
+      "qty": 111.0,
+      "avg_cost": 88.52726745605469,
+      "realized_pnl": 1724.1706848144524
+    },
+    "TIP": {
+      "qty": 89.0,
+      "avg_cost": 106.57739841706663,
+      "realized_pnl": 586.7624749270342
+    },
+    "BND": {
+      "qty": 134.0,
+      "avg_cost": 67.20049174380911,
+      "realized_pnl": -0.024231604237328952
+    },
+    "LQD": {
+      "qty": 90.0,
+      "avg_cost": 106.26886978149415,
+      "realized_pnl": 1039.5525054931654
+    },
+    "HYG": {
+      "qty": 124.0,
+      "avg_cost": 76.78372512920589,
+      "realized_pnl": 1238.9629028074207
+    },
+    "DVY": {
+      "qty": 70.0,
+      "avg_cost": 131.2081154188236,
+      "realized_pnl": 1359.9890311609126
+    },
+    "HDV": {
+      "qty": 81.0,
+      "avg_cost": 111.7061732330477,
+      "realized_pnl": 1558.6421095135852
+    },
+    "SCHD": {
+      "qty": 363.0,
+      "avg_cost": 25.973402585009488,
+      "realized_pnl": 2291.467624472945
+    },
+    "KO": {
+      "qty": 137.0,
+      "avg_cost": 67.35945217625624,
+      "realized_pnl": 1964.3336818202001
+    },
+    "O": {
+      "qty": 174.0,
+      "avg_cost": 56.89467504654807,
+      "realized_pnl": 1151.4263992309561
+    },
+    "PG": {
+      "qty": 67.0,
+      "avg_cost": 163.20565654559448,
+      "realized_pnl": 1462.7600066212347
+    },
+    "CVX": {
+      "qty": 65.0,
+      "avg_cost": 151.38660959097055,
+      "realized_pnl": 3828.7899475097647
+    }
+  },
+  "source": "portfolio",
+  "description": "High-dividend + bond income: 4-5% yield target, low drawdown",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 1.0,
+  "windows_tested": 6,
+  "composite_score": 0.1528,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0585,
+      "sh": 0.25,
+      "dd": -0.0779
+    },
+    "1Y_2024": {
+      "ret": 0.0803,
+      "sh": 0.59,
+      "dd": -0.0553
+    },
+    "1Y_2025": {
+      "ret": 0.1266,
+      "sh": 0.96,
+      "dd": -0.0666
+    },
+    "3Y_2022_2024": {
+      "ret": 0.1339,
+      "sh": 0.08,
+      "dd": -0.1271
+    },
+    "3Y_2023_2025": {
+      "ret": 0.3007,
+      "sh": 0.63,
+      "dd": -0.0779
+    },
+    "5Y_2020_2024": {
+      "ret": 0.3415,
+      "sh": 0.2,
+      "dd": -0.3141
+    }
+  }
+}

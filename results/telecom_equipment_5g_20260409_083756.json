@@ -1,0 +1,106 @@
+{
+  "metrics": {
+    "total_return": 0.46755154073556326,
+    "cagr": 0.13689882708866175,
+    "annual_volatility": 0.1769798027905231,
+    "sharpe_ratio": 0.594771085268107,
+    "sortino_ratio": 0.8191856112206429,
+    "calmar_ratio": 0.8753607212803022,
+    "max_drawdown": -0.15639132960916224,
+    "max_drawdown_date": "2025-05-09",
+    "win_rate": 0.5033288948069241,
+    "profit_factor": 1.1664734232936482,
+    "num_trading_days": 751,
+    "skewness": -0.8334122658084021,
+    "kurtosis": 6.777125960262712,
+    "best_day": 0.046711843950746346,
+    "worst_day": -0.08488351062626254,
+    "avg_daily_return": 0.0005733580746017983,
+    "black_swan_resilience": 68.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.09440732028825671,
+    "beta": 0.5707924121619913,
+    "information_ratio": -0.5643378562017202,
+    "tracking_error": 0.1672886538636019
+  },
+  "trade_metrics": {
+    "num_trades": 718,
+    "num_buys": 344,
+    "num_sells": 374,
+    "total_commission": 0.0,
+    "total_slippage": 5064.146286646366,
+    "total_transaction_costs": 5064.146286646366,
+    "avg_trade_size": 7053.128532933658
+  },
+  "final_positions": {
+    "KEYS": {
+      "qty": 108.0,
+      "avg_cost": 203.7100067138672,
+      "realized_pnl": -4762.728149414068
+    },
+    "ERIC": {
+      "qty": 2333.0,
+      "avg_cost": 8.381859311350011,
+      "realized_pnl": 1152.5129400246276
+    },
+    "NOK": {
+      "qty": 3385.0,
+      "avg_cost": 6.539999961853027,
+      "realized_pnl": -7526.037173271177
+    },
+    "QCOM": {
+      "qty": 129.0,
+      "avg_cost": 174.13328716571513,
+      "realized_pnl": 3290.6757414597764
+    },
+    "VIAV": {
+      "qty": 1231.0,
+      "avg_cost": 16.7336086048046,
+      "realized_pnl": 7578.670416677521
+    },
+    "LITE": {
+      "qty": 60.0,
+      "avg_cost": 246.4213399251302,
+      "realized_pnl": 26177.42755508423
+    }
+  },
+  "source": "theme",
+  "description": "5G infrastructure: equipment oligopoly + semiconductor + test & measurement",
+  "horizon": "3Y (2023-2025)",
+  "consistency_score": 0.83,
+  "windows_tested": 6,
+  "composite_score": 0.1268,
+  "rolling_windows": {
+    "1Y_2023": {
+      "ret": 0.0344,
+      "sh": 0.02,
+      "dd": -0.1192
+    },
+    "1Y_2024": {
+      "ret": 0.0744,
+      "sh": 0.26,
+      "dd": -0.1452
+    },
+    "1Y_2025": {
+      "ret": 0.3199,
+      "sh": 1.32,
+      "dd": -0.1447
+    },
+    "3Y_2022_2024": {
+      "ret": -0.0499,
+      "sh": -0.3,
+      "dd": -0.212
+    },
+    "3Y_2023_2025": {
+      "ret": 0.4676,
+      "sh": 0.59,
+      "dd": -0.1564
+    },
+    "5Y_2020_2024": {
+      "ret": 0.2524,
+      "sh": 0.12,
+      "dd": -0.216
+    }
+  }
+}
