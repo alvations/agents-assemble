@@ -14,7 +14,7 @@ Trading agents and algorithms for publicly tradable instruments. **175 strategie
 >
 > **Pre-Market Research (2026-04-09):** [knowledge/premarket-research/20260409.md](knowledge/premarket-research/20260409.md) — Iran ceasefire unraveling, oil to $98, $1.5T defense budget, UNH +9%
 
-## Top 5 Strategies (by Composite Score, 12 rolling windows)
+## Top 5 Strategies (by Composite Score, 2020-2025)
 
 | Rank | Strategy | Composite | Consistency | Avg Return | Type |
 |------|----------|-----------|-------------|------------|------|
@@ -24,9 +24,7 @@ Trading agents and algorithms for publicly tradable instruments. **175 strategie
 | 4 | **AI Revolution** | **0.53** | 92% | +79% avg | Broad AI theme (NVDA, AVGO, CRM, SNOW) |
 | 5 | **David Tepper** | **0.52** | 100% | +65% avg | Appaloosa macro — positive Sharpe in ALL 12 windows |
 
-Composite Score = Avg Return x Consistency x (1 - Avg Drawdown). See [LEADERBOARD.md](LEADERBOARD.md) for formula details.
-
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 175 strategies with full rankings.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 175 strategies with full rankings and formula details.
 
 ## Quick Start
 
@@ -208,4 +206,4 @@ See `knowledge/tax_k1_warning.md` for safe alternatives.
 
 ---
 
-**Disclaimer:** This is not financial advice. Past performance does not predict future results. Trade at your own risk. See [LEADERBOARD.md](LEADERBOARD.md) for full disclaimer.
+**Disclaimer:** This is not financial advice. Past performance does not predict future results. Trade at your own risk. See [full disclaimer](knowledge/DISCLAIMER.md).
