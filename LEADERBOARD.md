@@ -29,6 +29,8 @@ Always look at Return + Sharpe + Max DD **together**. A high return with terribl
 
 Risk: Stop loss 25.0% | Take profit 18.4% | Max allocation 11.4%
 
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+
 ### #2 [uranium_renaissance](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260408_230218.md)
 
 | Return | Sharpe | Max DD | Win Rate | Positions |
@@ -38,6 +40,8 @@ Risk: Stop loss 25.0% | Take profit 18.4% | Max allocation 11.4%
 > BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
 
 Risk: Stop loss 25.0% | Take profit 13.3% | Max allocation 6.8%
+
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
 
 ### #3 [midstream_toll_road](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/midstream_toll_road_20260408_230240.md)
 
@@ -49,6 +53,8 @@ Risk: Stop loss 25.0% | Take profit 13.3% | Max allocation 6.8%
 
 Risk: Stop loss 23.8% | Take profit 10.4% | Max allocation 9.2%
 
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+
 ### #4 [david_tepper](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/david_tepper_20260408_231230.md)
 
 | Return | Sharpe | Max DD | Win Rate | Positions |
@@ -58,6 +64,8 @@ Risk: Stop loss 23.8% | Take profit 10.4% | Max allocation 9.2%
 > BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
 
 Risk: Stop loss 25.0% | Take profit 10.1% | Max allocation 8.8%
+
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
 
 ### #5 [uk_european_banking](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uk_european_banking_20260408_225907.md)
 
@@ -69,6 +77,8 @@ Risk: Stop loss 25.0% | Take profit 10.1% | Max allocation 8.8%
 
 Risk: Stop loss 25.0% | Take profit 9.7% | Max allocation 10.0%
 
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+
 ### #6 [barbell_portfolio](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/barbell_portfolio_20260408_230402.md)
 
 | Return | Sharpe | Max DD | Win Rate | Positions |
@@ -78,6 +88,8 @@ Risk: Stop loss 25.0% | Take profit 9.7% | Max allocation 10.0%
 > BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
 
 Risk: Stop loss 25.0% | Take profit 9.7% | Max allocation 10.1%
+
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
 
 ### #7 [product_tanker_shipping](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/product_tanker_shipping_20260408_230507.md)
 
@@ -89,6 +101,8 @@ Risk: Stop loss 25.0% | Take profit 9.7% | Max allocation 10.1%
 
 Risk: Stop loss 25.0% | Take profit 9.4% | Max allocation 6.8%
 
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+
 ### #8 [stanley_druckenmiller](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/stanley_druckenmiller_20260408_231713.md)
 
 | Return | Sharpe | Max DD | Win Rate | Positions |
@@ -98,6 +112,8 @@ Risk: Stop loss 25.0% | Take profit 9.4% | Max allocation 6.8%
 > BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
 
 Risk: Stop loss 25.0% | Take profit 9.4% | Max allocation 8.8%
+
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
 
 ### #9 [momentum](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_20260408_231518.md)
 
@@ -109,6 +125,8 @@ Risk: Stop loss 25.0% | Take profit 9.4% | Max allocation 8.8%
 
 Risk: Stop loss 25.0% | Take profit 9.3% | Max allocation 6.5%
 
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+
 ### #10 [concentrate_winners](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/concentrate_winners_20260408_230140.md)
 
 | Return | Sharpe | Max DD | Win Rate | Positions |
@@ -118,6 +136,8 @@ Risk: Stop loss 25.0% | Take profit 9.3% | Max allocation 6.5%
 > BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
 
 Risk: Stop loss 25.0% | Take profit 9.2% | Max allocation 6.7%
+
+Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
 
 ---
 
@@ -337,7 +357,7 @@ Risk: Stop loss 25.0% | Take profit 9.2% | Max allocation 6.7%
 | 210 | **meme_stock** | -38.9% | -0.62 | -40.5% | 12 | [View](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/meme_stock_20260408_231527.md) |
 | 211 | **optimal_stopping** | -42.5% | -1.84 | -42.5% | 4 | [View](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/optimal_stopping_20260408_231217.md) |
 
-*Updated: 2026-04-09 07:12*
+*Updated: 2026-04-09 07:21*
 
 ---
 
