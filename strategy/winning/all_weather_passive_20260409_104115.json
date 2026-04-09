@@ -1,0 +1,93 @@
+{
+  "strategy_name": "all_weather_passive",
+  "is_winning": true,
+  "generated_at": "2026-04-09T10:41:15.146252",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "8.3%",
+    "stop_loss": "12.4%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "10.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "SAFE TO BUY. Position sizes are already risk-adjusted by volatility \u2014 higher vol stocks get smaller positions automatically.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "TLT",
+      "action": "BUY",
+      "current_position": 559.0,
+      "annual_volatility": "13%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "6.6% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "15.7% of portfolio",
+      "trailing_stop": "4.6% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TLT",
+      "yahoo_url": "https://finance.yahoo.com/quote/TLT/"
+    },
+    {
+      "symbol": "VTI",
+      "action": "BUY",
+      "current_position": 110.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "9.0% below entry",
+      "take_profit": "3.6% above entry",
+      "position_size": "11.5% of portfolio",
+      "trailing_stop": "6.3% trailing after 1.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=VTI",
+      "yahoo_url": "https://finance.yahoo.com/quote/VTI/"
+    },
+    {
+      "symbol": "IEF",
+      "action": "BUY",
+      "current_position": 192.0,
+      "annual_volatility": "6%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "6.2% below entry",
+      "take_profit": "3.0% above entry",
+      "position_size": "16.6% of portfolio",
+      "trailing_stop": "4.4% trailing after 1.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=IEF",
+      "yahoo_url": "https://finance.yahoo.com/quote/IEF/"
+    },
+    {
+      "symbol": "GLD",
+      "action": "BUY",
+      "current_position": 24.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "12.0% below entry",
+      "take_profit": "4.8% above entry",
+      "position_size": "8.6% of portfolio",
+      "trailing_stop": "8.4% trailing after 1.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=GLD",
+      "yahoo_url": "https://finance.yahoo.com/quote/GLD/"
+    },
+    {
+      "symbol": "DBC",
+      "action": "BUY",
+      "current_position": 410.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "8.9% below entry",
+      "take_profit": "3.6% above entry",
+      "position_size": "11.6% of portfolio",
+      "trailing_stop": "6.3% trailing after 1.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=DBC",
+      "yahoo_url": "https://finance.yahoo.com/quote/DBC/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "28.32%",
+    "sharpe_ratio": "0.55",
+    "max_drawdown": "-10.36%",
+    "win_rate": "54.06%",
+    "alpha": "-14.43%"
+  }
+}

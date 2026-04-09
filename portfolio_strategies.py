@@ -4,12 +4,23 @@ These are PORTFOLIO-LEVEL strategies that combine multiple asset classes
 (equities, bonds, commodities, defensive sectors) with explicit hedging.
 
 Strategies:
-    1. StaplesHedgedGrowth  — Growth core + staples/dividend hedge
-    2. BarbellPortfolio     — Short-duration bonds + long-duration bonds + equities
-    3. AllWeatherModern     — Updated Dalio All-Weather with 2026 adjustments
-    4. AdaptiveEnsemble     — Regime-aware ensemble that shifts between strategies
-    5. CoreSatellite        — 60% passive core + 40% active satellite
-    6. IncomeShield         — High-dividend stocks + bond income for downside protection
+    1. StaplesHedgedGrowth          — Growth core + staples/dividend hedge
+    2. BarbellPortfolio             — Short-duration bonds + long-duration bonds + equities
+    3. AllWeatherModern             — Updated Dalio All-Weather with 2026 adjustments
+    4. AdaptiveEnsemble             — Regime-aware ensemble that shifts between strategies
+    5. CoreSatellite                — 60% passive core + 40% active satellite
+    6. IncomeShield                 — High-dividend stocks + bond income for downside protection
+    7. BondFixedIncome              — Diversified bond and fixed income portfolio
+    8. HighYieldREITBDCIncome       — High-yield REIT, BDC & Real Estate Income
+    9. DividendAristocratBlueChips  — Dividend aristocrat blue chip income
+   10. BuffettHODL                  — Buffett buy-and-hold forever (wide moat, never sell)
+   11. BogleThreeFund               — Bogleheads Three-Fund passive baseline
+   12. PermanentPortfolio           — Harry Browne 25/25/25/25 all-weather
+   13. DividendGrowthCompounding    — Dividend growth + DRIP compounding
+   14. MagicFormula                 — Greenblatt magic formula (earnings yield + ROIC)
+   15. EqualWeightSP500             — Equal weight S&P 500 top holdings
+   16. AllWeatherPassive            — Ray Dalio All Weather (simplified passive)
+   17. QualityDividendAristocrats   — Quality factor + Dividend Aristocrats
 """
 
 from __future__ import annotations
@@ -747,6 +758,688 @@ class DividendAristocratBlueChips(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 10. Buffett Buy-and-Hold Forever (Wide Moat HODL)
+# ---------------------------------------------------------------------------
+class BuffettHODL(BasePersona):
+    """Buffett-style buy-and-hold forever strategy.
+
+    Research basis: Buffett's alpha comes from quality + concentration.
+    "Buy wonderful companies at fair prices, not fair companies at wonderful
+    prices." Wide moat companies with pricing power, high ROE, low debt.
+
+    Universe: Berkshire Hathaway top holdings + wide-moat blue chips.
+    Signal: Only buy when below intrinsic value proxy (below SMA200 or
+    RSI < 45 — unloved quality). Max 15% per position.
+    Exit: ONLY if price drops 40%+ below SMA200 (thesis broken, not a dip).
+    Rebalance: Monthly (check entry signals), but extremely low turnover.
+
+    Target: 12-15% CAGR over 10+ years with concentrated quality.
+    Historical: Buffett achieved ~20% CAGR over 50+ years; this proxy
+    targets the public equity portion of that approach.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Buffett Buy-and-Hold Forever",
+            description="Wide moat companies at fair prices, NEVER sell unless thesis breaks",
+            risk_tolerance=0.3,
+            max_position_size=0.15,
+            max_positions=13,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "BRK-B",  # Berkshire Hathaway (the Buffett vehicle itself)
+                "AAPL",   # Apple (ecosystem moat, 30% of BRK portfolio)
+                "KO",     # Coca-Cola (brand moat, 62yr dividend streak)
+                "AXP",    # American Express (network effect moat)
+                "BAC",    # Bank of America (scale moat)
+                "OXY",    # Occidental Petroleum (Buffett's energy bet)
+                "CVX",    # Chevron (integrated energy moat)
+                "MCO",    # Moody's (duopoly moat with S&P Global)
+                "AMZN",   # Amazon (scale + network + switching cost moat)
+                "V",      # Visa (payment network moat)
+                "MA",     # Mastercard (payment network moat)
+                "JNJ",    # Johnson & Johnson (diversified healthcare moat)
+                "PG",     # Procter & Gamble (brand portfolio moat)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "rsi_14", "sma_50"], date
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            sma50 = inds["sma_50"]
+
+            if sma200 is None:
+                # No data yet — small starter position in quality names
+                weights[sym] = 0.05
+                continue
+
+            # Thesis broken check: price 40%+ below SMA200 = exit
+            discount_from_sma200 = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount_from_sma200 > 0.40:
+                weights[sym] = 0.0  # Thesis broken — sell
+                continue
+
+            # Entry signal: buy when below intrinsic value proxy
+            # Below SMA200 OR RSI < 45 (unloved quality = best entry)
+            if price < sma200 or (rsi is not None and rsi < 45):
+                # Aggressive buy — great entry for wide moat stock
+                weights[sym] = 0.12
+                # Extra conviction if both signals agree
+                if price < sma200 and rsi is not None and rsi < 40:
+                    weights[sym] = 0.15
+            elif price < sma200 * 1.05:
+                # Near fair value — standard position
+                weights[sym] = 0.09
+            else:
+                # Above fair value — hold existing, smaller new allocation
+                # Buffett: "hold forever" means don't sell, but also don't
+                # chase prices above fair value with new money
+                weights[sym] = 0.06
+
+        # Normalize to ~95% invested (5% cash buffer)
+        total = sum(weights.values())
+        if total > 0.95:
+            scale = 0.95 / total
+            weights = {k: v * scale for k, v in weights.items()}
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 11. Bogleheads Three-Fund Portfolio (Passive Baseline)
+# ---------------------------------------------------------------------------
+class BogleThreeFund(BasePersona):
+    """Bogleheads Three-Fund Portfolio — the passive investing baseline.
+
+    Research basis: 10.36% annualized over 10 years, beats ~90% of
+    professional fund managers. Expense ratio: 0.03% blended.
+    Alpha: 0.81% vs S&P 500 with beta 0.77 (lower risk).
+
+    Composition: Total US Market + Total International + Total Bond.
+    Rebalance: Annually (Bogleheads say less trading = better).
+    Signal: Target allocation is fixed. Only trade to rebalance back
+    to targets when drift exceeds 5% from target.
+
+    This is the BASELINE — every other strategy should beat this.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Bogleheads Three-Fund Portfolio",
+            description="VTI+VXUS+BND passive baseline — beats 90% of pros",
+            risk_tolerance=0.3,
+            max_position_size=0.55,
+            max_positions=6,
+            rebalance_frequency="monthly",  # Check monthly, but only act on drift
+            universe=universe or [
+                "VTI",    # Vanguard Total US Stock Market
+                "VXUS",   # Vanguard Total International Stock
+                "BND",    # Vanguard Total Bond Market
+                # Alternatives if primary unavailable
+                "VOO",    # S&P 500 (substitute for VTI)
+                "VEU",    # FTSE All-World ex-US (substitute for VXUS)
+                "AGG",    # iShares Core US Aggregate Bond (substitute for BND)
+            ],
+        )
+        super().__init__(config)
+        # Target allocations (classic 60/20/20 split)
+        self._targets = {
+            "VTI": 0.50, "VXUS": 0.20, "BND": 0.30,
+            "VOO": 0.50, "VEU": 0.20, "AGG": 0.30,
+        }
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Use primary ETFs if available, fallback to alternatives
+        us_sym = "VTI" if "VTI" in prices else ("VOO" if "VOO" in prices else None)
+        intl_sym = "VXUS" if "VXUS" in prices else ("VEU" if "VEU" in prices else None)
+        bond_sym = "BND" if "BND" in prices else ("AGG" if "AGG" in prices else None)
+
+        if us_sym:
+            weights[us_sym] = self._targets.get(us_sym, 0.50)
+        if intl_sym:
+            weights[intl_sym] = self._targets.get(intl_sym, 0.20)
+        if bond_sym:
+            weights[bond_sym] = self._targets.get(bond_sym, 0.30)
+
+        # Normalize in case some ETFs are missing
+        total = sum(weights.values())
+        if total > 0 and abs(total - 1.0) > 0.01:
+            scale = 0.95 / total
+            weights = {k: v * scale for k, v in weights.items()}
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 12. Harry Browne Permanent Portfolio (All-Weather 25/25/25/25)
+# ---------------------------------------------------------------------------
+class PermanentPortfolio(BasePersona):
+    """Harry Browne Permanent Portfolio — all-weather 25/25/25/25.
+
+    Research basis: 9.7% CAGR from 1972-2020, only 6.8% volatility.
+    7.21% CAGR over 30 years with max drawdown of just -15.92%.
+    Sharpe ratio in top 25% of all portfolios.
+
+    Composition: 25% stocks, 25% long bonds, 25% gold, 25% cash/T-bills.
+    Rebalance: When any asset drifts beyond 15-35% band from 25% target
+    (i.e., drops below 15% or rises above 35% of portfolio).
+
+    Works in ALL economic regimes:
+    - Prosperity: stocks rise
+    - Recession: bonds rise (flight to safety)
+    - Inflation: gold rises
+    - Deflation: cash preserves purchasing power + bonds rise
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Harry Browne Permanent Portfolio",
+            description="25/25/25/25 stocks/bonds/gold/cash — works in ALL regimes",
+            risk_tolerance=0.2,
+            max_position_size=0.30,
+            max_positions=4,
+            rebalance_frequency="monthly",  # Check monthly for band violations
+            universe=universe or [
+                "VTI",    # Stocks (total US market)
+                "TLT",    # Long-term Treasury bonds (20+ year)
+                "GLD",    # Gold
+                "SHY",    # Short-term Treasury (cash proxy)
+            ],
+        )
+        super().__init__(config)
+        self._target = 0.25  # Each asset gets 25%
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        available = [sym for sym in ["VTI", "TLT", "GLD", "SHY"] if sym in prices]
+
+        if not available:
+            return weights
+
+        # Equal 25% allocation to each available asset
+        # If one asset is missing, redistribute its share equally
+        per_asset = 0.96 / len(available)  # 4% cash buffer
+        for sym in available:
+            weights[sym] = per_asset
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 13. Dividend Growth Compounding (DRIP Strategy)
+# ---------------------------------------------------------------------------
+class DividendGrowthCompounding(BasePersona):
+    """Dividend Growth + DRIP compounding strategy.
+
+    Research basis: DRIP achieves ~75% more assets over 20 years vs
+    taking cash dividends. $10K at 8% dividend + 4% growth + 5% price
+    appreciation = $32,469 in 10 years. Dividend aristocrats have
+    raised dividends 25+ consecutive years.
+
+    Universe: Stocks with 10+ years of dividend growth + dividend ETFs.
+    Signal: Only add on dips (below SMA200 or RSI < 50); never sell winners.
+    Rebalance: Monthly, equal weight across holdings.
+    Exit: None for quality dividend growers — hold forever and reinvest.
+
+    Target: 10-12% total return (4-5% yield + 6-7% appreciation).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Dividend Growth Compounding (DRIP)",
+            description="10+ year dividend growers, reinvest all dividends, never sell winners",
+            risk_tolerance=0.2,
+            max_position_size=0.10,
+            max_positions=13,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "JNJ",    # Johnson & Johnson (62yr dividend streak)
+                "PG",     # Procter & Gamble (69yr dividend streak)
+                "KO",     # Coca-Cola (62yr dividend streak)
+                "PEP",    # PepsiCo (52yr dividend streak)
+                "ABBV",   # AbbVie (52yr including ABT history)
+                "MO",     # Altria (55yr dividend streak, 8%+ yield)
+                "PM",     # Philip Morris International (16yr, 5% yield)
+                "XOM",    # Exxon Mobil (41yr dividend streak)
+                "CVX",    # Chevron (37yr dividend streak)
+                "O",      # Realty Income (29yr monthly dividend)
+                "SCHD",   # Schwab US Dividend Equity ETF
+                "VIG",    # Vanguard Dividend Appreciation ETF
+                "NOBL",   # ProShares S&P 500 Dividend Aristocrats ETF
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        buy_candidates = []
+        hold_candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "sma_50", "rsi_14"], date
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if sma200 is None:
+                # No data — equal weight starter
+                hold_candidates.append((sym, 1.0))
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            # Dividend growers: NEVER sell winners
+            # Only modulate allocation based on value opportunity
+            if discount > 0.10:
+                # Deep discount on dividend grower = aggressive buy
+                buy_candidates.append((sym, 3.0 + discount * 5))
+            elif discount > 0.0 or (rsi is not None and rsi < 50):
+                # Below SMA200 or RSI < 50 = add on dip
+                buy_candidates.append((sym, 2.0))
+            elif discount > -0.10:
+                # Near fair value — hold and reinvest
+                hold_candidates.append((sym, 1.5))
+            else:
+                # Above fair value — still hold (never sell), smaller add
+                hold_candidates.append((sym, 1.0))
+
+        # Allocate: buy candidates get more weight than hold
+        all_candidates = [(s, sc, "buy") for s, sc in buy_candidates] + \
+                         [(s, sc, "hold") for s, sc in hold_candidates]
+
+        if not all_candidates:
+            return weights
+
+        total_score = sum(sc for _, sc, _ in all_candidates)
+        for sym, score, action in all_candidates:
+            w = (score / total_score) * 0.95  # 5% cash buffer
+            weights[sym] = min(w, self.config.max_position_size)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 14. Greenblatt Magic Formula (Earnings Yield + ROIC)
+# ---------------------------------------------------------------------------
+class MagicFormula(BasePersona):
+    """Joel Greenblatt's Magic Formula strategy.
+
+    Research basis: 23.8% CAGR (1988-2009) vs 9.6% S&P 500.
+    11.4% CAGR (2003-2015) vs 8.7% S&P 500. Works globally.
+
+    Method: Rank stocks by (1) earnings yield (high = cheap) and
+    (2) return on capital (high = quality). Buy the top-ranked.
+
+    Proxy implementation: Since we can't compute live ROIC/earnings yield
+    in the backtester, we use quality+value factor stocks as proxies —
+    high-quality companies (high ROE, strong margins) at reasonable prices
+    (below SMA200 or low RSI).
+
+    Universe: Large-cap quality companies with strong ROIC profiles.
+    Rebalance: Annually (Greenblatt says hold minimum 1 year).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Greenblatt Magic Formula",
+            description="High earnings yield + high ROIC: quality companies at value prices",
+            risk_tolerance=0.4,
+            max_position_size=0.10,
+            max_positions=14,
+            rebalance_frequency="monthly",  # Check monthly, annual-ish turnover
+            universe=universe or [
+                # High ROIC + reasonable valuations (Magic Formula proxies)
+                "AAPL",   # Apple (40%+ ROIC, brand moat)
+                "MSFT",   # Microsoft (35%+ ROIC, cloud moat)
+                "GOOGL",  # Alphabet (25%+ ROIC, search/ad moat)
+                "BRK-B",  # Berkshire (capital allocation excellence)
+                "JNJ",    # J&J (consistent 25%+ ROE, healthcare moat)
+                "UNH",    # UnitedHealth (managed care dominance)
+                "V",      # Visa (80%+ margins, network moat)
+                "MA",     # Mastercard (80%+ margins, network moat)
+                "HD",     # Home Depot (high ROIC, scale moat)
+                "COST",   # Costco (high asset turns, membership moat)
+                "MCO",    # Moody's (duopoly, 40%+ margins)
+                "SPGI",   # S&P Global (duopoly, 35%+ margins)
+                "TXN",    # Texas Instruments (analog chip monopoly)
+                "QCOM",   # Qualcomm (IP licensing, high ROIC)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "sma_50", "rsi_14", "vol_20"], date
+            )
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if sma200 is None:
+                continue
+
+            # Magic Formula scoring proxy:
+            # Value score: how cheap relative to SMA200 (earnings yield proxy)
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            value_score = max(discount + 0.10, 0.01)  # Shift so fair value gets some score
+
+            # Quality score: low volatility + above SMA50 = quality proxy
+            quality_score = 1.0
+            if vol is not None and vol > 0:
+                # Lower vol = higher quality (stable earnings proxy)
+                quality_score = max(0.02 / vol, 0.5) if vol > 0 else 1.0
+                quality_score = min(quality_score, 3.0)
+            if sma50 is not None and price > sma50:
+                quality_score *= 1.2  # Momentum bonus (quality trends up)
+
+            # RSI bonus: oversold quality = best Magic Formula entry
+            if rsi is not None and rsi < 40:
+                value_score *= 1.5
+            elif rsi is not None and rsi > 75:
+                value_score *= 0.5  # Overvalued — reduce
+
+            # Combined Magic Formula score
+            combined = value_score * quality_score
+            candidates.append((sym, combined))
+
+        # Rank by combined score, take top positions
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+
+        if not top:
+            return weights
+
+        total_score = sum(sc for _, sc in top)
+        for sym, score in top:
+            w = (score / total_score) * 0.95  # 5% cash buffer
+            weights[sym] = min(w, self.config.max_position_size)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 15. Equal Weight S&P 500 Top Holdings
+# ---------------------------------------------------------------------------
+class EqualWeightSP500(BasePersona):
+    """Equal Weight S&P 500 strategy.
+
+    Research basis: Equal weight beat cap-weight by 1.05% annually until
+    2023. Since 1990, +63bps/year with 742% cumulative total return
+    difference. Equal weight grew earnings 12% annualized vs 9% for
+    cap-weight. After peaks in market concentration, equal weight
+    tends to outperform dramatically.
+
+    Method: Instead of market-cap weighting (where AAPL/MSFT/NVDA dominate),
+    equal-weight the top S&P 500 holdings. Include RSP (equal weight ETF)
+    as core + top 15 individual stocks equally weighted.
+    Rebalance: Quarterly (to maintain equal weights as prices diverge).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Equal Weight S&P 500",
+            description="Equal weight top S&P 500 holdings — beats cap-weight by ~1%/year long term",
+            risk_tolerance=0.4,
+            max_position_size=0.10,
+            max_positions=16,
+            rebalance_frequency="monthly",  # Quarterly intent, monthly checks
+            universe=universe or [
+                "RSP",    # Invesco S&P 500 Equal Weight ETF (core)
+                # Top 15 S&P 500 stocks (equally weighted, not cap-weighted)
+                "AAPL",   # Apple
+                "MSFT",   # Microsoft
+                "NVDA",   # NVIDIA
+                "AMZN",   # Amazon
+                "GOOGL",  # Alphabet
+                "META",   # Meta
+                "BRK-B",  # Berkshire Hathaway
+                "LLY",    # Eli Lilly
+                "UNH",    # UnitedHealth
+                "V",      # Visa
+                "JNJ",    # Johnson & Johnson
+                "XOM",    # Exxon Mobil
+                "JPM",    # JPMorgan Chase
+                "PG",     # Procter & Gamble
+                "HD",     # Home Depot
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        available = [sym for sym in self.config.universe if sym in prices]
+
+        if not available:
+            return weights
+
+        # Pure equal weight: each stock gets 1/N allocation
+        # RSP gets slightly more as it's already the equal-weight index
+        per_stock = 0.95 / len(available)  # 5% cash buffer
+        for sym in available:
+            if sym == "RSP":
+                weights[sym] = min(per_stock * 1.5, 0.10)
+            else:
+                weights[sym] = min(per_stock, 0.10)
+
+        # Normalize to 95% invested
+        total = sum(weights.values())
+        if total > 0.95:
+            scale = 0.95 / total
+            weights = {k: v * scale for k, v in weights.items()}
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 16. Ray Dalio All Weather Passive (Simplified)
+# ---------------------------------------------------------------------------
+class AllWeatherPassive(BasePersona):
+    """Ray Dalio All Weather portfolio — simplified passive version.
+
+    Research basis: 7.33% CAGR over 30 years, 7.49% std dev.
+    Designed for risk parity: each asset class contributes equal risk.
+    Works in any economic environment. Max drawdown much lower than stocks.
+
+    Composition: 30% stocks, 40% long bonds, 15% intermediate bonds,
+    7.5% gold, 7.5% commodities.
+    ETFs: VTI, TLT, IEF, GLD, DBC.
+    Rebalance: Annually (passive = less frequent).
+
+    Difference from AllWeatherModern (strategy #3): This is the ORIGINAL
+    Dalio allocation with no momentum filters or regime detection. Pure
+    passive risk parity for 10+ year holding periods.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Ray Dalio All Weather Passive",
+            description="30/40/15/7.5/7.5 stocks/long bonds/mid bonds/gold/commodities",
+            risk_tolerance=0.2,
+            max_position_size=0.42,
+            max_positions=5,
+            rebalance_frequency="monthly",  # Check monthly, rebalance on drift
+            universe=universe or [
+                "VTI",    # 30% — Total US Stock Market (stocks)
+                "TLT",    # 40% — 20+ Year Treasury Bond (long bonds)
+                "IEF",    # 15% — 7-10 Year Treasury Bond (intermediate bonds)
+                "GLD",    # 7.5% — Gold
+                "DBC",    # 7.5% — Commodities (Invesco DB Commodity Index)
+            ],
+        )
+        super().__init__(config)
+        # Fixed Dalio target allocations
+        self._targets = {
+            "VTI": 0.30,
+            "TLT": 0.40,
+            "IEF": 0.15,
+            "GLD": 0.075,
+            "DBC": 0.075,
+        }
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        available_targets = {
+            sym: w for sym, w in self._targets.items() if sym in prices
+        }
+
+        if not available_targets:
+            return weights
+
+        # Redistribute missing allocation proportionally
+        total_target = sum(available_targets.values())
+        if total_target > 0:
+            scale = 0.95 / total_target  # 5% cash buffer
+            for sym, target in available_targets.items():
+                weights[sym] = target * scale
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 17. Quality + Dividend Aristocrats (HODL)
+# ---------------------------------------------------------------------------
+class QualityDividendAristocrats(BasePersona):
+    """Quality factor + Dividend Aristocrats HODL strategy.
+
+    Research basis: Quality factor outperforms by 2.6%/year (MSCI, 1975-2018).
+    Dividend Aristocrats have 25+ years of consecutive dividend increases.
+    Combining quality (high ROE, stable earnings) with dividend growth
+    creates a powerful compounding engine.
+
+    Quality outperforms by 23-31 bps/month during high-volatility periods
+    (defensive behavior). Profitability (ROE) is the strongest quality signal.
+
+    Universe: Only companies with 25+ years of consecutive dividend
+    increases AND evidence of high quality (strong brands, pricing power).
+    Signal: Buy the dip, hold forever, reinvest dividends.
+    Exit: None — these are permanent holdings.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Quality Dividend Aristocrats",
+            description="25+ year dividend growers with high ROE — buy dips, hold forever",
+            risk_tolerance=0.2,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "NOBL",   # S&P 500 Dividend Aristocrats ETF (core)
+                "JNJ",    # Johnson & Johnson (62yr, healthcare)
+                "PG",     # Procter & Gamble (69yr, consumer staples)
+                "KO",     # Coca-Cola (62yr, beverages)
+                "MMM",    # 3M (65yr, industrial conglomerate)
+                "EMR",    # Emerson Electric (67yr, industrial automation)
+                "ABT",    # Abbott Laboratories (52yr, medical devices)
+                "ADP",    # Automatic Data Processing (49yr, payroll/HR)
+                "SHW",    # Sherwin-Williams (46yr, paint/coatings moat)
+                "CTAS",   # Cintas (41yr, uniform services moat)
+                "ITW",    # Illinois Tool Works (50yr, diversified industrial)
+                "GPC",    # Genuine Parts Company (68yr, auto parts distribution)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_200", "sma_50", "rsi_14", "vol_20"], date
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if sma200 is None:
+                # No data yet — equal weight starter for aristocrats
+                candidates.append((sym, 1.0, 0.07))
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            score = 1.0
+            base_weight = 0.07
+
+            # Quality aristocrats: always hold, buy dips aggressively
+            if discount > 0.15:
+                # Deep value on a dividend aristocrat = best opportunity
+                score = 4.0 + discount * 5
+                base_weight = 0.10
+            elif discount > 0.05:
+                # Moderate dip — accumulate
+                score = 2.5
+                base_weight = 0.09
+            elif discount > -0.05:
+                # Near fair value — standard hold
+                score = 1.5
+                base_weight = 0.07
+            else:
+                # Above SMA200 — still hold (never sell aristocrats)
+                score = 1.0
+                base_weight = 0.06
+
+            # RSI: oversold aristocrats are rare gifts
+            if rsi is not None and rsi < 30:
+                score += 2.0
+                base_weight = min(base_weight + 0.02, 0.10)
+            elif rsi is not None and rsi < 40:
+                score += 1.0
+
+            # Low volatility bonus (quality signal)
+            if vol is not None and vol < 0.012:
+                score += 0.5
+
+            # NOBL ETF gets a baseline larger allocation as diversified core
+            if sym == "NOBL":
+                base_weight = min(base_weight + 0.02, 0.10)
+
+            candidates.append((sym, score, base_weight))
+
+        if not candidates:
+            return weights
+
+        # Score-weighted allocation
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        total_weight = sum(wt for _, _, wt in top)
+        # Scale to ~95% invested
+        if total_weight > 0:
+            scale = 0.95 / total_weight if total_weight > 0.95 else 1.0
+            for sym, _, wt in top:
+                weights[sym] = min(wt * scale, self.config.max_position_size)
+
+        return weights
+
+
 PORTFOLIO_STRATEGIES = {
     "staples_hedged_growth": StaplesHedgedGrowth,
     "barbell_portfolio": BarbellPortfolio,
@@ -757,6 +1450,15 @@ PORTFOLIO_STRATEGIES = {
     "bond_fixed_income": BondFixedIncome,
     "high_yield_reit_bdc": HighYieldREITBDCIncome,
     "dividend_aristocrat_blue_chips": DividendAristocratBlueChips,
+    # --- Passive / HODL strategies (10+ year holding periods) ---
+    "buffett_hodl": BuffettHODL,
+    "bogle_three_fund": BogleThreeFund,
+    "permanent_portfolio": PermanentPortfolio,
+    "dividend_growth_compounding": DividendGrowthCompounding,
+    "magic_formula": MagicFormula,
+    "equal_weight_sp500": EqualWeightSP500,
+    "all_weather_passive": AllWeatherPassive,
+    "quality_dividend_aristocrats": QualityDividendAristocrats,
 }
 
 

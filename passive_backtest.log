@@ -1,0 +1,9 @@
+[1/8] buffett_hodl                        comp=0.38 hodl=0.73 con=89% 3Y=61.5% 10Y=261% 8s
+[2/8] bogle_three_fund                    comp=0.23 hodl=0.38 con=89% 3Y=55.5% 10Y=114% 17s
+[3/8] permanent_portfolio                 comp=0.14 hodl=0.21 con=71% 3Y=46.5% 10Y=68% 20s
+[4/8] dividend_growth_compounding         comp=0.27 hodl=0.47 con=89% 3Y=27.6% 10Y=149% 30s
+[5/8] magic_formula                       comp=0.55 hodl=1.11 con=92% 3Y=59.6% 10Y=353% 41s
+[6/8] equal_weight_sp500                  comp=0.68 hodl=1.66 con=92% 3Y=113.7% 10Y=616% 50s
+[7/8] all_weather_passive                 comp=0.11 hodl=0.16 con=67% 3Y=28.3% 10Y=55% 54s
+[8/8] quality_dividend_aristocrats        comp=0.32 hodl=0.57 con=89% 3Y=30.1% 10Y=181% 64s
+DONE: 8/8 in 65s, total strategies in MW: 183
