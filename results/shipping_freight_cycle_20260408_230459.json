@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.2644776372842639,
+    "cagr": 0.06059050355251716,
+    "annual_volatility": 0.17508528680696453,
+    "sharpe_ratio": 0.20090061494480768,
+    "sortino_ratio": 0.2754957789784867,
+    "calmar_ratio": 0.2914338399740792,
+    "max_drawdown": -0.20790483204663612,
+    "max_drawdown_date": "2022-07-06",
+    "win_rate": 0.5219560878243513,
+    "profit_factor": 1.0795757783800186,
+    "num_trading_days": 1002,
+    "skewness": -0.5495757692057848,
+    "kurtosis": 4.031715406926749,
+    "best_day": 0.05098047145042761,
+    "worst_day": -0.07067698651859955,
+    "avg_daily_return": 0.00029523217147105327,
+    "black_swan_resilience": 69.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.048077193645857275,
+    "beta": 0.31902602604365765,
+    "information_ratio": -0.2334859608515603,
+    "tracking_error": 0.20591042592245004
+  },
+  "trade_metrics": {
+    "num_trades": 1267,
+    "num_buys": 609,
+    "num_sells": 658,
+    "total_commission": 0.0,
+    "total_slippage": 8182.668182012559,
+    "total_transaction_costs": 8182.668182012559,
+    "avg_trade_size": 6458.301643261688
+  },
+  "final_positions": {
+    "ZIM": {
+      "qty": 699.0,
+      "avg_cost": 19.43760398061652,
+      "realized_pnl": 14351.785831521689
+    },
+    "CHRW": {
+      "qty": 88.0,
+      "avg_cost": 151.9491858450804,
+      "realized_pnl": -1133.9928172027521
+    },
+    "MATX": {
+      "qty": 115.0,
+      "avg_cost": 122.84796142578125,
+      "realized_pnl": 2617.522293090813
+    },
+    "EXPD": {
+      "qty": 95.0,
+      "avg_cost": 128.04492343535122,
+      "realized_pnl": -5167.055042806673
+    },
+    "GNK": {
+      "qty": 782.0,
+      "avg_cost": 18.38547757646977,
+      "realized_pnl": 5308.2828450636425
+    },
+    "SBLK": {
+      "qty": 739.0,
+      "avg_cost": 18.506000518798828,
+      "realized_pnl": -3458.286738395696
+    },
+    "SEA": {
+      "qty": 996.0,
+      "avg_cost": 13.772980339163711,
+      "realized_pnl": -1829.3201011748774
+    },
+    "EGLE": {
+      "qty": 489.0,
+      "avg_cost": 28.912735699687815,
+      "realized_pnl": -332.27469036242485
+    }
+  },
+  "source": "crisis",
+  "description": "Global shipping cycle: container/bulk shippers + freight ETFs",
+  "horizon": "4Y (2022-2025)"
+}

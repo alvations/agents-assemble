@@ -1,0 +1,111 @@
+{
+  "metrics": {
+    "total_return": 0.3073329992764129,
+    "cagr": 0.0694892820947286,
+    "annual_volatility": 0.12719517917792442,
+    "sharpe_ratio": 0.2851476467884511,
+    "sortino_ratio": 0.4028984751138728,
+    "calmar_ratio": 0.4830624954315569,
+    "max_drawdown": -0.1438515362958337,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5289421157684631,
+    "profit_factor": 1.1049215074200245,
+    "num_trading_days": 1002,
+    "skewness": -0.13003099054544287,
+    "kurtosis": 2.391997072357146,
+    "best_day": 0.04014236137729177,
+    "worst_day": -0.04137443095557236,
+    "avg_daily_return": 0.0002995760771778523,
+    "black_swan_resilience": 78.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.039178415103645836,
+    "beta": 0.44869350546240805,
+    "information_ratio": -0.28050397895471924,
+    "tracking_error": 0.13967151285925347
+  },
+  "trade_metrics": {
+    "num_trades": 630,
+    "num_buys": 321,
+    "num_sells": 309,
+    "total_commission": 0.0,
+    "total_slippage": 931.2056915607451,
+    "total_transaction_costs": 931.2056915607451,
+    "avg_trade_size": 1478.1042723186433
+  },
+  "final_positions": {
+    "MMM": {
+      "qty": 26.0,
+      "avg_cost": 169.71844482421875,
+      "realized_pnl": 310.7439346313471
+    },
+    "KHC": {
+      "qty": 479.0,
+      "avg_cost": 27.601924592098463,
+      "realized_pnl": 734.4204838174339
+    },
+    "FDX": {
+      "qty": 33.0,
+      "avg_cost": 248.58911859081243,
+      "realized_pnl": 1807.6129563434927
+    },
+    "MO": {
+      "qty": 157.0,
+      "avg_cost": 57.12001037597656,
+      "realized_pnl": 3776.0735969543493
+    },
+    "PM": {
+      "qty": 78.0,
+      "avg_cost": 147.56918897168424,
+      "realized_pnl": 4701.178088973497
+    },
+    "JNJ": {
+      "qty": 22.0,
+      "avg_cost": 155.66159789635782,
+      "realized_pnl": 1658.6997002286626
+    },
+    "ENB": {
+      "qty": 155.0,
+      "avg_cost": 39.974254566445985,
+      "realized_pnl": 2984.2821743213467
+    },
+    "PG": {
+      "qty": 82.0,
+      "avg_cost": 153.44227291973883,
+      "realized_pnl": 1154.8056326534465
+    },
+    "ABBV": {
+      "qty": 33.0,
+      "avg_cost": 193.41236483182678,
+      "realized_pnl": 5057.769668173427
+    },
+    "UPS": {
+      "qty": 111.0,
+      "avg_cost": 108.2059167048894,
+      "realized_pnl": -2063.4612236625476
+    },
+    "KO": {
+      "qty": 146.0,
+      "avg_cost": 63.911628308247344,
+      "realized_pnl": 1784.1155209374645
+    },
+    "PEP": {
+      "qty": 51.0,
+      "avg_cost": 147.45822131552495,
+      "realized_pnl": -76.40927736134964
+    },
+    "XOM": {
+      "qty": 65.0,
+      "avg_cost": 104.26100402219335,
+      "realized_pnl": 5501.286848051452
+    },
+    "SCHD": {
+      "qty": 387.0,
+      "avg_cost": 24.908901829273656,
+      "realized_pnl": 483.3767332401867
+    }
+  },
+  "source": "portfolio",
+  "description": "25+ year dividend growers: 4-8% yield, income + capital appreciation",
+  "horizon": "4Y (2022-2025)"
+}

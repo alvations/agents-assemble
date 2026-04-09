@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.10634505618932533,
+    "cagr": 0.025658477089644416,
+    "annual_volatility": 0.07676470071454661,
+    "sharpe_ratio": -0.14151431129294478,
+    "sortino_ratio": -0.19806279221481746,
+    "calmar_ratio": 0.14950079468099664,
+    "max_drawdown": -0.1716276969924757,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.5349301397205589,
+    "profit_factor": 1.0653189015268822,
+    "num_trading_days": 1002,
+    "skewness": 0.09318247930968653,
+    "kurtosis": 2.603558320267868,
+    "best_day": 0.028136136072650864,
+    "worst_day": -0.023192202512574367,
+    "avg_daily_return": 0.00011254151456416721,
+    "black_swan_resilience": 79.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08300922010873002,
+    "beta": 0.25389017440347894,
+    "information_ratio": -0.5613854870962331,
+    "tracking_error": 0.14786491994671125
+  },
+  "trade_metrics": {
+    "num_trades": 368,
+    "num_buys": 193,
+    "num_sells": 175,
+    "total_commission": 0.0,
+    "total_slippage": 801.0885151920318,
+    "total_transaction_costs": 801.0885151920318,
+    "avg_trade_size": 2176.870965195739
+  },
+  "final_positions": {
+    "TIP": {
+      "qty": 295.0,
+      "avg_cost": 105.02537888652462,
+      "realized_pnl": -912.8969183556143
+    },
+    "IEF": {
+      "qty": 272.0,
+      "avg_cost": 92.11884752532868,
+      "realized_pnl": -1856.192058315672
+    },
+    "GLD": {
+      "qty": 16.0,
+      "avg_cost": 314.76695808197303,
+      "realized_pnl": 5564.761212734416
+    },
+    "EFA": {
+      "qty": 82.0,
+      "avg_cost": 82.15817582625552,
+      "realized_pnl": 1950.7690169961202
+    },
+    "VNQ": {
+      "qty": 46.0,
+      "avg_cost": 88.52726745605469,
+      "realized_pnl": -941.1990356445342
+    },
+    "TLT": {
+      "qty": 140.0,
+      "avg_cost": 88.3901715954745,
+      "realized_pnl": -2965.915596079377
+    },
+    "SPY": {
+      "qty": 11.0,
+      "avg_cost": 600.5151279539175,
+      "realized_pnl": 3635.284693625903
+    },
+    "DBC": {
+      "qty": 409.0,
+      "avg_cost": 21.407484551001474,
+      "realized_pnl": 1207.4374970486845
+    }
+  },
+  "source": "hedge_fund",
+  "description": "All Weather risk parity: equal risk contribution across asset classes",
+  "horizon": "4Y (2022-2025)"
+}

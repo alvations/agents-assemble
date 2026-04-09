@@ -1,0 +1,101 @@
+{
+  "metrics": {
+    "total_return": 0.2763358405361567,
+    "cagr": 0.06307515731451474,
+    "annual_volatility": 0.09658073043784672,
+    "sharpe_ratio": 0.27754705857966316,
+    "sortino_ratio": 0.3968673561555275,
+    "calmar_ratio": 0.49608363021030716,
+    "max_drawdown": -0.12714621784188884,
+    "max_drawdown_date": "2022-10-10",
+    "win_rate": 0.5159680638722555,
+    "profit_factor": 1.1221630083680454,
+    "num_trading_days": 1002,
+    "skewness": 0.00485505411004575,
+    "kurtosis": 2.662409704256495,
+    "best_day": 0.03318103091589086,
+    "worst_day": -0.03275787885910031,
+    "avg_daily_return": 0.0002620216788567378,
+    "black_swan_resilience": 80.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.045592539883859695,
+    "beta": 0.37775468238773613,
+    "information_ratio": -0.347025975663567,
+    "tracking_error": 0.13138076997458115
+  },
+  "trade_metrics": {
+    "num_trades": 568,
+    "num_buys": 326,
+    "num_sells": 242,
+    "total_commission": 0.0,
+    "total_slippage": 1594.8230612983707,
+    "total_transaction_costs": 1594.8230612983707,
+    "avg_trade_size": 2807.787079750652
+  },
+  "final_positions": {
+    "BND": {
+      "qty": 131.0,
+      "avg_cost": 67.22481395260914,
+      "realized_pnl": -799.2341294408685
+    },
+    "LQD": {
+      "qty": 88.0,
+      "avg_cost": 106.26961335268888,
+      "realized_pnl": -251.20444488525482
+    },
+    "HYG": {
+      "qty": 122.0,
+      "avg_cost": 76.79049055514172,
+      "realized_pnl": 378.82569291161747
+    },
+    "TIP": {
+      "qty": 87.0,
+      "avg_cost": 106.5527396416913,
+      "realized_pnl": -72.6740947153373
+    },
+    "DVY": {
+      "qty": 69.0,
+      "avg_cost": 131.2836402081249,
+      "realized_pnl": 1494.728713728292
+    },
+    "HDV": {
+      "qty": 79.0,
+      "avg_cost": 111.60970419327417,
+      "realized_pnl": 2734.0211463443443
+    },
+    "SCHD": {
+      "qty": 356.0,
+      "avg_cost": 25.97880173052225,
+      "realized_pnl": 2289.0229312941938
+    },
+    "O": {
+      "qty": 170.0,
+      "avg_cost": 56.89720687866211,
+      "realized_pnl": 1819.831638336182
+    },
+    "VNQ": {
+      "qty": 109.0,
+      "avg_cost": 88.52726745605469,
+      "realized_pnl": 248.14253234863247
+    },
+    "PG": {
+      "qty": 66.0,
+      "avg_cost": 163.15767110337958,
+      "realized_pnl": 2156.0726670295953
+    },
+    "CVX": {
+      "qty": 64.0,
+      "avg_cost": 151.3865303993225,
+      "realized_pnl": 4428.024299621578
+    },
+    "KO": {
+      "qty": 135.0,
+      "avg_cost": 67.34836678340517,
+      "realized_pnl": 2735.237416760675
+    }
+  },
+  "source": "portfolio",
+  "description": "High-dividend + bond income: 4-5% yield target, low drawdown",
+  "horizon": "4Y (2022-2025)"
+}

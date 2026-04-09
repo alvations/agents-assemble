@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": -0.052825251169493104,
+    "cagr": -0.013513035415039787,
+    "annual_volatility": 0.11955939772432908,
+    "sharpe_ratio": -0.38251313519093033,
+    "sortino_ratio": -0.5298350071769768,
+    "calmar_ratio": -0.08059345401147303,
+    "max_drawdown": -0.1676691436145188,
+    "max_drawdown_date": "2023-03-10",
+    "win_rate": 0.5039920159680639,
+    "profit_factor": 0.9906501878073068,
+    "num_trading_days": 1002,
+    "skewness": 0.0482608698697215,
+    "kurtosis": 2.327742061108066,
+    "best_day": 0.03730443226001001,
+    "worst_day": -0.035767151681393994,
+    "avg_daily_return": -2.5830454927278843e-05,
+    "black_swan_resilience": 79.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.12218073261341422,
+    "beta": 0.45764640696659664,
+    "information_ratio": -0.9359013219354818,
+    "tracking_error": 0.13054873387798996
+  },
+  "trade_metrics": {
+    "num_trades": 7161,
+    "num_buys": 3552,
+    "num_sells": 3609,
+    "total_commission": 0.0,
+    "total_slippage": 41277.75756760893,
+    "total_transaction_costs": 41277.75756760893,
+    "avg_trade_size": 5764.244877476446
+  },
+  "final_positions": {
+    "ABBV": {
+      "qty": 42.0,
+      "avg_cost": 225.63354412606515,
+      "realized_pnl": 1408.5377625964966
+    },
+    "CVX": {
+      "qty": 63.0,
+      "avg_cost": 150.85962689112102,
+      "realized_pnl": -631.2139053344713
+    },
+    "SPY": {
+      "qty": 14.0,
+      "avg_cost": 684.3652866908482,
+      "realized_pnl": 2501.534851074224
+    },
+    "TSLA": {
+      "qty": 21.0,
+      "avg_cost": 449.7200012207031,
+      "realized_pnl": 906.5218124389733
+    },
+    "XOM": {
+      "qty": 79.0,
+      "avg_cost": 118.858224967328,
+      "realized_pnl": -1791.6431749687745
+    },
+    "JPM": {
+      "qty": 30.0,
+      "avg_cost": 320.01141764322915,
+      "realized_pnl": 4564.099525451651
+    },
+    "GS": {
+      "qty": 11.0,
+      "avg_cost": 874.3982543945312,
+      "realized_pnl": 2208.9668273925813
+    },
+    "GOOGL": {
+      "qty": 30.0,
+      "avg_cost": 309.2740614022186,
+      "realized_pnl": 3829.600000635894
+    },
+    "NVDA": {
+      "qty": 51.0,
+      "avg_cost": 188.50902093625535,
+      "realized_pnl": 9443.808623313897
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Multi-factor momentum + short-term mean-reversion entry, Citadel-inspired",
+  "horizon": "4Y (2022-2025)"
+}

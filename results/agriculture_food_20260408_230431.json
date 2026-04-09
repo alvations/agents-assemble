@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": -0.30686261267807835,
+    "cagr": -0.08778842453177282,
+    "annual_volatility": 0.14024497685230805,
+    "sharpe_ratio": -0.866480631578447,
+    "sortino_ratio": -1.1291469419391464,
+    "calmar_ratio": -0.1807185443615088,
+    "max_drawdown": -0.48577430081641837,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.46506986027944114,
+    "profit_factor": 0.8961485336475323,
+    "num_trading_days": 1002,
+    "skewness": -0.6477686880531673,
+    "kurtosis": 4.303317418976332,
+    "best_day": 0.03048684823114134,
+    "worst_day": -0.05292574548971418,
+    "avg_daily_return": -0.00032657059799719965,
+    "black_swan_resilience": 54.5,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.19645612173014726,
+    "beta": 0.3073058957586196,
+    "information_ratio": -1.0952583987245095,
+    "tracking_error": 0.17936965556158396
+  },
+  "trade_metrics": {
+    "num_trades": 1125,
+    "num_buys": 532,
+    "num_sells": 593,
+    "total_commission": 0.0,
+    "total_slippage": 7990.623387430198,
+    "total_transaction_costs": 7990.623387430198,
+    "avg_trade_size": 7102.776344382392
+  },
+  "final_positions": {
+    "CTVA": {
+      "qty": 155.0,
+      "avg_cost": 65.28108463287353,
+      "realized_pnl": -6024.0194292068545
+    },
+    "DBA": {
+      "qty": 407.0,
+      "avg_cost": 25.649999618530273,
+      "realized_pnl": -377.8176746368465
+    },
+    "MOO": {
+      "qty": 143.0,
+      "avg_cost": 71.397951398577,
+      "realized_pnl": -2893.203919546944
+    },
+    "NTR": {
+      "qty": 168.0,
+      "avg_cost": 59.6120695617528,
+      "realized_pnl": -2617.5411452600465
+    }
+  },
+  "source": "crisis",
+  "description": "Fertilizer + agriculture: food crisis beneficiaries",
+  "horizon": "4Y (2022-2025)"
+}

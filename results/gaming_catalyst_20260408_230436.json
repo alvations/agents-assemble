@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.26269941688774456,
+    "cagr": 0.06021640865221456,
+    "annual_volatility": 0.1451409242077691,
+    "sharpe_ratio": 0.20655451294806382,
+    "sortino_ratio": 0.2901346609305014,
+    "calmar_ratio": 0.254022411289463,
+    "max_drawdown": -0.23705155913820886,
+    "max_drawdown_date": "2024-09-06",
+    "win_rate": 0.47105788423153694,
+    "profit_factor": 1.0953814331804081,
+    "num_trading_days": 1002,
+    "skewness": -0.18915380382263525,
+    "kurtosis": 3.5721209586412535,
+    "best_day": 0.041580493086730286,
+    "worst_day": -0.04675151168877034,
+    "avg_daily_return": 0.00027461618385700724,
+    "black_swan_resilience": 72.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.048451288546159876,
+    "beta": 0.3613735561791403,
+    "information_ratio": -0.2794450115033616,
+    "tracking_error": 0.17338398093242408
+  },
+  "trade_metrics": {
+    "num_trades": 975,
+    "num_buys": 451,
+    "num_sells": 524,
+    "total_commission": 0.0,
+    "total_slippage": 7425.343242632857,
+    "total_transaction_costs": 7425.343242632857,
+    "avg_trade_size": 7615.736659110632
+  },
+  "final_positions": {
+    "TTWO": {
+      "qty": 74.0,
+      "avg_cost": 248.5800018310547,
+      "realized_pnl": 1090.4121170043984
+    },
+    "WBD": {
+      "qty": 659.0,
+      "avg_cost": 28.75,
+      "realized_pnl": 8910.506586074825
+    },
+    "EA": {
+      "qty": 93.0,
+      "avg_cost": 203.59735107421875,
+      "realized_pnl": 3698.173866271971
+    },
+    "U": {
+      "qty": 421.0,
+      "avg_cost": 45.21555936364833,
+      "realized_pnl": -1758.5199146270797
+    }
+  },
+  "source": "crisis",
+  "description": "Buy-the-rumor on game publishers: NTDOY, TTWO, EA momentum",
+  "horizon": "4Y (2022-2025)"
+}

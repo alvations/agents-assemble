@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.1895720476283569,
+    "cagr": 0.044478323917232165,
+    "annual_volatility": 0.1425662702743712,
+    "sharpe_ratio": 0.10242292673780792,
+    "sortino_ratio": 0.14297764743709748,
+    "calmar_ratio": 0.14956463118259058,
+    "max_drawdown": -0.29738530804741137,
+    "max_drawdown_date": "2025-04-07",
+    "win_rate": 0.5259481037924152,
+    "profit_factor": 1.07552342615869,
+    "num_trading_days": 1002,
+    "skewness": -0.17441374502090834,
+    "kurtosis": 4.6656070630863065,
+    "best_day": 0.04887795161077002,
+    "worst_day": -0.048189477333757114,
+    "avg_daily_return": 0.00021359452412298677,
+    "black_swan_resilience": 69.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.06418937328114227,
+    "beta": 0.3527833079674209,
+    "information_ratio": -0.3713489014625799,
+    "tracking_error": 0.1728546200845851
+  },
+  "trade_metrics": {
+    "num_trades": 1318,
+    "num_buys": 650,
+    "num_sells": 668,
+    "total_commission": 0.0,
+    "total_slippage": 5795.058399326331,
+    "total_transaction_costs": 5795.058399326331,
+    "avg_trade_size": 4396.857662614813
+  },
+  "final_positions": {
+    "DVN": {
+      "qty": 379.0,
+      "avg_cost": 34.084343126391055,
+      "realized_pnl": -46.84694719373181
+    },
+    "XLE": {
+      "qty": 308.0,
+      "avg_cost": 44.43209724596568,
+      "realized_pnl": -7493.4016848087285
+    },
+    "HAL": {
+      "qty": 487.0,
+      "avg_cost": 26.497893865545425,
+      "realized_pnl": 4564.863823629015
+    },
+    "NOC": {
+      "qty": 24.0,
+      "avg_cost": 582.2218983968099,
+      "realized_pnl": 616.0024108886719
+    },
+    "RTX": {
+      "qty": 74.0,
+      "avg_cost": 171.82093068715687,
+      "realized_pnl": 2691.274848937979
+    },
+    "GLD": {
+      "qty": 15.0,
+      "avg_cost": 398.6000061035156,
+      "realized_pnl": 5539.718414306644
+    },
+    "SLV": {
+      "qty": 90.0,
+      "avg_cost": 62.470001220703125,
+      "realized_pnl": 5679.748254775999
+    },
+    "LMT": {
+      "qty": 28.0,
+      "avg_cost": 482.19662039620533,
+      "realized_pnl": 2830.554351806641
+    },
+    "ITA": {
+      "qty": 63.0,
+      "avg_cost": 210.08777630518352,
+      "realized_pnl": 4713.063896179191
+    }
+  },
+  "source": "crisis",
+  "description": "War/crisis beneficiaries: energy + defense spike when vol rises",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.8571573835013071,
+    "cagr": 0.16787590777345573,
+    "annual_volatility": 0.13976614720897115,
+    "sharpe_ratio": 0.9032942539550183,
+    "sortino_ratio": 1.3394386995715537,
+    "calmar_ratio": 1.0697719702225161,
+    "max_drawdown": -0.1569268147290651,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5459081836327345,
+    "profit_factor": 1.2252007654682258,
+    "num_trading_days": 1002,
+    "skewness": 0.28760681586071457,
+    "kurtosis": 4.081500397722275,
+    "best_day": 0.05800148581612019,
+    "worst_day": -0.03575506269431317,
+    "avg_daily_return": 0.0006566417583122741,
+    "black_swan_resilience": 82.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.0592082105750813,
+    "beta": 0.6753155594329484,
+    "information_ratio": 0.6555450912213803,
+    "tracking_error": 0.09031905107361478
+  },
+  "trade_metrics": {
+    "num_trades": 289,
+    "num_buys": 160,
+    "num_sells": 129,
+    "total_commission": 0.0,
+    "total_slippage": 1753.6937578048696,
+    "total_transaction_costs": 1753.6937578048696,
+    "avg_trade_size": 6068.144490674293
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 110.0,
+      "avg_cost": 480.16225773358593,
+      "realized_pnl": 2623.2338182237527
+    },
+    "BND": {
+      "qty": 509.0,
+      "avg_cost": 70.57024408188977,
+      "realized_pnl": -362.7225804028214
+    },
+    "AVGO": {
+      "qty": 42.0,
+      "avg_cost": 307.5460300023447,
+      "realized_pnl": 7745.5660153780145
+    },
+    "LLY": {
+      "qty": 15.0,
+      "avg_cost": 849.4189987182617,
+      "realized_pnl": 8185.811103820801
+    },
+    "XLE": {
+      "qty": 363.0,
+      "avg_cost": 44.98017883300781,
+      "realized_pnl": 3133.564821243285
+    },
+    "GLD": {
+      "qty": 42.0,
+      "avg_cost": 368.7799987792969,
+      "realized_pnl": 6469.929885864259
+    }
+  },
+  "source": "portfolio",
+  "description": "60% passive core (SPY+BND) + 40% active satellite (momentum+themes)",
+  "horizon": "4Y (2022-2025)"
+}

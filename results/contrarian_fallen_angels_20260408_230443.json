@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.07664905199391336,
+    "cagr": 0.018686508564854654,
+    "annual_volatility": 0.13224733543741105,
+    "sharpe_ratio": -0.08993481904897986,
+    "sortino_ratio": -0.1243013632547435,
+    "calmar_ratio": 0.09425325225897038,
+    "max_drawdown": -0.19825850161129266,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.42015968063872255,
+    "profit_factor": 1.0457247657358175,
+    "num_trading_days": 1002,
+    "skewness": -0.36526471488947676,
+    "kurtosis": 6.780087834516965,
+    "best_day": 0.04438708106875411,
+    "worst_day": -0.04490035653766722,
+    "avg_daily_return": 0.00010845287794097193,
+    "black_swan_resilience": 72.3,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08998118863351978,
+    "beta": 0.42606329850678715,
+    "information_ratio": -0.6027281598094156,
+    "tracking_error": 0.1492898368345227
+  },
+  "trade_metrics": {
+    "num_trades": 233,
+    "num_buys": 126,
+    "num_sells": 107,
+    "total_commission": 0.0,
+    "total_slippage": 2474.965435641287,
+    "total_transaction_costs": 2474.965435641287,
+    "avg_trade_size": 10622.16925167935
+  },
+  "final_positions": {
+    "PYPL": {
+      "qty": 201.0,
+      "avg_cost": 62.3911018371582,
+      "realized_pnl": -5375.739219665528
+    },
+    "BA": {
+      "qty": 67.0,
+      "avg_cost": 186.4600067138672,
+      "realized_pnl": -3911.580993652342
+    },
+    "NCLH": {
+      "qty": 676.0,
+      "avg_cost": 18.56999969482422,
+      "realized_pnl": 11893.210356712341
+    },
+    "CLX": {
+      "qty": 119.0,
+      "avg_cost": 105.24427795410156,
+      "realized_pnl": 3269.6319503784175
+    }
+  },
+  "source": "crisis",
+  "description": "Buy beaten-down quality + activist catalysts: BA, INTC, PFE, NCLH",
+  "horizon": "4Y (2022-2025)"
+}

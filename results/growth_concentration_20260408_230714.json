@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.4500364311592946,
+    "cagr": 0.09762878945708442,
+    "annual_volatility": 0.2264933809651403,
+    "sharpe_ratio": 0.3527422277619291,
+    "sortino_ratio": 0.4982138916706829,
+    "calmar_ratio": 0.39750449552299116,
+    "max_drawdown": -0.2456042398429622,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.48502994011976047,
+    "profit_factor": 1.097047145753626,
+    "num_trading_days": 1002,
+    "skewness": -0.10128609894793401,
+    "kurtosis": 1.4410885694948012,
+    "best_day": 0.05701823165326814,
+    "worst_day": -0.05447675871613733,
+    "avg_daily_return": 0.0004726886714221155,
+    "black_swan_resilience": 73.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.011038907741290016,
+    "beta": 0.7435224833068701,
+    "information_ratio": -0.058591788695739326,
+    "tracking_error": 0.18840366520663573
+  },
+  "trade_metrics": {
+    "num_trades": 1231,
+    "num_buys": 592,
+    "num_sells": 639,
+    "total_commission": 0.0,
+    "total_slippage": 11563.22830448531,
+    "total_transaction_costs": 11563.22830448531,
+    "avg_trade_size": 9393.361742067686
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 145.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 6454.270673751833
+    },
+    "SHOP": {
+      "qty": 176.0,
+      "avg_cost": 159.85000610351562,
+      "realized_pnl": 2101.65971374512
+    },
+    "PLTR": {
+      "qty": 155.0,
+      "avg_cost": 193.91676990139868,
+      "realized_pnl": 21682.8523826599
+    },
+    "GOOGL": {
+      "qty": 81.0,
+      "avg_cost": 289.11118819978503,
+      "realized_pnl": 9734.206386089332
+    },
+    "AMZN": {
+      "qty": 106.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": -4784.635772705078
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Concentrated high-conviction growth bets, Tiger Global-inspired",
+  "horizon": "4Y (2022-2025)"
+}

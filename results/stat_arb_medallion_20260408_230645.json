@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": 0.1382407088127935,
+    "cagr": 0.0329923952422444,
+    "annual_volatility": 0.041121715075080965,
+    "sharpe_ratio": -0.1413508999680681,
+    "sortino_ratio": -0.20357977202908054,
+    "calmar_ratio": 0.8672095334533177,
+    "max_drawdown": -0.03804431797568608,
+    "max_drawdown_date": "2022-02-24",
+    "win_rate": 0.47904191616766467,
+    "profit_factor": 1.1656394183042593,
+    "num_trading_days": 1002,
+    "skewness": 0.19543193443491041,
+    "kurtosis": 3.2135543515061284,
+    "best_day": 0.012763262701759093,
+    "worst_day": -0.010516336566635198,
+    "avg_daily_return": 0.00013258402376708356,
+    "black_swan_resilience": 87.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.07567530195613004,
+    "beta": 0.10804111728410735,
+    "information_ratio": -0.45946558196232196,
+    "tracking_error": 0.16470287422385366
+  },
+  "trade_metrics": {
+    "num_trades": 1708,
+    "num_buys": 901,
+    "num_sells": 807,
+    "total_commission": 0.0,
+    "total_slippage": 9251.329021064774,
+    "total_transaction_costs": 9251.329021064774,
+    "avg_trade_size": 5416.4689818880315
+  },
+  "final_positions": {
+    "PG": {
+      "qty": 80.0,
+      "avg_cost": 141.6840362548828,
+      "realized_pnl": 1928.0127716064499
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Short-term mean reversion across sector pairs, Renaissance-inspired",
+  "horizon": "4Y (2022-2025)"
+}
