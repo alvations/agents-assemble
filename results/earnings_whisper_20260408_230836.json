@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.02441616644338862,
+    "cagr": 0.006065592328578839,
+    "annual_volatility": 0.12717420402848872,
+    "sharpe_ratio": -0.19726035657711546,
+    "sortino_ratio": -0.2808298345091573,
+    "calmar_ratio": 0.02570022035575317,
+    "max_drawdown": -0.2360132420896156,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.4630738522954092,
+    "profit_factor": 1.0220729367902261,
+    "num_trading_days": 1002,
+    "skewness": 0.2210013444031224,
+    "kurtosis": 4.666412243564019,
+    "best_day": 0.04301288407955406,
+    "worst_day": -0.03686042613141438,
+    "avg_daily_return": 5.6100542021141696e-05,
+    "black_swan_resilience": 77.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1026021048697956,
+    "beta": 0.40748659238414164,
+    "information_ratio": -0.6889787106164467,
+    "tracking_error": 0.14891912230204457
+  },
+  "trade_metrics": {
+    "num_trades": 5107,
+    "num_buys": 2475,
+    "num_sells": 2632,
+    "total_commission": 0.0,
+    "total_slippage": 26985.28776028055,
+    "total_transaction_costs": 26985.28776028055,
+    "avg_trade_size": 5283.980372093325
+  },
+  "final_positions": {
+    "META": {
+      "qty": 16.0,
+      "avg_cost": 658.2139511108398,
+      "realized_pnl": 7079.490417480463
+    },
+    "JPM": {
+      "qty": 32.0,
+      "avg_cost": 319.1398010253906,
+      "realized_pnl": 1545.0635223388658
+    },
+    "CRM": {
+      "qty": 39.0,
+      "avg_cost": 266.0799865722656,
+      "realized_pnl": -1040.87838745117
+    }
+  },
+  "source": "news_event",
+  "description": "Pre-earnings drift: accumulation patterns predict positive surprises",
+  "horizon": "4Y (2022-2025)"
+}

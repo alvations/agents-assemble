@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": -0.06992677866711483,
+    "cagr": -0.018008616488112472,
+    "annual_volatility": 0.10362230302338428,
+    "sharpe_ratio": -0.5028208653022167,
+    "sortino_ratio": -0.7122770077258094,
+    "calmar_ratio": -0.07381229961891642,
+    "max_drawdown": -0.24397853177707085,
+    "max_drawdown_date": "2025-06-11",
+    "win_rate": 0.47704590818363274,
+    "profit_factor": 0.9768667487519073,
+    "num_trading_days": 1002,
+    "skewness": 0.5855913115137896,
+    "kurtosis": 7.343061027206143,
+    "best_day": 0.04872476888129551,
+    "worst_day": -0.026337324807324425,
+    "avg_daily_return": -5.1109883521541086e-05,
+    "black_swan_resilience": 82.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1266763136864869,
+    "beta": 0.21624943176580633,
+    "information_ratio": -0.7419337193913559,
+    "tracking_error": 0.17073804623734531
+  },
+  "trade_metrics": {
+    "num_trades": 3449,
+    "num_buys": 1643,
+    "num_sells": 1806,
+    "total_commission": 0.0,
+    "total_slippage": 16936.90000057795,
+    "total_transaction_costs": 16936.90000057795,
+    "avg_trade_size": 4910.6697595181
+  },
+  "final_positions": {
+    "GILD": {
+      "qty": 81.0,
+      "avg_cost": 121.22083069226757,
+      "realized_pnl": -571.1887370281389
+    },
+    "ABBV": {
+      "qty": 44.0,
+      "avg_cost": 225.8372562953404,
+      "realized_pnl": -385.8403342110715
+    },
+    "JNJ": {
+      "qty": 48.0,
+      "avg_cost": 205.00406222873264,
+      "realized_pnl": 389.73089090983615
+    },
+    "AMGN": {
+      "qty": 30.0,
+      "avg_cost": 325.0576171875,
+      "realized_pnl": -1607.0577545166045
+    },
+    "IONS": {
+      "qty": 125.0,
+      "avg_cost": 79.40347533530377,
+      "realized_pnl": 3687.0358344544707
+    },
+    "IBB": {
+      "qty": 59.0,
+      "avg_cost": 170.09741973876953,
+      "realized_pnl": 1336.4442520141638
+    },
+    "BIIB": {
+      "qty": 56.0,
+      "avg_cost": 175.2555904033021,
+      "realized_pnl": 1970.2454661493707
+    },
+    "XBI": {
+      "qty": 81.0,
+      "avg_cost": 123.99130613907523,
+      "realized_pnl": 2820.054403222127
+    }
+  },
+  "source": "news_event",
+  "description": "Biotech FDA event plays: volume spike + momentum in pharma/biotech",
+  "horizon": "4Y (2022-2025)"
+}

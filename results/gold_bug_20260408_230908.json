@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "total_return": 0.8543487659042075,
+    "cagr": 0.1674328937287095,
+    "annual_volatility": 0.17305706404926638,
+    "sharpe_ratio": 0.7575781774348721,
+    "sortino_ratio": 1.0978609836291748,
+    "calmar_ratio": 0.6949501733011936,
+    "max_drawdown": -0.24092791132544056,
+    "max_drawdown_date": "2024-02-13",
+    "win_rate": 0.5209580838323353,
+    "profit_factor": 1.1866309879499908,
+    "num_trading_days": 1002,
+    "skewness": -0.17413645809783296,
+    "kurtosis": 2.108311043089147,
+    "best_day": 0.04695848553858495,
+    "worst_day": -0.059461751748718816,
+    "avg_daily_return": 0.0006759048436431403,
+    "black_swan_resilience": 72.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.05876519653033507,
+    "beta": 0.2116509665387645,
+    "information_ratio": 0.26639704386774593,
+    "tracking_error": 0.2205925248911896
+  },
+  "trade_metrics": {
+    "num_trades": 758,
+    "num_buys": 361,
+    "num_sells": 397,
+    "total_commission": 0.0,
+    "total_slippage": 1250.2558088951096,
+    "total_transaction_costs": 1250.2558088951096,
+    "avg_trade_size": 1649.4139959038405
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 140.0,
+      "avg_cost": 237.98960548186557,
+      "realized_pnl": 5626.3862896779965
+    },
+    "GDX": {
+      "qty": 434.0,
+      "avg_cost": 40.03886897676486,
+      "realized_pnl": 5710.472573339669
+    },
+    "SLV": {
+      "qty": 423.0,
+      "avg_cost": 26.45351934287467,
+      "realized_pnl": 4090.228435377649
+    },
+    "NEM": {
+      "qty": 187.0,
+      "avg_cost": 50.18525486583079,
+      "realized_pnl": 2672.2462689954377
+    }
+  },
+  "source": "recession",
+  "description": "Gold/silver/miners as recession and inflation hedge",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.07272535909267819,
+    "cagr": 0.01775457294989291,
+    "annual_volatility": 0.06847838030705299,
+    "sharpe_ratio": -0.28087929380358206,
+    "sortino_ratio": -0.4061608301931405,
+    "calmar_ratio": 0.3165657639575106,
+    "max_drawdown": -0.056084943387232244,
+    "max_drawdown_date": "2022-03-08",
+    "win_rate": 0.4500998003992016,
+    "profit_factor": 1.0870497257172973,
+    "num_trading_days": 1002,
+    "skewness": 1.5753892019908742,
+    "kurtosis": 79.95724026355762,
+    "best_day": 0.0659464714889133,
+    "worst_day": -0.05018135951860603,
+    "avg_daily_return": 7.932383461087328e-05,
+    "black_swan_resilience": 97.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.09091312424848152,
+    "beta": 0.20248703477662625,
+    "information_ratio": -0.5868870141180926,
+    "tracking_error": 0.15490737068888033
+  },
+  "trade_metrics": {
+    "num_trades": 700,
+    "num_buys": 403,
+    "num_sells": 297,
+    "total_commission": 0.0,
+    "total_slippage": 4912.619291690829,
+    "total_transaction_costs": 4912.619291690829,
+    "avg_trade_size": 7018.027559558323
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "math",
+  "description": "Buy at Z < -2 (statistically oversold), sell at Z > 0",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,41 @@
+{
+  "strategy_name": "merger_arbitrage",
+  "is_winning": false,
+  "generated_at": "2026-04-08T23:08:56.118837",
+  "overall_assessment": "AVOID \u2014 Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "12.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "10.0%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Strategy has low win rate \u2014 enter only on strong setup days. Be patient.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "IEX",
+      "action": "BUY",
+      "current_position": 61.0,
+      "annual_volatility": "27%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "13.5% below entry",
+      "take_profit": "5.6% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "9.4% trailing after 2.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=IEX",
+      "yahoo_url": "https://finance.yahoo.com/quote/IEX/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "-9.98%",
+    "sharpe_ratio": "-2.42",
+    "max_drawdown": "-9.98%",
+    "win_rate": "15.17%",
+    "alpha": "-13.47%"
+  }
+}

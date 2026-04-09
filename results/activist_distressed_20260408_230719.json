@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.1379959848508001,
+    "cagr": 0.03293671448094804,
+    "annual_volatility": 0.1294710379001323,
+    "sharpe_ratio": 0.012879594045849244,
+    "sortino_ratio": 0.018312991887355946,
+    "calmar_ratio": 0.15734032722542574,
+    "max_drawdown": -0.20933421877125447,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.36726546906187624,
+    "profit_factor": 1.078224998257897,
+    "num_trading_days": 1002,
+    "skewness": -0.04037354641614704,
+    "kurtosis": 15.607424551839653,
+    "best_day": 0.07129273590424434,
+    "worst_day": -0.06272439395839491,
+    "avg_daily_return": 0.00016226706282637576,
+    "black_swan_resilience": 75.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0757309827174264,
+    "beta": 0.45175961929641273,
+    "information_ratio": -0.5369331916014521,
+    "tracking_error": 0.14104358587248414
+  },
+  "trade_metrics": {
+    "num_trades": 160,
+    "num_buys": 84,
+    "num_sells": 76,
+    "total_commission": 0.0,
+    "total_slippage": 1702.530710133553,
+    "total_transaction_costs": 1702.530710133553,
+    "avg_trade_size": 10640.816938334703
+  },
+  "final_positions": {
+    "BA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "INTC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PFE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NKE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PYPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DIS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WBD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PARA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HAS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MMM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DOW": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "hedge_fund",
+  "description": "Deep-value activist targets: buy >20% below SMA200, catalyst-driven recovery",
+  "horizon": "4Y (2022-2025)"
+}

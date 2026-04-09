@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.02870968878970781,
+    "cagr": 0.007120983476905707,
+    "annual_volatility": 0.07215202823182686,
+    "sharpe_ratio": -0.40893525117678,
+    "sortino_ratio": -0.5708553652244949,
+    "calmar_ratio": 0.03742332052949349,
+    "max_drawdown": -0.19028197862062046,
+    "max_drawdown_date": "2022-10-24",
+    "win_rate": 0.5139720558882236,
+    "profit_factor": 1.0235877885492706,
+    "num_trading_days": 1002,
+    "skewness": 0.11998183879095521,
+    "kurtosis": 2.9679637991805015,
+    "best_day": 0.025393219936344025,
+    "worst_day": -0.02466822505948485,
+    "avg_daily_return": 3.856451442659521e-05,
+    "black_swan_resilience": 79.2,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.10154671372146873,
+    "beta": 0.0554113682352826,
+    "information_ratio": -0.5502505291596654,
+    "tracking_error": 0.18454632633711301
+  },
+  "trade_metrics": {
+    "num_trades": 651,
+    "num_buys": 333,
+    "num_sells": 318,
+    "total_commission": 0.0,
+    "total_slippage": 1844.0631073837258,
+    "total_transaction_costs": 1844.0631073837258,
+    "avg_trade_size": 2832.662223323699
+  },
+  "final_positions": {
+    "SHY": {
+      "qty": 502.0,
+      "avg_cost": 80.76345272379527,
+      "realized_pnl": 2780.3740330312703
+    },
+    "IEF": {
+      "qty": 269.0,
+      "avg_cost": 90.79489634332218,
+      "realized_pnl": -2379.9834915564925
+    },
+    "TLT": {
+      "qty": 118.0,
+      "avg_cost": 85.03701667205247,
+      "realized_pnl": -6737.727461164584
+    },
+    "GLD": {
+      "qty": 26.0,
+      "avg_cost": 317.8566051586383,
+      "realized_pnl": 6939.652807122628
+    },
+    "TIP": {
+      "qty": 94.0,
+      "avg_cost": 108.12279311304405,
+      "realized_pnl": -201.0621837019838
+    }
+  },
+  "source": "recession",
+  "description": "Flight to quality: long-duration bonds when recession signals fire",
+  "horizon": "4Y (2022-2025)"
+}

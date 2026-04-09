@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": -0.029281909842759468,
+    "cagr": -0.007422509181265857,
+    "annual_volatility": 0.12130231845271262,
+    "sharpe_ratio": -0.3241895043871663,
+    "sortino_ratio": -0.42549052630688666,
+    "calmar_ratio": -0.029721189647426413,
+    "max_drawdown": -0.2497379569699889,
+    "max_drawdown_date": "2025-06-13",
+    "win_rate": 0.5369261477045908,
+    "profit_factor": 0.9998465034158539,
+    "num_trading_days": 1002,
+    "skewness": -0.5854851529959201,
+    "kurtosis": 3.7140992901877716,
+    "best_day": 0.04269812841556897,
+    "worst_day": -0.036678634330013504,
+    "avg_daily_return": -4.014804634956202e-07,
+    "black_swan_resilience": 67.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.11609020637964029,
+    "beta": 0.45497537884086603,
+    "information_ratio": -0.874166542348635,
+    "tracking_error": 0.13280101760442486
+  },
+  "trade_metrics": {
+    "num_trades": 1052,
+    "num_buys": 516,
+    "num_sells": 536,
+    "total_commission": 0.0,
+    "total_slippage": 3493.7610146408106,
+    "total_transaction_costs": 3493.7610146408106,
+    "avg_trade_size": 3321.06560327073
+  },
+  "final_positions": {
+    "COST": {
+      "qty": 9.0,
+      "avg_cost": 930.5616048177084,
+      "realized_pnl": 5918.7875671386755
+    },
+    "AAPL": {
+      "qty": 28.0,
+      "avg_cost": 228.29169725544907,
+      "realized_pnl": 917.3408782551145
+    },
+    "UNH": {
+      "qty": 24.0,
+      "avg_cost": 348.94989939371743,
+      "realized_pnl": -2104.7656622314444
+    }
+  },
+  "source": "recession",
+  "description": "Rich richer, poor poorer: luxury+tech UP while dollar stores DOWN. Long the top arm of K.",
+  "horizon": "4Y (2022-2025)"
+}

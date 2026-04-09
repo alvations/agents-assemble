@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.002223163175650855,
+    "cagr": -0.0005577814484065691,
+    "annual_volatility": 0.059238378039160294,
+    "sharpe_ratio": -0.6417382696342406,
+    "sortino_ratio": -0.8292549877061228,
+    "calmar_ratio": -0.004774782773692916,
+    "max_drawdown": -0.11681818311813363,
+    "max_drawdown_date": "2022-06-01",
+    "win_rate": 0.08982035928143713,
+    "profit_factor": 1.009555730871117,
+    "num_trading_days": 1002,
+    "skewness": -3.251073403324065,
+    "kurtosis": 76.90938653865236,
+    "best_day": 0.03504858279538503,
+    "worst_day": -0.052779277388458334,
+    "avg_daily_return": 4.794568272255957e-06,
+    "black_swan_resilience": 68.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.109225478646781,
+    "beta": 0.05541168192399236,
+    "information_ratio": -0.6071775391096242,
+    "tracking_error": 0.17989051243060003
+  },
+  "trade_metrics": {
+    "num_trades": 430,
+    "num_buys": 205,
+    "num_sells": 225,
+    "total_commission": 0.0,
+    "total_slippage": 5900.220779425622,
+    "total_transaction_costs": 5900.220779425622,
+    "avg_trade_size": 13721.44367308284
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LLY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AVGO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "news_event",
+  "description": "Buy unusual volume + positive price moves (news proxy)",
+  "horizon": "4Y (2022-2025)"
+}

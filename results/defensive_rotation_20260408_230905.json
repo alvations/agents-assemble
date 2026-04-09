@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.3190503747776303,
+    "cagr": 0.07188424079699374,
+    "annual_volatility": 0.13940177601155623,
+    "sharpe_ratio": 0.28808427961712224,
+    "sortino_ratio": 0.3952172875686197,
+    "calmar_ratio": 0.34095796480729984,
+    "max_drawdown": -0.21083021432750737,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5369261477045908,
+    "profit_factor": 1.099735201403953,
+    "num_trading_days": 1002,
+    "skewness": -0.45111403302638203,
+    "kurtosis": 2.2573013656866365,
+    "best_day": 0.03203981255594979,
+    "worst_day": -0.055345815337991655,
+    "avg_daily_return": 0.00031501280017077316,
+    "black_swan_resilience": 70.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0367834564013807,
+    "beta": 0.6662236739884658,
+    "information_ratio": -0.39559365065210755,
+    "tracking_error": 0.09298292917681017
+  },
+  "trade_metrics": {
+    "num_trades": 1012,
+    "num_buys": 508,
+    "num_sells": 504,
+    "total_commission": 0.0,
+    "total_slippage": 2164.7255857467653,
+    "total_transaction_costs": 2164.7255857467653,
+    "avg_trade_size": 2139.0569029118233
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 58.0,
+      "avg_cost": 580.0239135242325,
+      "realized_pnl": 3385.5551972961184
+    },
+    "QQQ": {
+      "qty": 54.0,
+      "avg_cost": 513.6085347167472,
+      "realized_pnl": 4031.8096356906726
+    },
+    "XLK": {
+      "qty": 137.0,
+      "avg_cost": 115.87919553389492,
+      "realized_pnl": 1422.445920040575
+    },
+    "XLP": {
+      "qty": 171.0,
+      "avg_cost": 73.27800231106036,
+      "realized_pnl": 864.7244799386413
+    },
+    "XLV": {
+      "qty": 86.0,
+      "avg_cost": 133.79287934351376,
+      "realized_pnl": 674.3623290475618
+    },
+    "XLU": {
+      "qty": 156.0,
+      "avg_cost": 36.89904166563251,
+      "realized_pnl": 2330.6975709141116
+    }
+  },
+  "source": "recession",
+  "description": "Rotate to staples/utilities/healthcare when recession signals fire",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.40212882815810436,
+    "cagr": 0.08842303970657706,
+    "annual_volatility": 0.13427472006262528,
+    "sharpe_ratio": 0.4079544557639103,
+    "sortino_ratio": 0.5890555861115075,
+    "calmar_ratio": 0.4221341227301448,
+    "max_drawdown": -0.20946669540643303,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5299401197604791,
+    "profit_factor": 1.1324605303882485,
+    "num_trading_days": 1002,
+    "skewness": 0.4440473173104672,
+    "kurtosis": 8.788517999164615,
+    "best_day": 0.07647717817607935,
+    "worst_day": -0.0396706125054509,
+    "avg_daily_return": 0.0003730227609896743,
+    "black_swan_resilience": 82.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.02024465749179738,
+    "beta": 0.6886619800645132,
+    "information_ratio": -0.2661342709595796,
+    "tracking_error": 0.07606933680056611
+  },
+  "trade_metrics": {
+    "num_trades": 738,
+    "num_buys": 387,
+    "num_sells": 351,
+    "total_commission": 0.0,
+    "total_slippage": 903.7325688438419,
+    "total_transaction_costs": 903.7325688438419,
+    "avg_trade_size": 1224.5698764821702
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 324.0,
+      "avg_cost": 89.50463393715505,
+      "realized_pnl": -4138.1306157753315
+    },
+    "IEF": {
+      "qty": 221.0,
+      "avg_cost": 94.35920460916476,
+      "realized_pnl": -761.7090507227375
+    },
+    "XLP": {
+      "qty": 272.0,
+      "avg_cost": 78.41482818114629,
+      "realized_pnl": 550.1742915779455
+    },
+    "GLD": {
+      "qty": 53.0,
+      "avg_cost": 290.2177757364895,
+      "realized_pnl": 5606.312042012455
+    },
+    "XLU": {
+      "qty": 166.0,
+      "avg_cost": 44.94696467828185,
+      "realized_pnl": -15.51283633611996
+    },
+    "XLV": {
+      "qty": 91.0,
+      "avg_cost": 143.72737745059433,
+      "realized_pnl": -1090.5962267639839
+    },
+    "SPY": {
+      "qty": 31.0,
+      "avg_cost": 579.5838137810019,
+      "realized_pnl": 14607.872030921979
+    }
+  },
+  "source": "recession",
+  "description": "TLT/SHY ratio proxy for yield curve: go defensive on flattening",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": -0.09978433608167347,
+    "cagr": -0.026008184475033835,
+    "annual_volatility": 0.02702197935459006,
+    "sharpe_ratio": -2.4163454000096167,
+    "sortino_ratio": -2.9372050914147576,
+    "calmar_ratio": -0.2606439597267665,
+    "max_drawdown": -0.09978433608167347,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.15169660678642716,
+    "profit_factor": 0.7206057907041156,
+    "num_trading_days": 1002,
+    "skewness": -1.8092044551798823,
+    "kurtosis": 44.177377800030264,
+    "best_day": 0.017008338296823355,
+    "worst_day": -0.021267891026932273,
+    "avg_daily_return": -0.00010345504003658851,
+    "black_swan_resilience": 69.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.13467588167340827,
+    "beta": 0.02008131774914493,
+    "information_ratio": -0.7543435035524587,
+    "tracking_error": 0.17853389210508738
+  },
+  "trade_metrics": {
+    "num_trades": 426,
+    "num_buys": 213,
+    "num_sells": 213,
+    "total_commission": 0.0,
+    "total_slippage": 3118.685428318022,
+    "total_transaction_costs": 3118.685428318022,
+    "avg_trade_size": 7320.857812953107
+  },
+  "final_positions": {
+    "IEX": {
+      "qty": 61.0,
+      "avg_cost": 178.8634505975442,
+      "realized_pnl": -2299.124526977538
+    }
+  },
+  "source": "news_event",
+  "description": "M&A deal spread capture: buy targets at discount to deal price",
+  "horizon": "4Y (2022-2025)"
+}

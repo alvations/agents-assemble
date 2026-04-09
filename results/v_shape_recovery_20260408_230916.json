@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": -0.040466463278962084,
+    "cagr": -0.010301922292209276,
+    "annual_volatility": 0.1795001612572073,
+    "sharpe_ratio": -0.18738758309450648,
+    "sortino_ratio": -0.28040027809840207,
+    "calmar_ratio": -0.023089844696374585,
+    "max_drawdown": -0.44616680742884407,
+    "max_drawdown_date": "2023-01-19",
+    "win_rate": 0.5379241516966068,
+    "profit_factor": 1.010862571229258,
+    "num_trading_days": 1002,
+    "skewness": 1.1801190120702276,
+    "kurtosis": 23.048539610014164,
+    "best_day": 0.09511372430773912,
+    "worst_day": -0.07492773712482492,
+    "avg_daily_return": 2.2173270001333248e-05,
+    "black_swan_resilience": 76.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.11896961949058371,
+    "beta": 0.41792402594316513,
+    "information_ratio": -0.6139751009662111,
+    "tracking_error": 0.19376945303378185
+  },
+  "trade_metrics": {
+    "num_trades": 371,
+    "num_buys": 188,
+    "num_sells": 183,
+    "total_commission": 0.0,
+    "total_slippage": 1246.3422671284668,
+    "total_transaction_costs": 1246.3422671284668,
+    "avg_trade_size": 3359.4131189446566
+  },
+  "final_positions": {
+    "QQQ": {
+      "qty": 15.0,
+      "avg_cost": 556.3885176181793,
+      "realized_pnl": 2517.151738882066
+    }
+  },
+  "source": "recession",
+  "description": "Sharp crash \u2192 sharp rebound. Buy high-beta growth on confirmed V-recovery signal.",
+  "horizon": "4Y (2022-2025)"
+}

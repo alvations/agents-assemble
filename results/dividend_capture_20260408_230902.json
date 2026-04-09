@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": -0.13781166102023013,
+    "cagr": -0.036489754148359754,
+    "annual_volatility": 0.10259442773800653,
+    "sharpe_ratio": -0.694420144551882,
+    "sortino_ratio": -0.9171749772914417,
+    "calmar_ratio": -0.1335915051511532,
+    "max_drawdown": -0.2731442699674139,
+    "max_drawdown_date": "2023-10-06",
+    "win_rate": 0.49201596806387227,
+    "profit_factor": 0.9473363855554703,
+    "num_trading_days": 1002,
+    "skewness": -0.48095404384186435,
+    "kurtosis": 3.2114358517292114,
+    "best_day": 0.023317597929161105,
+    "worst_day": -0.04031328066474382,
+    "avg_daily_return": -0.00012706298379621373,
+    "black_swan_resilience": 67.4,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.1451574513467342,
+    "beta": 0.2564982959945574,
+    "information_ratio": -0.894610259750638,
+    "tracking_error": 0.16225775388177988
+  },
+  "trade_metrics": {
+    "num_trades": 2131,
+    "num_buys": 1047,
+    "num_sells": 1084,
+    "total_commission": 0.0,
+    "total_slippage": 10178.815459268597,
+    "total_transaction_costs": 10178.815459268597,
+    "avg_trade_size": 4776.544091632365
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 42.0,
+      "avg_cost": 201.63380650111608,
+      "realized_pnl": 439.3521575927747
+    },
+    "KO": {
+      "qty": 124.0,
+      "avg_cost": 71.12964641241575,
+      "realized_pnl": 807.2884239688983
+    },
+    "MCD": {
+      "qty": 28.0,
+      "avg_cost": 303.73074994768416,
+      "realized_pnl": -1853.9543762207013
+    },
+    "SCHD": {
+      "qty": 316.0,
+      "avg_cost": 27.388330459594727,
+      "realized_pnl": -647.2001647949218
+    },
+    "VYM": {
+      "qty": 60.0,
+      "avg_cost": 140.12637837727866,
+      "realized_pnl": 85.22826385498072
+    },
+    "VZ": {
+      "qty": 218.0,
+      "avg_cost": 39.78965759277344,
+      "realized_pnl": -3798.2183437347426
+    },
+    "HDV": {
+      "qty": 71.0,
+      "avg_cost": 121.31047323015001,
+      "realized_pnl": -336.2222011354268
+    },
+    "IBM": {
+      "qty": 28.0,
+      "avg_cost": 296.80265656446113,
+      "realized_pnl": 3370.4508318639937
+    },
+    "XOM": {
+      "qty": 72.0,
+      "avg_cost": 111.8846234944322,
+      "realized_pnl": -1109.4899697290089
+    }
+  },
+  "source": "news_event",
+  "description": "Dividend capture: hold high-yield low-vol stocks, harvest dividends",
+  "horizon": "4Y (2022-2025)"
+}

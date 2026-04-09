@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "total_return": 0.4302806845831444,
+    "cagr": 0.09386062738134249,
+    "annual_volatility": 0.14435991713878138,
+    "sharpe_ratio": 0.42393447971958526,
+    "sortino_ratio": 0.6122712078094419,
+    "calmar_ratio": 0.3992584984932362,
+    "max_drawdown": -0.2350873625372124,
+    "max_drawdown_date": "2022-10-11",
+    "win_rate": 0.5209580838323353,
+    "profit_factor": 1.131196497788125,
+    "num_trading_days": 1002,
+    "skewness": 0.07672604346516097,
+    "kurtosis": 4.349454526883009,
+    "best_day": 0.061020933677793154,
+    "worst_day": -0.046103821927516275,
+    "avg_daily_return": 0.0003985036182063093,
+    "black_swan_resilience": 76.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.014807069817031948,
+    "beta": 0.5229837460796455,
+    "information_ratio": -0.10645060443839635,
+    "tracking_error": 0.13909803420234118
+  },
+  "trade_metrics": {
+    "num_trades": 1501,
+    "num_buys": 767,
+    "num_sells": 734,
+    "total_commission": 0.0,
+    "total_slippage": 7190.321934510241,
+    "total_transaction_costs": 7190.321934510241,
+    "avg_trade_size": 4790.354386748988
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 81.0,
+      "avg_cost": 245.2309781940121,
+      "realized_pnl": 328.3325094718122
+    },
+    "SPY": {
+      "qty": 24.0,
+      "avg_cost": 677.509521484375,
+      "realized_pnl": 1039.2996826171736
+    },
+    "MCD": {
+      "qty": 39.0,
+      "avg_cost": 314.4404790242513,
+      "realized_pnl": -2638.713026428225
+    },
+    "NVDA": {
+      "qty": 23.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 24262.33668804166
+    },
+    "QQQ": {
+      "qty": 19.0,
+      "avg_cost": 618.4302368164062,
+      "realized_pnl": 3523.7992553710883
+    },
+    "JPM": {
+      "qty": 45.0,
+      "avg_cost": 314.45348375108506,
+      "realized_pnl": 6210.10339355469
+    },
+    "V": {
+      "qty": 18.0,
+      "avg_cost": 347.85918447133656,
+      "realized_pnl": -5738.268993480775
+    },
+    "GOOGL": {
+      "qty": 92.0,
+      "avg_cost": 212.50113111729368,
+      "realized_pnl": 2637.7393548442415
+    },
+    "AMZN": {
+      "qty": 53.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 2827.2489318847665
+    }
+  },
+  "source": "math",
+  "description": "Position sizing via Kelly criterion from rolling win rate and payoff ratio",
+  "horizon": "4Y (2022-2025)"
+}
