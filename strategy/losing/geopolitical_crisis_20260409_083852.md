@@ -81,8 +81,6 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Take profit:** Trim winners that are up 50%+ to lock in gains
-- **Stop loss:** Exit if drawdown exceeds 25% — the strategy may not recover quickly
-- **Time limit:** If flat (< 5% return) after 12 months, reassess whether the thesis still holds
+- **Exit rule:** Exit when disclosed position is sold by the insider. Follow their entries AND exits.
 
 </details>

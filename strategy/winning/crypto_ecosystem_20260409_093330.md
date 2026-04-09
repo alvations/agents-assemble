@@ -74,8 +74,6 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** If any single position doubles (+100%), trim half and let the rest ride
-- **Stop loss:** If the overall strategy drawdown exceeds 33%, reduce all positions by 50%
-- **Full exit:** If 3+ positions hit their individual stop losses within the same month, exit entirely and reassess
+- **Exit rule:** Size max 5% of portfolio. Exit 50% after any 3x gain. Crypto has 80%+ drawdowns — survive them.
 
 </details>
