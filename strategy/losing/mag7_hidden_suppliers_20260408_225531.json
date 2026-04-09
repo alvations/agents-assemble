@@ -1,0 +1,93 @@
+{
+  "strategy_name": "mag7_hidden_suppliers",
+  "is_winning": false,
+  "generated_at": "2026-04-08T22:55:30.653618",
+  "overall_assessment": "AVOID \u2014 Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "38.5%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "AJINY",
+      "action": "BUY",
+      "current_position": 469.0,
+      "annual_volatility": "34%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "35.6% below entry",
+      "take_profit": "7.1% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "24.9% trailing after 2.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AJINY",
+      "yahoo_url": "https://finance.yahoo.com/quote/AJINY/"
+    },
+    {
+      "symbol": "TOELY",
+      "action": "BUY",
+      "current_position": 126.0,
+      "annual_volatility": "52%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "10.8% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TOELY",
+      "yahoo_url": "https://finance.yahoo.com/quote/TOELY/"
+    },
+    {
+      "symbol": "ASML",
+      "action": "BUY",
+      "current_position": 14.0,
+      "annual_volatility": "44%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "9.3% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 3.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
+      "yahoo_url": "https://finance.yahoo.com/quote/ASML/"
+    },
+    {
+      "symbol": "ENTG",
+      "action": "BUY",
+      "current_position": 96.0,
+      "annual_volatility": "56%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "11.8% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "28.0% trailing after 4.7% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ENTG",
+      "yahoo_url": "https://finance.yahoo.com/quote/ENTG/"
+    },
+    {
+      "symbol": "MRAAY",
+      "action": "BUY",
+      "current_position": 1200.0,
+      "annual_volatility": "38%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "39.5% below entry",
+      "take_profit": "7.9% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "27.7% trailing after 3.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=MRAAY",
+      "yahoo_url": "https://finance.yahoo.com/quote/MRAAY/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "-20.93%",
+    "sharpe_ratio": "-0.46",
+    "max_drawdown": "-38.50%",
+    "win_rate": "48.54%",
+    "alpha": "-16.22%"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": -0.2092750295251311,
+    "cagr": -0.07553227121037187,
+    "annual_volatility": 0.20850245778184529,
+    "sharpe_ratio": -0.46118635048795376,
+    "sortino_ratio": -0.6346436340722307,
+    "calmar_ratio": -0.19618681291305204,
+    "max_drawdown": -0.3850017750369745,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.4853723404255319,
+    "profit_factor": 0.9549599811329859,
+    "num_trading_days": 752,
+    "skewness": -0.09064008409429768,
+    "kurtosis": 1.7002850769750162,
+    "best_day": 0.0625309125851945,
+    "worst_day": -0.05088646689052445,
+    "avg_daily_return": -0.00022593143709833196,
+    "black_swan_resilience": 66.1,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.16215685031013605,
+    "beta": 0.8314057925889656,
+    "information_ratio": -1.065593537399551,
+    "tracking_error": 0.15217514429175288
+  },
+  "trade_metrics": {
+    "num_trades": 1293,
+    "num_buys": 624,
+    "num_sells": 669,
+    "total_commission": 0.0,
+    "total_slippage": 3798.5243281507446,
+    "total_transaction_costs": 3798.5243281507446,
+    "avg_trade_size": 2937.7605012766817
+  },
+  "final_positions": {
+    "AJINY": {
+      "qty": 469.0,
+      "avg_cost": 18.8587220316527,
+      "realized_pnl": 1941.3894470464763
+    },
+    "TOELY": {
+      "qty": 126.0,
+      "avg_cost": 75.50154113769531,
+      "realized_pnl": -3028.4810562133785
+    },
+    "ASML": {
+      "qty": 14.0,
+      "avg_cost": 682.8981734295281,
+      "realized_pnl": -1928.5592694963702
+    },
+    "ENTG": {
+      "qty": 96.0,
+      "avg_cost": 108.07306532952231,
+      "realized_pnl": 1989.4996384554292
+    },
+    "MRAAY": {
+      "qty": 1200.0,
+      "avg_cost": 7.913748264312744,
+      "realized_pnl": -3327.316274642946
+    }
+  },
+  "source": "theme",
+  "description": "Hidden supply chain monopolies ALL Magnificent 7 depend on: ABF, EUV, wafers, capacitors"
+}
