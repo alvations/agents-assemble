@@ -74,6 +74,6 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Exit rules:**
 - **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
 - **Stop loss:** NO price-based stop loss. This strategy recovered from -20% drawdown to return 99% over the long term. Stopping out would have locked in losses.
-- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
+- **Exit rule:** Exit if US defense appropriations are actually reduced (not just threatened). Watch the final signed budget, not proposals.
 
 </details>
