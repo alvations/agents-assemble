@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.",
+    "timing": "BUY: When ETN/CAT/NUE are above SMA200 (capex cycle intact). STRONG BUY: On RSI pullback \u2014 only 2% of manufacturers have fully reshored, 98% of orders still coming.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

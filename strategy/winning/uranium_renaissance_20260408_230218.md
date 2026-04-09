@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** market
 - **limit_offset:** use market orders in volatile names
-- **timing:** Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+- **timing:** BUY: When uranium miners (CCJ, UUUU) are above SMA200. STRONG BUY: On pullback (RSI < 40) in secular uptrend — supply deficit is structural, every dip is an entry.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

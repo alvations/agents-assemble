@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.",
+    "timing": "BUY: When Korean names above SMA50. STRONG BUY: On governance reform catalyst or RSI < 35 \u2014 Korea discount is structural, any catalyst triggers re-rating.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

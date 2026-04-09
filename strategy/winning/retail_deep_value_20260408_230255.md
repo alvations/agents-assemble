@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** market
 - **limit_offset:** use market orders in volatile names
-- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
+- **timing:** BUY: When target names show MACD reversal from below signal line. STRONG BUY: When RSI < 35 AND price > 10% below SMA200 — deep value entry at maximum pessimism.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

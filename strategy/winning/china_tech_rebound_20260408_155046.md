@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** market
 - **limit_offset:** use market orders in volatile names
-- **timing:** Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+- **timing:** BUY: When holdings above SMA200 on weekly rebalance. STRONG BUY: On RSI pullback to 35-50 in confirmed uptrend — buy the dip in quality.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

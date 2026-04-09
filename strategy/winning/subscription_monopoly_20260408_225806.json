@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.",
+    "timing": "BUY: When CRM/ADP/NFLX are above SMA200 (subscriber growth intact). STRONG BUY: On RSI dip to 30-45 in uptrend \u2014 subscription revenue is predictable, dips always recover.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

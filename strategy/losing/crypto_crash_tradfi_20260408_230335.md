@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when COIN/GBTC drop >20% below SMA200. Rotate to TradFi.
+- **timing:** BUY: When banks (JPM, GS) are above SMA50. STRONG BUY: When COIN/GBTC drop >20% below SMA200 — crypto refugees rotate to TradFi.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

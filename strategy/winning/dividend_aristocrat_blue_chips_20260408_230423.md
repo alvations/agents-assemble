@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
+- **timing:** BUY: Always hold for income (DCA on rebalance). STRONG BUY: On price dip to SMA200 — yield expands, lock in higher income rate.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

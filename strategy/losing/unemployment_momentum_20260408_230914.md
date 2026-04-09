@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when staffing stocks (MAN, RHI, ADP) break below SMA200. Exit when staffing recovers above SMA200.
+- **timing:** BUY: When SaaS/AI names (CRM, NOW, NVDA) are above SMA200. STRONG BUY: When staffing stocks (MAN, RHI, ADP) break below SMA200 — automation acceleration confirmed.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

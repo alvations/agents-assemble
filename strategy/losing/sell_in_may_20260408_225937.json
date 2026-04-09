@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "CALENDAR: Enter stocks Nov 1, exit to bonds May 1. Seasonal effect.",
+    "timing": "CALENDAR: BUY stocks Nov 1 \u2192 Apr 30. Rotate to bonds May 1 \u2192 Oct 31. Seasonal effect.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

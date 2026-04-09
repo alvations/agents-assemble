@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
+- **timing:** BUY: When LAMR/CCO are above SMA50. STRONG BUY: On RSI pullback to 35-50 — billboard permits are frozen, digital conversion doubles revenue.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when UUP (dollar ETF) breaks below SMA200. Exit when dollar strengthens.
+- **timing:** BUY: When EM equities (EEM) are above SMA50. STRONG BUY: When UUP (dollar ETF) breaks below SMA200 — weak dollar boosts EM + commodities.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

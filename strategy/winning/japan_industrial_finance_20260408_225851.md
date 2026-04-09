@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
+- **timing:** BUY: When Japanese ADRs above SMA200. STRONG BUY: On Yen weakness (boosts exporters) or RSI < 40 — Buffett-approved, trading at book value with 15%+ ROE.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

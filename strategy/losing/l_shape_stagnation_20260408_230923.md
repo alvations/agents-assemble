@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when SPY death cross persists (SMA50 < SMA200 for 3+ months). Worst case hedge.
+- **timing:** BUY: Always hold 10-15% in GLD + short-duration bonds as insurance. STRONG BUY: When SPY death cross persists (SMA50 < SMA200 for 3+ months) — max defensive.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

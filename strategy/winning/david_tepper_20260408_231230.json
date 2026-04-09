@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.",
+    "timing": "BUY: When growth names are above SMA50. STRONG BUY: On RSI dip to 35-50 with MACD positive \u2014 Tepper style: concentrated high-conviction bets on macro trends.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "TRIGGER: Enter when COIN/GBTC drop >20% below SMA200. Rotate to TradFi.",
+    "timing": "TRIGGER ONLY: Do NOT hold without signal. Enter ONLY when COIN/GBTC drop >20% below SMA200. Then long TradFi banks (JPM, GS, SCHW). Exit when crypto stabilizes above SMA50.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

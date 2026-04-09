@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** AUTO: Regime detected weekly from SPY/VIX/XLE/TLT/DLTR. Strategy auto-switches between bull/bear/rotation/crisis/K-shape.
+- **timing:** AUTO: Always invested — regime detected weekly from SPY/VIX/XLE/TLT/DLTR. Allocation auto-switches between growth/defensive/rotation per regime.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

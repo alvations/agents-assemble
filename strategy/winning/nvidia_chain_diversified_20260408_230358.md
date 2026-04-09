@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter hedge when supply chain canaries (SMCI, AMKR, KLIC) break below SMA200 with volume spike.
+- **timing:** BUY: When NVDA is above SMA200, hold diversified AI chain. STRONG BUY hedge: When ANY chain member breaks SMA200 with RSI < 35 — first-one-out exit rule.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

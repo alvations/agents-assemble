@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** Strategy has low win rate — enter only on strong setup days. Be patient.
+- **timing:** BUY: When spread Z-score > 1.5 (divergence starting). STRONG BUY: When Z-score > 2.0 — statistical mean reversion at extreme levels.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

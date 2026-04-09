@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when VIX spikes >25 (VXX >1.3x SMA200). Buy fear in quality names.
+- **timing:** BUY: When disclosed positions above SMA200. STRONG BUY: On new filing or policy catalyst — political insider timing signal.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

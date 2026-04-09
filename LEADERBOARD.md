@@ -29,7 +29,7 @@ Always look at Return + Sharpe + Max DD **together**. A high return with terribl
 
 Risk: Stop loss 25.0% | Take profit 18.4% | Max allocation 11.4%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When AI infrastructure stocks (NVDA, AVGO, VRT) are above SMA50. STRONG BUY: When NVDA has golden cross (SMA50 > SMA200) + MACD positive — compute demand accelerating.
 
 ### #2 [uranium_renaissance](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260408_230218.md)
 
@@ -41,7 +41,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 13.3% | Max allocation 6.8%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When uranium miners (CCJ, UUUU) are above SMA200. STRONG BUY: On pullback (RSI < 40) in secular uptrend — supply deficit is structural, every dip is an entry.
 
 ### #3 [midstream_toll_road](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/midstream_toll_road_20260408_230240.md)
 
@@ -53,7 +53,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 23.8% | Take profit 10.4% | Max allocation 9.2%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When EPD/ET/MPLX are above SMA200 (volume growth intact). STRONG BUY: On RSI dip to 30-45 — yield expands on pullback, distribution still growing.
 
 ### #4 [david_tepper](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/david_tepper_20260408_231230.md)
 
@@ -65,7 +65,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 10.1% | Max allocation 8.8%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When growth names are above SMA50. STRONG BUY: On RSI dip to 35-50 with MACD positive — Tepper style: concentrated high-conviction bets on macro trends.
 
 ### #5 [uk_european_banking](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uk_european_banking_20260408_225907.md)
 
@@ -77,7 +77,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 9.7% | Max allocation 10.0%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When holdings above SMA200 on weekly rebalance. STRONG BUY: On RSI pullback to 35-50 in confirmed uptrend — buy the dip in quality.
 
 ### #6 [barbell_portfolio](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/barbell_portfolio_20260408_230402.md)
 
@@ -89,7 +89,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 9.7% | Max allocation 10.1%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When spread Z-score > 1.5 (divergence starting). STRONG BUY: When Z-score > 2.0 — statistical mean reversion at extreme levels.
 
 ### #7 [product_tanker_shipping](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/product_tanker_shipping_20260408_230507.md)
 
@@ -101,7 +101,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 9.4% | Max allocation 6.8%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When shipping stocks have golden cross (SMA50 > SMA200). STRONG BUY: When freight rates spike + volume surge — cycle upturn confirmed.
 
 ### #8 [stanley_druckenmiller](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/stanley_druckenmiller_20260408_231713.md)
 
@@ -113,7 +113,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 9.4% | Max allocation 8.8%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When top holdings above SMA50 > SMA200. STRONG BUY: On pullback with MACD crossover — Druckenmiller: big concentrated bets when conviction is high.
 
 ### #9 [momentum](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_20260408_231518.md)
 
@@ -125,7 +125,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 9.3% | Max allocation 6.5%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When trend leaders above SMA50 > SMA200 (golden cross). STRONG BUY: On RSI pullback to 40-55 in confirmed uptrend — ride the trend, don't fight it.
 
 ### #10 [concentrate_winners](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/concentrate_winners_20260408_230140.md)
 
@@ -137,7 +137,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 
 Risk: Stop loss 25.0% | Take profit 9.2% | Max allocation 6.7%
 
-Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.
+Timing: BUY: When holdings above SMA200 on weekly rebalance. STRONG BUY: On RSI pullback to 35-50 in confirmed uptrend — buy the dip in quality.
 
 ---
 
@@ -357,7 +357,7 @@ Timing: Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol c
 | 210 | [**meme_stock**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/meme_stock_20260408_231527.md) | -38.9% | -0.62 | -40.5% | 12 |
 | 211 | [**optimal_stopping**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/optimal_stopping_20260408_231217.md) | -42.5% | -1.84 | -42.5% | 4 |
 
-*Updated: 2026-04-09 07:21*
+*Updated: 2026-04-09 07:29*
 
 ---
 

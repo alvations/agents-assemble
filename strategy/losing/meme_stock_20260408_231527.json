@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "Strategy has low win rate \u2014 enter only on strong setup days. Be patient.",
+    "timing": "BUY: When holdings above SMA200 on weekly rebalance. STRONG BUY: On RSI pullback to 35-50 in confirmed uptrend \u2014 buy the dip in quality.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

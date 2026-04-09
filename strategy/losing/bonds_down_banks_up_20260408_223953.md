@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when TLT breaks below SMA200 (rates rising). Exit when bonds recover.
+- **timing:** BUY: When bank stocks (JPM, GS) are above SMA200. STRONG BUY: When TLT breaks below SMA200 — rising rates widen bank net interest margins.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

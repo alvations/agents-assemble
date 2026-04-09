@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** TRIGGER: Enter when VIX spikes >25 (VXX >1.3x SMA200). Buy fear in quality names.
+- **timing:** BUY: When cash-rich companies (AAPL, GOOGL, META) are above SMA200. STRONG BUY: When VIX spikes >25 and RSI < 40 — buy the fear, these companies buy themselves back.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

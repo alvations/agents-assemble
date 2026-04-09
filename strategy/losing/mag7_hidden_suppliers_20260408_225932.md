@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** market
 - **limit_offset:** use market orders in volatile names
-- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
+- **timing:** BUY: When QQQ above SMA200 (tech capex cycle intact). STRONG BUY: When hidden suppliers (AJINY, ENTG, ASML) dip to RSI < 35 — monopoly suppliers always recover.
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

@@ -24,7 +24,7 @@
 ## Execution Guidance
 - **order_type:** limit
 - **limit_offset:** 0.5% below current price for buys
-- **timing:** Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.
+- **timing:** BUY: Balanced allocation across consumer proxies. STRONG BUY risk-on: When MCD/RL/FCX all above SMA200. STRONG BUY defensive: When HBI drops below SMA200 (underwear index recession signal).
 - **scaling:** Enter in 3 tranches over 1-2 weeks to average in
 
 ## Positions — Vol-Adjusted Risk (per-stock sizing)

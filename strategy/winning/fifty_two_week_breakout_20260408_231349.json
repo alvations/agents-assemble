@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "limit",
     "limit_offset": "0.5% below current price for buys",
-    "timing": "Enter on any weekly rebalance day. Monitor SMA200 for trend confirmation.",
+    "timing": "BUY: When names above SMA50 > SMA200 (uptrend confirmed). STRONG BUY: On RSI pullback to 35-50 in uptrend \u2014 growth names always overshoot on dips.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [

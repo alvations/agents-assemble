@@ -13,7 +13,7 @@
   "execution_guidance": {
     "order_type": "market",
     "limit_offset": "use market orders in volatile names",
-    "timing": "TRIGGER: Enter when XRT (retail ETF) breaks below SMA200. E-commerce accelerates.",
+    "timing": "TRIGGER ONLY: Do NOT hold without signal. Enter ONLY when XRT (retail ETF) breaks below SMA200. Then long e-commerce (AMZN, SHOP, MELI). Exit when XRT recovers above SMA200.",
     "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
   },
   "position_recommendations": [
