@@ -10,9 +10,9 @@ Trading agents and algorithms for publicly tradable instruments. **175 strategie
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
+> - **[knowledge/](knowledge/)** — 54+ research files with backtested findings
 >
 > **Pre-Market Research (2026-04-09):** [knowledge/premarket-research/20260409.md](knowledge/premarket-research/20260409.md) — Iran ceasefire unraveling, oil to $98, $1.5T defense budget, UNH +9%
-> - **[knowledge/](knowledge/)** — 54 research files with backtested findings
 
 ## Top 5 Strategies (by Composite Score, 12 rolling windows)
 
