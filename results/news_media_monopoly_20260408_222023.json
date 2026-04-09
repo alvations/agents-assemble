@@ -1,0 +1,59 @@
+{
+  "metrics": {
+    "total_return": -0.12554247208350144,
+    "cagr": -0.04387894376444723,
+    "annual_volatility": 0.18451053913683604,
+    "sharpe_ratio": -0.36403084571117084,
+    "sortino_ratio": -0.5069528440758803,
+    "calmar_ratio": -0.13180954026405978,
+    "max_drawdown": -0.3328965693723128,
+    "max_drawdown_date": "2022-11-09",
+    "win_rate": 0.48404255319148937,
+    "profit_factor": 0.973733376756747,
+    "num_trading_days": 752,
+    "skewness": -0.006701214308844538,
+    "kurtosis": 1.936223408427121,
+    "best_day": 0.05170178185482732,
+    "worst_day": -0.0503794836476531,
+    "avg_daily_return": -0.00011088794516352484,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.1305035228642114,
+    "beta": 0.7915602795529447,
+    "information_ratio": -1.0262588468360452,
+    "tracking_error": 0.12716433409227468
+  },
+  "trade_metrics": {
+    "num_trades": 779,
+    "num_buys": 408,
+    "num_sells": 371,
+    "total_commission": 0.0,
+    "total_slippage": 3409.1021396169667,
+    "total_transaction_costs": 3409.1021396169667,
+    "avg_trade_size": 4376.254351241292
+  },
+  "final_positions": {
+    "NWSA": {
+      "qty": 482.0,
+      "avg_cost": 28.31625023917044,
+      "realized_pnl": 436.2138624191218
+    },
+    "CMCSA": {
+      "qty": 397.0,
+      "avg_cost": 37.753305090060245,
+      "realized_pnl": -1415.178119343135
+    },
+    "DIS": {
+      "qty": 120.0,
+      "avg_cost": 110.88372039794922,
+      "realized_pnl": -2898.6666946411165
+    },
+    "NYT": {
+      "qty": 254.0,
+      "avg_cost": 51.52755355834961,
+      "realized_pnl": 3229.3413639068613
+    }
+  },
+  "source": "unconventional",
+  "description": "Irreplaceable media IP and distribution: NYT, DIS, GOOG (YouTube), CMCSA"
+}

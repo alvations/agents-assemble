@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": 0.1306976690778212,
+    "cagr": 0.04194124725204884,
+    "annual_volatility": 0.09036005135532166,
+    "sharpe_ratio": 0.06663513960686665,
+    "sortino_ratio": 0.09450114312775058,
+    "calmar_ratio": 0.3840617966305347,
+    "max_drawdown": -0.10920442392346585,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5053191489361702,
+    "profit_factor": 1.0945637166402953,
+    "num_trading_days": 752,
+    "skewness": -0.134557080133229,
+    "kurtosis": 4.043002901067689,
+    "best_day": 0.024749628446180783,
+    "worst_day": -0.034861916939368576,
+    "avg_daily_return": 0.00017954333357279257,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.044683331847715335,
+    "beta": 0.32328631138897,
+    "information_ratio": -0.3241846369646299,
+    "tracking_error": 0.1378329715624078
+  },
+  "trade_metrics": {
+    "num_trades": 226,
+    "num_buys": 122,
+    "num_sells": 104,
+    "total_commission": 0.0,
+    "total_slippage": 730.3544602279659,
+    "total_transaction_costs": 730.3544602279659,
+    "avg_trade_size": 3231.656903663568
+  },
+  "final_positions": {
+    "UL": {
+      "qty": 110.0,
+      "avg_cost": 65.68823145086115,
+      "realized_pnl": 2429.778022766111
+    },
+    "MKC": {
+      "qty": 93.0,
+      "avg_cost": 76.29164213775307,
+      "realized_pnl": 995.496944427491
+    },
+    "KO": {
+      "qty": 154.0,
+      "avg_cost": 62.2272675997251,
+      "realized_pnl": 2256.9697608947727
+    },
+    "NSRGY": {
+      "qty": 183.0,
+      "avg_cost": 96.8466847115617,
+      "realized_pnl": 40.43510824606703
+    },
+    "NVO": {
+      "qty": 151.0,
+      "avg_cost": 114.94507317315964,
+      "realized_pnl": 1620.2057096390497
+    },
+    "PG": {
+      "qty": 41.0,
+      "avg_cost": 141.61426510068756,
+      "realized_pnl": 1584.6675580319998
+    }
+  },
+  "source": "theme",
+  "description": "Global pricing power: Unilever, Nestle, P&G, KO, Deere \u2014 income + stability"
+}

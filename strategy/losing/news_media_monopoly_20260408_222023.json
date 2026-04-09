@@ -1,0 +1,80 @@
+{
+  "strategy_name": "news_media_monopoly",
+  "is_winning": false,
+  "generated_at": "2026-04-08T22:20:23.229017",
+  "overall_assessment": "AVOID \u2014 Strategy is destroying capital. Do NOT deploy. Needs fundamental redesign.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "0.0%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "5.0%",
+    "max_drawdown_tolerance": "33.3%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "NWSA",
+      "action": "BUY",
+      "current_position": 482.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "25.0% below entry",
+      "take_profit": "5.0% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "17.5% trailing after 2.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NWSA",
+      "yahoo_url": "https://finance.yahoo.com/quote/NWSA/"
+    },
+    {
+      "symbol": "CMCSA",
+      "action": "BUY",
+      "current_position": 397.0,
+      "annual_volatility": "26%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "27.5% below entry",
+      "take_profit": "5.5% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "19.3% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CMCSA",
+      "yahoo_url": "https://finance.yahoo.com/quote/CMCSA/"
+    },
+    {
+      "symbol": "DIS",
+      "action": "BUY",
+      "current_position": 120.0,
+      "annual_volatility": "27%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "28.7% below entry",
+      "take_profit": "5.7% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "20.1% trailing after 2.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=DIS",
+      "yahoo_url": "https://finance.yahoo.com/quote/DIS/"
+    },
+    {
+      "symbol": "NYT",
+      "action": "BUY",
+      "current_position": 254.0,
+      "annual_volatility": "26%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "27.3% below entry",
+      "take_profit": "5.5% above entry",
+      "position_size": "0.0% of portfolio",
+      "trailing_stop": "19.1% trailing after 2.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NYT",
+      "yahoo_url": "https://finance.yahoo.com/quote/NYT/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "-12.55%",
+    "sharpe_ratio": "-0.36",
+    "max_drawdown": "-33.29%",
+    "win_rate": "48.40%",
+    "alpha": "-13.05%"
+  }
+}

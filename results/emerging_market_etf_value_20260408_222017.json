@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "total_return": -0.07868272390533515,
+    "cagr": -0.02703847985727137,
+    "annual_volatility": 0.12307367293104296,
+    "sharpe_ratio": -0.48031153422398665,
+    "sortino_ratio": -0.6546239983824005,
+    "calmar_ratio": -0.12076034910665687,
+    "max_drawdown": -0.22390196829748055,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.4867021276595745,
+    "profit_factor": 0.9733513866443659,
+    "num_trading_days": 752,
+    "skewness": -0.1490406715720931,
+    "kurtosis": 1.4801317403343348,
+    "best_day": 0.03389675412036097,
+    "worst_day": -0.03227452178914492,
+    "avg_daily_return": -7.892833033607998e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11366305895703555,
+    "beta": 0.4939089861536748,
+    "information_ratio": -0.9123598391282048,
+    "tracking_error": 0.12458139221213968
+  },
+  "trade_metrics": {
+    "num_trades": 990,
+    "num_buys": 481,
+    "num_sells": 509,
+    "total_commission": 0.0,
+    "total_slippage": 5571.6185754718745,
+    "total_transaction_costs": 5571.6185754718745,
+    "avg_trade_size": 5627.897550981695
+  },
+  "final_positions": {
+    "VNM": {
+      "qty": 1033.0,
+      "avg_cost": 11.80555534362793,
+      "realized_pnl": -3983.2952871322645
+    },
+    "EPI": {
+      "qty": 264.0,
+      "avg_cost": 47.5745849609375,
+      "realized_pnl": 3094.2604446411106
+    },
+    "INDA": {
+      "qty": 226.0,
+      "avg_cost": 55.1510009765625,
+      "realized_pnl": 2875.069843292242
+    },
+    "EWY": {
+      "qty": 238.0,
+      "avg_cost": 59.0315895379016,
+      "realized_pnl": -1134.9751782911865
+    },
+    "EWS": {
+      "qty": 567.0,
+      "avg_cost": 20.706139842803807,
+      "realized_pnl": 332.3559498358167
+    },
+    "EEM": {
+      "qty": 290.0,
+      "avg_cost": 40.97108840942383,
+      "realized_pnl": -1668.1336669921943
+    },
+    "NU": {
+      "qty": 1117.0,
+      "avg_cost": 10.649999618530273,
+      "realized_pnl": 2258.737053871165
+    }
+  },
+  "source": "theme",
+  "description": "EM country ETFs at value prices: Vietnam, Korea, India, Taiwan, Singapore"
+}

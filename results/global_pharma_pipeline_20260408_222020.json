@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": -0.04513626335850163,
+    "cagr": -0.015329698952293969,
+    "annual_volatility": 0.12002962623980443,
+    "sharpe_ratio": -0.3956647709920979,
+    "sortino_ratio": -0.532783621995499,
+    "calmar_ratio": -0.06597645827451991,
+    "max_drawdown": -0.23235104389067052,
+    "max_drawdown_date": "2022-09-26",
+    "win_rate": 0.5039893617021277,
+    "profit_factor": 0.988228326747055,
+    "num_trading_days": 752,
+    "skewness": -0.38800148071937846,
+    "kurtosis": 2.2643666052329876,
+    "best_day": 0.024844378947904033,
+    "worst_day": -0.03871759587987067,
+    "avg_daily_return": -3.2808449027940876e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.10195427805205814,
+    "beta": 0.3026128985298882,
+    "information_ratio": -0.6262123457216435,
+    "tracking_error": 0.1628110316710007
+  },
+  "trade_metrics": {
+    "num_trades": 240,
+    "num_buys": 122,
+    "num_sells": 118,
+    "total_commission": 0.0,
+    "total_slippage": 2058.301937753201,
+    "total_transaction_costs": 2058.301937753201,
+    "avg_trade_size": 8576.258073971669
+  },
+  "final_positions": {
+    "RHHBY": {
+      "qty": 432.0,
+      "avg_cost": 33.84762954711914,
+      "realized_pnl": -1593.7751369476337
+    },
+    "MRK": {
+      "qty": 153.0,
+      "avg_cost": 96.69276428222656,
+      "realized_pnl": 3711.098175048828
+    },
+    "NVS": {
+      "qty": 149.0,
+      "avg_cost": 102.31363677978516,
+      "realized_pnl": 4295.676925659179
+    },
+    "AZN": {
+      "qty": 112.0,
+      "avg_cost": 138.412841796875,
+      "realized_pnl": 5445.472984313964
+    },
+    "GSK": {
+      "qty": 448.0,
+      "avg_cost": 40.3634814327942,
+      "realized_pnl": -928.5660035330005
+    },
+    "SNY": {
+      "qty": 318.0,
+      "avg_cost": 45.92494201660156,
+      "realized_pnl": -945.5583915710481
+    }
+  },
+  "source": "theme",
+  "description": "Global pharma at value: Roche, AZN, MRK, GSK, TAK \u2014 deep pipelines, patent cliff fears"
+}

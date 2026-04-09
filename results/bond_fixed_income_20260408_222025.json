@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.07492657315802564,
+    "cagr": -0.025713501458709542,
+    "annual_volatility": 0.08017859639423665,
+    "sharpe_ratio": -0.7746758425662927,
+    "sortino_ratio": -1.062802152203622,
+    "calmar_ratio": -0.13216744874702838,
+    "max_drawdown": -0.19455245374317387,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.49867021276595747,
+    "profit_factor": 0.9551131641975339,
+    "num_trading_days": 752,
+    "skewness": 0.15495084027560624,
+    "kurtosis": 1.262782622110001,
+    "best_day": 0.027233404354520374,
+    "worst_day": -0.021136618486830572,
+    "avg_daily_return": -9.082800116702284e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.11233808055847372,
+    "beta": 0.1674643981782939,
+    "information_ratio": -0.6860365704455993,
+    "tracking_error": 0.16374940549525968
+  },
+  "trade_metrics": {
+    "num_trades": 238,
+    "num_buys": 108,
+    "num_sells": 130,
+    "total_commission": 0.0,
+    "total_slippage": 312.32106597518913,
+    "total_transaction_costs": 312.32106597518913,
+    "avg_trade_size": 1312.2733864503748
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 107.0,
+      "avg_cost": 94.43309774575229,
+      "realized_pnl": -2472.242495061925
+    },
+    "LQD": {
+      "qty": 109.0,
+      "avg_cost": 104.70252017806406,
+      "realized_pnl": -813.1867523122087
+    },
+    "HYG": {
+      "qty": 103.0,
+      "avg_cost": 67.1834515119005,
+      "realized_pnl": -506.1437551385049
+    },
+    "VWOB": {
+      "qty": 127.0,
+      "avg_cost": 55.5064130783928,
+      "realized_pnl": -921.919479168625
+    },
+    "SCHI": {
+      "qty": 448.0,
+      "avg_cost": 21.249878757563508,
+      "realized_pnl": -83.35923871542818
+    },
+    "VTEB": {
+      "qty": 194.0,
+      "avg_cost": 48.40039383283698,
+      "realized_pnl": -117.54100747089046
+    },
+    "AGG": {
+      "qty": 121.0,
+      "avg_cost": 93.46204330928741,
+      "realized_pnl": -423.1345991758333
+    },
+    "BND": {
+      "qty": 163.0,
+      "avg_cost": 69.35554285525909,
+      "realized_pnl": -426.3095951896947
+    },
+    "FBND": {
+      "qty": 219.0,
+      "avg_cost": 41.92968772186127,
+      "realized_pnl": -237.32700829714537
+    },
+    "SPBO": {
+      "qty": 271.0,
+      "avg_cost": 26.78753300667494,
+      "realized_pnl": -209.55009564213935
+    }
+  },
+  "source": "portfolio",
+  "description": "Diversified bonds: duration ladder + credit spectrum + EM, 3-5% yield target"
+}
