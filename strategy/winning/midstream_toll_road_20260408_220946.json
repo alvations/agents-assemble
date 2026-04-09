@@ -1,0 +1,132 @@
+{
+  "strategy_name": "midstream_toll_road",
+  "is_winning": true,
+  "generated_at": "2026-04-08T22:09:45.189853",
+  "overall_assessment": "STRONG BUY \u2014 Excellent risk-adjusted returns with significant alpha. Deploy with confidence.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "11.1%",
+    "stop_loss": "23.8%",
+    "take_profit_target": "13.6%",
+    "max_drawdown_tolerance": "19.9%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "WMB",
+      "action": "BUY",
+      "current_position": 502.0,
+      "annual_volatility": "25%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.7% below entry",
+      "take_profit": "14.0% above entry",
+      "position_size": "10.8% of portfolio",
+      "trailing_stop": "17.3% trailing after 5.6% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=WMB",
+      "yahoo_url": "https://finance.yahoo.com/quote/WMB/"
+    },
+    {
+      "symbol": "OKE",
+      "action": "BUY",
+      "current_position": 261.0,
+      "annual_volatility": "28%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "28.4% below entry",
+      "take_profit": "16.1% above entry",
+      "position_size": "9.4% of portfolio",
+      "trailing_stop": "19.9% trailing after 6.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=OKE",
+      "yahoo_url": "https://finance.yahoo.com/quote/OKE/"
+    },
+    {
+      "symbol": "TRGP",
+      "action": "BUY",
+      "current_position": 142.0,
+      "annual_volatility": "32%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "31.9% below entry",
+      "take_profit": "18.2% above entry",
+      "position_size": "8.3% of portfolio",
+      "trailing_stop": "22.3% trailing after 7.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=TRGP",
+      "yahoo_url": "https://finance.yahoo.com/quote/TRGP/"
+    },
+    {
+      "symbol": "PAA",
+      "action": "BUY",
+      "current_position": 1635.0,
+      "annual_volatility": "24%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "24.0% below entry",
+      "take_profit": "13.6% above entry",
+      "position_size": "11.1% of portfolio",
+      "trailing_stop": "16.8% trailing after 5.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=PAA",
+      "yahoo_url": "https://finance.yahoo.com/quote/PAA/"
+    },
+    {
+      "symbol": "AM",
+      "action": "BUY",
+      "current_position": 1878.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.5% below entry",
+      "take_profit": "13.4% above entry",
+      "position_size": "11.3% of portfolio",
+      "trailing_stop": "16.4% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=AM",
+      "yahoo_url": "https://finance.yahoo.com/quote/AM/"
+    },
+    {
+      "symbol": "EPD",
+      "action": "BUY",
+      "current_position": 675.0,
+      "annual_volatility": "17%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "17.2% below entry",
+      "take_profit": "9.8% above entry",
+      "position_size": "15.4% of portfolio",
+      "trailing_stop": "12.0% trailing after 3.9% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=EPD",
+      "yahoo_url": "https://finance.yahoo.com/quote/EPD/"
+    },
+    {
+      "symbol": "ET",
+      "action": "BUY",
+      "current_position": 1185.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.0% below entry",
+      "take_profit": "13.1% above entry",
+      "position_size": "11.5% of portfolio",
+      "trailing_stop": "16.1% trailing after 5.2% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=ET",
+      "yahoo_url": "https://finance.yahoo.com/quote/ET/"
+    },
+    {
+      "symbol": "KMI",
+      "action": "BUY",
+      "current_position": 1036.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "23.1% below entry",
+      "take_profit": "13.1% above entry",
+      "position_size": "11.5% of portfolio",
+      "trailing_stop": "16.2% trailing after 5.3% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=KMI",
+      "yahoo_url": "https://finance.yahoo.com/quote/KMI/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "105.02%",
+    "sharpe_ratio": "1.12",
+    "max_drawdown": "-19.87%",
+    "win_rate": "56.38%",
+    "alpha": "18.48%"
+  }
+}

@@ -1420,6 +1420,286 @@ class MuniBondIncome(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 20. Serial Acquirer Compounders — TDG 5,449% since IPO
+# ---------------------------------------------------------------------------
+class SerialAcquirer(BasePersona):
+    """TransDigm, HEICO, Roper, Danaher — capital allocation machines.
+
+    Buy small profitable businesses, integrate with minimal overhead, compound 15-25%
+    annually. Look "expensive" on P/E but CHEAP on P/FCF because acquisitions
+    depress earnings via amortization. ROP at 19x FCF vs 29x historical is deep value.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Serial Acquirer Compounders",
+            description="TDG/HEI/ROP: 15-25% CAGR machines that look expensive on P/E but are cheap on FCF",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "TDG", "HEI", "DHR", "ROP", "IEX", "NDSN",
+                "GGG", "ITW", "AME", "CPRT", "WDFC", "BR",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "volume_sma_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and sma50 > sma200:
+                score += 1.5
+            if 35 < rsi < 50 and price > sma200:
+                score += 2.0  # Pullback in compounder
+            elif 50 <= rsi < 65:
+                score += 0.5
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+            if score >= 3.5:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 21. Patent Cliff Pharma Value — BMY 7x earnings, $15B FCF
+# ---------------------------------------------------------------------------
+class PatentCliffPharma(BasePersona):
+    """Big Pharma at decade-low multiples due to patent cliff fears.
+
+    Market prices in 100% revenue loss but biosimilar erosion is only 60-70%.
+    ABBV proved transition works. BMY at 7x earnings with Opdivo growing.
+    $2.1T in M&A firepower ensures continuous pipeline refilling.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Patent Cliff Pharma Value",
+            description="BMY 7x earnings, PFE post-COVID: market overprices patent cliffs by 2-3x",
+            risk_tolerance=0.5,
+            max_position_size=0.10,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "BMY", "PFE", "MRK", "ABBV", "GILD", "VTRS",
+                "TEVA", "AMGN", "JNJ", "BIIB", "TAK", "GSK", "AZN", "NVS",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            if price < sma200 * 0.90:
+                score += 3.0
+            elif price < sma200:
+                score += 1.5
+            if rsi < 35:
+                score += 2.5
+            elif rsi < 45:
+                score += 1.0
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+            bb_low = inds["bb_lower"]
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+            if price > sma200 and rsi > 55:
+                score += 1.0  # Hold recovery
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 22. Midstream Toll Road Income — 40% discount, 7%+ yield
+# ---------------------------------------------------------------------------
+class MidstreamTollRoad(BasePersona):
+    """Pipeline MLPs: 90% fee-based, 7%+ growing yield, don't care about oil prices.
+
+    EPD has 27 consecutive distribution increases. 40% discount to S&P peers.
+    These are toll roads collecting fees on every barrel. LNG export growth
+    and data center power demand = structural volume growth.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Midstream Toll Road Income",
+            description="Pipeline MLPs: 90% fee-based contracts, 7%+ yield, 27yr distribution growth, toll roads of energy",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "EPD", "ET", "MPLX", "WMB", "OKE",
+                "PAA", "TRGP", "KMI", "AM", "CTRA",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "volume_sma_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            if price > sma200:
+                score += 2.0
+            if sma50 is not None and sma50 > sma200:
+                score += 1.0
+            if 30 < rsi < 45:
+                score += 2.0  # Yield expansion on pullback
+            elif 45 <= rsi < 65:
+                score += 1.0
+            vol_sma = inds["volume_sma_20"]
+            if vol_sma is not None and not _is_missing(vol_sma) and sym in data:
+                try:
+                    cur_vol = data[sym].loc[:date, "Volume"].iloc[-1]
+                    if cur_vol > vol_sma * 1.5:
+                        score += 1.0
+                except Exception:
+                    pass
+            score += 0.5  # Base allocation (income play)
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 23. Constellation Contrarian — STZ 49.8% DCF discount
+# ---------------------------------------------------------------------------
+class ConstellationContrarian(BasePersona):
+    """Wide-moat brands at extreme DCF discounts.
+
+    STZ at $155 vs $309 DCF (49.8% discount) — Modelo is #1 US beer.
+    EFX at 34% discount to fair value. NKE brand moat permanent despite selloff.
+    LULU at 15x earnings. These are the most mispriced wide-moat stocks available.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Constellation Contrarian (Max DCF Discount)",
+            description="STZ 49.8% DCF discount, EFX 34%, NKE permanent moat — most mispriced wide-moat stocks",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "STZ",    # Constellation Brands — 49.8% DCF discount, Modelo #1 beer
+                "EFX",    # Equifax — 34% discount, data monopoly
+                "NKE",    # Nike — brand moat, beaten down on China
+                "LULU",   # Lululemon — 15x earnings for 20% grower
+                "PVH",    # Calvin Klein + Tommy Hilfiger — Morningstar undervalued
+                "BUD",    # AB InBev — global beer monopoly, cheap
+                "TAP",    # Molson Coors — value play
+                "SAM",    # Boston Beer — craft beer + Truly, beaten down
+                "MNST",   # Monster Beverage — energy drink growth
+                "BF.B",   # Brown-Forman — Jack Daniel's, recession-proof
+                "DEO",    # Diageo — global spirits monopoly
+                "HAS",    # Hasbro — IP licensing machine
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+            price = prices[sym]
+            score = 0.0
+            # Deep discount = massive DCF upside
+            if price < sma200 * 0.85:
+                score += 3.0
+            elif price < sma200:
+                score += 1.5
+            # Max pessimism
+            if rsi < 35:
+                score += 2.5
+            elif rsi < 45:
+                score += 1.5
+            # MACD reversal
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+            # Bollinger support
+            bb_low = inds["bb_lower"]
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.03:
+                score += 1.0
+            # Recovery hold
+            if price > sma200 and rsi > 50:
+                score += 1.5
+            if score >= 3:
+                scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
 UNCONVENTIONAL_STRATEGIES = {
     "sell_in_may": SellInMayGoAway,
     "turn_of_month": TurnOfMonth,
@@ -1440,6 +1720,10 @@ UNCONVENTIONAL_STRATEGIES = {
     "uranium_renaissance": UraniumRenaissance,
     "fallen_luxury": FallenLuxury,
     "muni_bond_income": MuniBondIncome,
+    "serial_acquirer": SerialAcquirer,
+    "patent_cliff_pharma": PatentCliffPharma,
+    "midstream_toll_road": MidstreamTollRoad,
+    "constellation_contrarian": ConstellationContrarian,
 }
 
 

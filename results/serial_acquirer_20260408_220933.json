@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.09267994484508812,
+    "cagr": 0.030089720233052564,
+    "annual_volatility": 0.11838148813008993,
+    "sharpe_ratio": -0.021280227486994426,
+    "sortino_ratio": -0.029603767777405386,
+    "calmar_ratio": 0.24355295243660174,
+    "max_drawdown": -0.1235448797972798,
+    "max_drawdown_date": "2022-10-14",
+    "win_rate": 0.5226063829787234,
+    "profit_factor": 1.0543931300409437,
+    "num_trading_days": 752,
+    "skewness": -0.10403649671662837,
+    "kurtosis": 1.9956416868463882,
+    "best_day": 0.031683945631179045,
+    "worst_day": -0.03356179830958195,
+    "avg_daily_return": 0.00014565309692754358,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.05653485886671161,
+    "beta": 0.43008268153782614,
+    "information_ratio": -0.4179144769699319,
+    "tracking_error": 0.13527853659584801
+  },
+  "trade_metrics": {
+    "num_trades": 252,
+    "num_buys": 119,
+    "num_sells": 133,
+    "total_commission": 0.0,
+    "total_slippage": 1203.749981498719,
+    "total_transaction_costs": 1203.749981498719,
+    "avg_trade_size": 4776.78564086793
+  },
+  "final_positions": {
+    "ROP": {
+      "qty": 21.0,
+      "avg_cost": 562.5548095703125,
+      "realized_pnl": 1466.7443542480496
+    },
+    "GGG": {
+      "qty": 133.0,
+      "avg_cost": 89.21746063232422,
+      "realized_pnl": -142.65971374511855
+    },
+    "IEX": {
+      "qty": 42.0,
+      "avg_cost": 212.05235290527344,
+      "realized_pnl": -1201.5958709716806
+    },
+    "HEI": {
+      "qty": 35.0,
+      "avg_cost": 188.4218748155531,
+      "realized_pnl": 1855.1881954486566
+    },
+    "ITW": {
+      "qty": 44.0,
+      "avg_cost": 253.52488708496094,
+      "realized_pnl": -1182.058593750001
+    },
+    "AME": {
+      "qty": 49.0,
+      "avg_cost": 176.70046997070312,
+      "realized_pnl": -671.7754669189471
+    },
+    "CPRT": {
+      "qty": 173.0,
+      "avg_cost": 62.02000045776367,
+      "realized_pnl": 4902.950138092044
+    },
+    "BR": {
+      "qty": 47.0,
+      "avg_cost": 196.32539267666846,
+      "realized_pnl": 1323.6150500416998
+    },
+    "NDSN": {
+      "qty": 57.0,
+      "avg_cost": 253.67636108398438,
+      "realized_pnl": -3027.6865997314444
+    },
+    "WDFC": {
+      "qty": 48.0,
+      "avg_cost": 251.74711336408342,
+      "realized_pnl": 4008.9326542445588
+    }
+  },
+  "source": "unconventional",
+  "description": "TDG/HEI/ROP: 15-25% CAGR machines that look expensive on P/E but are cheap on FCF"
+}

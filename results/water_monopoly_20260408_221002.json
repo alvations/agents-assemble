@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "total_return": -0.07891486781594181,
+    "cagr": -0.02712048625766772,
+    "annual_volatility": 0.16195124714421344,
+    "sharpe_ratio": -0.3313459543656385,
+    "sortino_ratio": -0.4559244383878204,
+    "calmar_ratio": -0.10182722431344526,
+    "max_drawdown": -0.2663382650418247,
+    "max_drawdown_date": "2022-06-16",
+    "win_rate": 0.5132978723404256,
+    "profit_factor": 0.9850816225065184,
+    "num_trading_days": 752,
+    "skewness": -0.0788919308325378,
+    "kurtosis": 1.379700039012596,
+    "best_day": 0.043547113443381136,
+    "worst_day": -0.03727719759361492,
+    "avg_daily_return": -5.7294147310740284e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.1137450653574319,
+    "beta": 0.6932480834332739,
+    "information_ratio": -0.9484811289141056,
+    "tracking_error": 0.11992338264827264
+  },
+  "trade_metrics": {
+    "num_trades": 224,
+    "num_buys": 112,
+    "num_sells": 112,
+    "total_commission": 0.0,
+    "total_slippage": 959.7955787353519,
+    "total_transaction_costs": 959.7955787353519,
+    "avg_trade_size": 4284.80169078282
+  },
+  "final_positions": {
+    "PNR": {
+      "qty": 120.0,
+      "avg_cost": 65.14369123801147,
+      "realized_pnl": 1362.0820980364708
+    },
+    "AWK": {
+      "qty": 98.0,
+      "avg_cost": 128.31944453159224,
+      "realized_pnl": -5186.676979849273
+    },
+    "FELE": {
+      "qty": 138.0,
+      "avg_cost": 97.95364822268934,
+      "realized_pnl": -1012.3401030081292
+    },
+    "ECL": {
+      "qty": 60.0,
+      "avg_cost": 207.48847817271172,
+      "realized_pnl": -2368.652277654875
+    },
+    "WTRG": {
+      "qty": 382.0,
+      "avg_cost": 35.251319967257096,
+      "realized_pnl": -6055.628333237768
+    },
+    "WTS": {
+      "qty": 69.0,
+      "avg_cost": 205.54801498634228,
+      "realized_pnl": 1860.7660522460938
+    }
+  },
+  "source": "theme",
+  "description": "Regulated water monopolies: $45B EPA mandate, AWK below fair value, 8-9% rate base growth guaranteed"
+}

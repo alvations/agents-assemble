@@ -1171,6 +1171,185 @@ class GlobalFinancialInfra(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 17. Reshoring Industrial Renaissance — 2% implemented, 98% orders pending
+# ---------------------------------------------------------------------------
+class ReshoringIndustrial(BasePersona):
+    """US reshoring + CHIPS Act + IRA = multi-decade industrial capex.
+
+    Only 2% of manufacturers have FULLY reshored — 98% of orders pending.
+    ETN picks-and-shovels for electrification, NUE domestic steel at premium,
+    CAT 19% earnings growth, URI rents equipment to build every factory.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Reshoring Industrial Renaissance",
+            description="CHIPS Act + IRA + reshoring: 2% implemented, 98% of orders still coming. ETN, CAT, NUE, URI.",
+            risk_tolerance=0.5, max_position_size=0.10, max_positions=12, rebalance_frequency="weekly",
+            universe=universe or ["ETN", "EMR", "ROK", "AME", "GE", "CAT", "NUE", "STLD", "RS", "TT", "GNRC", "VMC", "MLM", "URI"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi): continue
+            price = prices[sym]
+            score = 0.0
+            if price > sma200: score += 2.0
+            if sma50 is not None and sma50 > sma200: score += 1.5
+            if 40 < rsi < 55: score += 1.5
+            macd, ms = inds["macd"], inds["macd_signal"]
+            if macd is not None and ms is not None and macd > ms: score += 1.0
+            if score >= 3: scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        if scored:
+            total = sum(s for _, s in scored[:self.config.max_positions])
+            for sym, sc in scored[:self.config.max_positions]:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 18. Water Infrastructure Monopoly — $45B mandated EPA spending
+# ---------------------------------------------------------------------------
+class WaterMonopoly(BasePersona):
+    """Regulated water monopolies with zero competition. You can't choose your water provider.
+
+    EPA lead pipe mandate = $45B MUST be spent, utilities MUST be made whole via rate hikes.
+    AWK 10% below fair value. WTRG unanimous Strong Buy +25% upside.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Water Infrastructure Monopoly",
+            description="Regulated water monopolies: $45B EPA mandate, AWK below fair value, 8-9% rate base growth guaranteed",
+            risk_tolerance=0.3, max_position_size=0.15, max_positions=8, rebalance_frequency="monthly",
+            universe=universe or ["AWK", "WTRG", "WTR", "SJW", "XYL", "WTS", "FELE", "PNR", "ECL"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi): continue
+            price = prices[sym]
+            score = 1.0  # Always some allocation (utility income)
+            if price > sma200: score += 2.0
+            sma50 = inds["sma_50"]
+            if sma50 is not None and price > sma50: score += 0.5
+            if 30 < rsi < 45: score += 2.0
+            elif rsi < 30: score += 2.5  # Rare panic = gift
+            elif 45 <= rsi < 60: score += 0.5
+            if score >= 3: scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        if scored:
+            total = sum(s for _, s in scored[:self.config.max_positions])
+            for sym, sc in scored[:self.config.max_positions]:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 19. Regulated Data Infrastructure — SPGI 31.9% DCF upside
+# ---------------------------------------------------------------------------
+class RegulatedData(BasePersona):
+    """Data monopolies REQUIRED by regulation. 85-95% subscription, 100%+ NRR.
+
+    VRSK: sole insurance actuarial data provider. SPGI/MCO: required by Basel III.
+    MSCI indexes determine $15T+ in fund allocations. Arms dealers of finance.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Regulated Data Infrastructure",
+            description="VRSK/SPGI/MSCI: regulatory-required data monopolies, 85-95% subscription, 100%+ NRR",
+            risk_tolerance=0.4, max_position_size=0.12, max_positions=10, rebalance_frequency="monthly",
+            universe=universe or ["VRSK", "FDS", "MSCI", "SPGI", "MCO", "TRI", "NDAQ", "MORN", "DNB", "ENV"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "vol_20"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi): continue
+            price = prices[sym]
+            score = 0.0
+            if price > sma200: score += 2.0
+            if sma50 is not None and sma50 > sma200: score += 1.5
+            if 35 < rsi < 50 and price > sma200: score += 2.0
+            elif 50 <= rsi < 65: score += 1.0
+            vol = inds["vol_20"]
+            if vol is not None and not _is_missing(vol) and vol < 0.015: score += 1.0
+            if score >= 4: scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        if scored:
+            total = sum(s for _, s in scored[:self.config.max_positions])
+            for sym, sc in scored[:self.config.max_positions]:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 20. China ADR Deep Value — JD/PDD 9x P/E
+# ---------------------------------------------------------------------------
+class ChinaADRDeepValue(BasePersona):
+    """Chinese ADRs at lowest valuations in history. Delisting fear resolved.
+
+    JD 9x P/E, PDD 9.4x forward. BABA dominant e-commerce + cloud below intrinsic.
+    Government pivoted to stimulus. Geopolitical fear = persistent mispricing.
+    MAX POSITION SIZE SMALL due to tail risk.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="China ADR Deep Value",
+            description="JD/PDD 9x P/E, BABA below intrinsic — delisting resolved, stimulus pivot, geopolitical discount",
+            risk_tolerance=0.6, max_position_size=0.08, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or ["BABA", "JD", "PDD", "BIDU", "NIO", "XPEV", "LI", "VIPS", "BILI", "TME", "ZTO", "YUMC", "TCOM", "MNSO"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "volume_sma_20"], date)
+            sma200, rsi = inds["sma_200"], inds["rsi_14"]
+            if _is_missing(sma200) or _is_missing(rsi): continue
+            price = prices[sym]
+            score = 0.0
+            if price < sma200 * 0.85: score += 3.0
+            elif price < sma200: score += 1.5
+            if rsi < 35: score += 2.0
+            elif rsi < 45: score += 1.0
+            macd, ms = inds["macd"], inds["macd_signal"]
+            if macd is not None and ms is not None and macd > ms: score += 1.5
+            vol_sma = inds["volume_sma_20"]
+            if vol_sma is not None and not _is_missing(vol_sma) and sym in data:
+                try:
+                    cv = data[sym].loc[:date, "Volume"].iloc[-1]
+                    if cv > vol_sma * 2.0: score += 1.5
+                except Exception: pass
+            if score >= 4: scored.append((sym, score))
+        scored.sort(key=lambda x: -x[1])
+        if scored:
+            total = sum(s for _, s in scored[:self.config.max_positions])
+            for sym, sc in scored[:self.config.max_positions]:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -1188,6 +1367,10 @@ THEME_STRATEGIES = {
     "subscription_monopoly": SubscriptionMonopoly,
     "contrastive_pairs": ContrastivePairs,
     "global_financial_infra": GlobalFinancialInfra,
+    "reshoring_industrial": ReshoringIndustrial,
+    "water_monopoly": WaterMonopoly,
+    "regulated_data": RegulatedData,
+    "china_adr_deep_value": ChinaADRDeepValue,
 }
 
 

@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": 0.10910457158612608,
+    "cagr": 0.03524302071265706,
+    "annual_volatility": 0.10253713749208208,
+    "sharpe_ratio": 0.007061149487739134,
+    "sortino_ratio": 0.010280683472560498,
+    "calmar_ratio": 0.36730587661829794,
+    "max_drawdown": -0.09595005949028523,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.488031914893617,
+    "profit_factor": 1.0692455681505306,
+    "num_trading_days": 752,
+    "skewness": 0.24318180458295108,
+    "kurtosis": 2.1881697484976805,
+    "best_day": 0.03375268798714304,
+    "worst_day": -0.026705258929101916,
+    "avg_daily_return": 0.0001585229979336297,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.05138155838710712,
+    "beta": 0.30494422257220166,
+    "information_ratio": -0.34276263153969394,
+    "tracking_error": 0.14990420092266338
+  },
+  "trade_metrics": {
+    "num_trades": 1077,
+    "num_buys": 560,
+    "num_sells": 517,
+    "total_commission": 0.0,
+    "total_slippage": 5031.2968345737445,
+    "total_transaction_costs": 5031.2968345737445,
+    "avg_trade_size": 4671.584804618148
+  },
+  "final_positions": {
+    "BIIB": {
+      "qty": 68.0,
+      "avg_cost": 200.49432616154786,
+      "realized_pnl": -628.5135675967708
+    },
+    "TAK": {
+      "qty": 577.0,
+      "avg_cost": 12.873347282409668,
+      "realized_pnl": 2737.883464813233
+    },
+    "AMGN": {
+      "qty": 44.0,
+      "avg_cost": 256.2680452520197,
+      "realized_pnl": 2105.213516235355
+    },
+    "PFE": {
+      "qty": 230.0,
+      "avg_cost": 23.691114029383552,
+      "realized_pnl": -2654.4164386470547
+    },
+    "JNJ": {
+      "qty": 80.0,
+      "avg_cost": 143.78487243652344,
+      "realized_pnl": 1469.736648559572
+    },
+    "AZN": {
+      "qty": 87.0,
+      "avg_cost": 136.36771474445322,
+      "realized_pnl": 2579.2134804358857
+    },
+    "NVS": {
+      "qty": 112.0,
+      "avg_cost": 100.73718567116532,
+      "realized_pnl": 2541.216726933216
+    },
+    "MRK": {
+      "qty": 117.0,
+      "avg_cost": 101.62135473593611,
+      "realized_pnl": 1861.820826187043
+    },
+    "GSK": {
+      "qty": 345.0,
+      "avg_cost": 34.33483489565814,
+      "realized_pnl": 1144.3772766729455
+    },
+    "ABBV": {
+      "qty": 33.0,
+      "avg_cost": 168.8883514404297,
+      "realized_pnl": 1271.06527709961
+    }
+  },
+  "source": "unconventional",
+  "description": "BMY 7x earnings, PFE post-COVID: market overprices patent cliffs by 2-3x"
+}

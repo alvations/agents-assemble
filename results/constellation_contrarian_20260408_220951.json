@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "total_return": -0.03298357287037035,
+    "cagr": -0.011155633850355229,
+    "annual_volatility": 0.1889949655528341,
+    "sharpe_ratio": -0.1727737318823747,
+    "sortino_ratio": -0.24782017650697158,
+    "calmar_ratio": -0.04474815707137757,
+    "max_drawdown": -0.24929817405800492,
+    "max_drawdown_date": "2022-10-20",
+    "win_rate": 0.4946808510638298,
+    "profit_factor": 1.005939973388346,
+    "num_trading_days": 752,
+    "skewness": 0.22377153219166862,
+    "kurtosis": 2.1643372229542757,
+    "best_day": 0.06295597902382566,
+    "worst_day": -0.04918374105303969,
+    "avg_daily_return": 2.6073015547040586e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.0977802129501194,
+    "beta": 0.8429886797376159,
+    "information_ratio": -0.8066686802517016,
+    "tracking_error": 0.12121483744678105
+  },
+  "trade_metrics": {
+    "num_trades": 1425,
+    "num_buys": 721,
+    "num_sells": 704,
+    "total_commission": 0.0,
+    "total_slippage": 5339.600770622257,
+    "total_transaction_costs": 5339.600770622257,
+    "avg_trade_size": 3747.0882600857917
+  },
+  "final_positions": {
+    "STZ": {
+      "qty": 50.0,
+      "avg_cost": 232.41110569113303,
+      "realized_pnl": 3594.763109263684
+    },
+    "PVH": {
+      "qty": 81.0,
+      "avg_cost": 105.44823455810547,
+      "realized_pnl": 3113.87802886963
+    },
+    "BUD": {
+      "qty": 237.0,
+      "avg_cost": 56.956101735432945,
+      "realized_pnl": 1746.6433029174877
+    },
+    "TAP": {
+      "qty": 137.0,
+      "avg_cost": 55.89326858520508,
+      "realized_pnl": 2459.8557319641113
+    },
+    "SAM": {
+      "qty": 25.0,
+      "avg_cost": 298.1499938964844,
+      "realized_pnl": 997.0985107421861
+    },
+    "MNST": {
+      "qty": 122.0,
+      "avg_cost": 52.25,
+      "realized_pnl": -11.881591796876648
+    },
+    "DEO": {
+      "qty": 53.0,
+      "avg_cost": 118.61512154244087,
+      "realized_pnl": -2968.50073873159
+    },
+    "HAS": {
+      "qty": 160.0,
+      "avg_cost": 58.26418268329162,
+      "realized_pnl": -1685.2133336921415
+    },
+    "NKE": {
+      "qty": 147.0,
+      "avg_cost": 77.9890283920094,
+      "realized_pnl": -3131.333270100197
+    },
+    "EFX": {
+      "qty": 34.0,
+      "avg_cost": 252.53138732910156,
+      "realized_pnl": 3135.6295623779242
+    }
+  },
+  "source": "unconventional",
+  "description": "STZ 49.8% DCF discount, EFX 34%, NKE permanent moat \u2014 most mispriced wide-moat stocks"
+}

@@ -1,0 +1,54 @@
+{
+  "metrics": {
+    "total_return": 0.26210090045991574,
+    "cagr": 0.08097026274387464,
+    "annual_volatility": 0.3338170065005015,
+    "sharpe_ratio": 0.2768890378138039,
+    "sortino_ratio": 0.46498464640488085,
+    "calmar_ratio": 0.26264675731270465,
+    "max_drawdown": -0.308285788761794,
+    "max_drawdown_date": "2022-03-14",
+    "win_rate": 0.4587765957446808,
+    "profit_factor": 1.0933222009828312,
+    "num_trading_days": 752,
+    "skewness": 3.122848007151031,
+    "kurtosis": 41.26416779646723,
+    "best_day": 0.27426431577606336,
+    "worst_day": -0.09150365386784409,
+    "avg_daily_return": 0.0005224366474571683,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.005654316355889533,
+    "beta": 0.7611690850474244,
+    "information_ratio": -0.018304272865591012,
+    "tracking_error": 0.3089069091905151
+  },
+  "trade_metrics": {
+    "num_trades": 882,
+    "num_buys": 474,
+    "num_sells": 408,
+    "total_commission": 0.0,
+    "total_slippage": 2961.1649623308185,
+    "total_transaction_costs": 2961.1649623308185,
+    "avg_trade_size": 3357.3298892639664
+  },
+  "final_positions": {
+    "PDD": {
+      "qty": 107.0,
+      "avg_cost": 100.22712400710016,
+      "realized_pnl": 8489.352283255568
+    },
+    "VIPS": {
+      "qty": 787.0,
+      "avg_cost": 12.794885635375977,
+      "realized_pnl": 1865.9177789688092
+    },
+    "NIO": {
+      "qty": 2300.0,
+      "avg_cost": 4.380000114440918,
+      "realized_pnl": 3792.948598623275
+    }
+  },
+  "source": "theme",
+  "description": "JD/PDD 9x P/E, BABA below intrinsic \u2014 delisting resolved, stimulus pivot, geopolitical discount"
+}

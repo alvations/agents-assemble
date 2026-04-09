@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 0.027961613128151486,
+    "cagr": 0.009266850187557685,
+    "annual_volatility": 0.08760987329137784,
+    "sharpe_ratio": -0.2983784450756752,
+    "sortino_ratio": -0.3926749026171752,
+    "calmar_ratio": 0.06557998074736013,
+    "max_drawdown": -0.14130608277024714,
+    "max_drawdown_date": "2022-01-27",
+    "win_rate": 0.5452127659574468,
+    "profit_factor": 1.0273245288439148,
+    "num_trading_days": 752,
+    "skewness": -0.5940963629614289,
+    "kurtosis": 4.282222562051427,
+    "best_day": 0.025056342683483113,
+    "worst_day": -0.02811282833572437,
+    "avg_daily_return": 5.19161414977777e-05,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.07735772891220649,
+    "beta": 0.2635821513652183,
+    "information_ratio": -0.5195599041685817,
+    "tracking_error": 0.14889087531878945
+  },
+  "trade_metrics": {
+    "num_trades": 142,
+    "num_buys": 66,
+    "num_sells": 76,
+    "total_commission": 0.0,
+    "total_slippage": 816.9208662300114,
+    "total_transaction_costs": 816.9208662300114,
+    "avg_trade_size": 5752.963846690218
+  },
+  "final_positions": {
+    "VRSK": {
+      "qty": 44.0,
+      "avg_cost": 270.93794383173406,
+      "realized_pnl": 954.3295261548908
+    },
+    "SPGI": {
+      "qty": 20.0,
+      "avg_cost": 414.98974609375,
+      "realized_pnl": -1125.2113647460938
+    },
+    "MCO": {
+      "qty": 21.0,
+      "avg_cost": 368.8166783650716,
+      "realized_pnl": 858.633918762208
+    },
+    "TRI": {
+      "qty": 79.0,
+      "avg_cost": 141.8286290705063,
+      "realized_pnl": -576.0510597776571
+    },
+    "FDS": {
+      "qty": 27.0,
+      "avg_cost": 450.23992919921875,
+      "realized_pnl": 270.86526489257835
+    },
+    "MSCI": {
+      "qty": 21.0,
+      "avg_cost": 564.3030279250372,
+      "realized_pnl": -2292.219970703125
+    },
+    "NDAQ": {
+      "qty": 159.0,
+      "avg_cost": 69.8582534790039,
+      "realized_pnl": -39.96584701538177
+    },
+    "MORN": {
+      "qty": 36.0,
+      "avg_cost": 350.169921875,
+      "realized_pnl": -1037.319396972655
+    }
+  },
+  "source": "theme",
+  "description": "VRSK/SPGI/MSCI: regulatory-required data monopolies, 85-95% subscription, 100%+ NRR"
+}

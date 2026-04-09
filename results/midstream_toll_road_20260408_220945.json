@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "total_return": 1.05024310298018,
+    "cagr": 0.2714287859954265,
+    "annual_volatility": 0.19733759345967766,
+    "sharpe_ratio": 1.1198176328531708,
+    "sortino_ratio": 1.5940065078616197,
+    "calmar_ratio": 1.3660085426897435,
+    "max_drawdown": -0.1987021146009591,
+    "max_drawdown_date": "2022-07-06",
+    "win_rate": 0.5638297872340425,
+    "profit_factor": 1.2460923989201638,
+    "num_trading_days": 752,
+    "skewness": -0.4160285476867924,
+    "kurtosis": 1.9324175097777512,
+    "best_day": 0.04061988756083612,
+    "worst_day": -0.06004219853925574,
+    "avg_daily_return": 0.0010325630246204595,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": 0.18480420689566235,
+    "beta": 0.6076057329756032,
+    "information_ratio": 1.0275526185133745,
+    "tracking_error": 0.17984889879705654
+  },
+  "trade_metrics": {
+    "num_trades": 326,
+    "num_buys": 158,
+    "num_sells": 168,
+    "total_commission": 0.0,
+    "total_slippage": 2074.0555307312015,
+    "total_transaction_costs": 2074.0555307312015,
+    "avg_trade_size": 6362.13352985031
+  },
+  "final_positions": {
+    "WMB": {
+      "qty": 502.0,
+      "avg_cost": 36.677290506194815,
+      "realized_pnl": 4494.610822726746
+    },
+    "OKE": {
+      "qty": 261.0,
+      "avg_cost": 67.28842622737808,
+      "realized_pnl": 2589.558649032203
+    },
+    "TRGP": {
+      "qty": 142.0,
+      "avg_cost": 137.9664339952066,
+      "realized_pnl": 14565.627639770508
+    },
+    "PAA": {
+      "qty": 1635.0,
+      "avg_cost": 16.486713409423828,
+      "realized_pnl": 10624.781069278715
+    },
+    "AM": {
+      "qty": 1878.0,
+      "avg_cost": 13.797656321297058,
+      "realized_pnl": 7531.507564067842
+    },
+    "EPD": {
+      "qty": 675.0,
+      "avg_cost": 24.542623255177826,
+      "realized_pnl": 4771.479242929854
+    },
+    "ET": {
+      "qty": 1185.0,
+      "avg_cost": 12.714870343887094,
+      "realized_pnl": 9592.304254120285
+    },
+    "KMI": {
+      "qty": 1036.0,
+      "avg_cost": 21.548805387166528,
+      "realized_pnl": 3794.6019538202854
+    }
+  },
+  "source": "unconventional",
+  "description": "Pipeline MLPs: 90% fee-based contracts, 7%+ yield, 27yr distribution growth, toll roads of energy"
+}
