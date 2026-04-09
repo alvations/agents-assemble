@@ -755,6 +755,130 @@ class ShippingFreightCycle(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 9. Product Tanker Shipping
+# ---------------------------------------------------------------------------
+class ProductTankerShipping(BasePersona):
+    """Product tanker shipping cycle strategy.
+
+    Thesis: Product tankers carry refined petroleum (gasoline, diesel,
+    jet fuel) — distinct from crude tankers. The product tanker fleet
+    is aging (average age 13+ years) with minimal newbuild orders due
+    to uncertainty around future fuel standards. Ton-mile demand is
+    growing as refinery capacity shifts to Middle East/Asia while
+    consumption stays in West. TORM (TRMD) is the largest publicly
+    traded product tanker company. Frontline (FRO) operates both
+    crude and product tankers. Scorpio Tankers (STNG) has the youngest
+    fleet. International Seaways (INSW) is a pure-play tanker with
+    strong shareholder returns. These companies generate 30-50% FCF
+    yields at peak rates.
+
+    Source: Clarksons Research — product tanker earnings hit $50K/day
+    in 2023-2024 vs $15K/day breakeven. Drewry: global product tanker
+    fleet growth < 1% through 2027.
+
+    Signal: Cycle timing via momentum. Buy when SMA50 > SMA200
+    (freight rates rising). MACD and volume confirm institutional
+    interest. Exit on overbought (rate normalization).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Product Tanker Shipping",
+            description="Product tanker cycle: aging fleet + ton-mile growth, 30-50% FCF yields at peak",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "TRMD",   # TORM plc (largest listed product tanker co)
+                "FRO",    # Frontline Ltd (crude + product tankers)
+                "STNG",   # Scorpio Tankers (youngest product tanker fleet)
+                "INSW",   # International Seaways (pure-play tanker)
+                "TNK",    # Teekay Tankers (product + crude tankers)
+                "DHT",    # DHT Holdings (VLCC crude tankers)
+                "HAFN",   # Hafnia Limited (product tanker pure-play)
+                "ASC",    # Ardmore Shipping (MR product tankers)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20", "atr_14"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            # Exit: cycle bust (price crashed below SMA200)
+            if sma200 is not None and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            # Exit: overbought (take profits at cycle top)
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Cycle upturn: golden cross = freight rates rising
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+                # Extra for strong cycle momentum
+                if sma200 > 0:
+                    pct_above = (price - sma200) / sma200
+                    score += min(pct_above * 3, 2.0)
+            elif price > sma50:
+                score += 1.5
+
+            # MACD confirmation
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume rising (freight demand = cargo bookings)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.3:
+                score += 0.5
+
+            # RSI in momentum zone
+            if 40 < rsi < 70:
+                score += 0.5
+
+            # Dip-buying in uptrend (pullback to SMA50 in bull cycle)
+            if sma200 is not None and price > sma200 and rsi < 40:
+                score += 1.5
+
+            if score >= 3.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 CRISIS_COMMODITY_STRATEGIES = {
     "geopolitical_crisis": GeopoliticalCrisis,
     "agriculture_food": AgricultureFoodSecurity,
@@ -764,6 +888,7 @@ CRISIS_COMMODITY_STRATEGIES = {
     "rare_earth_minerals": RareEarthCriticalMinerals,
     "water_scarcity": WaterScarcity,
     "shipping_freight_cycle": ShippingFreightCycle,
+    "product_tanker_shipping": ProductTankerShipping,
 }
 
 

@@ -16,12 +16,56 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
 
+import numpy as np
 import pandas as pd
+
+
+# ---------------------------------------------------------------------------
+# Extended backtest horizons (Feature 5)
+# ---------------------------------------------------------------------------
+EXTENDED_HORIZONS = {
+    "2025": ("2025-01-01", "2025-12-31"),
+    "2026_ytd": ("2026-01-01", datetime.now().strftime("%Y-%m-%d")),
+}
+
+
+# ---------------------------------------------------------------------------
+# Historical black swan events for calibration (Feature 2)
+# ---------------------------------------------------------------------------
+HISTORICAL_CRASHES = {
+    "covid_2020": {"magnitude": -0.34, "duration_days": 23, "recovery_days": 148,
+                   "label": "COVID-19 Crash (Mar 2020)"},
+    "gfc_2008": {"magnitude": -0.57, "duration_days": 355, "recovery_days": 1400,
+                 "label": "Global Financial Crisis (2008-09)"},
+    "flash_crash_2010": {"magnitude": -0.09, "duration_days": 1, "recovery_days": 4,
+                         "label": "Flash Crash (May 2010)"},
+    "dot_com_2000": {"magnitude": -0.49, "duration_days": 929, "recovery_days": 2500,
+                     "label": "Dot-Com Bust (2000-02)"},
+    "black_monday_1987": {"magnitude": -0.22, "duration_days": 1, "recovery_days": 400,
+                          "label": "Black Monday (Oct 1987)"},
+    "volmageddon_2018": {"magnitude": -0.10, "duration_days": 9, "recovery_days": 120,
+                         "label": "Volmageddon (Feb 2018)"},
+}
+
+# Asset categories for black swan resilience scoring (Feature 3)
+_DEFENSIVE_ASSETS = {
+    "TLT", "IEF", "SHY", "BND", "AGG", "GOVT", "TIPS", "VTIP",  # Bonds
+    "GLD", "IAU", "SLV", "SGOL",  # Gold/precious metals
+    "BIL", "SHV", "MINT",  # Cash equivalents / T-bills
+    "VPU", "XLU",  # Utilities
+    "VNQ", "SCHD",  # REIT / dividend
+}
+_CONCENTRATED_GROWTH = {
+    "QQQ", "ARKK", "TQQQ", "SOXL", "TECL", "SPXL",  # Leveraged / tech-heavy
+    "TSLA", "NVDA", "AMD", "COIN", "MSTR",  # Volatile growth
+}
 
 
 # ---------------------------------------------------------------------------
@@ -321,6 +365,15 @@ def compute_metrics(
         "avg_daily_return": returns.mean(),
     }
 
+    # Black swan resilience score (Feature 3) — 0-100 scale.
+    # Higher = better expected performance during crashes.
+    # Computed from: max drawdown depth, tail risk, and distribution shape.
+    # Strategies with low drawdown, positive skew, and low kurtosis score higher.
+    _dd_score = max(0, min(50, 50 * (1 + max_drawdown)))  # 0 if -100% DD, 50 if 0% DD
+    _tail_score = max(0, min(25, 25 * (1 - abs(returns.quantile(0.01)))))  # 1st pctile
+    _skew_score = max(0, min(25, 12.5 + 12.5 * min(1, max(-1, skew))))  # Positive skew helps
+    metrics["black_swan_resilience"] = round(_dd_score + _tail_score + _skew_score, 1)
+
     # Benchmark comparison
     if benchmark_returns is not None and not benchmark_returns.empty:
         aligned = pd.DataFrame({"port": returns, "bench": benchmark_returns})
@@ -585,6 +638,10 @@ class Backtester:
             for dt, row in _raw_prices.items()
         }
 
+        # Gather external signals once (Feature 4) — these are static stubs
+        # for now but will pull live data when API keys are configured.
+        external_signals = gather_external_signals(self.symbols)
+
         # Run simulation
         equity_values = []
         equity_dates = []
@@ -599,9 +656,16 @@ class Backtester:
                 equity_dates.append(date)
                 continue
 
-            # Call strategy
+            # Call strategy — try passing external_signals if the strategy
+            # accepts a 5th positional arg; fall back to 4-arg call.
             try:
-                target_weights = self.strategy(date, prices, portfolio, enriched_data)
+                try:
+                    target_weights = self.strategy(
+                        date, prices, portfolio, enriched_data, external_signals
+                    )
+                except TypeError:
+                    # Strategy doesn't accept external_signals — use old signature
+                    target_weights = self.strategy(date, prices, portfolio, enriched_data)
             except Exception:
                 target_weights = {}
                 strategy_errors += 1
@@ -743,6 +807,40 @@ class Backtester:
                 if affordable > 0:
                     portfolio.execute_trade(date, sym, Side.BUY, affordable, price)
 
+    def run_with_analysis(self) -> dict[str, Any]:
+        """Run backtest and attach forward predictions + black swan analysis.
+
+        Convenience method that calls run(), then enriches results with:
+        - forward_predictions: list of ForwardPrediction
+        - black_swan_results: list of BlackSwanResult
+        - black_swan_resilience: 0-100 score
+
+        Returns:
+            Same dict as run(), plus analysis fields.
+        """
+        results = self.run()
+
+        equity_curve = results.get("equity_curve", pd.Series(dtype=float))
+        daily_returns = results.get("daily_returns", pd.Series(dtype=float))
+
+        # Forward predictions (Feature 1)
+        results["forward_predictions"] = predict_forward(equity_curve, daily_returns)
+
+        # Black swan simulation (Feature 2)
+        swan_results = simulate_black_swan(equity_curve, daily_returns)
+        results["black_swan_results"] = swan_results
+
+        # Black swan resilience with portfolio composition (Feature 3)
+        holdings = {}
+        last_snap = results.get("portfolio_history", [])
+        if last_snap:
+            holdings = last_snap[-1].get("holdings", {})
+        results["black_swan_resilience"] = compute_black_swan_resilience(
+            swan_results, holdings
+        )
+
+        return results
+
 
 # ---------------------------------------------------------------------------
 # Technical indicator helpers
@@ -775,6 +873,506 @@ def _compute_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
     close = df["Close"].shift(1)
     tr = pd.concat([high - low, (high - close).abs(), (low - close).abs()], axis=1).max(axis=1)
     return tr.rolling(period).mean()
+
+
+# ---------------------------------------------------------------------------
+# Forward Prediction Engine (Feature 1) — EXPERIMENTAL
+# ---------------------------------------------------------------------------
+@dataclass
+class ForwardPrediction:
+    """EXPERIMENTAL: Forward return predictions with confidence intervals.
+
+    Uses exponential smoothing + mean reversion toward historical CAGR.
+    NOT investment advice. Predictions are calibrated extrapolations only.
+    """
+    horizon_label: str  # e.g. "1M", "3M", "6M", "12M"
+    horizon_days: int
+    base_return: float  # Base case predicted return
+    optimistic_return: float  # Upper confidence bound (~75th pctile)
+    pessimistic_return: float  # Lower confidence bound (~25th pctile)
+    annualized_base: float  # Base return annualized
+    confidence: float  # 0-1 confidence level (decays with horizon)
+    method: str = "exponential_smoothing_mean_reversion"
+
+
+def predict_forward(
+    equity_curve: pd.Series,
+    daily_returns: pd.Series,
+    lookback_years: float = 3.0,
+    horizons: dict[str, int] | None = None,
+) -> list[ForwardPrediction]:
+    """EXPERIMENTAL: Predict forward returns using trend extrapolation.
+
+    Uses the last `lookback_years` of backtest data to project returns for
+    multiple forward horizons. Combines exponential smoothing of recent
+    momentum with mean reversion toward the historical CAGR.
+
+    Args:
+        equity_curve: Portfolio value time series from backtest.
+        daily_returns: Daily return series from backtest.
+        lookback_years: Years of history to use for calibration (default 3).
+        horizons: Dict of {label: trading_days}. Defaults to standard set.
+
+    Returns:
+        List of ForwardPrediction for each horizon.
+    """
+    if horizons is None:
+        horizons = {"1M": 21, "3M": 63, "6M": 126, "12M": 252}
+
+    if len(daily_returns) < 60:
+        # Not enough data to produce meaningful predictions
+        return [
+            ForwardPrediction(
+                horizon_label=label, horizon_days=days,
+                base_return=0.0, optimistic_return=0.0, pessimistic_return=0.0,
+                annualized_base=0.0, confidence=0.0,
+                method="insufficient_data",
+            )
+            for label, days in horizons.items()
+        ]
+
+    # Trim to lookback window
+    lookback_days = int(lookback_years * 252)
+    rets = daily_returns.iloc[-lookback_days:].copy()
+    rets = rets.replace([float('inf'), float('-inf')], float('nan')).dropna()
+
+    if len(rets) < 60:
+        return [
+            ForwardPrediction(
+                horizon_label=label, horizon_days=days,
+                base_return=0.0, optimistic_return=0.0, pessimistic_return=0.0,
+                annualized_base=0.0, confidence=0.0,
+                method="insufficient_data",
+            )
+            for label, days in horizons.items()
+        ]
+
+    # Historical CAGR (annualized)
+    cum = (1 + rets).cumprod()
+    n_years = len(rets) / 252.0
+    historical_cagr = (cum.iloc[-1] ** (1 / max(n_years, 0.01))) - 1
+
+    # Exponential smoothing of recent daily returns (alpha=0.02 for ~50-day half-life)
+    alpha = 0.02
+    smoothed_daily = rets.ewm(alpha=alpha).mean().iloc[-1]
+
+    # Realized volatility (annualized)
+    daily_vol = rets.std()
+    annual_vol = daily_vol * math.sqrt(252)
+
+    # Recent momentum (last 63 trading days annualized)
+    recent = rets.iloc[-min(63, len(rets)):]
+    recent_momentum = (1 + recent).prod() ** (252 / len(recent)) - 1
+
+    predictions = []
+    for label, days in horizons.items():
+        # Blend: short horizons favor momentum, long horizons favor mean reversion
+        # Weight shifts from 80% momentum at 1M to 20% momentum at 12M
+        momentum_weight = max(0.2, 1.0 - (days / 252) * 0.8)
+        reversion_weight = 1.0 - momentum_weight
+
+        # Daily expected return from each component
+        momentum_daily = smoothed_daily * 0.5 + (recent_momentum / 252) * 0.5
+        reversion_daily = historical_cagr / 252
+
+        blended_daily = momentum_weight * momentum_daily + reversion_weight * reversion_daily
+
+        # Compound for the horizon
+        base_return = (1 + blended_daily) ** days - 1
+
+        # Confidence intervals using historical volatility
+        # Scale vol by sqrt(days) for the horizon
+        horizon_vol = daily_vol * math.sqrt(days)
+
+        # Optimistic: ~75th percentile; Pessimistic: ~25th percentile
+        # Using 0.675 z-score for 75th/25th percentile
+        optimistic_return = base_return + 0.675 * horizon_vol
+        pessimistic_return = base_return - 0.675 * horizon_vol
+
+        # Annualize the base return
+        if days > 0:
+            annualized_base = (1 + base_return) ** (252 / days) - 1
+        else:
+            annualized_base = 0.0
+
+        # Confidence decays with horizon: ~0.7 at 1M, ~0.3 at 12M
+        confidence = max(0.1, 0.8 - (days / 252) * 0.5)
+
+        predictions.append(ForwardPrediction(
+            horizon_label=label,
+            horizon_days=days,
+            base_return=base_return,
+            optimistic_return=optimistic_return,
+            pessimistic_return=pessimistic_return,
+            annualized_base=annualized_base,
+            confidence=confidence,
+            method="exponential_smoothing_mean_reversion",
+        ))
+
+    return predictions
+
+
+def format_predictions(predictions: list[ForwardPrediction]) -> str:
+    """Format forward predictions as a readable table."""
+    lines = [
+        "",
+        "=" * 60,
+        "  EXPERIMENTAL: Forward Return Predictions",
+        "  (NOT investment advice — calibrated extrapolation only)",
+        "=" * 60,
+        "",
+        f"  {'Horizon':<10s} {'Pessimistic':>12s} {'Base':>12s} {'Optimistic':>12s} {'Confidence':>12s}",
+        f"  {'-' * 10} {'-' * 12} {'-' * 12} {'-' * 12} {'-' * 12}",
+    ]
+    for p in predictions:
+        lines.append(
+            f"  {p.horizon_label:<10s} "
+            f"{p.pessimistic_return:>11.2%} "
+            f"{p.base_return:>11.2%} "
+            f"{p.optimistic_return:>11.2%} "
+            f"{p.confidence:>11.0%}"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Black Swan Simulation (Feature 2)
+# ---------------------------------------------------------------------------
+@dataclass
+class BlackSwanResult:
+    """Results from injecting a black swan event into an equity curve."""
+    scenario_name: str
+    crash_magnitude: float  # e.g. -0.34
+    crash_duration_days: int
+    original_final_value: float
+    stressed_final_value: float
+    stressed_max_drawdown: float
+    recovery_days: int | None  # Days to recover to pre-crash level (None if never)
+    tail_risk_var_95: float  # 95th percentile daily VaR under stress
+    tail_risk_var_99: float  # 99th percentile daily VaR under stress
+
+
+def simulate_black_swan(
+    equity_curve: pd.Series,
+    daily_returns: pd.Series,
+    scenarios: dict[str, dict] | None = None,
+    injection_point: float = 0.7,
+) -> list[BlackSwanResult]:
+    """Simulate black swan crash events on a backtest equity curve.
+
+    Injects synthetic crash events at a specified point in the equity curve
+    and measures the strategy's resilience. Uses deterministic scenarios
+    calibrated from historical crashes (NOT Monte Carlo).
+
+    Args:
+        equity_curve: Portfolio value time series from backtest.
+        daily_returns: Daily return series from backtest.
+        scenarios: Dict of crash scenarios. Defaults to HISTORICAL_CRASHES.
+            Each entry: {"magnitude": float, "duration_days": int,
+                         "recovery_days": int, "label": str}
+        injection_point: Where in the curve to inject (0-1, default 0.7 = 70%).
+
+    Returns:
+        List of BlackSwanResult, one per scenario.
+    """
+    if scenarios is None:
+        scenarios = HISTORICAL_CRASHES
+
+    if len(equity_curve) < 20:
+        return []
+
+    results = []
+    inject_idx = int(len(equity_curve) * max(0.1, min(0.9, injection_point)))
+
+    for name, params in scenarios.items():
+        magnitude = params["magnitude"]  # e.g. -0.34
+        crash_days = max(1, params["duration_days"])
+        label = params.get("label", name)
+
+        # Build the stressed equity curve
+        stressed = equity_curve.copy().values.astype(float)
+        dates = equity_curve.index
+
+        # Pre-crash value
+        pre_crash_value = stressed[inject_idx]
+
+        # Apply crash: distribute the total drop over crash_days
+        # Using an exponential decay pattern (most damage early)
+        actual_crash_days = min(crash_days, len(stressed) - inject_idx - 1)
+        if actual_crash_days < 1:
+            actual_crash_days = 1
+
+        for d in range(actual_crash_days):
+            # Exponential decay: most of the drop happens early
+            if actual_crash_days == 1:
+                day_frac = 1.0
+            else:
+                day_frac = 1.0 - math.exp(-3.0 * (d + 1) / actual_crash_days)
+            drop_so_far = magnitude * day_frac
+            idx = inject_idx + d + 1
+            if idx < len(stressed):
+                stressed[idx] = pre_crash_value * (1 + drop_so_far)
+
+        # Post-crash: scale all remaining values by the crash factor,
+        # then blend back toward original curve (slow recovery)
+        crash_end_idx = inject_idx + actual_crash_days + 1
+        if crash_end_idx < len(stressed):
+            crash_bottom = stressed[min(crash_end_idx - 1, len(stressed) - 1)]
+            original_at_crash_end = equity_curve.values[min(crash_end_idx, len(equity_curve) - 1)]
+            if original_at_crash_end > 0:
+                scale_factor = crash_bottom / original_at_crash_end
+            else:
+                scale_factor = 1.0
+
+            for i in range(crash_end_idx, len(stressed)):
+                # Gradually recover: blend between scaled (crashed) and original
+                days_since_crash = i - crash_end_idx
+                # Recovery factor: 0 at crash end, approaches 1 asymptotically
+                # Half-life proportional to historical recovery time
+                hist_recovery = params.get("recovery_days", 252)
+                half_life = max(20, hist_recovery * 0.3)
+                recovery_frac = 1.0 - math.exp(-0.693 * days_since_crash / half_life)
+                stressed[i] = (
+                    scale_factor * equity_curve.values[i] * (1 - recovery_frac)
+                    + equity_curve.values[i] * recovery_frac
+                )
+
+        stressed_series = pd.Series(stressed, index=dates)
+
+        # Compute stressed metrics
+        stressed_returns = stressed_series.pct_change().dropna()
+        stressed_returns = stressed_returns.replace([float('inf'), float('-inf')], float('nan')).dropna()
+
+        # Max drawdown of stressed curve
+        cum = stressed_series / stressed_series.cummax().clip(lower=stressed_series.iloc[0])
+        stressed_max_dd = (cum - 1).min()
+
+        # Recovery time: days after crash bottom to return to pre-crash level
+        recovery_days_result = None
+        crash_bottom_idx = inject_idx + actual_crash_days
+        if crash_bottom_idx < len(stressed):
+            for i in range(crash_bottom_idx, len(stressed)):
+                if stressed[i] >= pre_crash_value:
+                    recovery_days_result = i - crash_bottom_idx
+                    break
+
+        # Tail risk VaR
+        if len(stressed_returns) > 10:
+            var_95 = float(np.percentile(stressed_returns, 5))
+            var_99 = float(np.percentile(stressed_returns, 1))
+        else:
+            var_95 = 0.0
+            var_99 = 0.0
+
+        results.append(BlackSwanResult(
+            scenario_name=label,
+            crash_magnitude=magnitude,
+            crash_duration_days=crash_days,
+            original_final_value=float(equity_curve.iloc[-1]),
+            stressed_final_value=float(stressed[-1]),
+            stressed_max_drawdown=float(stressed_max_dd),
+            recovery_days=recovery_days_result,
+            tail_risk_var_95=var_95,
+            tail_risk_var_99=var_99,
+        ))
+
+    return results
+
+
+def compute_black_swan_resilience(
+    black_swan_results: list[BlackSwanResult],
+    holdings: dict[str, Any] | None = None,
+) -> float:
+    """Compute a 0-100 black swan resilience score.
+
+    Combines:
+    - Performance under simulated crashes (50 points)
+    - Asset composition bonus/penalty (30 points)
+    - Recovery speed (20 points)
+
+    Args:
+        black_swan_results: Results from simulate_black_swan().
+        holdings: Current portfolio holdings dict {symbol: {...}} for
+                  asset-class scoring. Optional.
+
+    Returns:
+        Score from 0 (extremely fragile) to 100 (highly resilient).
+    """
+    if not black_swan_results:
+        return 50.0  # Neutral if no data
+
+    # --- Crash survival score (0-50) ---
+    # How much value is retained after each crash scenario?
+    survival_scores = []
+    for r in black_swan_results:
+        if r.original_final_value > 0:
+            retention = r.stressed_final_value / r.original_final_value
+            # Scale: 1.0 retention = 50, 0.5 retention = 25, 0 = 0
+            survival_scores.append(max(0, min(50, retention * 50)))
+        else:
+            survival_scores.append(0)
+    crash_score = sum(survival_scores) / len(survival_scores) if survival_scores else 25
+
+    # --- Asset composition score (0-30) ---
+    composition_score = 15.0  # Neutral default
+    if holdings:
+        symbols = set(holdings.keys())
+        defensive_count = len(symbols & _DEFENSIVE_ASSETS)
+        growth_count = len(symbols & _CONCENTRATED_GROWTH)
+        total = len(symbols) if symbols else 1
+
+        # Defensive fraction boosts score, concentrated growth penalizes
+        defensive_frac = defensive_count / total
+        growth_frac = growth_count / total
+        composition_score = 15 + 15 * defensive_frac - 15 * growth_frac
+        composition_score = max(0, min(30, composition_score))
+
+    # --- Recovery speed score (0-20) ---
+    recovery_scores = []
+    for r in black_swan_results:
+        if r.recovery_days is not None:
+            # Fast recovery (<60 days) = 20, slow (>500 days) = 0
+            score = max(0, min(20, 20 * (1 - r.recovery_days / 500)))
+            recovery_scores.append(score)
+        else:
+            recovery_scores.append(0)  # Never recovered
+    recovery_score = sum(recovery_scores) / len(recovery_scores) if recovery_scores else 10
+
+    return round(max(0, min(100, crash_score + composition_score + recovery_score)), 1)
+
+
+def format_black_swan_report(results: list[BlackSwanResult], resilience_score: float | None = None) -> str:
+    """Format black swan simulation results as a readable report."""
+    lines = [
+        "",
+        "=" * 72,
+        "  Black Swan Stress Test Results",
+        "=" * 72,
+        "",
+    ]
+    if resilience_score is not None:
+        lines.append(f"  Overall Resilience Score: {resilience_score:.1f} / 100")
+        lines.append("")
+
+    for r in results:
+        value_change = (r.stressed_final_value / r.original_final_value - 1) if r.original_final_value > 0 else -1
+        recovery_str = f"{r.recovery_days} days" if r.recovery_days is not None else "Never"
+        lines.extend([
+            f"  {r.scenario_name}",
+            f"    Crash: {r.crash_magnitude:+.1%} over {r.crash_duration_days} day(s)",
+            f"    Final Value Impact: {value_change:+.2%}  (${r.stressed_final_value:,.0f} vs ${r.original_final_value:,.0f})",
+            f"    Stressed Max DD: {r.stressed_max_drawdown:.2%}",
+            f"    Recovery Time: {recovery_str}",
+            f"    VaR (95/99): {r.tail_risk_var_95:.2%} / {r.tail_risk_var_99:.2%}",
+            "",
+        ])
+
+    lines.append("=" * 72)
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Sentiment Integration Stubs (Feature 4)
+# ---------------------------------------------------------------------------
+def _get_polymarket_signal(tickers: list[str] | None = None) -> dict[str, Any]:
+    """Stub: Fetch market-implied probabilities from Polymarket.
+
+    Returns dict with market-implied event probabilities that can inform
+    trading decisions (e.g., election outcomes, rate decisions, geopolitical).
+
+    Requires POLYMARKET_API_KEY env var. Returns empty dict if unavailable.
+    """
+    api_key = os.environ.get("POLYMARKET_API_KEY", "")
+    if not api_key:
+        return {}
+    # TODO: Implement actual API call when key is available
+    # Expected return format:
+    # {
+    #     "events": {
+    #         "rate_cut_2025": {"probability": 0.65, "volume": 1200000},
+    #         "recession_2025": {"probability": 0.20, "volume": 800000},
+    #     },
+    #     "timestamp": "2025-04-08T12:00:00Z",
+    #     "source": "polymarket",
+    # }
+    return {}
+
+
+def _get_reddit_sentiment(tickers: list[str] | None = None) -> dict[str, Any]:
+    """Stub: Fetch ticker sentiment scores from Reddit (r/wallstreetbets, etc.).
+
+    Returns dict with sentiment scores per ticker (-1 to +1 scale).
+
+    Requires REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET env vars.
+    Returns empty dict if unavailable.
+    """
+    client_id = os.environ.get("REDDIT_CLIENT_ID", "")
+    client_secret = os.environ.get("REDDIT_CLIENT_SECRET", "")
+    if not client_id or not client_secret:
+        return {}
+    # TODO: Implement actual API call when credentials are available
+    # Expected return format:
+    # {
+    #     "ticker_sentiment": {
+    #         "AAPL": {"score": 0.35, "mentions": 142, "bullish_pct": 0.67},
+    #         "TSLA": {"score": -0.12, "mentions": 89, "bullish_pct": 0.44},
+    #     },
+    #     "subreddits": ["wallstreetbets", "stocks", "investing"],
+    #     "timestamp": "2025-04-08T12:00:00Z",
+    #     "source": "reddit",
+    # }
+    return {}
+
+
+def _get_kalshi_events(tickers: list[str] | None = None) -> dict[str, Any]:
+    """Stub: Fetch event contract prices from Kalshi prediction market.
+
+    Returns dict with event contract prices for macro/market events.
+
+    Requires KALSHI_API_KEY env var. Returns empty dict if unavailable.
+    """
+    api_key = os.environ.get("KALSHI_API_KEY", "")
+    if not api_key:
+        return {}
+    # TODO: Implement actual API call when key is available
+    # Expected return format:
+    # {
+    #     "events": {
+    #         "fed_rate_hold": {"price": 0.72, "volume": 50000},
+    #         "sp500_above_5000": {"price": 0.85, "volume": 30000},
+    #     },
+    #     "timestamp": "2025-04-08T12:00:00Z",
+    #     "source": "kalshi",
+    # }
+    return {}
+
+
+def gather_external_signals(tickers: list[str] | None = None) -> dict[str, Any]:
+    """Gather all available external signals into a single dict.
+
+    Calls each signal source and merges results. Sources that return
+    empty dicts (no API key) are silently skipped.
+
+    Returns:
+        Dict with keys "polymarket", "reddit", "kalshi" (only present if
+        the source returned data).
+    """
+    signals = {}
+
+    poly = _get_polymarket_signal(tickers)
+    if poly:
+        signals["polymarket"] = poly
+
+    reddit = _get_reddit_sentiment(tickers)
+    if reddit:
+        signals["reddit"] = reddit
+
+    kalshi = _get_kalshi_events(tickers)
+    if kalshi:
+        signals["kalshi"] = kalshi
+
+    return signals
 
 
 # ---------------------------------------------------------------------------
@@ -837,6 +1435,13 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
             "",
             "--- Warnings ---",
             f"  Strategy Errors:    {strategy_errors:>10d}",
+        ])
+
+    if "black_swan_resilience" in m:
+        lines.extend([
+            "",
+            "--- Risk ---",
+            f"  Swan Resilience:    {m['black_swan_resilience']:>10.1f} / 100",
         ])
 
     if "benchmark_total_return" in m:

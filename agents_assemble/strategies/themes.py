@@ -33,6 +33,12 @@ Themes:
     + GlobalConsumerStaples      — Global consumer staples income
     + EmergingMarketETFValue     — Emerging market ETF value
     + GlobalPharmaPipeline       — Global pharma pipeline value
+    + SingaporeAlpha             — Singapore heritage consumer + REITs
+    + UKEuropeanBanking          — UK & European bank deep value
+    + TelecomEquipment5G         — 5G equipment & infrastructure
+    + GigEconomySaaSDisruptors   — Gig economy + SaaS growth disruptors
+    + KoreanChaebols             — Korean chaebol conglomerates + fintech
+    + RideshareMobility          — Rideshare & mobility platforms
 """
 
 from __future__ import annotations
@@ -2004,6 +2010,645 @@ class GlobalPharmaPipeline(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Singapore Alpha (Heritage Consumer + REITs combined)
+# ---------------------------------------------------------------------------
+class SingaporeAlpha(BasePersona):
+    """Singapore equities: heritage consumer brands + REITs.
+
+    Thesis: Singapore is a AAA-rated financial hub with world-class
+    governance. Heritage consumer brands (Haw Par/Tiger Balm, Wilmar
+    International, Thai Beverage) are cash-generative with regional
+    distribution. Singapore REITs (S-REITs) offer 4-6% yields backed
+    by prime commercial real estate in Asia's most transparent market.
+    Combined, they offer income + growth from Singapore's structural
+    advantages: rule of law, low tax, regional HQ status.
+
+    Signal: Income-oriented — buy on dips below SMA200 for yield,
+    hold in uptrend for total return.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Singapore Alpha",
+            description="Singapore heritage consumer + REITs: AAA-rated income + growth",
+            risk_tolerance=0.3,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Heritage consumer brands
+                "H02.SI",   # Haw Par Corporation (Tiger Balm, healthcare)
+                "F34.SI",   # Wilmar International (world's largest palm oil)
+                "Y92.SI",   # Thai Beverage (Chang Beer, spirits, regional)
+                # Singapore REITs (S-REITs)
+                "A17U.SI",  # CapitaLand Ascendas REIT (industrial, data centers)
+                "N2IU.SI",  # Mapletree Pan Asia Commercial Trust
+                "C38U.SI",  # CapitaLand Integrated Commercial Trust
+                "ME8U.SI",  # Mapletree Industrial Trust
+                "AJBU.SI",  # Keppel DC REIT (data center REIT)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200, sma50, rsi = inds["sma_200"], inds["sma_50"], inds["rsi_14"]
+            if _is_missing(sma200):
+                continue
+
+            # Income strategy: always maintain allocation, buy dips
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            if discount > 0.05:
+                # 5%+ below SMA200 = accumulate (yield pickup)
+                score = 2.5 + discount * 5
+                if rsi is not None and rsi < 35:
+                    score += 1.0
+                candidates.append((sym, score, 0.13))
+            elif discount > -0.05:
+                # Near SMA200 = normal income allocation
+                score = 1.5
+                if rsi is not None and rsi < 45:
+                    score += 0.5
+                candidates.append((sym, score, 0.10))
+            elif discount > -0.15:
+                # Moderately above SMA200 = hold for income
+                candidates.append((sym, 1.0, 0.08))
+            else:
+                # >15% above SMA200 and RSI overbought = trim
+                if rsi is not None and rsi > 75:
+                    weights[sym] = 0.0
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        for sym, _, wt in top:
+            weights[sym] = min(wt, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# UK & European Banking Value
+# ---------------------------------------------------------------------------
+class UKEuropeanBanking(BasePersona):
+    """UK and European banking value strategy.
+
+    Thesis: European banks trade at 0.5-0.8x book value vs US banks
+    at 1.2-1.5x despite improving ROE from higher rates. NatWest,
+    Barclays, HSBC benefit from UK rate normalization. UBS (post-CS
+    integration) is the world's largest wealth manager. BNP Paribas
+    and Deutsche Bank are restructuring successfully. Dividend yields
+    of 4-7% provide downside cushion.
+
+    Signal: Deep value + MACD reversal. Buy when below book (SMA200
+    proxy) with momentum confirmation. Sell on overbought.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="UK & European Banking Value",
+            description="European bank deep value: 0.5-0.8x book, 4-7% yield, rate normalization",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "NWG",    # NatWest Group (UK retail/commercial bank)
+                "BARC",   # Barclays (UK investment + retail bank)
+                "HSBC",   # HSBC Holdings (global, Asia-focused)
+                "UBS",    # UBS Group (wealth management leader post-CS)
+                "BNPQF",  # BNP Paribas (France, largest eurozone bank)
+                "DB",     # Deutsche Bank (German restructuring play)
+                "LYG",    # Lloyds Banking Group (UK mortgage leader)
+                "ING",    # ING Group (Netherlands digital banking)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            score = 0.0
+
+            # Value: banks below SMA200 = below "book value" proxy
+            if price < sma200 * 0.92:
+                score += 3.0
+            elif price < sma200:
+                score += 1.5
+
+            # RSI oversold = peak pessimism on European banks
+            if rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+
+            # MACD bullish crossover = turnaround signal
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+
+            # Bollinger lower band = statistical extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+
+            # Momentum confirmation for established uptrend
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.0
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+
+            # Overbought: take profits (banks are cyclical)
+            if rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.95, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Telecom Equipment & 5G
+# ---------------------------------------------------------------------------
+class TelecomEquipment5G(BasePersona):
+    """Telecom equipment and 5G infrastructure strategy.
+
+    Thesis: 5G capex cycle is multi-year ($1.7T global spend by 2030).
+    Equipment vendors (Ericsson, Nokia) have oligopoly with Huawei
+    restricted from Western markets. Qualcomm dominates 5G modems.
+    Marvell provides custom silicon for 5G base stations. Keysight
+    is the picks-and-shovels play (test equipment for every 5G rollout).
+    Secular tailwind from AI requiring low-latency 5G edge networks.
+
+    Signal: Momentum in equipment names. Buy uptrend + MACD bullish.
+    Sell on overbought or trend breakdown.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Telecom Equipment & 5G",
+            description="5G infrastructure: equipment oligopoly + semiconductor + test & measurement",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "ERIC",   # Ericsson (5G RAN leader, Huawei displacement)
+                "NOK",    # Nokia (5G equipment + submarine cables)
+                "QCOM",   # Qualcomm (5G modem monopoly + licensing)
+                "MRVL",   # Marvell Technology (5G custom silicon)
+                "KEYS",   # Keysight Technologies (5G test equipment)
+                "ANET",   # Arista Networks (data center + 5G backhaul)
+                "LITE",   # Lumentum (optical components for 5G)
+                "VIAV",   # Viavi Solutions (network test + assurance)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma50) or _is_missing(rsi):
+                continue
+
+            # Exit: overbought (take profits)
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Exit: broken trend
+            if sma200 is not None and price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Uptrend: golden cross
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+
+            # MACD bullish = capex cycle accelerating
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume confirmation (carrier orders = institutional buying)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.3:
+                score += 0.5
+
+            # RSI healthy range
+            if 35 < rsi < 70:
+                score += 0.5
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Gig Economy & SaaS Disruptors
+# ---------------------------------------------------------------------------
+class GigEconomySaaSDisruptors(BasePersona):
+    """Gig economy platforms and SaaS disruptors strategy.
+
+    Thesis: The gig economy is restructuring labor markets globally.
+    Upwork and Fiverr connect 100M+ freelancers with enterprises.
+    Toast is replacing legacy restaurant POS with cloud-native SaaS.
+    Rocket Lab is disrupting SpaceX with small-launch dominance.
+    These names trade at growth discounts after 2022 selloff but are
+    approaching profitability / already profitable. Revenue growth
+    25-50% with expanding margins = re-rating potential.
+
+    Signal: Growth momentum. Buy on uptrend + volume. Sell overbought.
+    Higher risk tolerance for these high-beta names.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Gig Economy & SaaS Disruptors",
+            description="Gig platforms + SaaS disruptors: growth at reasonable price, high beta",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "UPWK",   # Upwork (freelance marketplace leader)
+                "FVRR",   # Fiverr (gig economy marketplace)
+                "TOST",   # Toast (restaurant SaaS / fintech)
+                "RKLB",   # Rocket Lab (small-launch space disruptor)
+                "DDOG",   # Datadog (observability SaaS)
+                "NET",    # Cloudflare (edge computing / CDN)
+                "CFLT",   # Confluent (data streaming SaaS)
+                "HUBS",   # HubSpot (marketing SaaS)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma50) or _is_missing(rsi):
+                continue
+
+            # Exit: overbought growth names (take profits aggressively)
+            if rsi > 78:
+                weights[sym] = 0.0
+                continue
+
+            # Exit: structural breakdown
+            if sma200 is not None and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Growth momentum: strong uptrend
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+                # Extra for breakout momentum
+                if sma200 > 0:
+                    pct_above = (price - sma200) / sma200
+                    score += min(pct_above * 2, 1.5)
+            elif price > sma50:
+                score += 1.5
+
+            # MACD bullish = earnings acceleration
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume surge (institutional accumulation)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.5:
+                score += 1.0
+            elif vol_ratio > 1.2:
+                score += 0.5
+
+            # RSI in healthy momentum zone
+            if 40 < rsi < 70:
+                score += 0.5
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Korean Chaebols & Fintech
+# ---------------------------------------------------------------------------
+class KoreanChaebols(BasePersona):
+    """Korean chaebol conglomerates and fintech strategy.
+
+    Thesis: Korean chaebols are global leaders trading at "Korea discount"
+    (30-50% vs global peers) due to governance concerns. Reforms underway:
+    Korea Value-Up Program (2024) follows Japan's TSE model. Coupang is
+    Korea's Amazon (dominant e-commerce + logistics). Samsung (SSNLF) is
+    the world's largest semiconductor manufacturer. KB Financial and
+    Shinhan are top banks with 5%+ dividend yields. POSCO is the world's
+    most efficient steelmaker + battery materials play.
+
+    Signal: Value + momentum. Buy Korea discount names in uptrend.
+    MACD reversal for turnaround signals.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Korean Chaebols & Fintech",
+            description="Korea discount value: chaebols + fintech, governance reform catalyst",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "CPNG",   # Coupang (Korea's Amazon, dominant e-commerce)
+                "SKM",    # SK Telecom (5G leader + AI investments)
+                "SSNLF",  # Samsung Electronics (memory + foundry)
+                "KB",     # KB Financial Group (Korea's largest bank)
+                "SHG",    # Shinhan Financial (premium Korean bank)
+                "PKX",    # POSCO Holdings (steel + battery materials)
+                "LPL",    # LG Display (OLED technology leader)
+                "EWY",    # iShares MSCI South Korea ETF (broad exposure)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "bb_lower"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            score = 0.0
+
+            # Korea discount: buy below SMA200 (value entry)
+            if price < sma200 * 0.92:
+                score += 2.5
+            elif price < sma200:
+                score += 1.5
+
+            # Also buy momentum (governance reform re-rating)
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.5
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+
+            # RSI oversold = Korea sentiment trough
+            if rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+
+            # MACD bullish crossover = reform momentum building
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Bollinger lower band extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 0.5
+
+            # Overbought: take profits (Korea rallies are sharp but short)
+            if rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Rideshare & Mobility
+# ---------------------------------------------------------------------------
+class RideshareMobility(BasePersona):
+    """Rideshare and mobility platform strategy.
+
+    Thesis: Rideshare is a winner-take-most market. Uber is the global
+    leader (150M+ monthly active users, 37 countries). Lyft is the #2
+    US player approaching sustained profitability. Grab is the SE Asia
+    super-app (rideshare + food + payments). DoorDash dominates US food
+    delivery with 65%+ market share. All four have crossed the
+    profitability inflection point with expanding margins. Network
+    effects + autonomous driving optionality = long runway.
+
+    Signal: Growth momentum. Buy on uptrend + volume confirmation.
+    Sell on overbought or breakdown.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Rideshare & Mobility",
+            description="Mobility platforms: rideshare + delivery, profitability inflection",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "UBER",   # Uber Technologies (global rideshare + delivery leader)
+                "LYFT",   # Lyft (US #2 rideshare, margin expansion)
+                "GRAB",   # Grab Holdings (SE Asia super-app)
+                "DASH",   # DoorDash (US food delivery dominant)
+                "ABNB",   # Airbnb (mobility-adjacent: travel platform)
+                "TCOM",   # Trip.com (China travel + mobility)
+                "BKNG",   # Booking Holdings (global travel platform)
+                "CPRT",   # Copart (vehicle remarketing — mobility value chain)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma50) or _is_missing(rsi):
+                continue
+
+            # Exit: overbought
+            if rsi > 78:
+                weights[sym] = 0.0
+                continue
+
+            # Exit: broken below SMA200
+            if sma200 is not None and price < sma200 * 0.80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Growth momentum: strong uptrend
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+
+            # MACD bullish = earnings momentum
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume confirmation
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.3:
+                score += 0.5
+
+            # RSI healthy range
+            if 35 < rsi < 70:
+                score += 0.5
+
+            # Dip-buy: oversold mobility names
+            if rsi < 35 and sma200 is not None and price > sma200 * 0.90:
+                score += 1.5
+
+            if score >= 2.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -2033,6 +2678,12 @@ THEME_STRATEGIES = {
     "global_consumer_staples": GlobalConsumerStaples,
     "emerging_market_etf_value": EmergingMarketETFValue,
     "global_pharma_pipeline": GlobalPharmaPipeline,
+    "singapore_alpha": SingaporeAlpha,
+    "uk_european_banking": UKEuropeanBanking,
+    "telecom_equipment_5g": TelecomEquipment5G,
+    "gig_economy_saas": GigEconomySaaSDisruptors,
+    "korean_chaebols": KoreanChaebols,
+    "rideshare_mobility": RideshareMobility,
 }
 
 

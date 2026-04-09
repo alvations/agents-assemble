@@ -514,6 +514,237 @@ class BondFixedIncome(BasePersona):
         return {k: v for k, v in weights.items() if k in prices}
 
 
+# ---------------------------------------------------------------------------
+# 8. High-Yield REIT, BDC & Real Estate Income
+# ---------------------------------------------------------------------------
+class HighYieldREITBDCIncome(BasePersona):
+    """High-yield REIT, BDC, and real estate income strategy.
+
+    Thesis: REITs and BDCs provide 6-12% dividend yields with monthly
+    or quarterly distributions. Realty Income (O) is the "Monthly
+    Dividend Company" with 30+ years of increases. AGNC and NLY are
+    agency mortgage REITs yielding 12-15% (interest rate sensitive).
+    MAIN and HTGC are BDCs lending to middle-market companies at 10%+
+    yields. ARCC (Ares Capital) is the largest BDC by AUM.
+    STAG Industrial is a logistics/e-commerce REIT beneficiary.
+    Zillow and Redfin provide real estate tech exposure as a growth
+    kicker alongside the income core.
+
+    Target: 6-8% yield portfolio, max drawdown < 20%.
+
+    Signal: Income-oriented. Buy on dips below SMA200 for yield
+    accumulation. Hold in uptrend for total return. Trim overbought.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="High-Yield REIT, BDC & Real Estate",
+            description="REITs + BDCs + RE tech: 6-8% yield, monthly income, dip accumulation",
+            risk_tolerance=0.3,
+            max_position_size=0.10,
+            max_positions=14,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Equity REITs
+                "O",      # Realty Income (monthly dividend, net lease)
+                "STAG",   # STAG Industrial (logistics / e-commerce REIT)
+                # Mortgage REITs (high yield, rate sensitive)
+                "AGNC",   # AGNC Investment (agency MBS, 12-15% yield)
+                "ARR",    # ARMOUR Residential (agency MBS REIT)
+                "NLY",    # Annaly Capital (largest mortgage REIT)
+                "DX",     # Dynex Capital (agency + non-agency MBS)
+                # BDCs (Business Development Companies)
+                "MAIN",   # Main Street Capital (premium BDC, internal)
+                "HTGC",   # Horizon Technology Finance (venture lending)
+                "ARCC",   # Ares Capital (largest BDC by AUM)
+                # Real Estate Tech (growth kicker)
+                "Z",      # Zillow Group (RE marketplace + tech)
+                "RDFN",   # Redfin (discount brokerage + tech)
+                # Broad REIT exposure
+                "VNQ",    # Vanguard Real Estate ETF (diversified)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        # Classify tickers by type for different allocation logic
+        income_core = {"O", "STAG", "MAIN", "ARCC", "VNQ"}
+        mortgage_reits = {"AGNC", "ARR", "NLY", "DX"}
+        bdcs = {"HTGC"}
+        growth = {"Z", "RDFN"}
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200, sma50, rsi = inds["sma_200"], inds["sma_50"], inds["rsi_14"]
+
+            if sma200 is None or (sma200 != sma200):
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            if sym in income_core:
+                # Income core: always allocate, buy dips aggressively
+                if discount > 0.08:
+                    score = 3.0 + discount * 5
+                    candidates.append((sym, score, 0.10))
+                elif discount > -0.05:
+                    candidates.append((sym, 2.0, 0.08))
+                elif discount > -0.15:
+                    candidates.append((sym, 1.0, 0.06))
+                elif rsi is not None and rsi > 78:
+                    weights[sym] = 0.0
+
+            elif sym in mortgage_reits:
+                # Mortgage REITs: yield-seekers, very rate sensitive
+                # Buy on oversold, trim on overbought
+                if rsi is not None and rsi < 35 and discount > 0:
+                    candidates.append((sym, 2.5 + discount * 3, 0.08))
+                elif rsi is not None and rsi < 50 and discount > -0.05:
+                    candidates.append((sym, 1.5, 0.06))
+                elif rsi is not None and rsi > 75:
+                    weights[sym] = 0.0
+                else:
+                    candidates.append((sym, 1.0, 0.05))
+
+            elif sym in bdcs:
+                # BDCs: steady income, accumulate on dips
+                if discount > 0.05:
+                    candidates.append((sym, 2.5, 0.08))
+                elif discount > -0.10:
+                    candidates.append((sym, 1.5, 0.06))
+                elif rsi is not None and rsi > 75:
+                    weights[sym] = 0.0
+
+            elif sym in growth:
+                # RE tech: momentum-driven growth kicker
+                if sma50 is not None and price > sma50 and (rsi is None or rsi < 75):
+                    score = 1.5
+                    if sma200 is not None and price > sma50 > sma200:
+                        score = 2.5
+                    candidates.append((sym, score, 0.06))
+                elif rsi is not None and rsi > 78:
+                    weights[sym] = 0.0
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        for sym, _, wt in top:
+            weights[sym] = min(wt, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 9. Dividend Aristocrat Blue Chips
+# ---------------------------------------------------------------------------
+class DividendAristocratBlueChips(BasePersona):
+    """Dividend aristocrat blue chip income portfolio.
+
+    Thesis: Dividend aristocrats have raised dividends 25+ consecutive
+    years — proof of business quality and capital discipline. Altria (MO)
+    yields 8%+ with pricing power. Philip Morris (PM) is the global
+    tobacco leader with IQOS growth. 3M (MMM) is restructuring post-
+    litigation. UPS/FDX are logistics duopoly. JNJ is the healthcare
+    conglomerate gold standard. Enbridge (ENB) is North America's
+    largest pipeline operator (6%+ yield). ABBV (AbbVie) has the best
+    pharma pipeline. XOM generates $50B+ operating cash flow.
+    SCHD ETF provides diversified dividend exposure.
+
+    Signal: Income accumulation. Buy on dips below SMA200 (yield
+    pickup). Inverse volatility weighting for stability. Trim
+    overbought to lock in capital gains.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Dividend Aristocrat Blue Chips",
+            description="25+ year dividend growers: 4-8% yield, income + capital appreciation",
+            risk_tolerance=0.2,
+            max_position_size=0.10,
+            max_positions=14,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "MO",     # Altria (8%+ yield, pricing power)
+                "PM",     # Philip Morris International (IQOS growth + 5% yield)
+                "MMM",    # 3M (restructuring, 65yr dividend streak)
+                "UPS",    # UPS (logistics duopoly, 4%+ yield)
+                "FDX",    # FedEx (logistics duopoly, restructuring)
+                "F",      # Ford Motor (turnaround, 5%+ yield)
+                "KHC",    # Kraft Heinz (consumer staples, 4%+ yield)
+                "JNJ",    # Johnson & Johnson (healthcare gold standard)
+                "ENB",    # Enbridge (pipeline, 6%+ yield)
+                "ABBV",   # AbbVie (pharma pipeline + 4% yield)
+                "XOM",    # Exxon Mobil (energy cash machine)
+                "SCHD",   # Schwab US Dividend Equity ETF (diversified)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14", "vol_20"], date)
+            sma200, sma50, rsi, vol20 = inds["sma_200"], inds["sma_50"], inds["rsi_14"], inds["vol_20"]
+
+            if sma200 is None or (sma200 != sma200):
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            # Income: always maintain some allocation (aristocrats are core)
+            base_weight = 0.06
+            score = 1.0
+
+            # Buy dips below SMA200 (yield pickup on aristocrats)
+            if discount > 0.10:
+                score = 3.0 + discount * 5
+                base_weight = 0.10
+            elif discount > 0.03:
+                score = 2.0
+                base_weight = 0.08
+            elif discount > -0.05:
+                score = 1.5
+                base_weight = 0.07
+            elif discount > -0.15:
+                score = 1.0
+                base_weight = 0.05
+
+            # RSI bonus for oversold aristocrats
+            if rsi is not None and rsi < 35:
+                score += 1.5
+            elif rsi is not None and rsi < 45:
+                score += 0.5
+
+            # Overbought aristocrats: trim (not sell — they're income)
+            if rsi is not None and rsi > 78 and discount < -0.15:
+                base_weight = 0.03
+
+            # Low vol bonus (stable dividend payers = more allocation)
+            if vol20 is not None and vol20 < 0.015:
+                score += 0.5
+
+            candidates.append((sym, score, base_weight))
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        top = candidates[:self.config.max_positions]
+        total_weight = sum(wt for _, _, wt in top)
+        # Scale to ~95% invested
+        scale = 0.95 / total_weight if total_weight > 0 else 1.0
+        for sym, _, wt in top:
+            scaled = min(wt * scale, self.config.max_position_size)
+            weights[sym] = scaled
+        return weights
+
+
 PORTFOLIO_STRATEGIES = {
     "staples_hedged_growth": StaplesHedgedGrowth,
     "barbell_portfolio": BarbellPortfolio,
@@ -522,6 +753,8 @@ PORTFOLIO_STRATEGIES = {
     "core_satellite": CoreSatellite,
     "income_shield": IncomeShield,
     "bond_fixed_income": BondFixedIncome,
+    "high_yield_reit_bdc": HighYieldREITBDCIncome,
+    "dividend_aristocrat_blue_chips": DividendAristocratBlueChips,
 }
 
 

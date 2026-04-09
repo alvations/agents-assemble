@@ -1801,6 +1801,382 @@ class NewsMediaMonopoly(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Retail Deep Value
+# ---------------------------------------------------------------------------
+class RetailDeepValue(BasePersona):
+    """Retail deep value — contrarian department store / brick-and-mortar play.
+
+    Thesis: Department stores and brick-and-mortar retailers are trading
+    at historic low valuations (0.1-0.3x sales) despite owning prime real
+    estate, generating free cash flow, and buying back shares aggressively.
+    Kohl's, Macy's, and Nordstrom are trading below liquidation value.
+    Dillard's has 10 straight years of buybacks (share count -60%).
+    Burlington is the off-price leader with expanding margins.
+    The "retail is dead" narrative is overdone — survivors are
+    cash-generative with real asset backing.
+
+    Signal: Deep value + RSI reversal. Buy oversold names with MACD
+    bullish crossover. Sell on overbought recovery.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Retail Deep Value",
+            description="Contrarian brick-and-mortar: below liquidation value, buybacks, real estate",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "KSS",    # Kohl's (massive buybacks, real estate value)
+                "M",      # Macy's (prime urban real estate, digital growth)
+                "JWN",    # Nordstrom (premium positioning, Rack growth)
+                "DDS",    # Dillard's (buyback king, owner-operator)
+                "BURL",   # Burlington (off-price growth, margin expansion)
+                "TJX",    # TJ Maxx (off-price leader, treasure hunt model)
+                "ROST",   # Ross Stores (discount leader, low-income resilient)
+                "BBWI",   # Bath & Body Works (specialty retail, brand moat)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "sma_50", "rsi_14", "macd", "macd_signal",
+                 "bb_lower", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            # Exit: structural freefall (>35% below SMA200 = going bankrupt)
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            if discount > 0.35:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Deep value: below SMA200
+            if discount > 0.10:
+                score += 3.0  # >10% below = deep discount
+            elif discount > 0.02:
+                score += 1.5
+
+            # RSI oversold = maximum retail pessimism
+            if rsi < 30:
+                score += 2.5
+            elif rsi < 40:
+                score += 1.5
+
+            # MACD reversal = turnaround starting
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+
+            # Bollinger lower band = statistical extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+
+            # Volume surge = institutional interest (buyout? activist?)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.5:
+                score += 0.5
+
+            # Also ride recovery momentum
+            if sma50 is not None and price > sma50 > sma200:
+                score += 1.5
+
+            # Take profits on recovery
+            if rsi > 70 and discount < -0.15:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 3.0:
+                candidates.append((sym, score))
+
+        candidates.sort(key=lambda x: -x[1])
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Cannabis & Alt Consumer
+# ---------------------------------------------------------------------------
+class CannabisAltConsumer(BasePersona):
+    """Cannabis and alternative consumer products strategy.
+
+    Thesis: US cannabis legalization is a matter of when, not if. SAFE
+    Banking Act / rescheduling would unlock institutional capital for an
+    industry generating $30B+ annual revenue. Tilray (TLRY) is the
+    world's largest cannabis company by revenue with diversification
+    into beverages. Canopy Growth (CGC) has Constellation Brands backing.
+    MJ ETF provides diversified cannabis exposure. The sector trades
+    at 0.5-1x sales vs 3-5x for consumer staples — binary catalyst
+    with asymmetric upside if regulation changes.
+
+    Signal: Contrarian deep value. Buy on extreme oversold with MACD
+    reversal. These are volatile — aggressive position sizing limits.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Cannabis & Alt Consumer",
+            description="Contrarian cannabis: pre-legalization value, binary regulatory catalyst",
+            risk_tolerance=0.8,
+            max_position_size=0.12,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "TLRY",   # Tilray Brands (largest cannabis co by revenue)
+                "CGC",    # Canopy Growth (Constellation Brands-backed)
+                "MJ",     # ETFMG Alternative Harvest ETF (diversified)
+                "CRON",   # Cronos Group (Altria-backed cannabis)
+                "MSOS",   # AdvisorShares Pure US Cannabis ETF
+                "GTBIF",  # Green Thumb Industries (US MSO leader)
+                "CURLF",  # Curaleaf Holdings (US MSO)
+                "SAM",    # Boston Beer (craft/alternative beverage proxy)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "bb_lower", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(rsi):
+                continue
+
+            # Exit: overbought (cannabis rallies are sharp and short)
+            if rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Deep value: heavily discounted from peak
+            if sma200 is not None:
+                discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+                if discount > 0.15:
+                    score += 3.0  # >15% below SMA200 = deep distress
+                elif discount > 0.05:
+                    score += 2.0
+
+            # RSI extremely oversold (common for cannabis)
+            if rsi < 25:
+                score += 3.0
+            elif rsi < 35:
+                score += 2.0
+            elif rsi < 45:
+                score += 1.0
+
+            # MACD bullish crossover = regulatory catalyst hope
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+
+            # Bollinger lower band = statistical extreme
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.03:
+                score += 1.0
+
+            # Volume surge = potential catalyst (regulatory news)
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 2.0:
+                score += 1.5
+            elif vol_ratio > 1.5:
+                score += 0.5
+
+            # Momentum: also ride if uptrend established
+            if sma50 is not None and sma200 is not None and price > sma50 > sma200:
+                score += 2.0
+
+            if score >= 3.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Fallen Blue Chip Value
+# ---------------------------------------------------------------------------
+class FallenBlueChipValue(BasePersona):
+    """Fallen blue chip value — contrarian play on once-great companies.
+
+    Thesis: Blue chips that have fallen 30-60% from highs while
+    maintaining dominant market positions and strong cash flows.
+    Pfizer (PFE) trades at 9x earnings with $60B+ revenue and
+    oncology pipeline. Intel (INTC) is the only Western foundry with
+    US government backing ($50B+ CHIPS Act). Starbucks (SBUX) has new
+    CEO turnaround. Nike (NKE) is the world's #1 athletic brand
+    at a decade-low valuation. Cisco (CSCO) generates $15B+ FCF.
+    These are NOT value traps — they have identifiable catalysts.
+
+    Signal: Deep value + mean reversion. Buy when RSI < 40 and
+    price near SMA200 support. MACD crossover for timing.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Fallen Blue Chip Value",
+            description="Once-great blue chips at deep discounts: turnaround catalysts + dividend income",
+            risk_tolerance=0.5,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "PFE",    # Pfizer (9x earnings, oncology pipeline)
+                "INTC",   # Intel (CHIPS Act, foundry turnaround)
+                "WMT",    # Walmart (defensive, e-commerce growth)
+                "SBUX",   # Starbucks (new CEO turnaround)
+                "NKE",    # Nike (brand moat at decade-low valuation)
+                "CSCO",   # Cisco (networking moat, $15B+ FCF)
+                "VZ",     # Verizon (7% dividend yield, fiber build)
+                "TGT",    # Target (inventory reset, private label)
+                "BMY",    # Bristol-Myers Squibb (pipeline catalyst)
+                "MDT",    # Medtronic (med-tech leader at discount)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "sma_50", "rsi_14", "macd", "macd_signal",
+                 "bb_lower", "Volume", "volume_sma_20"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            bb_low = inds["bb_lower"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+
+            # Exit: falling knife (>30% below SMA200 with no reversal)
+            if discount > 0.30 and rsi < 25:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Deep value: below SMA200
+            if discount > 0.10:
+                score += 3.0
+            elif discount > 0.03:
+                score += 1.5
+
+            # RSI oversold = contrarian entry
+            if rsi < 30:
+                score += 2.5
+            elif rsi < 40:
+                score += 1.5
+            elif rsi < 50:
+                score += 0.5
+
+            # MACD bullish crossover = turnaround confirmation
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.5
+
+            # Bollinger lower band
+            if bb_low is not None and not _is_missing(bb_low) and price < bb_low * 1.02:
+                score += 1.0
+
+            # Volume surge = institutional accumulation
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            if vol_ratio > 1.5:
+                score += 0.5
+
+            # Recovery momentum: already started turning
+            if sma50 is not None and price > sma50 > sma200:
+                score += 2.0
+            elif sma50 is not None and price > sma50:
+                score += 1.0
+
+            # Take profits on full recovery
+            if rsi > 70 and discount < -0.15:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 3.0:
+                candidates.append((sym, score))
+
+        candidates.sort(key=lambda x: -x[1])
+        top = candidates[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 UNCONVENTIONAL_STRATEGIES = {
     "sell_in_may": SellInMayGoAway,
     "turn_of_month": TurnOfMonth,
@@ -1826,6 +2202,9 @@ UNCONVENTIONAL_STRATEGIES = {
     "midstream_toll_road": MidstreamTollRoad,
     "constellation_contrarian": ConstellationContrarian,
     "news_media_monopoly": NewsMediaMonopoly,
+    "retail_deep_value": RetailDeepValue,
+    "cannabis_alt_consumer": CannabisAltConsumer,
+    "fallen_blue_chip_value": FallenBlueChipValue,
 }
 
 
