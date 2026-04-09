@@ -67,8 +67,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Take profit:** Follow the calendar — sell on schedule.
-- **Stop loss:** No stop loss within the season.
-- **Exit rule:** Exit on calendar date regardless of P&L.
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -28% drawdown to return 17% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

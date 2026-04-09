@@ -82,8 +82,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Take profit:** Trim 25% of any position that doubles. Reinvest the proceeds into the lowest-yielding holding to rebalance.
-- **Stop loss:** No price-based stop loss. Only exit if dividend is CUT (not just frozen). A 30% price drop with maintained dividend = higher yield = buy more.
-- **Exit rule:** Full exit only if company cuts dividend AND debt-to-equity exceeds 2x (financial distress, not just a bad quarter).
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -15% drawdown to return 76% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

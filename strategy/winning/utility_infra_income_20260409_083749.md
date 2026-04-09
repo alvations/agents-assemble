@@ -72,8 +72,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** Rarely sell income positions. Trim at +60% if yield drops below 2%.
-- **Stop loss:** Exit if dividend/distribution is cut.
-- **Exit rule:** Rebalance annually to highest-yielding positions.
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -19% drawdown to return 190% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

@@ -71,8 +71,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** Rebalance when either end drifts >10% from target. Dont let offense OR defense dominate.
-- **Stop loss:** No stop loss on the portfolio level. Individual positions: -30% triggers review, not automatic exit.
-- **Exit rule:** Never fully exit — barbell is designed to work in ALL environments. Adjust the ratio, dont abandon it.
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -31% drawdown to return 683% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

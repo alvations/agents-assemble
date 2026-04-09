@@ -78,8 +78,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** Take profit at +40%. These are recovery plays, not compounders — take the mean reversion.
-- **Stop loss:** Stop loss at -25%. If GLP-1 thesis accelerates beyond expectation, cut early.
-- **Exit rule:** Exit if GLP-1 adoption passes 15% of population (thesis shifts from overreaction to structural change).
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -24% drawdown to return 116% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

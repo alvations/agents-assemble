@@ -71,8 +71,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Take profit:** Trim 25% at +100% gain. Midstream rarely sustains that — lock in and redeploy to laggards.
-- **Stop loss:** Exit if distribution cut (not just price drop). EPD has 27 years of increases — a cut means something is wrong.
-- **Exit rule:** Exit if fee-based revenue drops below 80% of total (means more commodity exposure than expected).
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -52% drawdown to return 129% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

@@ -65,8 +65,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Take profit:** Follow the calendar — sell on schedule.
-- **Stop loss:** No stop loss within the season.
-- **Exit rule:** Exit on calendar date regardless of P&L.
+- **Take profit:** Rebalance quarterly to target weights. Take 25% off any position up 100%+.
+- **Stop loss:** Review if drawdown exceeds 7% — but dont auto-sell. Assess if fundamentals changed.
+- **Exit rule:** Exit if the strategy thesis breaks: sector structural decline, regulation change, or management quality deterioration.
 
 </details>

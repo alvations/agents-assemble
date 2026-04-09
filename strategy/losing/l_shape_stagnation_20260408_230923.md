@@ -75,8 +75,8 @@ This strategy has **moderate long-term potential** but requires more active moni
 **Rebalance:** Check monthly. This strategy is more volatile and needs closer attention.
 
 **Exit rules:**
-- **Take profit:** Trim 25% at +80%. Rebalance quarterly.
-- **Stop loss:** Stop loss at -25% from entry.
-- **Exit rule:** Exit if strategy thesis no longer holds.
+- **Take profit:** Rebalance quarterly to target weights. Take 25% off any position up 100%+.
+- **Stop loss:** Review if drawdown exceeds 15% — but dont auto-sell. Assess if fundamentals changed.
+- **Exit rule:** Exit if the strategy thesis breaks: sector structural decline, regulation change, or management quality deterioration.
 
 </details>

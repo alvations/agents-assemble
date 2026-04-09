@@ -75,8 +75,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** Trim at +100% per position. Redistribute to laggards. These compound — but take some off at doubles.
-- **Stop loss:** No hard stop. These are 15-20% annual growers. -25% dips = buy more.
-- **Exit rule:** Exit only if a company acquisition destroys ROIC (bad M&A) or FCF turns negative.
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -32% drawdown to return 278% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

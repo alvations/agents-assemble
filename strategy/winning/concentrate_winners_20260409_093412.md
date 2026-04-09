@@ -69,8 +69,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** Trim any position exceeding 25% of portfolio back to 15%. Concentration wins but diversify gains.
-- **Stop loss:** Stop loss at -20% per position. Concentrated means one bad position can hurt significantly.
-- **Exit rule:** Exit if Sharpe ratio turns negative for 2 consecutive quarters (strategy stopped working).
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -32% drawdown to return 839% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>

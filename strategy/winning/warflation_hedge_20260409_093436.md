@@ -74,8 +74,8 @@ This strategy is **suitable for passive investing**. It has shown consistent ret
 **Rebalance:** Check quarterly. If any position has drifted more than 5% from target, rebalance back.
 
 **Exit rules:**
-- **Take profit:** Take profit on energy positions at +50% per cycle. Geopolitical premiums come and go.
-- **Stop loss:** Stop loss at -20% on energy positions. If oil drops below , warflation thesis may be over.
-- **Exit rule:** Exit when Strait of Hormuz fully reopens AND ceasefire holds for 30+ days. Keep midstream for yield.
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -14% drawdown to return 151% over the long term. Stopping out would have locked in losses.
+- **Exit rule:** Exit only on FUNDAMENTAL deterioration: dividend cuts, moat erosion, management fraud, or regulatory destruction of business model. Price drops alone are NOT exit signals for passive investors.
 
 </details>
