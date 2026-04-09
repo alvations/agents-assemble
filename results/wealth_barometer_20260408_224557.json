@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.21804109444911912,
+    "cagr": 0.06819867892872145,
+    "annual_volatility": 0.11859494585014906,
+    "sharpe_ratio": 0.28593955489232964,
+    "sortino_ratio": 0.40059287538382987,
+    "calmar_ratio": 0.47736689090120743,
+    "max_drawdown": -0.14286428369586146,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.535904255319149,
+    "profit_factor": 1.1140353134199177,
+    "num_trading_days": 752,
+    "skewness": -0.18324148534031437,
+    "kurtosis": 2.6766872519279317,
+    "best_day": 0.03505211277165299,
+    "worst_day": -0.033915643118066274,
+    "avg_daily_return": 0.00029021726766773726,
+    "black_swan_resilience": 77.5,
+    "benchmark_total_return": 0.28194132237102565,
+    "benchmark_cagr": 0.08662457909976418,
+    "alpha": -0.01842590017104273,
+    "beta": 0.40397582757964134,
+    "information_ratio": -0.1304497675348021,
+    "tracking_error": 0.14124900733247353
+  },
+  "trade_metrics": {
+    "num_trades": 678,
+    "num_buys": 314,
+    "num_sells": 364,
+    "total_commission": 0.0,
+    "total_slippage": 1490.471757537843,
+    "total_transaction_costs": 1490.471757537843,
+    "avg_trade_size": 2198.335925572038
+  },
+  "final_positions": {
+    "COST": {
+      "qty": 15.0,
+      "avg_cost": 674.4998975185316,
+      "realized_pnl": 2034.183551889305
+    },
+    "WMT": {
+      "qty": 164.0,
+      "avg_cost": 57.39143194073749,
+      "realized_pnl": 2024.3899562313868
+    },
+    "TJX": {
+      "qty": 117.0,
+      "avg_cost": 92.51313844550266,
+      "realized_pnl": 1407.111020145292
+    },
+    "RL": {
+      "qty": 64.0,
+      "avg_cost": 171.15796959936586,
+      "realized_pnl": 4337.564239845257
+    },
+    "LULU": {
+      "qty": 36.0,
+      "avg_cost": 341.64578809236224,
+      "realized_pnl": -856.6711843390159
+    },
+    "TPR": {
+      "qty": 227.0,
+      "avg_cost": 41.984240285971374,
+      "realized_pnl": -283.73167185085174
+    },
+    "RH": {
+      "qty": 37.0,
+      "avg_cost": 334.2852636382629,
+      "realized_pnl": -9195.106774925289
+    }
+  },
+  "source": "unconventional",
+  "description": "DLTR/DG crash signals K-shaped economy \u2192 long Costco + luxury (rich don't care)"
+}

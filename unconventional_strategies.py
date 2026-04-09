@@ -2756,12 +2756,81 @@ UNCONVENTIONAL_STRATEGIES["vix_spike_buyback"] = VIXSpikeBuyback
 UNCONVENTIONAL_STRATEGIES["crypto_crash_tradfi"] = CryptoCrashTradFi
 
 
+class WealthBarometer(BasePersona):
+    """Dollar stores vs Costco/luxury = wealth inequality barometer.
+
+    When DLTR/DG crash: lower-income consumers under stress → trade DOWN.
+    But Costco (bulk = value-conscious affluent) and luxury (LVMUY, RMS, TPR)
+    OUTPERFORM because wealthy consumers are unaffected.
+
+    Inverse: Dollar store weakness = K-shaped economy signal.
+    Long: Costco + luxury + Walmart (captures both ends).
+    This worked perfectly in 2023 when DLTR crashed 50% while COST hit ATH.
+    """
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Wealth Barometer (Dollar Store vs Costco/Luxury)",
+            description="DLTR/DG crash signals K-shaped economy → long Costco + luxury (rich don't care)",
+            risk_tolerance=0.5, max_position_size=0.12, max_positions=10, rebalance_frequency="weekly",
+            universe=universe or [
+                # Barometer stocks (INVERSE signals)
+                "DLTR",   # Dollar Tree — lower-income consumer proxy
+                "DG",     # Dollar General — same
+                # Beneficiaries when dollar stores crash (K-shape winners)
+                "COST",   # Costco — bulk buying affluent
+                "WMT",    # Walmart — captures trade-down from middle class
+                "TJX",    # TJ Maxx — "treasure hunt" off-price
+                "LVMUY",  # LVMH — ultra luxury
+                "TPR",    # Tapestry/Coach — aspirational luxury
+                "RL",     # Ralph Lauren
+                "LULU",   # Lululemon
+                "RH",     # Restoration Hardware — high-end home
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        dollar_store_weak = 0
+        for sym in ["DLTR", "DG"]:
+            if sym not in data or sym not in prices: continue
+            inds = self._get_indicators(data, sym, ["sma_200"], date)
+            if not _is_missing(inds["sma_200"]) and prices[sym] < inds["sma_200"]:
+                dollar_store_weak += 1
+
+        targets = ["COST","WMT","TJX","LVMUY","TPR","RL","LULU","RH"]
+        if dollar_store_weak >= 1:
+            # K-shape signal: dollar stores weak → long quality/luxury
+            scored = []
+            for sym in targets:
+                if sym not in prices: continue
+                inds = self._get_indicators(data, sym, ["sma_50","sma_200","rsi_14"], date)
+                if _is_missing(inds["sma_200"]) or _is_missing(inds["rsi_14"]): continue
+                sc = 0.0
+                if prices[sym] > inds["sma_200"]: sc += 2.0
+                s50 = inds["sma_50"]
+                if s50 is not None and s50 > inds["sma_200"]: sc += 1.0
+                if 35 < inds["rsi_14"] < 65: sc += 1.0
+                if sc >= 2: scored.append((sym, sc))
+            scored.sort(key=lambda x: -x[1])
+            if scored:
+                total = sum(s for _,s in scored[:8])
+                for sym, sc in scored[:8]:
+                    weights[sym] = min((sc/total)*0.95, self.config.max_position_size)
+        else:
+            # Dollar stores strong = broad consumer health → balanced
+            for sym in ["COST","WMT","TJX"]:
+                if sym in prices: weights[sym] = 0.08
+        return weights
+
+
 def get_unconventional_strategy(name: str, **kwargs) -> BasePersona:
     cls = UNCONVENTIONAL_STRATEGIES.get(name)
     if cls is None:
         raise ValueError(f"Unknown: {name}. Available: {list(UNCONVENTIONAL_STRATEGIES.keys())}")
     return cls(**kwargs)
 
+UNCONVENTIONAL_STRATEGIES["wealth_barometer"] = WealthBarometer
 
 if __name__ == "__main__":
     print("=== Unconventional Strategies ===\n")
