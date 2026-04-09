@@ -1,0 +1,91 @@
+{
+  "metrics": {
+    "total_return": 0.42485019769393517,
+    "cagr": 0.09281800061038203,
+    "annual_volatility": 0.1776688257901349,
+    "sharpe_ratio": 0.36901622351841923,
+    "sortino_ratio": 0.5418434422004665,
+    "calmar_ratio": 0.3416685858209709,
+    "max_drawdown": -0.27166091488146715,
+    "max_drawdown_date": "2022-09-30",
+    "win_rate": 0.5089820359281437,
+    "profit_factor": 1.1088541143310775,
+    "num_trading_days": 1002,
+    "skewness": 0.3764875417504161,
+    "kurtosis": 5.232633073000446,
+    "best_day": 0.08684351848219651,
+    "worst_day": -0.04441564405437348,
+    "avg_daily_return": 0.0004158192244183561,
+    "black_swan_resilience": 77.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0158496965879924,
+    "beta": 0.8134812075355902,
+    "information_ratio": -0.14961232830757568,
+    "tracking_error": 0.10593843948079142
+  },
+  "trade_metrics": {
+    "num_trades": 555,
+    "num_buys": 336,
+    "num_sells": 219,
+    "total_commission": 0.0,
+    "total_slippage": 2625.3753097515114,
+    "total_transaction_costs": 2625.3753097515114,
+    "avg_trade_size": 4730.405963516236
+  },
+  "final_positions": {
+    "DIS": {
+      "qty": 117.0,
+      "avg_cost": 106.05245971679688,
+      "realized_pnl": 3537.2997970581055
+    },
+    "BA": {
+      "qty": 66.0,
+      "avg_cost": 186.4600067138672,
+      "realized_pnl": -25.84040832519395
+    },
+    "HON": {
+      "qty": 65.0,
+      "avg_cost": 201.03040137657752,
+      "realized_pnl": -294.9604492187506
+    },
+    "DOW": {
+      "qty": 525.0,
+      "avg_cost": 36.10408027510095,
+      "realized_pnl": 4593.313927875265
+    },
+    "V": {
+      "qty": 38.0,
+      "avg_cost": 345.26164727461963,
+      "realized_pnl": 1606.1222229003906
+    },
+    "CRM": {
+      "qty": 53.0,
+      "avg_cost": 275.5501437230458,
+      "realized_pnl": 242.9069459347072
+    },
+    "NKE": {
+      "qty": 191.0,
+      "avg_cost": 61.84208297729492,
+      "realized_pnl": -3904.473705291748
+    },
+    "HD": {
+      "qty": 35.0,
+      "avg_cost": 352.67584228515625,
+      "realized_pnl": 414.83145141601665
+    },
+    "UNH": {
+      "qty": 39.0,
+      "avg_cost": 362.8297322080818,
+      "realized_pnl": 2732.158506310505
+    },
+    "PG": {
+      "qty": 85.0,
+      "avg_cost": 156.76714459587544,
+      "realized_pnl": 1733.5958709716801
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy worst-performing blue chips yearly, contrarian equal-weight",
+  "horizon": "4Y (2022-2025)"
+}

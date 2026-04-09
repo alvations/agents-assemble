@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.11091187018914161,
+    "cagr": 0.026718183640757287,
+    "annual_volatility": 0.11652287877438235,
+    "sharpe_ratio": -0.05136566307274455,
+    "sortino_ratio": -0.07161566465333212,
+    "calmar_ratio": 0.17050537023773443,
+    "max_drawdown": -0.1566999538108642,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5189620758483033,
+    "profit_factor": 1.0496796571441847,
+    "num_trading_days": 1002,
+    "skewness": -0.06871754529064607,
+    "kurtosis": 2.7416034792537545,
+    "best_day": 0.039290043462584245,
+    "worst_day": -0.03671811659324009,
+    "avg_daily_return": 0.00013189877179367875,
+    "black_swan_resilience": 78.3,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08194951355761715,
+    "beta": 0.42108115060871987,
+    "information_ratio": -0.5992903183572538,
+    "tracking_error": 0.13674426408598303
+  },
+  "trade_metrics": {
+    "num_trades": 325,
+    "num_buys": 148,
+    "num_sells": 177,
+    "total_commission": 0.0,
+    "total_slippage": 1668.5115753822329,
+    "total_transaction_costs": 1668.5115753822329,
+    "avg_trade_size": 5133.88177040687
+  },
+  "final_positions": {
+    "DHR": {
+      "qty": 58.0,
+      "avg_cost": 213.3093719482422,
+      "realized_pnl": -1874.418701171876
+    },
+    "IEX": {
+      "qty": 75.0,
+      "avg_cost": 174.00511169433594,
+      "realized_pnl": -3345.5023956298837
+    },
+    "HEI": {
+      "qty": 42.0,
+      "avg_cost": 258.2544875372024,
+      "realized_pnl": 5559.181579589844
+    },
+    "AME": {
+      "qty": 67.0,
+      "avg_cost": 182.2659378441729,
+      "realized_pnl": -1021.2264301874893
+    },
+    "NDSN": {
+      "qty": 56.0,
+      "avg_cost": 220.4363250732422,
+      "realized_pnl": -6625.235061645507
+    }
+  },
+  "source": "unconventional",
+  "description": "TDG/HEI/ROP: 15-25% CAGR machines that look expensive on P/E but are cheap on FCF",
+  "horizon": "4Y (2022-2025)"
+}

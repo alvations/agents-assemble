@@ -1,0 +1,46 @@
+{
+  "metrics": {
+    "total_return": 0.2847052405535413,
+    "cagr": 0.06481840783511372,
+    "annual_volatility": 0.11325432028941836,
+    "sharpe_ratio": 0.26662184472110256,
+    "sortino_ratio": 0.38713128448976314,
+    "calmar_ratio": 0.4598037078666325,
+    "max_drawdown": -0.1409697371425167,
+    "max_drawdown_date": "2025-04-10",
+    "win_rate": 0.5069860279441117,
+    "profit_factor": 1.1156401542526257,
+    "num_trading_days": 1002,
+    "skewness": 0.04802861411935364,
+    "kurtosis": 3.3262294393386727,
+    "best_day": 0.03375269880376397,
+    "worst_day": -0.04077866583339751,
+    "avg_daily_return": 0.00027547556040316486,
+    "black_swan_resilience": 80.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.04384928936326071,
+    "beta": 0.31884019702942296,
+    "information_ratio": -0.27967038302372804,
+    "tracking_error": 0.1567891776353752
+  },
+  "trade_metrics": {
+    "num_trades": 1399,
+    "num_buys": 724,
+    "num_sells": 675,
+    "total_commission": 0.0,
+    "total_slippage": 6551.647485433096,
+    "total_transaction_costs": 6551.647485433096,
+    "avg_trade_size": 4683.093270502574
+  },
+  "final_positions": {
+    "TAK": {
+      "qty": 873.0,
+      "avg_cost": 14.511457288585316,
+      "realized_pnl": 3019.11483805705
+    }
+  },
+  "source": "unconventional",
+  "description": "BMY 7x earnings, PFE post-COVID: market overprices patent cliffs by 2-3x",
+  "horizon": "4Y (2022-2025)"
+}

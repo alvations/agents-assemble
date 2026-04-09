@@ -1,0 +1,67 @@
+{
+  "strategy_name": "specialty_insurance",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:02:12.321274",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.3%",
+    "stop_loss": "22.0%",
+    "take_profit_target": "6.5%",
+    "max_drawdown_tolerance": "18.3%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "limit",
+    "limit_offset": "0.5% below current price for buys",
+    "timing": "Enter on any weekly rebalance day. No specific timing edge detected.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "WRB",
+      "action": "BUY",
+      "current_position": 343.0,
+      "annual_volatility": "23%",
+      "entry_rule": "Limit 0.5% below market",
+      "stop_loss": "20.9% below entry",
+      "take_profit": "6.2% above entry",
+      "position_size": "6.6% of portfolio",
+      "trailing_stop": "14.6% trailing after 2.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=WRB",
+      "yahoo_url": "https://finance.yahoo.com/quote/WRB/"
+    },
+    {
+      "symbol": "OSCR",
+      "action": "BUY",
+      "current_position": 1480.0,
+      "annual_volatility": "77%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "19.4% above entry",
+      "position_size": "2.1% of portfolio",
+      "trailing_stop": "28.0% trailing after 7.8% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=OSCR",
+      "yahoo_url": "https://finance.yahoo.com/quote/OSCR/"
+    },
+    {
+      "symbol": "HCI",
+      "action": "BUY",
+      "current_position": 141.0,
+      "annual_volatility": "37%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "33.7% below entry",
+      "take_profit": "9.9% above entry",
+      "position_size": "4.1% of portfolio",
+      "trailing_stop": "23.6% trailing after 4.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=HCI",
+      "yahoo_url": "https://finance.yahoo.com/quote/HCI/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "62.60%",
+    "sharpe_ratio": "0.52",
+    "max_drawdown": "-18.33%",
+    "win_rate": "52.79%",
+    "alpha": "2.09%"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "metrics": {
+    "total_return": 0.01606163858269105,
+    "cagr": 0.004002428392014146,
+    "annual_volatility": 0.14739838872934907,
+    "sharpe_ratio": -0.16522709792239262,
+    "sortino_ratio": -0.22864535065125333,
+    "calmar_ratio": 0.013236550826176193,
+    "max_drawdown": -0.302376989638348,
+    "max_drawdown_date": "2022-06-17",
+    "win_rate": 0.5039920159680639,
+    "profit_factor": 1.017308113071441,
+    "num_trading_days": 1002,
+    "skewness": -0.12799800568022088,
+    "kurtosis": 1.6277272226002575,
+    "best_day": 0.03680731322774555,
+    "worst_day": -0.03710159171757188,
+    "avg_daily_return": 5.900618021909198e-05,
+    "black_swan_resilience": 70.1,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.10466526880636029,
+    "beta": 0.5832477611133422,
+    "information_ratio": -0.8192000600258255,
+    "tracking_error": 0.12776521134905763
+  },
+  "trade_metrics": {
+    "num_trades": 359,
+    "num_buys": 178,
+    "num_sells": 181,
+    "total_commission": 0.0,
+    "total_slippage": 1751.1626151008604,
+    "total_transaction_costs": 1751.1626151008604,
+    "avg_trade_size": 4877.8902927600575
+  },
+  "final_positions": {
+    "WST": {
+      "qty": 45.0,
+      "avg_cost": 271.02186414930554,
+      "realized_pnl": -6111.178161621094
+    },
+    "IDXX": {
+      "qty": 17.0,
+      "avg_cost": 481.4665897535241,
+      "realized_pnl": 304.69176091733164
+    },
+    "CLH": {
+      "qty": 54.0,
+      "avg_cost": 228.5399932861328,
+      "realized_pnl": 1325.099105834961
+    }
+  },
+  "source": "unconventional",
+  "description": "Quiet compounders in boring industries: pool supply, uniforms, fasteners, packaging",
+  "horizon": "4Y (2022-2025)"
+}

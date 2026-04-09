@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 1.1245389339136196,
+    "cagr": 0.20792727852090565,
+    "annual_volatility": 0.1977399725389156,
+    "sharpe_ratio": 0.8597240570369266,
+    "sortino_ratio": 1.1917726313669632,
+    "calmar_ratio": 1.0464270417028674,
+    "max_drawdown": -0.19870212660267483,
+    "max_drawdown_date": "2022-07-06",
+    "win_rate": 0.5508982035928144,
+    "profit_factor": 1.1992110140857113,
+    "num_trading_days": 1002,
+    "skewness": -0.6952901782592943,
+    "kurtosis": 4.119287846383209,
+    "best_day": 0.05003614957390212,
+    "worst_day": -0.08622555274609978,
+    "avg_daily_return": 0.0008302602256068459,
+    "black_swan_resilience": 68.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.09925958132253121,
+    "beta": 0.6120592913159013,
+    "information_ratio": 0.5563660563593467,
+    "tracking_error": 0.1784069681965308
+  },
+  "trade_metrics": {
+    "num_trades": 417,
+    "num_buys": 205,
+    "num_sells": 212,
+    "total_commission": 0.0,
+    "total_slippage": 3097.1830387382506,
+    "total_transaction_costs": 3097.1830387382506,
+    "avg_trade_size": 7427.297455007795
+  },
+  "final_positions": {
+    "CTRA": {
+      "qty": 965.0,
+      "avg_cost": 26.75503158569336,
+      "realized_pnl": 6427.899450302124
+    },
+    "WMB": {
+      "qty": 529.0,
+      "avg_cost": 45.523193397715815,
+      "realized_pnl": 8879.819733874825
+    },
+    "TRGP": {
+      "qty": 147.0,
+      "avg_cost": 175.80325317382812,
+      "realized_pnl": 18574.708480834957
+    },
+    "MPLX": {
+      "qty": 480.0,
+      "avg_cost": 49.761218709389304,
+      "realized_pnl": 14764.725537605256
+    },
+    "AM": {
+      "qty": 1787.0,
+      "avg_cost": 16.51657177797036,
+      "realized_pnl": 14655.033652391561
+    },
+    "EPD": {
+      "qty": 806.0,
+      "avg_cost": 32.00547409057617,
+      "realized_pnl": 8267.90398216248
+    },
+    "KMI": {
+      "qty": 1185.0,
+      "avg_cost": 27.635869876457512,
+      "realized_pnl": 7886.917116659107
+    }
+  },
+  "source": "unconventional",
+  "description": "Pipeline MLPs: 90% fee-based contracts, 7%+ yield, 27yr distribution growth, toll roads of energy",
+  "horizon": "4Y (2022-2025)"
+}

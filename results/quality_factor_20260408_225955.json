@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "total_return": 0.2362581210071013,
+    "cagr": 0.05460665539046716,
+    "annual_volatility": 0.11061265024778302,
+    "sharpe_ratio": 0.1829871052799701,
+    "sortino_ratio": 0.25639857760270907,
+    "calmar_ratio": 0.3467718506398686,
+    "max_drawdown": -0.15747141900274242,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.5159680638722555,
+    "profit_factor": 1.0965171087454388,
+    "num_trading_days": 1002,
+    "skewness": -0.28300943084716107,
+    "kurtosis": 3.9977991446670433,
+    "best_day": 0.03788261268664295,
+    "worst_day": -0.044437094242579134,
+    "avg_daily_return": 0.00023597005595073735,
+    "black_swan_resilience": 75.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.05406104180790727,
+    "beta": 0.44598397382146615,
+    "information_ratio": -0.43089852229149184,
+    "tracking_error": 0.12546119100249864
+  },
+  "trade_metrics": {
+    "num_trades": 699,
+    "num_buys": 368,
+    "num_sells": 331,
+    "total_commission": 0.0,
+    "total_slippage": 3665.6071961898765,
+    "total_transaction_costs": 3665.6071961898765,
+    "avg_trade_size": 5244.073242045609
+  },
+  "final_positions": {
+    "DUK": {
+      "qty": 105.0,
+      "avg_cost": 118.00346289142215,
+      "realized_pnl": -1662.3936138079
+    },
+    "MCD": {
+      "qty": 41.0,
+      "avg_cost": 301.88360595703125,
+      "realized_pnl": -902.6755371093745
+    },
+    "BRK-B": {
+      "qty": 25.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 3309.650848388672
+    },
+    "KO": {
+      "qty": 175.0,
+      "avg_cost": 71.45864868164062,
+      "realized_pnl": -1173.2619590759255
+    },
+    "NEE": {
+      "qty": 149.0,
+      "avg_cost": 80.67982482910156,
+      "realized_pnl": -1291.005714416503
+    },
+    "TMO": {
+      "qty": 21.0,
+      "avg_cost": 584.1328735351562,
+      "realized_pnl": -2015.333984375
+    },
+    "GOOGL": {
+      "qty": 40.0,
+      "avg_cost": 314.4627990722656,
+      "realized_pnl": 5578.668815612795
+    },
+    "MSFT": {
+      "qty": 26.0,
+      "avg_cost": 516.2815457857572,
+      "realized_pnl": 2624.7290649414053
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy low-vol stocks in uptrends \u2014 quality minus junk",
+  "horizon": "4Y (2022-2025)"
+}

@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.1635997475686921,
+    "cagr": 0.03871419897574668,
+    "annual_volatility": 0.12157974045894145,
+    "sharpe_ratio": 0.05171284419303024,
+    "sortino_ratio": 0.07066043035897593,
+    "calmar_ratio": 0.2239000715266293,
+    "max_drawdown": -0.17290838145686904,
+    "max_drawdown_date": "2023-03-13",
+    "win_rate": 0.5299401197604791,
+    "profit_factor": 1.0684917524580835,
+    "num_trading_days": 1002,
+    "skewness": -0.45816894123918656,
+    "kurtosis": 8.216601834249555,
+    "best_day": 0.054924192137294714,
+    "worst_day": -0.06483175079517722,
+    "avg_daily_return": 0.00018059920475706556,
+    "black_swan_resilience": 72.6,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.06995349822262775,
+    "beta": 0.46966036212984424,
+    "information_ratio": -0.5404995894700639,
+    "tracking_error": 0.12942377678994
+  },
+  "trade_metrics": {
+    "num_trades": 410,
+    "num_buys": 190,
+    "num_sells": 220,
+    "total_commission": 0.0,
+    "total_slippage": 1271.5328172645573,
+    "total_transaction_costs": 1271.5328172645573,
+    "avg_trade_size": 3101.2995543037973
+  },
+  "final_positions": {
+    "CME": {
+      "qty": 43.0,
+      "avg_cost": 214.17028845572062,
+      "realized_pnl": 2171.7150580149296
+    },
+    "NDAQ": {
+      "qty": 130.0,
+      "avg_cost": 65.05972518238201,
+      "realized_pnl": 718.8939696019964
+    },
+    "CHRW": {
+      "qty": 73.0,
+      "avg_cost": 127.3181381225586,
+      "realized_pnl": -308.49124145507835
+    },
+    "A": {
+      "qty": 77.0,
+      "avg_cost": 125.94108590847108,
+      "realized_pnl": -3716.2895741346406
+    },
+    "MCO": {
+      "qty": 24.0,
+      "avg_cost": 483.94140625,
+      "realized_pnl": 1953.9168395996105
+    }
+  },
+  "source": "unconventional",
+  "description": "Companies that tax every transaction: payments, exchanges, ratings, logistics",
+  "horizon": "4Y (2022-2025)"
+}

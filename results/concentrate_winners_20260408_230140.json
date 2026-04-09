@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "total_return": 0.9627638437939987,
+    "cagr": 0.18418081260280528,
+    "annual_volatility": 0.23903967972159118,
+    "sharpe_ratio": 0.6648034420251409,
+    "sortino_ratio": 0.976355378115591,
+    "calmar_ratio": 0.6206228372421015,
+    "max_drawdown": -0.2967677010102633,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.4880239520958084,
+    "profit_factor": 1.1601275531456667,
+    "num_trading_days": 1002,
+    "skewness": 0.18393374149681863,
+    "kurtosis": 2.7688976500649947,
+    "best_day": 0.08435237348840041,
+    "worst_day": -0.05723780645233023,
+    "avg_daily_return": 0.0007862625685829337,
+    "black_swan_resilience": 73.9,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": 0.07551311540443084,
+    "beta": 0.7090999029465419,
+    "information_ratio": 0.3617646414667892,
+    "tracking_error": 0.2087354781226266
+  },
+  "trade_metrics": {
+    "num_trades": 1087,
+    "num_buys": 513,
+    "num_sells": 574,
+    "total_commission": 0.0,
+    "total_slippage": 17288.034672266982,
+    "total_transaction_costs": 17288.034672266982,
+    "avg_trade_size": 15904.355724256633
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 119.0,
+      "avg_cost": 308.2529757060702,
+      "realized_pnl": 2698.1652967664977
+    },
+    "LLY": {
+      "qty": 32.0,
+      "avg_cost": 1062.2033233642578,
+      "realized_pnl": 3586.6713256835974
+    },
+    "NVDA": {
+      "qty": 209.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 25185.01132774355
+    },
+    "PLTR": {
+      "qty": 222.0,
+      "avg_cost": 182.44644618678737,
+      "realized_pnl": 41410.97468471528
+    },
+    "AMZN": {
+      "qty": 155.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": -8340.06036376953
+    }
+  },
+  "source": "unconventional",
+  "description": "Extreme concentration: top 3-5 strongest momentum stocks only",
+  "horizon": "4Y (2022-2025)"
+}

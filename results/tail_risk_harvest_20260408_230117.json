@@ -1,0 +1,51 @@
+{
+  "metrics": {
+    "total_return": 0.004375319037148495,
+    "cagr": 0.0010950393214550491,
+    "annual_volatility": 0.09208537804963231,
+    "sharpe_ratio": -0.367993656162914,
+    "sortino_ratio": -0.5096463808729136,
+    "calmar_ratio": 0.00648955794030449,
+    "max_drawdown": -0.16873866163581397,
+    "max_drawdown_date": "2022-10-12",
+    "win_rate": 0.4161676646706587,
+    "profit_factor": 1.0127852016825893,
+    "num_trading_days": 1002,
+    "skewness": -0.1541352699323941,
+    "kurtosis": 10.037488699685845,
+    "best_day": 0.042452451060421614,
+    "worst_day": -0.04236759338418239,
+    "avg_daily_return": 2.117829553876938e-05,
+    "black_swan_resilience": 76.7,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.10757265787691939,
+    "beta": 0.35811136734727705,
+    "information_ratio": -0.8088505294017511,
+    "tracking_error": 0.13299448287000962
+  },
+  "trade_metrics": {
+    "num_trades": 658,
+    "num_buys": 355,
+    "num_sells": 303,
+    "total_commission": 0.0,
+    "total_slippage": 8188.684601335526,
+    "total_transaction_costs": 8188.684601335526,
+    "avg_trade_size": 12444.809424522075
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 86.0,
+      "avg_cost": 174.96308934411337,
+      "realized_pnl": 10329.632154464725
+    },
+    "GOOGL": {
+      "qty": 50.0,
+      "avg_cost": 296.5112609863281,
+      "realized_pnl": -3349.253211975095
+    }
+  },
+  "source": "unconventional",
+  "description": "Buy quality names after sharp single-day drops, capture mean-reversion",
+  "horizon": "4Y (2022-2025)"
+}

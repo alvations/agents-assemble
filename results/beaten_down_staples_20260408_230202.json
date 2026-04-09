@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.10588234751670811,
+    "cagr": 0.02555092507519774,
+    "annual_volatility": 0.0964659976945377,
+    "sharpe_ratio": -0.09601773049353386,
+    "sortino_ratio": -0.13661625567383157,
+    "calmar_ratio": 0.2198727805584375,
+    "max_drawdown": -0.11620776801158816,
+    "max_drawdown_date": "2023-10-12",
+    "win_rate": 0.4820359281437126,
+    "profit_factor": 1.0587597346546538,
+    "num_trading_days": 1002,
+    "skewness": -0.01840176687901164,
+    "kurtosis": 3.4609187812658133,
+    "best_day": 0.029107743398365082,
+    "worst_day": -0.027619426942986358,
+    "avg_daily_return": 0.0001188941240276756,
+    "black_swan_resilience": 81.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.0831167721231767,
+    "beta": 0.16418487117485975,
+    "information_ratio": -0.4713248585132893,
+    "tracking_error": 0.17634710035314882
+  },
+  "trade_metrics": {
+    "num_trades": 300,
+    "num_buys": 172,
+    "num_sells": 128,
+    "total_commission": 0.0,
+    "total_slippage": 2440.9947405166627,
+    "total_transaction_costs": 2440.9947405166627,
+    "avg_trade_size": 8136.649135055542
+  },
+  "final_positions": {
+    "DPZ": {
+      "qty": 32.0,
+      "avg_cost": 423.5547346635298,
+      "realized_pnl": 781.0084672407654
+    },
+    "HRL": {
+      "qty": 590.0,
+      "avg_cost": 26.565119059492904,
+      "realized_pnl": -448.85161120717373
+    },
+    "SJM": {
+      "qty": 133.0,
+      "avg_cost": 102.06847381591797,
+      "realized_pnl": 6846.117721557617
+    },
+    "MDLZ": {
+      "qty": 245.0,
+      "avg_cost": 55.64036323391662,
+      "realized_pnl": -71.81978607177453
+    },
+    "CAG": {
+      "qty": 783.0,
+      "avg_cost": 21.466429937674945,
+      "realized_pnl": 1066.9631687263386
+    },
+    "CPB": {
+      "qty": 458.0,
+      "avg_cost": 35.13503608714961,
+      "realized_pnl": -2157.6253177123103
+    }
+  },
+  "source": "unconventional",
+  "description": "Consumer staples oversold on GLP-1 fears \u2014 buy the overreaction, collect dividends",
+  "horizon": "4Y (2022-2025)"
+}

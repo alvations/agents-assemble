@@ -1,0 +1,71 @@
+{
+  "metrics": {
+    "total_return": 0.0816220421330982,
+    "cagr": 0.019864018220757895,
+    "annual_volatility": 0.1304299468985223,
+    "sharpe_ratio": -0.08419757023341254,
+    "sortino_ratio": -0.11630920125605884,
+    "calmar_ratio": 0.09597296716049725,
+    "max_drawdown": -0.20697513902575249,
+    "max_drawdown_date": "2022-12-28",
+    "win_rate": 0.5099800399201597,
+    "profit_factor": 1.0375837805870567,
+    "num_trading_days": 1002,
+    "skewness": -0.20680115737477772,
+    "kurtosis": 4.61969555848599,
+    "best_day": 0.05326359513721379,
+    "worst_day": -0.059169161015836025,
+    "avg_daily_return": 0.0001120709555907525,
+    "black_swan_resilience": 74.0,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.08880367897761654,
+    "beta": 0.5153409555491382,
+    "information_ratio": -0.7016946546113777,
+    "tracking_error": 0.1265560146340277
+  },
+  "trade_metrics": {
+    "num_trades": 511,
+    "num_buys": 269,
+    "num_sells": 242,
+    "total_commission": 0.0,
+    "total_slippage": 2215.933907304766,
+    "total_transaction_costs": 2215.933907304766,
+    "avg_trade_size": 4336.465572024978
+  },
+  "final_positions": {
+    "SPGI": {
+      "qty": 22.0,
+      "avg_cost": 494.12139892578125,
+      "realized_pnl": -694.8751525878874
+    },
+    "MCO": {
+      "qty": 26.0,
+      "avg_cost": 483.94140625,
+      "realized_pnl": 870.7106323242176
+    },
+    "CSX": {
+      "qty": 368.0,
+      "avg_cost": 34.75640894019085,
+      "realized_pnl": -3913.3639335632324
+    },
+    "NSC": {
+      "qty": 44.0,
+      "avg_cost": 256.3676806012401,
+      "realized_pnl": -1874.8596512016838
+    },
+    "TT": {
+      "qty": 31.0,
+      "avg_cost": 431.13598404168835,
+      "realized_pnl": 5020.501088788435
+    },
+    "MSCI": {
+      "qty": 23.0,
+      "avg_cost": 576.1521420686141,
+      "realized_pnl": -1414.1480102539076
+    }
+  },
+  "source": "unconventional",
+  "description": "Natural monopolies in boring industries: credit ratings, data, waste, rail, HVAC",
+  "horizon": "4Y (2022-2025)"
+}

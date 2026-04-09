@@ -1,0 +1,132 @@
+{
+  "strategy_name": "uranium_renaissance",
+  "is_winning": true,
+  "generated_at": "2026-04-08T23:02:17.771315",
+  "overall_assessment": "BUY \u2014 Good returns with acceptable risk. Consider deploying with moderate position sizes.",
+  "risk_parameters": {
+    "max_portfolio_allocation": "6.8%",
+    "stop_loss": "25.0%",
+    "take_profit_target": "13.3%",
+    "max_drawdown_tolerance": "51.4%",
+    "rebalance_frequency": "weekly"
+  },
+  "execution_guidance": {
+    "order_type": "market",
+    "limit_offset": "use market orders in volatile names",
+    "timing": "Wait for VIX spike > 25 to enter (buy fear). Avoid entering in low-vol complacency.",
+    "scaling": "Enter in 3 tranches over 1-2 weeks to average in"
+  },
+  "position_recommendations": [
+    {
+      "symbol": "DNN",
+      "action": "BUY",
+      "current_position": 13098.0,
+      "annual_volatility": "62%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "35.0% above entry",
+      "position_size": "2.6% of portfolio",
+      "trailing_stop": "28.0% trailing after 14.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=DNN",
+      "yahoo_url": "https://finance.yahoo.com/quote/DNN/"
+    },
+    {
+      "symbol": "UUUU",
+      "action": "BUY",
+      "current_position": 2627.0,
+      "annual_volatility": "81%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "40.0% above entry",
+      "position_size": "2.3% of portfolio",
+      "trailing_stop": "28.0% trailing after 16.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UUUU",
+      "yahoo_url": "https://finance.yahoo.com/quote/UUUU/"
+    },
+    {
+      "symbol": "CCJ",
+      "action": "BUY",
+      "current_position": 381.0,
+      "annual_volatility": "51%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "28.9% above entry",
+      "position_size": "3.2% of portfolio",
+      "trailing_stop": "28.0% trailing after 11.5% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=CCJ",
+      "yahoo_url": "https://finance.yahoo.com/quote/CCJ/"
+    },
+    {
+      "symbol": "LEU",
+      "action": "BUY",
+      "current_position": 116.0,
+      "annual_volatility": "97%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "40.0% above entry",
+      "position_size": "2.3% of portfolio",
+      "trailing_stop": "28.0% trailing after 16.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=LEU",
+      "yahoo_url": "https://finance.yahoo.com/quote/LEU/"
+    },
+    {
+      "symbol": "UEC",
+      "action": "BUY",
+      "current_position": 1845.0,
+      "annual_volatility": "72%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "40.0% above entry",
+      "position_size": "2.3% of portfolio",
+      "trailing_stop": "28.0% trailing after 16.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=UEC",
+      "yahoo_url": "https://finance.yahoo.com/quote/UEC/"
+    },
+    {
+      "symbol": "NXE",
+      "action": "BUY",
+      "current_position": 3819.0,
+      "annual_volatility": "55%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "30.9% above entry",
+      "position_size": "2.9% of portfolio",
+      "trailing_stop": "28.0% trailing after 12.4% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=NXE",
+      "yahoo_url": "https://finance.yahoo.com/quote/NXE/"
+    },
+    {
+      "symbol": "URA",
+      "action": "BUY",
+      "current_position": 663.0,
+      "annual_volatility": "45%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "25.1% above entry",
+      "position_size": "3.6% of portfolio",
+      "trailing_stop": "28.0% trailing after 10.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=URA",
+      "yahoo_url": "https://finance.yahoo.com/quote/URA/"
+    },
+    {
+      "symbol": "OKLO",
+      "action": "BUY",
+      "current_position": 304.0,
+      "annual_volatility": "121%",
+      "entry_rule": "Market order (volatile)",
+      "stop_loss": "40.0% below entry",
+      "take_profit": "40.0% above entry",
+      "position_size": "2.3% of portfolio",
+      "trailing_stop": "28.0% trailing after 16.0% gain",
+      "tradingview_url": "https://www.tradingview.com/chart/?symbol=OKLO",
+      "yahoo_url": "https://finance.yahoo.com/quote/OKLO/"
+    }
+  ],
+  "metrics_summary": {
+    "total_return": "156.93%",
+    "sharpe_ratio": "0.67",
+    "max_drawdown": "-51.41%",
+    "win_rate": "51.60%",
+    "alpha": "15.82%"
+  }
+}

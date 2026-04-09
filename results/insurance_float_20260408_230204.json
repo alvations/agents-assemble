@@ -1,0 +1,76 @@
+{
+  "metrics": {
+    "total_return": 0.4020516997466921,
+    "cagr": 0.0884080302897825,
+    "annual_volatility": 0.1272022237424455,
+    "sharpe_ratio": 0.42371815185503964,
+    "sortino_ratio": 0.5787006770614237,
+    "calmar_ratio": 0.6292271605555768,
+    "max_drawdown": -0.1405025654196531,
+    "max_drawdown_date": "2022-09-26",
+    "win_rate": 0.5429141716566867,
+    "profit_factor": 1.1396411403382092,
+    "num_trading_days": 1002,
+    "skewness": -0.8151590937812128,
+    "kurtosis": 8.819288947708444,
+    "best_day": 0.04326689801453254,
+    "worst_day": -0.07231824732269132,
+    "avg_daily_return": 0.0003695303832515812,
+    "black_swan_resilience": 69.8,
+    "benchmark_total_return": 0.509089291202014,
+    "benchmark_cagr": 0.10866769719837444,
+    "alpha": -0.020259666908591933,
+    "beta": 0.3345019975122553,
+    "information_ratio": -0.12347868672176694,
+    "tracking_error": 0.1640742013578651
+  },
+  "trade_metrics": {
+    "num_trades": 286,
+    "num_buys": 124,
+    "num_sells": 162,
+    "total_commission": 0.0,
+    "total_slippage": 1465.9306448898317,
+    "total_transaction_costs": 1465.9306448898317,
+    "avg_trade_size": 5125.631625488922
+  },
+  "final_positions": {
+    "CB": {
+      "qty": 57.0,
+      "avg_cost": 293.0150146484375,
+      "realized_pnl": 1677.3946685790984
+    },
+    "AFL": {
+      "qty": 153.0,
+      "avg_cost": 108.97103118896484,
+      "realized_pnl": 1860.336063385008
+    },
+    "WRB": {
+      "qty": 233.0,
+      "avg_cost": 71.74166870117188,
+      "realized_pnl": 10849.241352081299
+    },
+    "BRK-B": {
+      "qty": 33.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 4582.599365234379
+    },
+    "CINF": {
+      "qty": 102.0,
+      "avg_cost": 133.62400532544143,
+      "realized_pnl": 3338.3380268376077
+    },
+    "MKL": {
+      "qty": 8.0,
+      "avg_cost": 1955.1099853515625,
+      "realized_pnl": 2526.960937500001
+    },
+    "ALL": {
+      "qty": 80.0,
+      "avg_cost": 208.9427490234375,
+      "realized_pnl": 2964.164100646968
+    }
+  },
+  "source": "unconventional",
+  "description": "Insurance companies with massive float: paid to hold money, compound via investing",
+  "horizon": "4Y (2022-2025)"
+}
