@@ -6,3 +6,10 @@ __pycache__/
 dist/
 build/
 charts/
+
+# Internal logs
+*.log
+
+# Internal tools (kept in parent directory)
+regen_missing.py
+post_evolve_test.sh
