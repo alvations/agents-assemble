@@ -3310,8 +3310,544 @@ class DefenseBudgetFloor(BasePersona):
 UNCONVENTIONAL_STRATEGIES["warflation_hedge"] = WarflationHedge
 UNCONVENTIONAL_STRATEGIES["defense_budget_floor"] = DefenseBudgetFloor
 
+
+# ---------------------------------------------------------------------------
+# Insider Buying Acceleration
+# ---------------------------------------------------------------------------
+class InsiderBuyingAcceleration(BasePersona):
+    """Detect insider accumulation via price + volume proxies.
+
+    Thesis: When corporate insiders buy their own stock aggressively, it is
+    the strongest buy signal -- they know more than analysts.  Since we
+    cannot call fetch_insider_trades() during a backtest (it is live data),
+    we use three price-based proxies that historically coincide with insider
+    buying:
+      1. Price bouncing off 52-week low with a volume spike
+      2. RSI < 30 with price > SMA200 (oversold in an uptrend = insiders
+         buying the dip)
+      3. Price within 5% of 52-week low + volume > 2x average
+
+    Buy when 2+ signals confirm, exit when RSI > 70.
+    Rebalance weekly.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Insider Buying Acceleration",
+            description="Detect insider accumulation via price/volume proxies: 52-week low bounce, oversold uptrend, volume spike",
+            risk_tolerance=0.5,
+            max_position_size=0.08,
+            max_positions=15,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "JPM", "BAC", "WFC", "GS",
+                "JNJ", "PFE", "UNH", "XOM", "CVX", "HD", "LOW",
+                "META", "AMZN", "BRK-B", "V", "MA", "COST",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices or sym not in data:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_200", "rsi_14", "vol_20", "volume_sma_20", "Volume"],
+                date,
+            )
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol_avg = inds["volume_sma_20"]
+            cur_vol = inds["Volume"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            # Exit signal: overbought = take profits
+            if rsi > 70:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                continue
+
+            # Compute 52-week low proxy from historical data
+            df = data[sym]
+            try:
+                hist = df.loc[:date]
+                if len(hist) < 50:
+                    continue
+                lookback = hist.tail(252)  # ~1 year
+                low_52w = lookback["Low"].min() if "Low" in lookback.columns else lookback["Close"].min()
+            except Exception:
+                continue
+
+            if _is_missing(low_52w) or low_52w <= 0:
+                continue
+
+            signals = 0
+
+            # Signal 1: Price bouncing off 52-week low with volume spike
+            pct_from_low = (price - low_52w) / low_52w
+            vol_ratio = (cur_vol / vol_avg) if (
+                not _is_missing(cur_vol) and not _is_missing(vol_avg) and vol_avg > 0
+            ) else 1.0
+            if pct_from_low < 0.10 and vol_ratio > 1.5:
+                signals += 1
+
+            # Signal 2: RSI < 30 with price > SMA200 (oversold in uptrend)
+            if rsi < 30 and price > sma200:
+                signals += 1
+
+            # Signal 3: Price within 5% of 52-week low + volume > 2x average
+            if pct_from_low < 0.05 and vol_ratio > 2.0:
+                signals += 1
+
+            # Require 2+ confirming signals
+            if signals >= 2:
+                score = float(signals)
+                # Bonus for extreme oversold
+                if rsi < 25:
+                    score += 1.0
+                # Bonus for massive volume (panic selling = opportunity)
+                if vol_ratio > 3.0:
+                    score += 0.5
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.90, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Sentiment Reversal
+# ---------------------------------------------------------------------------
+class SentimentReversal(BasePersona):
+    """Buy when sentiment hits extreme pessimism, reduce at extreme optimism.
+
+    Thesis: Markets overreact to fear and greed.  When sentiment hits
+    extreme pessimism, it is time to buy quality names.  When extreme
+    optimism, reduce exposure.
+
+    Since we cannot call fetch_aggregate_sentiment() during a backtest,
+    we use VIX proxies (realized volatility of SPY) as a sentiment gauge:
+      - Implied VIX > 1.5x its SMA200 = extreme fear -> STRONG BUY
+      - Implied VIX 1.2x-1.5x SMA200 = elevated fear -> BUY on dips
+      - Implied VIX < 0.8x SMA200 = complacency -> REDUCE (take profits)
+    Combined with per-stock RSI: fear + oversold = max conviction.
+
+    Rebalance weekly.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Sentiment Reversal",
+            description="Contrarian sentiment: buy extreme fear (VIX spike), sell extreme greed (VIX collapse)",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "QQQ", "SPY", "AAPL", "MSFT", "NVDA", "TSLA", "META",
+                "AMZN", "GOOGL", "AMD", "NFLX", "CRM", "COIN", "MSTR",
+                "ARKK",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Use SPY realized vol as VIX proxy
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+        if _is_missing(spy_vol):
+            # Fallback: equal weight core names
+            fallback = {"SPY": 0.20, "QQQ": 0.20, "AAPL": 0.10, "MSFT": 0.10}
+            return {k: v for k, v in fallback.items() if k in prices}
+
+        # Annualized implied VIX
+        implied_vix = spy_vol * _SQRT_252 * 100
+
+        # Compute VIX SMA200 proxy from rolling vol history
+        if "SPY" in data:
+            df_spy = data["SPY"]
+            try:
+                hist = df_spy.loc[:date]
+                if "vol_20" in hist.columns and len(hist) >= 200:
+                    vol_sma200 = hist["vol_20"].rolling(200).mean().iloc[-1]
+                    if not _is_missing(vol_sma200) and vol_sma200 > 0:
+                        vix_sma200 = vol_sma200 * _SQRT_252 * 100
+                    else:
+                        vix_sma200 = 20.0  # long-run VIX average
+                else:
+                    vix_sma200 = 20.0
+            except Exception:
+                vix_sma200 = 20.0
+        else:
+            vix_sma200 = 20.0
+
+        # Determine regime
+        vix_ratio = implied_vix / vix_sma200 if vix_sma200 > 0 else 1.0
+
+        if vix_ratio > 1.5:
+            regime = "extreme_fear"
+        elif vix_ratio > 1.2:
+            regime = "elevated_fear"
+        elif vix_ratio < 0.8:
+            regime = "complacency"
+        else:
+            regime = "normal"
+
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if _is_missing(rsi):
+                continue
+
+            if regime == "extreme_fear":
+                # STRONG BUY quality names -- fear + oversold = max conviction
+                score = 3.0
+                if rsi < 30:
+                    score += 2.0  # max conviction
+                elif rsi < 45:
+                    score += 1.0
+                if not _is_missing(sma200) and prices[sym] > sma200:
+                    score += 0.5  # still in uptrend despite fear
+                scored.append((sym, score))
+
+            elif regime == "elevated_fear":
+                # BUY on dips
+                score = 1.5
+                if rsi < 40:
+                    score += 1.5
+                elif rsi < 50:
+                    score += 0.5
+                if not _is_missing(sma200) and prices[sym] > sma200:
+                    score += 0.5
+                scored.append((sym, score))
+
+            elif regime == "complacency":
+                # REDUCE exposure -- take profits on overbought
+                if rsi > 70:
+                    weights[sym] = 0.0  # sell overbought in complacent market
+                elif rsi > 60:
+                    weights[sym] = 0.02  # minimal position
+                else:
+                    weights[sym] = 0.04  # small position
+
+            else:
+                # Normal -- standard allocation
+                score = 1.0
+                if not _is_missing(sma200) and prices[sym] > sma200:
+                    score += 0.5
+                if 40 < rsi < 60:
+                    score += 0.5
+                scored.append((sym, score))
+
+        if scored:
+            scored.sort(key=lambda x: -x[1])
+            top = scored[:self.config.max_positions]
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.90, self.config.max_position_size)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Institutional Flow
+# ---------------------------------------------------------------------------
+class InstitutionalFlow(BasePersona):
+    """Follow smart money via price + volume proxies for institutional flow.
+
+    Thesis: When top institutions increase positions, follow.  When they
+    decrease, exit.  Since we cannot call fetch_institutional_holders()
+    during a backtest (it returns live 13F data), we use price and volume
+    proxies:
+      - Steady price appreciation on increasing volume = accumulation
+      - Price > SMA50 > SMA200 + volume above average = smart money buying
+      - MACD positive + OBV trending up = institutional flow confirmation
+      - Low vol uptrend (vol_20 < 1.5%) + price > SMA200 = quiet buying
+
+    Rebalance monthly (institutions move slowly).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Institutional Flow",
+            description="Smart money proxies: volume accumulation, golden cross, OBV trend, low-vol uptrend",
+            risk_tolerance=0.4,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "BRK-B", "AAPL", "BAC", "OXY", "CVX", "KO", "AXP",
+                "MCO", "V", "AMZN", "JPM", "GS", "BLK", "MSCI",
+                "SPGI", "ICE",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices or sym not in data:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "vol_20", "macd", "macd_signal",
+                 "obv", "obv_sma_20", "volume_sma_20", "Volume"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            obv = inds["obv"]
+            obv_sma = inds["obv_sma_20"]
+            vol_avg = inds["volume_sma_20"]
+            cur_vol = inds["Volume"]
+
+            if _is_missing(sma200) or _is_missing(rsi):
+                continue
+
+            score = 0.0
+
+            # Signal 1: Golden cross alignment (price > SMA50 > SMA200)
+            if not _is_missing(sma50) and price > sma50 > sma200:
+                score += 2.5
+            elif price > sma200:
+                score += 1.0
+
+            # Signal 2: Volume consistently above average (accumulation)
+            if (not _is_missing(cur_vol) and not _is_missing(vol_avg)
+                    and vol_avg > 0 and cur_vol > vol_avg * 1.1):
+                score += 1.0
+                if cur_vol > vol_avg * 1.5:
+                    score += 0.5  # strong accumulation
+
+            # Signal 3: MACD positive = momentum confirmation
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                score += 1.0
+
+            # Signal 4: OBV trending up = money flowing in
+            if not _is_missing(obv) and not _is_missing(obv_sma) and obv > obv_sma:
+                score += 1.0
+
+            # Signal 5: Low vol uptrend = quiet institutional buying
+            if (not _is_missing(vol) and vol < 0.015
+                    and price > sma200):
+                score += 1.5
+
+            # Sell signal: breakdown below SMA200 with rising vol
+            if price < sma200 and rsi < 40:
+                weights[sym] = 0.0
+                continue
+
+            if score >= 3.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            total = sum(s for _, s in top)
+            for sym, sc in top:
+                weights[sym] = min((sc / total) * 0.90, self.config.max_position_size)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Breadth Divergence
+# ---------------------------------------------------------------------------
+class BreadthDivergence(BasePersona):
+    """Position defensively when breadth deteriorates, offensively when healthy.
+
+    Thesis: When the market index (SPY/QQQ) makes new highs but breadth
+    deteriorates, a correction is coming.  Since we cannot call
+    fetch_market_breadth() during a backtest, we use QQQ vs RSP (equal
+    weight S&P 500) as a breadth proxy:
+      - QQQ outperforming RSP by >5% over 3 months AND RSI > 70 =
+        narrow breadth, top-heavy -> go defensive
+      - RSP matching or outperforming QQQ = healthy breadth -> growth
+      - SPY above SMA200 but RSI > 75 = overextended -> trim growth
+
+    Defensive: GLD, TLT, XLU, XLP, SCHD
+    Offensive: AAPL, MSFT, NVDA, QQQ
+
+    Rebalance weekly.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Breadth Divergence",
+            description="Defensive when breadth narrows (QQQ >> RSP), offensive when broad participation",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Breadth indicators (must be in universe for data fetch)
+                "SPY", "QQQ", "RSP",
+                # Defensive assets
+                "GLD", "TLT", "SHY", "XLU", "XLP", "SCHD",
+                # Offensive assets
+                "AAPL", "MSFT", "NVDA",
+                # Hybrid
+                "JNJ", "PG", "KO", "VZ",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        defensive_tickers = ["GLD", "TLT", "XLU", "XLP", "SCHD", "SHY",
+                             "JNJ", "PG", "KO", "VZ"]
+        offensive_tickers = ["AAPL", "MSFT", "NVDA", "QQQ"]
+
+        # Compute breadth proxy: QQQ vs RSP 3-month relative performance
+        qqq_roc = self._get_indicator(data, "QQQ", "roc_12", date)
+        rsp_roc = self._get_indicator(data, "RSP", "roc_12", date)
+        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        qqq_rsi = self._get_indicator(data, "QQQ", "rsi_14", date)
+
+        # Determine breadth regime
+        if not _is_missing(qqq_roc) and not _is_missing(rsp_roc):
+            # roc_12 is 12-period pct change * 100 (roughly 2.5 weeks)
+            # Use the divergence: how much QQQ leads RSP
+            breadth_gap = qqq_roc - rsp_roc
+        else:
+            breadth_gap = 0.0
+
+        # Also compute longer-term divergence from price data if available
+        if "QQQ" in data and "RSP" in data:
+            try:
+                df_qqq = data["QQQ"].loc[:date]
+                df_rsp = data["RSP"].loc[:date]
+                if len(df_qqq) >= 63 and len(df_rsp) >= 63:
+                    qqq_3m_ret = (df_qqq["Close"].iloc[-1] / df_qqq["Close"].iloc[-63]) - 1
+                    rsp_3m_ret = (df_rsp["Close"].iloc[-1] / df_rsp["Close"].iloc[-63]) - 1
+                    breadth_gap_3m = (qqq_3m_ret - rsp_3m_ret) * 100
+                else:
+                    breadth_gap_3m = breadth_gap
+            except Exception:
+                breadth_gap_3m = breadth_gap
+        else:
+            breadth_gap_3m = breadth_gap
+
+        # Regime classification
+        narrow_breadth = breadth_gap_3m > 5.0  # QQQ leading RSP by >5%
+        overbought_market = (
+            (not _is_missing(spy_rsi) and spy_rsi > 75)
+            or (not _is_missing(qqq_rsi) and qqq_rsi > 75)
+        )
+        spy_above_trend = (
+            not _is_missing(spy_sma200)
+            and "SPY" in prices
+            and prices["SPY"] > spy_sma200
+        )
+
+        if narrow_breadth and overbought_market:
+            # Maximum defensive: narrow breadth + overbought = correction risk
+            mode = "max_defensive"
+        elif narrow_breadth:
+            # Mild defensive: breadth narrowing but not overbought yet
+            mode = "defensive"
+        elif overbought_market and spy_above_trend:
+            # Trim growth but don't panic
+            mode = "cautious"
+        else:
+            # Healthy breadth or RSP outperforming = broad participation
+            mode = "offensive"
+
+        if mode == "max_defensive":
+            targets = {"GLD": 0.20, "TLT": 0.15, "XLU": 0.12, "XLP": 0.12,
+                        "SCHD": 0.10, "SHY": 0.10}
+            for sym, w in targets.items():
+                if sym in prices:
+                    weights[sym] = w
+            # Explicitly zero out growth
+            for sym in offensive_tickers:
+                if sym in prices:
+                    weights[sym] = 0.0
+
+        elif mode == "defensive":
+            targets = {"GLD": 0.15, "TLT": 0.10, "XLU": 0.10, "XLP": 0.10,
+                        "SCHD": 0.10, "AAPL": 0.05, "MSFT": 0.05}
+            for sym, w in targets.items():
+                if sym in prices:
+                    weights[sym] = w
+
+        elif mode == "cautious":
+            targets = {"AAPL": 0.10, "MSFT": 0.10, "NVDA": 0.05,
+                        "GLD": 0.10, "TLT": 0.08, "SCHD": 0.10,
+                        "XLP": 0.05, "XLU": 0.05}
+            for sym, w in targets.items():
+                if sym in prices:
+                    weights[sym] = w
+
+        else:
+            # Offensive: growth + some defense
+            scored = []
+            for sym in offensive_tickers:
+                if sym not in prices:
+                    continue
+                inds = self._get_indicators(
+                    data, sym, ["sma_50", "sma_200", "rsi_14"], date,
+                )
+                sma50 = inds["sma_50"]
+                sma200 = inds["sma_200"]
+                rsi = inds["rsi_14"]
+                if _is_missing(sma200) or _is_missing(rsi):
+                    scored.append((sym, 1.0))
+                    continue
+                sc = 1.0
+                if prices[sym] > sma200:
+                    sc += 1.5
+                if not _is_missing(sma50) and prices[sym] > sma50:
+                    sc += 1.0
+                if 40 < rsi < 70:
+                    sc += 0.5
+                scored.append((sym, sc))
+
+            if scored:
+                scored.sort(key=lambda x: -x[1])
+                total = sum(s for _, s in scored)
+                for sym, sc in scored:
+                    weights[sym] = min((sc / total) * 0.65, self.config.max_position_size)
+
+            # Add small defensive allocation even in offensive mode
+            for sym, w in [("GLD", 0.08), ("SCHD", 0.08), ("TLT", 0.05)]:
+                if sym in prices:
+                    weights[sym] = w
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["insider_buying_acceleration"] = InsiderBuyingAcceleration
+UNCONVENTIONAL_STRATEGIES["sentiment_reversal"] = SentimentReversal
+UNCONVENTIONAL_STRATEGIES["institutional_flow"] = InstitutionalFlow
+UNCONVENTIONAL_STRATEGIES["breadth_divergence"] = BreadthDivergence
+
 if __name__ == "__main__":
     print("=== Unconventional Strategies ===\n")
     for key, cls in UNCONVENTIONAL_STRATEGIES.items():
         inst = cls()
-        print(f"  {key:25s} | {inst.config.name:35s} | {inst.config.description}")
+        print(f"  {key:35s} | {inst.config.name:40s} | {inst.config.description}")
