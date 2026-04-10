@@ -529,6 +529,16 @@ class Backtester:
                 self.symbols, start=warmup_start, end=self.end
             )
 
+        # Use Adj Close for return calculations if available (accounts for
+        # dividends and splits).  Keep original Close for display purposes.
+        for sym, df in all_data.items():
+            if "Adj Close" in df.columns:
+                adj = df["Adj Close"]
+                if adj.notna().any():
+                    # Preserve raw close for display, use adjusted for returns
+                    df["Close_Raw"] = df["Close"]
+                    df["Close"] = adj
+
         bench_data = None
         if self.benchmark:
             if self.benchmark in all_data:
@@ -536,6 +546,11 @@ class Backtester:
             else:
                 try:
                     bench_data = fetch_ohlcv(self.benchmark, start=self.start, end=self.end)
+                    if bench_data is not None and "Adj Close" in bench_data.columns:
+                        adj = bench_data["Adj Close"]
+                        if adj.notna().any():
+                            bench_data["Close_Raw"] = bench_data["Close"]
+                            bench_data["Close"] = adj
                 except Exception:
                     pass
 
@@ -629,6 +644,61 @@ class Backtester:
             enriched["vol_20"] = enriched["daily_return"].rolling(20).std()
             if "Volume" in enriched.columns:
                 enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
+
+            # --- NEW INDICATORS ---
+
+            # VWAP (Volume Weighted Average Price) - rolling 20-day
+            if "Volume" in enriched.columns:
+                typical_price = (enriched["High"] + enriched["Low"] + enriched["Close"]) / 3
+                enriched["vwap_20"] = (typical_price * enriched["Volume"]).rolling(20).sum() / enriched["Volume"].rolling(20).sum()
+
+            # OBV (On Balance Volume)
+            if "Volume" in enriched.columns:
+                obv = [0]
+                closes = enriched["Close"].values
+                volumes = enriched["Volume"].values
+                for j in range(1, len(closes)):
+                    if closes[j] > closes[j-1]:
+                        obv.append(obv[-1] + volumes[j])
+                    elif closes[j] < closes[j-1]:
+                        obv.append(obv[-1] - volumes[j])
+                    else:
+                        obv.append(obv[-1])
+                enriched["obv"] = obv
+                enriched["obv_sma_20"] = pd.Series(obv, index=enriched.index).rolling(20).mean()
+
+            # Stochastic Oscillator (%K, %D)
+            if "High" in enriched.columns and "Low" in enriched.columns:
+                low_14 = enriched["Low"].rolling(14).min()
+                high_14 = enriched["High"].rolling(14).max()
+                enriched["stoch_k"] = ((enriched["Close"] - low_14) / (high_14 - low_14)) * 100
+                enriched["stoch_d"] = enriched["stoch_k"].rolling(3).mean()
+
+                # Williams %R (14-period)
+                enriched["williams_r"] = ((high_14 - enriched["Close"]) / (high_14 - low_14)) * -100
+
+                # Ichimoku Cloud (simplified - Tenkan, Kijun, Senkou A/B)
+                high_9 = enriched["High"].rolling(9).max()
+                low_9 = enriched["Low"].rolling(9).min()
+                high_26 = enriched["High"].rolling(26).max()
+                low_26 = enriched["Low"].rolling(26).min()
+                high_52 = enriched["High"].rolling(52).max()
+                low_52 = enriched["Low"].rolling(52).min()
+                enriched["ichimoku_tenkan"] = (high_9 + low_9) / 2      # Conversion line
+                enriched["ichimoku_kijun"] = (high_26 + low_26) / 2      # Base line
+                enriched["ichimoku_senkou_a"] = (enriched["ichimoku_tenkan"] + enriched["ichimoku_kijun"]) / 2
+                enriched["ichimoku_senkou_b"] = (high_52 + low_52) / 2
+
+            # Rate of Change (12-period)
+            enriched["roc_12"] = enriched["Close"].pct_change(12) * 100
+
+            # Commodity Channel Index (20-period)
+            if "High" in enriched.columns and "Low" in enriched.columns:
+                tp = (enriched["High"] + enriched["Low"] + enriched["Close"]) / 3
+                tp_sma = tp.rolling(20).mean()
+                tp_mad = tp.rolling(20).apply(lambda x: abs(x - x.mean()).mean(), raw=True)
+                enriched["cci_20"] = (tp - tp_sma) / (0.015 * tp_mad)
+
             enriched_data[sym] = enriched
 
         # Pre-compute prices dict — avoids per-iteration pandas Series creation
