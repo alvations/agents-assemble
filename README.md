@@ -1,6 +1,6 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **183 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
+Trading agents and algorithms for publicly tradable instruments. **187 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
@@ -24,7 +24,7 @@ Trading agents and algorithms for publicly tradable instruments. **183 strategie
 | 4 | **AI Revolution** | **0.53** | 92% | +79% avg | Broad AI theme (NVDA, AVGO, CRM, SNOW) |
 | 5 | **David Tepper** | **0.52** | 100% | +65% avg | Appaloosa macro — positive Sharpe in ALL 12 windows |
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 183 strategies with full rankings and formula details.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 187 strategies with full rankings and formula details.
 
 ## Quick Start
 
