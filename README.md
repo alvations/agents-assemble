@@ -12,7 +12,7 @@ Trading agents and algorithms for publicly tradable instruments. **183 strategie
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
 > - **[knowledge/](knowledge/)** — 54+ research files with backtested findings
 >
-> **Pre-Market Research (2026-04-09):** [knowledge/premarket-research/20260409.md](knowledge/premarket-research/20260409.md) — Iran ceasefire unraveling, oil to $98, $1.5T defense budget, UNH +9%
+> **Pre-Market Research (2026-04-10):** [knowledge/premarket-research/20260410.md](knowledge/premarket-research/20260410.md) — CPI release day, tariff escalation, market selloff
 
 ## Top 5 Strategies (by Composite Score, 2020-2025)
 
