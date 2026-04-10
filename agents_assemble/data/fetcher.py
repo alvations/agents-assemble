@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -1433,7 +1433,7 @@ def fetch_all_news(
                 pub = ""
                 if ts and ts > 946684800:
                     try:
-                        pub = datetime.utcfromtimestamp(ts).strftime(
+                        pub = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
                             "%a, %d %b %Y %H:%M:%S +0000"
                         )
                     except Exception:
@@ -1456,7 +1456,7 @@ def fetch_all_news(
                 pub = ""
                 if ts and ts > 946684800:
                     try:
-                        pub = datetime.utcfromtimestamp(ts).strftime(
+                        pub = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
                             "%a, %d %b %Y %H:%M:%S +0000"
                         )
                     except Exception:
@@ -1478,7 +1478,7 @@ def fetch_all_news(
             pub = ""
             if ts:
                 try:
-                    pub = datetime.utcfromtimestamp(ts).strftime(
+                    pub = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
                         "%a, %d %b %Y %H:%M:%S +0000"
                     )
                 except Exception:
@@ -1641,6 +1641,7 @@ def fetch_aggregate_sentiment(symbol: str) -> dict[str, Any]:
         "news_count": sum(
             v.get("mentions", 0) + v.get("messages", 0)
             + v.get("articles_analyzed", 0)
+            + v.get("positive_mentions", 0) + v.get("negative_mentions", 0)
             for v in sources_data.values()
         ),
     }
@@ -2604,8 +2605,8 @@ def fetch_air_travel_index(
         try:
             resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
-                df = pd.read_csv(StringIO(resp.text), parse_dates=["observation_date"])
-                df = df.rename(columns={"observation_date": "date", series_id: col_name})
+                df = pd.read_csv(StringIO(resp.text), parse_dates=["DATE"])
+                df = df.rename(columns={"DATE": "date", series_id: col_name})
                 df = df.set_index("date")
                 df[col_name] = pd.to_numeric(df[col_name], errors="coerce")
                 frames.append(df)
@@ -2640,6 +2641,9 @@ def fetch_tsa_yoy_change(cache: bool = True) -> pd.DataFrame:
         })
         result["yoy_change"] = (
             (result["current"] - result["prior_year"]) / result["prior_year"]
+        )
+        result["yoy_change"] = result["yoy_change"].replace(
+            [float("inf"), float("-inf")], float("nan")
         )
         return result.dropna()
 

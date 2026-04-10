@@ -17,13 +17,12 @@ from __future__ import annotations
 import json
 import math
 import os
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
 
-import numpy as np
 import pandas as pd
 
 
@@ -648,24 +647,17 @@ class Backtester:
             # --- NEW INDICATORS ---
 
             # VWAP (Volume Weighted Average Price) - rolling 20-day
-            if "Volume" in enriched.columns:
+            if "Volume" in enriched.columns and "High" in enriched.columns and "Low" in enriched.columns:
                 typical_price = (enriched["High"] + enriched["Low"] + enriched["Close"]) / 3
                 enriched["vwap_20"] = (typical_price * enriched["Volume"]).rolling(20).sum() / enriched["Volume"].rolling(20).sum()
 
-            # OBV (On Balance Volume)
+            # OBV (On Balance Volume) — vectorized
             if "Volume" in enriched.columns:
-                obv = [0]
-                closes = enriched["Close"].values
-                volumes = enriched["Volume"].values
-                for j in range(1, len(closes)):
-                    if closes[j] > closes[j-1]:
-                        obv.append(obv[-1] + volumes[j])
-                    elif closes[j] < closes[j-1]:
-                        obv.append(obv[-1] - volumes[j])
-                    else:
-                        obv.append(obv[-1])
+                delta = close.diff()
+                direction = (delta > 0).astype(int) - (delta < 0).astype(int)
+                obv = (direction * enriched["Volume"]).fillna(0).cumsum()
                 enriched["obv"] = obv
-                enriched["obv_sma_20"] = pd.Series(obv, index=enriched.index).rolling(20).mean()
+                enriched["obv_sma_20"] = obv.rolling(20).mean()
 
             # Stochastic Oscillator (%K, %D)
             if "High" in enriched.columns and "Low" in enriched.columns:
@@ -1229,8 +1221,8 @@ def simulate_black_swan(
 
         # Tail risk VaR
         if len(stressed_returns) > 10:
-            var_95 = float(np.percentile(stressed_returns, 5))
-            var_99 = float(np.percentile(stressed_returns, 1))
+            var_95 = float(stressed_returns.quantile(0.05))
+            var_99 = float(stressed_returns.quantile(0.01))
         else:
             var_95 = 0.0
             var_99 = 0.0
@@ -1534,6 +1526,8 @@ def _sanitize_for_json(obj):
         return obj.strftime("%Y-%m-%d")
     if isinstance(obj, float) and (math.isinf(obj) or math.isnan(obj)):
         return None
+    if hasattr(obj, "__dataclass_fields__"):
+        return _sanitize_for_json(asdict(obj))
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
     if isinstance(obj, list):
