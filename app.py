@@ -1126,7 +1126,7 @@ function loadStrategies() {
         const filter = document.getElementById('cat-filter').value;
         data.forEach(s => {
             if (filter && s.source !== filter) return;
-            html += '<tr><td><b>' + esc(s.name) + '</b></td>'
+            html += '<tr><td><b><a href="#" onclick="openStrategyDetail(\'' + esc(s.name) + '\');return false;">' + esc(s.name) + '</a></b></td>'
                 + '<td><span class="tag tag-blue">' + esc(s.source) + '</span></td>'
                 + '<td>' + s.universe_size + '</td>'
                 + '<td>' + esc(s.rebalance || '?') + '</td>'
@@ -1302,6 +1302,13 @@ function clearPortfolio() {
     updatePortfolioSummary();
     document.getElementById('portfolio-positions').innerHTML = 'Select strategies and click "Build Portfolio" to see combined positions.';
 }
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeStrategyModal();
+    }
+});
 </script>
 </body>
 </html>
