@@ -997,8 +997,9 @@ function closeStrategyModal() {
 
 // ==================== QUICK SCAN ====================
 function scanTicker() {
-    const sym = document.getElementById('scan-ticker').value.toUpperCase();
-    document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + sym + '...</p>';
+    const sym = document.getElementById('scan-ticker').value.trim().toUpperCase();
+    if (!sym) { document.getElementById('scan-results').innerHTML = '<p class="negative">Enter a ticker symbol.</p>'; return; }
+    document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + esc(sym) + '...</p>';
     fetchJSON('/api/scan/' + encodeURIComponent(sym)).then(data => {
         let html = '<h3 style="color:var(--warm-white); font-size:15px; margin-bottom:8px;">' + sym + '</h3>';
         if (data.industry) html += '<p style="color:var(--warm-gray);font-size:12px;margin-bottom:8px;">' + esc(data.industry) + '</p>';
@@ -1087,7 +1088,7 @@ function generateTradePlan() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading">Generating trade plan for ' + esc(strat) + '...</p>';
-    fetchJSON('/api/trade-plan/' + strat + '?amount=' + amt).then(data => {
+    fetchJSON('/api/trade-plan/' + encodeURIComponent(strat) + '?amount=' + encodeURIComponent(amt)).then(data => {
         let html = '<h3 style="font-weight:300; font-size:18px; color:var(--warm-white); margin-bottom:8px;">' + esc(data.strategy || '') + ' <span class="tag tag-yellow">DRY RUN</span></h3>';
         const planAmt = data.amount || 100000;
         html += '<p style="color:var(--warm-gray);font-size:12px;margin-bottom:16px;">Portfolio: <span style="font-family:var(--mono)">$' + planAmt.toLocaleString() + '</span> &middot; Slippage: 10bps &middot; Positions: ' + (data.orders||[]).length + '</p>';
@@ -1130,7 +1131,7 @@ function executeTrades() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading" style="color:var(--rose)">Executing live trades for ' + esc(strat) + '...</p>';
-    fetchJSON('/api/execute-trade/' + strat, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(data => {
+    fetchJSON('/api/execute-trade/' + encodeURIComponent(strat), {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(data => {
         let html = '<h3 style="color:var(--rose); font-weight:300; font-size:18px;">Execution Result: ' + esc(strat) + '</h3>';
         if (data.error) {
             html += '<p class="negative">' + esc(data.error) + '</p>';
@@ -1276,7 +1277,7 @@ function showPickResult() {
 
 function nextPick() {
     pickIdx++;
-    if (pickIdx >= pickRecs.length) { pickIdx = 0; pickCycleCount++; pickRecs = shuffleArray(pickRecs); }
+    if (pickIdx >= pickRecs.length) { pickIdx = 0; pickCycleCount++; }
     showPickResult();
 }
 

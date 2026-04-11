@@ -13,3 +13,4 @@ charts/
 # Internal tools (kept in parent directory)
 regen_missing.py
 post_evolve_test.sh
+.evolution/
