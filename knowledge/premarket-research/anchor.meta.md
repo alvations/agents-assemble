@@ -96,6 +96,14 @@ Keep it concise and actionable.
 5. defense_budget_floor (defense news?)
 6. warflation_hedge (energy + geopolitical?)
 
+## Schedule
+- **Monday-Friday 7-8am ET**: Standard pre-market research before US open
+- **Sunday ~6pm ET**: Pre-Asian-market research (8am Tokyo Monday). Same full process but:
+  - Focus on Asia/Europe weekend developments, Sunday futures
+  - Search: "asia markets monday [DATE]", "nikkei futures sunday", "china economy weekend news"
+  - File saved as MONDAY's date (e.g., Sunday Apr 13 report → 20260414.md)
+  - This gives a head start before Asian session moves US pre-market
+
 ## Event-Specific Additions (add when known, remove after event passes)
 - [Active] Iran ceasefire status — check until resolved
 - [Active] CPI/inflation — check monthly on release day
