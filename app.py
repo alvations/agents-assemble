@@ -709,6 +709,9 @@ function esc(s) {
     d.appendChild(document.createTextNode(s));
     return d.innerHTML;
 }
+function jesc(s) {
+    return String(s).replace(/\\\\/g, '\\\\\\\\').replace(/'/g, "\\\\'");
+}
 function fetchJSON(url, opts) {
     return fetch(url, opts).then(r => r.json().then(d => {
         if (!r.ok) throw new Error(d.error || 'Server error ' + r.status);
@@ -761,12 +764,12 @@ function renderLeaderboard() {
         const ret = s.return || 0, sharpe = s.sharpe || 0, max_dd = s.max_dd || 0;
         const retClass = ret > 0 ? 'positive' : 'negative';
         html += '<tr><td style="color:var(--warm-gray)">' + (i+1) + '</td>'
-            + '<td style="font-family:var(--font);font-weight:500;font-size:13px;"><a href="#" onclick="openStrategyDetail(\'' + esc(s.name) + '\');return false;">' + esc(s.name) + '</a></td>'
+            + '<td style="font-family:var(--font);font-weight:500;font-size:13px;"><a href="#" onclick="openStrategyDetail(\'' + esc(jesc(s.name)) + '\');return false;">' + esc(s.name) + '</a></td>'
             + '<td><span class="tag tag-blue">' + esc(s.source) + '</span></td>'
             + '<td class="' + retClass + '">' + (ret*100).toFixed(1) + '%</td>'
             + '<td>' + sharpe.toFixed(2) + '</td>'
             + '<td class="negative">' + (max_dd*100).toFixed(1) + '%</td>'
-            + '<td><button class="ghost" onclick="openStrategyDetail(\'' + esc(s.name) + '\')" style="padding:4px 12px;font-size:11px;">View</button></td></tr>';
+            + '<td><button class="ghost" onclick="openStrategyDetail(\'' + esc(jesc(s.name)) + '\')" style="padding:4px 12px;font-size:11px;">View</button></td></tr>';
     });
     html += '</table>';
     document.getElementById('leaderboard-table').innerHTML = html;
@@ -856,7 +859,7 @@ function renderTopPicks() {
         return;
     }
     const picks = topPicksView === 'passive'
-        ? topPicksData.filter(p => p.rebalance === 'monthly' || p.rebalance === 'quarterly' || (p.sharpe||0) > 0.5).slice(0, 5)
+        ? topPicksData.filter(p => (p.rebalance === 'monthly' || p.rebalance === 'quarterly') && (p.sharpe||0) > 0.5).slice(0, 5)
         : topPicksData.slice(0, 5);
 
     let html = '<div class="top-picks-scroll">';
@@ -865,7 +868,7 @@ function renderTopPicks() {
         const retClass = ret > 0 ? 'positive' : 'negative';
         const posCount = (p.positions || []).length;
         const topSyms = (p.positions || []).slice(0, 3).map(pos => pos.symbol).join(', ');
-        html += '<div class="top-pick-card" onclick="openStrategyDetail(\'' + esc(p.name) + '\')">'
+        html += '<div class="top-pick-card" onclick="openStrategyDetail(\'' + esc(jesc(p.name)) + '\')">'
             + '<div class="top-pick-rank">No. ' + (i+1) + '</div>'
             + '<div class="top-pick-info">'
             + '<div class="name">' + esc(p.name) + '</div>'
@@ -1346,7 +1349,7 @@ function loadStrategies() {
         const filter = document.getElementById('cat-filter').value;
         data.forEach(s => {
             if (filter && s.source !== filter) return;
-            html += '<tr><td style="font-family:var(--font);font-weight:500;"><a href="#" onclick="openStrategyDetail(\'' + esc(s.name) + '\');return false;">' + esc(s.name) + '</a></td>'
+            html += '<tr><td style="font-family:var(--font);font-weight:500;"><a href="#" onclick="openStrategyDetail(\'' + esc(jesc(s.name)) + '\');return false;">' + esc(s.name) + '</a></td>'
                 + '<td><span class="tag tag-blue">' + esc(s.source) + '</span></td>'
                 + '<td>' + s.universe_size + '</td>'
                 + '<td style="font-family:var(--font)">' + esc(s.rebalance || '?') + '</td>'
@@ -1377,13 +1380,13 @@ function loadPortfolioStrategies() {
             const retClass = ret > 0 ? 'positive' : 'negative';
             const checked = selectedStrategies[s.name] ? 'checked' : '';
             html += '<div style="padding:8px 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">'
-                + '<input type="checkbox" class="strat-checkbox" id="pf-' + esc(s.name) + '" ' + checked + ' onchange="togglePortfolioStrategy(\'' + esc(s.name) + '\', this.checked)">'
+                + '<input type="checkbox" class="strat-checkbox" id="pf-' + esc(s.name) + '" ' + checked + ' onchange="togglePortfolioStrategy(\'' + esc(jesc(s.name)) + '\', this.checked)">'
                 + '<label for="pf-' + esc(s.name) + '" style="flex:1; cursor:pointer; font-family:var(--font);">'
                 + '<span style="font-weight:500;">' + esc(s.name) + '</span> <span class="tag tag-blue">' + esc(s.source || '') + '</span>'
                 + ' <span class="' + retClass + '" style="font-family:var(--mono);font-size:12px;">' + (ret > 0 ? '+' : '') + ret.toFixed(1) + '%</span>'
                 + ' <span style="color:var(--warm-gray);font-size:12px;font-family:var(--mono);">Sharpe ' + (s.sharpe || 0).toFixed(2) + '</span>'
                 + '</label>'
-                + '<input type="number" class="alloc-input" id="alloc-' + esc(s.name) + '" value="' + (selectedStrategies[s.name] ? selectedStrategies[s.name].alloc : 10) + '" min="1" max="100" onchange="updatePortfolioAlloc(\'' + esc(s.name) + '\', this.value)">'
+                + '<input type="number" class="alloc-input" id="alloc-' + esc(s.name) + '" value="' + (selectedStrategies[s.name] ? selectedStrategies[s.name].alloc : 10) + '" min="1" max="100" onchange="updatePortfolioAlloc(\'' + esc(jesc(s.name)) + '\', this.value)">'
                 + '<span style="color:var(--warm-gray); font-size:12px;">%</span>'
                 + '</div>';
         });
@@ -1397,7 +1400,7 @@ function togglePortfolioStrategy(name, checked) {
     if (checked) {
         const strat = portfolioStrategies.find(s => s.name === name);
         const allocEl = document.getElementById('alloc-' + name);
-        selectedStrategies[name] = { alloc: parseInt(allocEl ? allocEl.value : 10), data: strat };
+        selectedStrategies[name] = { alloc: parseInt(allocEl ? allocEl.value : 10) || 10, data: strat };
     } else {
         delete selectedStrategies[name];
     }
@@ -1466,6 +1469,10 @@ function buildPortfolio() {
     }
     const totalAmount = parseFloat(document.getElementById('portfolio-total').value) || 100000;
     const totalAlloc = names.reduce((sum, n) => sum + selectedStrategies[n].alloc, 0);
+    if (totalAlloc <= 0) {
+        document.getElementById('portfolio-positions').innerHTML = '<p class="negative">All allocations are zero. Set allocation percentages above 0.</p>';
+        return;
+    }
 
     const combined = {};
     names.forEach(n => {
@@ -1681,7 +1688,7 @@ def api_market():
 
 @app.route("/api/scan/<symbol>")
 def api_scan(symbol):
-    sym = symbol.upper()
+    sym = symbol.strip().upper()
     if not _SYMBOL_RE.match(sym):
         return jsonify({"error": "Invalid symbol"}), 400
     from catalyst_analyzer import CatalystAnalyzer
@@ -1707,7 +1714,7 @@ def api_scan(symbol):
                 except Exception:
                     pass
         valid_bts = {k: v for k, v in bts.items()
-                     if isinstance(v.total_return, (int, float)) and math.isfinite(v.total_return)}
+                     if isinstance(v.total_return, (int, float)) and not isinstance(v.total_return, bool) and math.isfinite(v.total_return)}
         if valid_bts:
             best_key = max(valid_bts, key=lambda k: valid_bts[k].total_return)
             best_dict = valid_bts[best_key].to_dict()
@@ -1724,7 +1731,7 @@ def api_scan(symbol):
 
 @app.route("/api/catalyst/<symbol>")
 def api_catalyst(symbol):
-    sym = symbol.upper()
+    sym = symbol.strip().upper()
     if not _SYMBOL_RE.match(sym):
         return jsonify({"error": "Invalid symbol"}), 400
     from catalyst_analyzer import CatalystAnalyzer
@@ -1737,7 +1744,7 @@ def api_catalyst(symbol):
 
 @app.route("/api/chart/<symbol>")
 def api_chart(symbol):
-    sym = symbol.upper()
+    sym = symbol.strip().upper()
     if not _SYMBOL_RE.match(sym):
         return jsonify({"error": "Invalid symbol"}), 400
     from terminal import Terminal
@@ -1745,7 +1752,10 @@ def api_chart(symbol):
     if not _valid_date(start):
         return jsonify({"error": "Invalid start date (expected valid YYYY-MM-DD)"}), 400
     t = Terminal()
-    path = t.equity_chart(sym, start=start)
+    try:
+        path = t.equity_chart(sym, start=start)
+    except Exception as e:
+        return jsonify({"error": f"Chart generation failed for {sym}: {e}"}), 500
     if not path or not Path(path).is_file():
         return jsonify({"error": f"Chart generation failed for {sym}"}), 500
     chart_path = Path(path)
@@ -1828,11 +1838,12 @@ def api_trade_plan(strategy):
     numeric_weights = {s: w for s, w in weights.items()
                        if isinstance(w, (int, float)) and not isinstance(w, bool) and math.isfinite(w)}
     max_pos = persona.config.max_position_size
-    capped = {s: min(w, max_pos) for s, w in numeric_weights.items()
+    capped = {s: w for s, w in numeric_weights.items()
               if w > 0 and s in prices and prices[s] > 0}
     total_w = sum(capped.values())
     if total_w > 1.0:
         capped = {s: w / total_w for s, w in capped.items()}
+    capped = {s: min(w, max_pos) for s, w in capped.items()}
     for sym, w in sorted(capped.items(), key=lambda x: -x[1]):
         if remaining <= 0:
             break
@@ -2015,14 +2026,18 @@ def api_strategy_detail(name):
         if result_files:
             try:
                 rdata = json.loads(result_files[0].read_text())
-                # Extract monthly returns if available in the backtest data
-                eq = rdata.get("equity_curve", rdata.get("monthly_returns", []))
-                if isinstance(eq, list) and len(eq) > 1:
-                    # Convert equity curve to monthly returns
+                eq = rdata.get("equity_curve")
+                mr = rdata.get("monthly_returns") if eq is None else None
+                if isinstance(mr, list) and len(mr) > 0:
+                    # monthly_returns are already percentage values — use directly
+                    rolling_returns = [round(float(v), 1) for v in mr
+                                       if isinstance(v, (int, float)) and not isinstance(v, bool)]
+                elif isinstance(eq, list) and len(eq) > 1:
+                    # Convert equity curve to approximate monthly returns
                     step = max(1, len(eq) // 12)
                     for i in range(step, len(eq), step):
-                        prev = eq[i - step] if isinstance(eq[i - step], (int, float)) else 0
-                        curr = eq[i] if isinstance(eq[i], (int, float)) else 0
+                        prev = eq[i - step] if isinstance(eq[i - step], (int, float)) and not isinstance(eq[i - step], bool) else 0
+                        curr = eq[i] if isinstance(eq[i], (int, float)) and not isinstance(eq[i], bool) else 0
                         if prev > 0:
                             rolling_returns.append(round((curr / prev - 1) * 100, 1))
             except Exception:

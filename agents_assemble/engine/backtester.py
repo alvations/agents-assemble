@@ -29,10 +29,23 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Extended backtest horizons (Feature 5)
 # ---------------------------------------------------------------------------
-EXTENDED_HORIZONS = {
-    "2025": ("2025-01-01", "2025-12-31"),
-    "2026_ytd": ("2026-01-01", datetime.now().strftime("%Y-%m-%d")),
-}
+def get_extended_horizons() -> dict[str, tuple[str, str]]:
+    """Return extended horizons with a fresh YTD end date.
+
+    ``datetime.now()`` must not be evaluated at import time — long-running
+    processes (servers, notebooks) would freeze the YTD end at the import
+    timestamp.
+    """
+    return {
+        "2025": ("2025-01-01", "2025-12-31"),
+        "2026_ytd": ("2026-01-01", datetime.now().strftime("%Y-%m-%d")),
+    }
+
+
+# Backwards-compatible alias (reads fresh on each access via property-like
+# pattern is impossible for a module-level name, so callers that cache this
+# at import time still get stale dates — prefer get_extended_horizons()).
+EXTENDED_HORIZONS = get_extended_horizons()
 
 
 # ---------------------------------------------------------------------------
@@ -166,10 +179,10 @@ class Portfolio:
     def execute_trade(self, date: pd.Timestamp, symbol: str, side: Side,
                       quantity: float, price: float) -> Trade:
         """Execute a trade and update portfolio."""
-        if not (quantity > 0):
-            raise ValueError(f"Quantity must be positive, got {quantity}")
-        if not (price > 0):
-            raise ValueError(f"Price must be positive, got {price}")
+        if not (quantity > 0) or not math.isfinite(quantity):
+            raise ValueError(f"Quantity must be a finite positive number, got {quantity}")
+        if not (price > 0) or not math.isfinite(price):
+            raise ValueError(f"Price must be a finite positive number, got {price}")
 
         slippage = price * self.slippage_pct * quantity
         commission = self.commission_per_trade
@@ -181,6 +194,12 @@ class Portfolio:
             self.positions[symbol] = Position(symbol=symbol)
 
         self.positions[symbol].update(side, quantity, price)
+
+        # Remove fully closed positions to keep iteration fast on long
+        # backtests (thousands of dates × many symbols → stale Position
+        # objects accumulate and slow snapshot/total_value/rebalance loops).
+        if self.positions[symbol].quantity == 0:
+            del self.positions[symbol]
 
         if side == Side.BUY:
             self.cash -= trade.cost
@@ -646,9 +665,13 @@ class Backtester:
 
             # --- NEW INDICATORS ---
 
-            # VWAP (Volume Weighted Average Price) - rolling 20-day
-            if "Volume" in enriched.columns and "High" in enriched.columns and "Low" in enriched.columns:
+            # Typical price — shared by VWAP and CCI, compute once
+            _has_hl = "High" in enriched.columns and "Low" in enriched.columns
+            if _has_hl:
                 typical_price = (enriched["High"] + enriched["Low"] + enriched["Close"]) / 3
+
+            # VWAP (Volume Weighted Average Price) - rolling 20-day
+            if "Volume" in enriched.columns and _has_hl:
                 enriched["vwap_20"] = (typical_price * enriched["Volume"]).rolling(20).sum() / enriched["Volume"].rolling(20).sum()
 
             # OBV (On Balance Volume) — vectorized
@@ -663,11 +686,12 @@ class Backtester:
             if "High" in enriched.columns and "Low" in enriched.columns:
                 low_14 = enriched["Low"].rolling(14).min()
                 high_14 = enriched["High"].rolling(14).max()
-                enriched["stoch_k"] = ((enriched["Close"] - low_14) / (high_14 - low_14)) * 100
+                _hl_range_14 = (high_14 - low_14).replace(0, float('nan'))
+                enriched["stoch_k"] = ((enriched["Close"] - low_14) / _hl_range_14) * 100
                 enriched["stoch_d"] = enriched["stoch_k"].rolling(3).mean()
 
                 # Williams %R (14-period)
-                enriched["williams_r"] = ((high_14 - enriched["Close"]) / (high_14 - low_14)) * -100
+                enriched["williams_r"] = ((high_14 - enriched["Close"]) / _hl_range_14) * -100
 
                 # Ichimoku Cloud (simplified - Tenkan, Kijun, Senkou A/B)
                 high_9 = enriched["High"].rolling(9).max()
@@ -685,11 +709,11 @@ class Backtester:
             enriched["roc_12"] = enriched["Close"].pct_change(12) * 100
 
             # Commodity Channel Index (20-period)
-            if "High" in enriched.columns and "Low" in enriched.columns:
-                tp = (enriched["High"] + enriched["Low"] + enriched["Close"]) / 3
+            if _has_hl:
+                tp = typical_price
                 tp_sma = tp.rolling(20).mean()
                 tp_mad = tp.rolling(20).apply(lambda x: abs(x - x.mean()).mean(), raw=True)
-                enriched["cci_20"] = (tp - tp_sma) / (0.015 * tp_mad)
+                enriched["cci_20"] = (tp - tp_sma) / (0.015 * tp_mad.replace(0, float('nan')))
 
             enriched_data[sym] = enriched
 
@@ -1012,7 +1036,11 @@ def predict_forward(
     # Historical CAGR (annualized)
     cum = (1 + rets).cumprod()
     n_years = len(rets) / 252.0
-    historical_cagr = (cum.iloc[-1] ** (1 / max(n_years, 0.01))) - 1
+    cum_final = cum.iloc[-1]
+    if cum_final > 0:
+        historical_cagr = (cum_final ** (1 / max(n_years, 0.01))) - 1
+    else:
+        historical_cagr = -1.0  # Total loss
 
     # Exponential smoothing of recent daily returns (alpha=0.02 for ~50-day half-life)
     alpha = 0.02
@@ -1024,7 +1052,14 @@ def predict_forward(
 
     # Recent momentum (last 63 trading days annualized)
     recent = rets.iloc[-min(63, len(rets)):]
-    recent_momentum = (1 + recent).prod() ** (252 / len(recent)) - 1
+    _recent_growth = (1 + recent).prod()
+    if _recent_growth > 0:
+        try:
+            recent_momentum = _recent_growth ** (252 / len(recent)) - 1
+        except OverflowError:
+            recent_momentum = historical_cagr
+    else:
+        recent_momentum = -1.0
 
     predictions = []
     for label, days in horizons.items():
@@ -1051,9 +1086,15 @@ def predict_forward(
         optimistic_return = base_return + 0.675 * horizon_vol
         pessimistic_return = base_return - 0.675 * horizon_vol
 
-        # Annualize the base return
-        if days > 0:
-            annualized_base = (1 + base_return) ** (252 / days) - 1
+        # Annualize the base return (guard negative growth — same
+        # pattern as CAGR: negative base raises ValueError on fractional exp)
+        if days > 0 and (1 + base_return) > 0:
+            try:
+                annualized_base = (1 + base_return) ** (252 / days) - 1
+            except OverflowError:
+                annualized_base = float("inf")
+        elif days > 0:
+            annualized_base = -1.0  # Total loss
         else:
             annualized_base = 0.0
 
@@ -1156,8 +1197,12 @@ def simulate_black_swan(
         stressed = equity_curve.copy().values.astype(float)
         dates = equity_curve.index
 
-        # Pre-crash value
+        # Pre-crash value — skip scenario if portfolio is already wiped out
+        # (crash injection on a zero/negative value produces division-by-zero
+        # in scale_factor and nonsensical stressed curves)
         pre_crash_value = stressed[inject_idx]
+        if pre_crash_value <= 0:
+            continue
 
         # Apply crash: distribute the total drop over crash_days
         # Using an exponential decay pattern (most damage early)
@@ -1279,15 +1324,17 @@ def compute_black_swan_resilience(
     # --- Asset composition score (0-30) ---
     composition_score = 15.0  # Neutral default
     if holdings:
-        symbols = set(holdings.keys())
-        defensive_count = len(symbols & _DEFENSIVE_ASSETS)
-        growth_count = len(symbols & _CONCENTRATED_GROWTH)
-        total = len(symbols) if symbols else 1
-
-        # Defensive fraction boosts score, concentrated growth penalizes
-        defensive_frac = defensive_count / total
-        growth_frac = growth_count / total
-        composition_score = 15 + 15 * defensive_frac - 15 * growth_frac
+        # Use portfolio weights (not position counts) so a 90% TLT portfolio
+        # scores higher than a 1% TLT portfolio with the same position count.
+        defensive_weight = sum(
+            h.get("weight", 0) for sym, h in holdings.items()
+            if sym in _DEFENSIVE_ASSETS
+        )
+        growth_weight = sum(
+            h.get("weight", 0) for sym, h in holdings.items()
+            if sym in _CONCENTRATED_GROWTH
+        )
+        composition_score = 15 + 15 * defensive_weight - 15 * growth_weight
         composition_score = max(0, min(30, composition_score))
 
     # --- Recovery speed score (0-20) ---
@@ -1442,16 +1489,26 @@ def gather_external_signals(tickers: list[str] | None = None) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 def _fmt_ratio(value: float) -> str:
     """Format a ratio that may be infinite (calmar, profit_factor)."""
-    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+    if isinstance(value, bool):
         return "       N/A"
-    return f"{value:>10.2f}"
+    try:
+        if not math.isfinite(value):
+            return "       N/A"
+        return f"{value:>10.2f}"
+    except (TypeError, ValueError):
+        return "       N/A"
 
 
 def _fmt_pct(value: float) -> str:
     """Format a percentage that may be infinite (alpha on extreme short backtests)."""
-    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+    if isinstance(value, bool):
         return "       N/A"
-    return f"{value:>10.2%}"
+    try:
+        if not math.isfinite(value):
+            return "       N/A"
+        return f"{value:>10.2%}"
+    except (TypeError, ValueError):
+        return "       N/A"
 
 
 def format_report(results: dict[str, Any], title: str = "Backtest Report") -> str:
@@ -1524,8 +1581,13 @@ def _sanitize_for_json(obj):
     """Replace float inf/nan with None and Timestamps with strings for JSON compliance."""
     if isinstance(obj, pd.Timestamp):
         return obj.strftime("%Y-%m-%d")
-    if isinstance(obj, float) and (math.isinf(obj) or math.isnan(obj)):
-        return None
+    # Catch inf/nan for both Python float and numpy scalars (numpy 2.0+
+    # where float64 is no longer a subclass of Python float).
+    try:
+        if not math.isfinite(obj):
+            return None
+    except (TypeError, ValueError):
+        pass
     if hasattr(obj, "__dataclass_fields__"):
         return _sanitize_for_json(asdict(obj))
     if isinstance(obj, dict):
@@ -1542,10 +1604,14 @@ def save_results(results: dict[str, Any], path: str) -> None:
     serializable = {}
     for k, v in results.items():
         if isinstance(v, pd.Series):
-            serializable[k] = {str(idx): float(val) for idx, val in v.items()}
+            serializable[k] = {
+                (idx.strftime("%Y-%m-%d") if isinstance(idx, pd.Timestamp) else str(idx)): float(val)
+                for idx, val in v.items()
+            }
         elif isinstance(v, list) and v and isinstance(v[0], Trade):
             serializable[k] = [
-                {"date": str(t.date), "symbol": t.symbol, "side": t.side.value,
+                {"date": t.date.strftime("%Y-%m-%d") if isinstance(t.date, pd.Timestamp) else str(t.date),
+                 "symbol": t.symbol, "side": t.side.value,
                  "quantity": t.quantity, "price": t.price,
                  "commission": t.commission, "slippage": t.slippage}
                 for t in v

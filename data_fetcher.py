@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -141,11 +141,17 @@ def _cache_set(key: str, df: pd.DataFrame) -> None:
 
 
 def _canonical_cache_read(symbol: str, interval: str = "1d") -> pd.DataFrame | None:
-    """Read the canonical (one-per-ticker) cache file."""
+    """Read the canonical (one-per-ticker) cache file.
+
+    Always returns tz-naive index so callers don't need to strip it.
+    """
     path = _canonical_cache_path(symbol, interval)
     try:
         if path.exists():
-            return pd.read_parquet(path)
+            df = pd.read_parquet(path)
+            if df.index.tz is not None:
+                df.index = df.index.tz_localize(None)
+            return df
     except Exception:
         try:
             path.unlink()
@@ -216,8 +222,6 @@ def migrate_cache() -> dict[str, int]:
             # Also merge with existing canonical file if present
             existing = _canonical_cache_read(sym, interval)
             if existing is not None and not existing.empty:
-                if existing.index.tz is not None:
-                    existing.index = existing.index.tz_localize(None)
                 merged = pd.concat([existing, merged])
                 merged = merged[~merged.index.duplicated(keep="last")]
                 merged = merged.sort_index()
@@ -250,6 +254,7 @@ def refresh_cache(max_age_days: int = 1) -> dict[str, int]:
         return {"updated": 0, "skipped": 0, "failed": 0}
 
     canonical = re.compile(r"^ohlcv_(.+?)_([\w]+)\.parquet$")
+    old_format = re.compile(r"\d{4}-\d{2}-\d{2}")
     today = pd.Timestamp(datetime.now().strftime("%Y-%m-%d"))
     updated = 0
     skipped = 0
@@ -261,6 +266,9 @@ def refresh_cache(max_age_days: int = 1) -> dict[str, int]:
         if not m:
             continue
         sym, interval = m.groups()
+        # Skip old-format files (ohlcv_SYM_YYYY-MM-DD_YYYY-MM-DD_interval)
+        if old_format.search(sym):
+            continue
         # Skip intraday
         if interval not in ("1d", "1wk", "1mo"):
             continue
@@ -346,10 +354,6 @@ def fetch_ohlcv(
     fetch_end = end
 
     if cached_df is not None and not cached_df.empty:
-        # Normalize index to tz-naive for comparison
-        if cached_df.index.tz is not None:
-            cached_df.index = cached_df.index.tz_localize(None)
-
         cached_min = cached_df.index.min()
         cached_max = cached_df.index.max()
         today = pd.Timestamp(datetime.now().strftime("%Y-%m-%d"))
@@ -416,8 +420,8 @@ def fetch_ohlcv(
             cached_df = df_new
         # else: keep whatever cached_df we had (may be None)
 
-        # Write merged data back to canonical cache
-        if cache and cached_df is not None and not cached_df.empty:
+        # Write merged data back to canonical cache (only if we got new data)
+        if cache and not df_new.empty and cached_df is not None and not cached_df.empty:
             _canonical_cache_write(symbol, cached_df, interval)
 
     if cached_df is None or cached_df.empty:
@@ -461,8 +465,6 @@ def fetch_multiple_ohlcv(
         for sym in symbols:
             cached = _canonical_cache_read(sym, interval)
             if cached is not None and not cached.empty:
-                if cached.index.tz is not None:
-                    cached.index = cached.index.tz_localize(None)
                 cached_min = cached.index.min()
                 cached_max = cached.index.max()
                 covers_start = cached_min <= req_start
@@ -1433,7 +1435,7 @@ def fetch_all_news(
                 pub = ""
                 if ts and ts > 946684800:
                     try:
-                        pub = datetime.utcfromtimestamp(ts).strftime(
+                        pub = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
                             "%a, %d %b %Y %H:%M:%S +0000"
                         )
                     except Exception:
@@ -1456,7 +1458,7 @@ def fetch_all_news(
                 pub = ""
                 if ts and ts > 946684800:
                     try:
-                        pub = datetime.utcfromtimestamp(ts).strftime(
+                        pub = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
                             "%a, %d %b %Y %H:%M:%S +0000"
                         )
                     except Exception:
@@ -1478,7 +1480,7 @@ def fetch_all_news(
             pub = ""
             if ts:
                 try:
-                    pub = datetime.utcfromtimestamp(ts).strftime(
+                    pub = datetime.fromtimestamp(ts, tz=timezone.utc).strftime(
                         "%a, %d %b %Y %H:%M:%S +0000"
                     )
                 except Exception:
@@ -1641,6 +1643,7 @@ def fetch_aggregate_sentiment(symbol: str) -> dict[str, Any]:
         "news_count": sum(
             v.get("mentions", 0) + v.get("messages", 0)
             + v.get("articles_analyzed", 0)
+            + v.get("positive_mentions", 0) + v.get("negative_mentions", 0)
             for v in sources_data.values()
         ),
     }
@@ -1719,10 +1722,16 @@ def fetch_market_events(days_ahead: int = 14) -> list[dict[str, Any]]:
     ]
     for name, desc, months in major_events:
         for m in months:
-            event_date = (
-                now.replace(month=m, day=15) if m != now.month
-                else now + timedelta(days=7)
-            )
+            if m == now.month:
+                event_date = now + timedelta(days=7)
+            else:
+                event_date = now.replace(month=m, day=15)
+                # If date is in the past, try next year (handles Dec→Jan boundary)
+                if event_date < now:
+                    try:
+                        event_date = event_date.replace(year=now.year + 1)
+                    except (ValueError, OverflowError):
+                        continue
             try:
                 delta = (event_date - now).days
                 if 0 <= delta <= days_ahead:
@@ -2604,8 +2613,8 @@ def fetch_air_travel_index(
         try:
             resp = requests.get(url, timeout=15)
             if resp.status_code == 200:
-                df = pd.read_csv(StringIO(resp.text), parse_dates=["observation_date"])
-                df = df.rename(columns={"observation_date": "date", series_id: col_name})
+                df = pd.read_csv(StringIO(resp.text), parse_dates=["DATE"])
+                df = df.rename(columns={"DATE": "date", series_id: col_name})
                 df = df.set_index("date")
                 df[col_name] = pd.to_numeric(df[col_name], errors="coerce")
                 frames.append(df)
@@ -2640,6 +2649,9 @@ def fetch_tsa_yoy_change(cache: bool = True) -> pd.DataFrame:
         })
         result["yoy_change"] = (
             (result["current"] - result["prior_year"]) / result["prior_year"]
+        )
+        result["yoy_change"] = result["yoy_change"].replace(
+            [float("inf"), float("-inf")], float("nan")
         )
         return result.dropna()
 
