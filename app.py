@@ -725,6 +725,7 @@ function showSection(name, el) {
     document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
     if (el) el.classList.add('active');
     if (name === 'portfolio' && !portfolioStrategiesLoaded) loadPortfolioStrategies();
+    if (name === 'strategies' && !strategiesLoaded) loadStrategies();
 }
 
 // Update status time
@@ -1018,8 +1019,9 @@ function scanTicker() {
 }
 
 function runCatalyst() {
-    const sym = document.getElementById('catalyst-ticker').value.toUpperCase();
-    document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + sym + '... (this takes ~30s)</p>';
+    const sym = document.getElementById('catalyst-ticker').value.trim().toUpperCase();
+    if (!sym) { document.getElementById('catalyst-results').innerHTML = '<p class="negative">Enter a ticker symbol.</p>'; return; }
+    document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + esc(sym) + '... (this takes ~30s)</p>';
     fetchJSON('/api/catalyst/' + encodeURIComponent(sym)).then(data => {
         let html = '<h3 style="color:var(--warm-white); font-size:16px; margin-bottom:12px;">' + sym;
         if (data.industry) html += ' <span style="color:var(--warm-gray);font-weight:300;font-size:13px;">&mdash; ' + esc(data.industry) + '</span>';
@@ -1343,6 +1345,7 @@ function analyzeStockPick() {
 }
 
 // ==================== STRATEGIES LIST ====================
+let strategiesLoaded = false;
 function loadStrategies() {
     document.getElementById('all-strategies').innerHTML = '<p class="loading">Loading...</p>';
     fetchJSON('/api/strategies').then(data => {
@@ -1358,11 +1361,12 @@ function loadStrategies() {
         });
         html += '</table>';
         document.getElementById('all-strategies').innerHTML = html;
+        strategiesLoaded = true;
     }).catch(e => {
         document.getElementById('all-strategies').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
-document.querySelector('[onclick*="strategies"]').addEventListener('click', function() { setTimeout(loadStrategies, 100); });
+document.querySelector('[onclick*="strategies"]').addEventListener('click', function() { if (!strategiesLoaded) setTimeout(loadStrategies, 100); });
 
 // ==================== PORTFOLIO BUILDER ====================
 let portfolioStrategiesLoaded = false;
