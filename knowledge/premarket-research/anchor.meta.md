@@ -99,11 +99,17 @@ Keep it concise and actionable.
 ## Schedule
 - **Monday-Friday 7-8am ET**: Standard pre-market research before US open
 - **Saturday 6-9am ET**: Weekly Roundup — different format (see below)
-- **Sunday ~6pm ET**: Pre-Asian-market research (8am Tokyo Monday). Same full process but:
-  - Focus on Asia/Europe weekend developments, Sunday futures
-  - Search: "asia markets monday [DATE]", "nikkei futures sunday", "china economy weekend news"
-  - File saved as **SUNDAY's US date** (e.g., Sunday Apr 13 report → 20260413.md)
-  - Monday gets its own standard YYYYMMDD.md report as usual
+- **Sunday ~6pm ET**: Pre-Asian-market research (8am Tokyo Monday). File = **Sunday's US date**.
+  Monday gets its own standard report. Sunday's report focuses on:
+  - Asian market outlook: "nikkei futures sunday", "hang seng monday open", "china PMI weekend"
+  - Asian stock movers: Samsung, TSMC, Toyota, Alibaba, Tencent, DBS, SoftBank
+  - S&P/Nasdaq futures (Sunday evening open at 6pm ET)
+  - Weekend geopolitical developments affecting Asia-Pacific
+  - Forward-looking: what Monday's Asian session will signal for US pre-market
+  - Commodity futures: oil, gold, copper (trade Sunday evening)
+  - Crypto weekend moves (24/7 market — proxy for Monday risk appetite)
+  - Economic calendar: any Asian data releases Monday (Japan GDP, China trade, Korea exports)
+  - Our Asia-exposed strategies: japan_industrial_finance, korean_chaebols, singapore_alpha, china_adr_deep_value, china_tech_rebound, japanese_sogo_shosha
 
 ## Saturday Weekly Roundup Format
 File: `YYYYMMDD_weekly.md` (Saturday's date)
