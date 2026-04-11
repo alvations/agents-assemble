@@ -98,11 +98,27 @@ Keep it concise and actionable.
 
 ## Schedule
 - **Monday-Friday 7-8am ET**: Standard pre-market research before US open
+- **Saturday 6-9am ET**: Weekly Roundup — different format (see below)
 - **Sunday ~6pm ET**: Pre-Asian-market research (8am Tokyo Monday). Same full process but:
   - Focus on Asia/Europe weekend developments, Sunday futures
   - Search: "asia markets monday [DATE]", "nikkei futures sunday", "china economy weekend news"
   - File saved as MONDAY's date (e.g., Sunday Apr 13 report → 20260414.md)
   - This gives a head start before Asian session moves US pre-market
+
+## Saturday Weekly Roundup Format
+File: `YYYYMMDD_weekly.md` (Saturday's date)
+
+Sections:
+1. **Week in Review** — Mon-Fri recap: biggest movers, surprises, what our strategies caught vs missed
+2. **Strategy Scorecard** — Top 10 strategies performance this week (spot check)
+3. **Forward Look** — Next week: economic calendar, earnings, events, geopolitical
+4. **Monday Setup** — What to watch, which triggers might fire, sizing
+5. **The Fun Section** — Creative, original, finance-adjacent but light:
+   - Rotate themes weekly: stocks-as-sneakers, Bloomberg Yelp reviews, portfolio playlists,
+     luxury index (Birkin/Rolex/whisky), meme economy, CEO fashion report, etc.
+   - Must be ORIGINAL (not copied), informative underneath the humor
+
+Tone: Weekend reading — relaxed, personality, make someone smile while learning.
 
 ## Event-Specific Additions (add when known, remove after event passes)
 - [Active] Iran ceasefire status — check until resolved
