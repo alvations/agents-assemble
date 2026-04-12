@@ -1,12 +1,12 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **204 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
+Trading agents and algorithms for publicly tradable instruments. **204 strategies**, 720+ tickers, ranked by Composite Score across 28 rolling windows (2015-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
 > **Start here:**
 > - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (Avg Return × Consistency × Drawdown Protection)
-> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning204 strategies (entry, stop-loss, take-profit)
+> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
@@ -177,7 +177,7 @@ agents-assemble/
   TRADING.md                    # Public.com API execution guide
   knowledge/                    # 54 research files (NVDA supply chain, alt data, etc.)
   results/                      # Backtest JSON results
-  strategy/winning/             # Trade recs for winning204 strategies
+  strategy/winning/             # Trade recs for winning strategies
   strategy/losing/              # Failed204 strategies (don't repeat)
 ```
 
