@@ -42,6 +42,11 @@ Themes:
     + NvidiaSupplyChain          — NVIDIA peripheral supply chain (non-megacap)
     + Mag7HiddenSuppliers        — Hidden supply chain monopolies ALL Mag7 depend on
     + Mag7DominoHedge            — Supply chain stress early-warning hedge
+    + AIInfrastructureLayer      — Railroad builders of AI (data centers, power, cooling)
+    + AIApplicationSurvivors     — The Amazons: real-revenue AI apps that survive the bust
+    + AIAdoptersNotBuilders      — Walmart principle: established companies adopting AI
+    + LateCycleBubbleHedge       — 1999 detector: rotate to value when AI gets frothy
+    + PicksAndShovelsAI          — Levi Strauss principle: sell tools to AI miners
 """
 
 from __future__ import annotations
@@ -3204,6 +3209,691 @@ class Mag7DominoHedge(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Tech Boom Cycle Strategies (Historical Pattern)
+# Research: knowledge/tech_boom_cycles_research.md
+# ---------------------------------------------------------------------------
+
+
+def _days_below_sma200(data, symbol, date, max_lookback=30):
+    """Count consecutive trading days the symbol's Close was below its SMA200.
+
+    Looks backward from *date* in data[symbol]. Returns 0 if currently above
+    SMA200 or if data is unavailable.
+    """
+    if symbol not in data:
+        return 0
+    df = data[symbol]
+    if "Close" not in df.columns or "sma_200" not in df.columns:
+        return 0
+    mask = df.index <= date
+    subset = df.loc[mask].tail(max_lookback)
+    if subset.empty:
+        return 0
+    count = 0
+    for idx in reversed(subset.index):
+        row = subset.loc[idx]
+        close_val = row["Close"]
+        sma_val = row["sma_200"]
+        if hasattr(close_val, "iloc"):
+            close_val = close_val.iloc[-1]
+        if hasattr(sma_val, "iloc"):
+            sma_val = sma_val.iloc[-1]
+        try:
+            if close_val != close_val or sma_val != sma_val:  # NaN check
+                break
+        except (TypeError, ValueError):
+            break
+        if close_val < sma_val:
+            count += 1
+        else:
+            break
+    return count
+
+
+# ---------------------------------------------------------------------------
+# AI Infrastructure Layer — the "railroad builders" of AI
+# ---------------------------------------------------------------------------
+class AIInfrastructureLayer(BasePersona):
+    """AI physical infrastructure strategy.
+
+    Historical parallel: Railroad builders in the 1840s, fiber optic companies
+    in the 1990s. Companies building the physical layer always benefit during
+    tech booms — data centers, power, cooling, networking.
+
+    Signal: momentum following NVDA as lead indicator. Buy uptrends, cut below
+    SMA200. NVDA acts as the canary — when it trends up, infrastructure demand
+    is confirmed.
+
+    Exit logic (in generate_signals):
+    - Take profit: NVDA RSI > 80 AND 3+ infra stocks RSI > 75 → trim ALL by 30%.
+    - Stop loss: NVDA below SMA200 (10+ days or any day) → EXIT ALL.
+    - Per-stock: RSI > 80 → zero weight. Below SMA200 → zero weight.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="AI Infrastructure Layer",
+            description="Railroad builders of AI: data centers, power, cooling, networking",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "EQIX", "DLR",          # Data center REITs
+                "VST", "CEG", "NRG",    # Power for AI
+                "VRT", "MOD",           # Cooling infrastructure
+                "ANET", "MRVL",         # Networking
+                "AMT", "CCI",           # Fiber / connectivity
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # ---- NVDA bellwether check ----
+        nvda_below_sma200 = False
+        nvda_rsi = None
+        if "NVDA" in data:
+            nvda_inds = self._get_indicators(
+                data, "NVDA", ["sma_200", "rsi_14", "sma_50"], date
+            )
+            nvda_sma200 = nvda_inds["sma_200"]
+            nvda_rsi = nvda_inds["rsi_14"]
+            nvda_sma50 = nvda_inds["sma_50"]
+            if "NVDA" in prices and not _is_missing(nvda_sma200):
+                if prices["NVDA"] < nvda_sma200:
+                    nvda_below_sma200 = True
+
+        # STOP LOSS: NVDA below SMA200 AND stays below 10+ trading days
+        # → AI capex cycle slowing → EXIT ALL
+        if nvda_below_sma200:
+            days_below = _days_below_sma200(data, "NVDA", date, max_lookback=30)
+            if days_below >= 10:
+                for sym in self.config.universe:
+                    weights[sym] = 0.0
+                return weights
+
+        # Even single-day below SMA200 for NVDA → exit all (capex signal)
+        if nvda_below_sma200:
+            for sym in self.config.universe:
+                weights[sym] = 0.0
+            return weights
+
+        # ---- Count infra stocks with RSI > 75 (overheating detection) ----
+        high_rsi_count = 0
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["rsi_14"], date)
+            rsi = inds["rsi_14"]
+            if not _is_missing(rsi) and rsi > 75:
+                high_rsi_count += 1
+
+        # TAKE PROFIT: NVDA RSI > 80 AND 3+ infra stocks RSI > 75
+        # → infrastructure overheated → trim ALL positions by 30%
+        trim_factor = 1.0
+        if (not _is_missing(nvda_rsi) and nvda_rsi > 80
+                and high_rsi_count >= 3):
+            trim_factor = 0.70
+
+        # ---- Score each stock ----
+        scored = []
+        nvda_up = False
+        if "NVDA" in prices and not _is_missing(nvda_sma200):
+            nvda_sma50_val = nvda_inds["sma_50"] if "NVDA" in data else None
+            if (not _is_missing(nvda_sma50_val) and not _is_missing(nvda_sma200)
+                    and prices["NVDA"] > nvda_sma50_val > nvda_sma200):
+                nvda_up = True
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            sma50, sma200 = inds["sma_50"], inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+
+            if _is_missing(sma200):
+                continue
+
+            # Per-stock: RSI > 80 → zero weight (overheated)
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Below SMA200 → broken trend
+            if price < sma200:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            if not _is_missing(sma50) and price > sma50 > sma200:
+                score += 3.0
+            elif not _is_missing(sma50) and price > sma50:
+                score += 1.5
+
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                score += 1.0
+
+            if nvda_up:
+                score += 1.0
+
+            if not _is_missing(rsi) and 35 < rsi < 70:
+                score += 0.5
+
+            if score > 2:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock * trim_factor
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# AI Application Survivors — the "Amazons" that will survive the bust
+# ---------------------------------------------------------------------------
+class AIApplicationSurvivors(BasePersona):
+    """AI application survivor strategy.
+
+    Historical parallel: Amazon survived the dotcom crash because it had REAL
+    revenue and adapted its business model. Pets.com died because it had neither.
+    Pick application companies with real revenue, not just AI hype.
+
+    Signal: price > SMA200 AND positive MACD. Avoid stocks below SMA50 for
+    extended periods (proxy for revenue weakness).
+
+    Exit logic (in generate_signals):
+    - Take profit: price > 3x SMA200 → halve weight (speculative territory).
+    - Stop loss: below SMA200 for 20+ days → zero weight (not a survivor).
+      Below SMA200 at all → zero weight.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="AI Application Survivors",
+            description="The Amazons of AI: real-revenue application companies that survive the bust",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "CRM",    # Enterprise (Salesforce)
+                "NOW",    # IT automation (ServiceNow)
+                "ADBE",   # Creative tools (Adobe)
+                "INTU",   # Tax/accounting (Intuit)
+                "VEEV",   # Pharma data (Veeva)
+                "HUBS",   # Marketing (HubSpot)
+                "PANW",   # Cybersecurity (Palo Alto)
+                "WDAY",   # HR/finance (Workday)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            sma50, sma200 = inds["sma_50"], inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+
+            if _is_missing(sma200):
+                continue
+
+            # STOP LOSS: Below SMA200 for 20+ days → dead, not a survivor
+            if price < sma200:
+                days_below = _days_below_sma200(data, sym, date, max_lookback=30)
+                if days_below >= 20:
+                    weights[sym] = 0.0
+                    continue
+                # Even if < 20 days, below SMA200 = zero weight
+                weights[sym] = 0.0
+                continue
+
+            # TAKE PROFIT: price/SMA200 > 3.0 → speculative territory → halve weight
+            price_sma_ratio = price / sma200 if sma200 > 0 else 1.0
+            halve_factor = 0.5 if price_sma_ratio > 3.0 else 1.0
+
+            # Revenue-weakness proxy: below SMA50 = avoid
+            if not _is_missing(sma50) and price < sma50:
+                weights[sym] = 0.0
+                continue
+
+            # MACD must be positive — momentum confirmation
+            macd_positive = (
+                not _is_missing(macd)
+                and not _is_missing(macd_sig)
+                and macd > macd_sig
+            )
+            if not macd_positive:
+                weights[sym] = 0.0
+                continue
+
+            # Overbought caution
+            if not _is_missing(rsi) and rsi > 78:
+                weights[sym] = 0.0
+                continue
+
+            score = 2.0  # Base: passed all filters
+            # Above both MAs: strong
+            if not _is_missing(sma50) and price > sma50 > sma200:
+                score += 2.0
+            # RSI sweet spot
+            if not _is_missing(rsi) and 40 < rsi < 65:
+                score += 1.0  # Not overheated = sustainable
+            elif not _is_missing(rsi) and rsi < 40:
+                score += 0.5  # Dip opportunity
+
+            scored.append((sym, score, halve_factor))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _, halve in top:
+                weights[sym] = per_stock * halve
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# AI Adopters Not Builders — Walmart survived, e-commerce startups died
+# ---------------------------------------------------------------------------
+class AIAdoptersNotBuilders(BasePersona):
+    """Traditional companies aggressively adopting AI.
+
+    Historical parallel: Walmart adopted the internet for supply chain and
+    e-commerce — survived and thrived. Most pure e-commerce startups died.
+    Banks that adopted mobile banking outperformed fintech startups.
+
+    Buy established companies in uptrends that are investing in AI. These are
+    NOT valued as tech stocks, so they avoid the bubble premium.
+
+    Exit logic (in generate_signals):
+    - Take profit: RSI > 70 → trim (halve weight). RSI > 75 → zero weight.
+      Adopters should not get speculative.
+    - Stop loss: below SMA200 = adoption thesis failed → zero weight.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="AI Adopters Not Builders",
+            description="Walmart principle: established companies adopting AI outperform tech builders",
+            risk_tolerance=0.4,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "JPM",   # AI trading, fraud detection
+                "UNH",   # AI healthcare / claims processing
+                "WMT",   # AI supply chain / inventory
+                "CAT",   # Autonomous equipment
+                "DE",    # Precision agriculture
+                "JNJ",   # AI drug discovery
+                "UPS",   # AI logistics optimization
+                "GE",    # AI industrial / jet engines
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date,
+            )
+            sma50, sma200 = inds["sma_50"], inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma200):
+                continue
+
+            # STOP LOSS: Below SMA200 = adoption thesis failed → exit
+            if price < sma200:
+                weights[sym] = 0.0
+                continue
+
+            # TAKE PROFIT: RSI > 75 → overextended for an adopter → no allocation
+            if not _is_missing(rsi) and rsi > 75:
+                weights[sym] = 0.0
+                continue
+
+            # Reject speculative overshoot (>50% above SMA200)
+            if price > sma200 * 1.50:
+                weights[sym] = 0.0
+                continue
+
+            # TAKE PROFIT: Trim at RSI > 70 — adopters should not get speculative
+            trim_factor = 1.0
+            if not _is_missing(rsi) and rsi > 70:
+                trim_factor = 0.5  # Reduce allocation at RSI 70-75
+
+            score = 1.0  # Base: in uptrend
+            # Steady growth: close to SMA200 (within 20%) = healthy
+            pct_above = (price - sma200) / sma200
+            if pct_above < 0.20:
+                score += 2.0  # Near SMA200 = steady, not speculative
+            elif pct_above < 0.35:
+                score += 1.0
+
+            # SMA50 trend confirmation
+            if not _is_missing(sma50) and sma50 > sma200:
+                score += 1.0
+
+            # RSI middle ground = sustainable
+            if not _is_missing(rsi) and 35 < rsi < 60:
+                score += 1.0
+            elif not _is_missing(rsi) and rsi < 35:
+                score += 0.5  # Dip buy
+
+            if score > 2:
+                scored.append((sym, score, trim_factor))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _, trim in top:
+                weights[sym] = per_stock * trim
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Late-Cycle Bubble Hedge — the "1999 detector"
+# ---------------------------------------------------------------------------
+class LateCycleBubbleHedge(BasePersona):
+    """Late-cycle bubble detector and rotation strategy.
+
+    THIS IS THE EXIT STRATEGY ITSELF. When AI froth is detected, rotate to
+    value. When froth subsides, ride growth.
+
+    Froth detection: Count how many of [NVDA, SMCI, ARM, PLTR, AI, MSTR]
+    have RSI > 75.
+    - froth >= 3 → 100% value allocation
+    - froth 1-2 → 50% value, 50% growth
+    - froth 0 → 100% growth
+    """
+
+    _FROTH_CANARIES = ["NVDA", "SMCI", "ARM", "PLTR", "AI", "MSTR"]
+    _VALUE_ROTATION = ["BRK-B", "JNJ", "PG", "KO", "PEP", "MRK", "WMT", "XOM"]
+    _GROWTH_STOCKS = ["MSFT", "AAPL", "GOOGL", "AMZN", "NVDA", "AVGO", "AMD", "QQQ"]
+
+    def __init__(self, universe: list[str] | None = None):
+        full_universe = list(set(
+            LateCycleBubbleHedge._FROTH_CANARIES
+            + LateCycleBubbleHedge._VALUE_ROTATION
+            + LateCycleBubbleHedge._GROWTH_STOCKS
+        ))
+        config = PersonaConfig(
+            name="Late-Cycle Bubble Hedge",
+            description="Dynamic value/growth rotation based on AI froth detection",
+            risk_tolerance=0.3,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or full_universe,
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # ---- Count froth canaries with RSI > 75 ----
+        froth_count = 0
+        for sym in self._FROTH_CANARIES:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["rsi_14"], date)
+            rsi = inds["rsi_14"]
+            if not _is_missing(rsi) and rsi > 75:
+                froth_count += 1
+
+        # ---- Determine allocation regime ----
+        if froth_count >= 3:
+            # Full defensive: 100% value
+            value_pct = 1.0
+            growth_pct = 0.0
+        elif froth_count >= 1:
+            # Half defensive: 50% value, 50% growth
+            value_pct = 0.5
+            growth_pct = 0.5
+        else:
+            # No froth: 100% growth
+            value_pct = 0.0
+            growth_pct = 1.0
+
+        # ---- Allocate value portion ----
+        if value_pct > 0:
+            value_available = [s for s in self._VALUE_ROTATION if s in prices]
+            if value_available:
+                value_scored = []
+                for sym in value_available:
+                    inds = self._get_indicators(data, sym, ["sma_200", "rsi_14"], date)
+                    sma200, rsi = inds["sma_200"], inds["rsi_14"]
+                    price = prices[sym]
+                    score = 1.0
+                    if not _is_missing(sma200) and price > sma200:
+                        score += 1.0
+                    if not _is_missing(rsi) and rsi < 60:
+                        score += 0.5
+                    value_scored.append((sym, score))
+                value_scored.sort(key=lambda x: -x[1])
+                top_val = value_scored[:self.config.max_positions]
+                if top_val:
+                    per_stock = min(
+                        value_pct * 0.90 / len(top_val),
+                        self.config.max_position_size,
+                    )
+                    for sym, _ in top_val:
+                        weights[sym] = per_stock
+
+        # ---- Allocate growth portion ----
+        if growth_pct > 0:
+            growth_scored = []
+            for sym in self._GROWTH_STOCKS:
+                if sym not in prices:
+                    continue
+                price = prices[sym]
+                inds = self._get_indicators(
+                    data, sym, ["sma_50", "sma_200", "rsi_14"], date,
+                )
+                sma50, sma200 = inds["sma_50"], inds["sma_200"]
+                rsi = inds["rsi_14"]
+                if _is_missing(sma200):
+                    continue
+                if price < sma200:
+                    weights[sym] = 0.0
+                    continue
+                score = 1.0
+                if not _is_missing(sma50) and price > sma50 > sma200:
+                    score += 2.0
+                if not _is_missing(rsi) and 35 < rsi < 70:
+                    score += 0.5
+                growth_scored.append((sym, score))
+
+            growth_scored.sort(key=lambda x: -x[1])
+            top_growth = growth_scored[:8]
+            if top_growth:
+                total = sum(s for _, s in top_growth)
+                for sym, sc in top_growth:
+                    w = (sc / total) * growth_pct * 0.90
+                    weights[sym] = min(w, self.config.max_position_size)
+
+        # ---- Zero out unallocated ----
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Picks and Shovels AI — the Levi Strauss principle
+# ---------------------------------------------------------------------------
+class PicksAndShovelsAI(BasePersona):
+    """Sell tools to the AI miners, don't mine.
+
+    Historical parallel: Levi Strauss sold work clothes to gold miners and
+    died worth ~$1B (today's money). Never mined an ounce of gold. During
+    the internet boom, companies selling routers and servers (Cisco) profited
+    while individual dotcoms failed.
+
+    Universe: companies selling tools/services to AI chip and infrastructure
+    companies. Not the AI companies themselves.
+
+    Exit logic (in generate_signals):
+    - Take profit: RSI > 80 → zero weight (shovel makers overpriced = gold
+      rush ending).
+    - Stop loss: NVDA AND ASML both below SMA200 → EXIT ALL (semiconductor
+      cycle turning). Individual stock below SMA200 → zero weight.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Picks and Shovels AI",
+            description="Levi Strauss principle: sell tools to AI miners, don't mine",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "ENTG",   # Chip chemicals (Entegris)
+                "KLAC",   # Chip inspection (KLA Corp)
+                "CDNS",   # Chip design software (Cadence)
+                "SNPS",   # Chip design (Synopsys)
+                "ANSS",   # Simulation software (Ansys)
+                "KEYS",   # Test equipment (Keysight)
+                "FLEX",   # Contract manufacturing (Flex)
+                "LRCX",   # Wafer fabrication (Lam Research)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # ---- Cycle check: NVDA + ASML both below SMA200 = semi cycle turning ----
+        nvda_below = False
+        asml_below = False
+        for leader in ["NVDA", "ASML"]:
+            if leader in data:
+                inds = self._get_indicators(data, leader, ["sma_200"], date)
+                sma200 = inds["sma_200"]
+                if leader in prices and not _is_missing(sma200):
+                    if prices[leader] < sma200:
+                        if leader == "NVDA":
+                            nvda_below = True
+                        else:
+                            asml_below = True
+
+        # STOP LOSS: Both NVDA AND ASML below SMA200 = entire semiconductor
+        # cycle is turning → EXIT ALL
+        if nvda_below and asml_below:
+            for sym in self.config.universe:
+                weights[sym] = 0.0
+            return weights
+
+        # ---- NVDA demand multiplier (softer signal when only one is weak) ----
+        demand_mult = 1.0
+        if "NVDA" in prices and "NVDA" in data:
+            nvda_inds = self._get_indicators(
+                data, "NVDA", ["sma_50", "sma_200"], date
+            )
+            nvda_sma50 = nvda_inds["sma_50"]
+            nvda_sma200 = nvda_inds["sma_200"]
+            if not _is_missing(nvda_sma50) and not _is_missing(nvda_sma200):
+                nvda_price = prices["NVDA"]
+                if nvda_price > nvda_sma50 > nvda_sma200:
+                    demand_mult = 1.3
+                elif nvda_price > nvda_sma200:
+                    demand_mult = 1.0
+                else:
+                    demand_mult = 0.5
+
+        # ---- Score each picks-and-shovels stock ----
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"],
+                date,
+            )
+            sma50, sma200 = inds["sma_50"], inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd, macd_sig = inds["macd"], inds["macd_signal"]
+
+            if _is_missing(sma200):
+                continue
+
+            # TAKE PROFIT: RSI > 80 → shovel makers overpriced → zero
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Below SMA200 → individual trend broken
+            if price < sma200:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            if not _is_missing(sma50) and price > sma50 > sma200:
+                score += 3.0
+            elif not _is_missing(sma50) and price > sma50:
+                score += 1.5
+
+            if not _is_missing(macd) and not _is_missing(macd_sig) and macd > macd_sig:
+                score += 1.0
+
+            if not _is_missing(rsi) and 35 < rsi < 70:
+                score += 0.5
+
+            score *= demand_mult
+
+            if score > 2:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: -x[1])
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -3242,6 +3932,12 @@ THEME_STRATEGIES = {
     "nvidia_supply_chain": NvidiaSupplyChain,
     "mag7_hidden_suppliers": Mag7HiddenSuppliers,
     "mag7_domino_hedge": Mag7DominoHedge,
+    # Tech boom cycle strategies (historical pattern)
+    "ai_infrastructure_layer": AIInfrastructureLayer,
+    "ai_application_survivors": AIApplicationSurvivors,
+    "ai_adopters_not_builders": AIAdoptersNotBuilders,
+    "late_cycle_bubble_hedge": LateCycleBubbleHedge,
+    "picks_and_shovels_ai": PicksAndShovelsAI,
 }
 
 

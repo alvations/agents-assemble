@@ -711,6 +711,367 @@ class DividendCapture(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 8. FOMC Announcement
+# ---------------------------------------------------------------------------
+class FOMCAnnouncement(BasePersona):
+    """FOMC announcement day pre-drift strategy.
+
+    Research: Pre-FOMC announcement drift yields ~50 bps excess
+    return on S&P 500 in the 24 hours before the announcement.
+    Sharpe ratios of FOMC-only strategy: 0.75-1.04 across 5 major
+    countries. Between 1980-1993: 20 bps avg pre-FOMC returns while
+    other days were an order of magnitude smaller. Counter-expectation
+    trades around surprises yield +4.5%.
+
+    Strategy: FOMC meetings are roughly every 6 weeks (8 per year).
+    We proxy the "FOMC effect" by going long during mid-month
+    windows when FOMC typically meets (usually Tue-Wed in the
+    3rd or 4th week). Use volatility compression before FOMC
+    as a signal -- low vol + stable RSI = pre-announcement drift.
+    After the meeting window, take profits.
+
+    Source: NY Fed Staff Report 512, Quantpedia, Chicago Booth.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="FOMC Announcement",
+            description="Pre-FOMC drift: 50 bps excess return, Sharpe 0.75-1.04",
+            risk_tolerance=0.5,
+            max_position_size=0.35,
+            max_positions=5,
+            rebalance_frequency="daily",
+            universe=universe or [
+                "SPY", "QQQ", "IWM",  # Broad indices (FOMC effect)
+                "TLT", "GLD", "SHY",  # Rate-sensitive / hedges
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        day = date.day
+        month = date.month
+
+        # FOMC typically meets in: Jan, Mar, May, Jun, Jul, Sep, Nov, Dec
+        # Meetings usually in 3rd-4th week (days 14-28)
+        fomc_months = {1, 3, 5, 6, 7, 9, 11, 12}
+        is_fomc_month = month in fomc_months
+
+        # Pre-FOMC window: days 14-21 (week before typical meeting)
+        is_pre_fomc = is_fomc_month and 14 <= day <= 21
+
+        # FOMC meeting window: days 22-28 (typical meeting week)
+        is_fomc_week = is_fomc_month and 22 <= day <= 28
+
+        # Post-FOMC: days after meeting (take profits)
+        is_post_fomc = is_fomc_month and day > 28
+
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+        spy_sma20 = self._get_indicator(data, "SPY", "sma_20", date)
+        spy_price = prices.get("SPY")
+
+        if spy_price is None:
+            return {}
+
+        # Vol compression signal (pre-FOMC calm)
+        vol_compressed = spy_vol is not None and spy_vol * (252 ** 0.5) < 0.18
+
+        if is_pre_fomc:
+            # Pre-FOMC: build long position (anticipation drift)
+            if vol_compressed or (spy_rsi is not None and 40 < spy_rsi < 65):
+                return {
+                    "SPY": 0.35, "QQQ": 0.25, "IWM": 0.15,
+                    "TLT": 0.05, "GLD": 0.05, "SHY": 0.0,
+                }
+            else:
+                # High vol pre-FOMC = uncertainty, lighter position
+                return {
+                    "SPY": 0.20, "QQQ": 0.15,
+                    "TLT": 0.15, "GLD": 0.10, "SHY": 0.10,
+                    "IWM": 0.0,
+                }
+
+        if is_fomc_week:
+            # FOMC meeting week: ride the drift, prepare to take profits
+            if spy_sma20 and spy_price > spy_sma20:
+                return {
+                    "SPY": 0.30, "QQQ": 0.20, "IWM": 0.10,
+                    "TLT": 0.10, "GLD": 0.10, "SHY": 0.0,
+                }
+            else:
+                return {
+                    "SPY": 0.15, "TLT": 0.25, "GLD": 0.20,
+                    "SHY": 0.15, "QQQ": 0.0, "IWM": 0.0,
+                }
+
+        if is_post_fomc:
+            # Post-FOMC: reduce to neutral, take profits
+            return {
+                "SPY": 0.20, "QQQ": 0.15,
+                "TLT": 0.15, "GLD": 0.10, "SHY": 0.10,
+                "IWM": 0.0,
+            }
+
+        # Non-FOMC months: light balanced allocation
+        if spy_sma20 and spy_price > spy_sma20:
+            return {"SPY": 0.25, "QQQ": 0.20, "TLT": 0.10, "GLD": 0.10}
+        else:
+            return {"SPY": 0.15, "TLT": 0.20, "GLD": 0.15, "SHY": 0.15}
+
+
+# ---------------------------------------------------------------------------
+# 9. NFP Momentum
+# ---------------------------------------------------------------------------
+class NFPMomentum(BasePersona):
+    """Non-farm payroll reaction momentum strategy.
+
+    Research: NFP released first Friday of each month at 8:30 AM ET.
+    Despite leading indicators, NFP tends to surprise markets and
+    trigger substantial volatility. Misses exceeding 100,000 jobs
+    create major trend shifts lasting days or weeks.
+
+    Strategy: We proxy NFP reaction through volume and momentum
+    signals around the first week of each month. Large moves on
+    high volume in the first week = NFP surprise reaction. Trade
+    in the direction of the surprise for continuation over the
+    following 2-3 weeks.
+
+    NFP surprise direction proxy: if SPY/QQQ gap up on high volume
+    in first 5 trading days = positive surprise (jobs strong, economy
+    healthy). If gap down on volume = negative surprise.
+
+    Source: Quantified Strategies, Trade That Swing.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="NFP Momentum",
+            description="Non-farm payroll surprise momentum: trade direction of NFP reaction",
+            risk_tolerance=0.6,
+            max_position_size=0.25,
+            max_positions=6,
+            rebalance_frequency="daily",
+            universe=universe or [
+                # Broad indices (most NFP-sensitive)
+                "SPY", "QQQ", "IWM",
+                # Rate-sensitive sectors
+                "XLF", "XLI",
+                # Safe havens (for negative surprise)
+                "TLT", "GLD", "SHY",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        day = date.day
+
+        # NFP release window: first 5 trading days of month
+        is_nfp_week = day <= 7
+
+        # NFP momentum continuation: days 8-21 (ride the reaction)
+        is_continuation = 8 <= day <= 21
+
+        spy_ret = self._get_indicator(data, "SPY", "daily_return", date)
+        spy_vol = self._get_indicator(data, "SPY", "Volume", date)
+        spy_vol_avg = self._get_indicator(data, "SPY", "volume_sma_20", date)
+        spy_sma20 = self._get_indicator(data, "SPY", "sma_20", date)
+        spy_sma50 = self._get_indicator(data, "SPY", "sma_50", date)
+        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+        spy_price = prices.get("SPY")
+
+        if spy_price is None:
+            return {}
+
+        vol_ratio = spy_vol / spy_vol_avg if spy_vol and spy_vol_avg and spy_vol_avg > 0 else 1
+
+        if is_nfp_week:
+            # NFP week: detect the surprise direction
+            if spy_ret is not None and vol_ratio > 1.5:
+                if spy_ret > 0.005:
+                    # Positive NFP surprise: long equities
+                    return {
+                        "SPY": 0.30, "QQQ": 0.25, "IWM": 0.15,
+                        "XLF": 0.10, "XLI": 0.10,
+                        "TLT": 0.0, "GLD": 0.0, "SHY": 0.0,
+                    }
+                elif spy_ret < -0.005:
+                    # Negative NFP surprise: defensive
+                    return {
+                        "TLT": 0.25, "GLD": 0.20, "SHY": 0.20,
+                        "XLF": 0.0, "XLI": 0.0,
+                        "SPY": 0.10, "QQQ": 0.0, "IWM": 0.0,
+                    }
+
+            # No clear signal yet: neutral
+            return {"SPY": 0.20, "QQQ": 0.15, "TLT": 0.10, "GLD": 0.10}
+
+        if is_continuation:
+            # Continuation phase: follow the established direction
+            if spy_sma20 and spy_price > spy_sma20:
+                # Positive momentum continuing (NFP was good)
+                scored = []
+                for sym in ["SPY", "QQQ", "IWM", "XLF", "XLI"]:
+                    if sym not in prices:
+                        continue
+                    rsi = self._get_indicator(data, sym, "rsi_14", date)
+                    sma50 = self._get_indicator(data, sym, "sma_50", date)
+                    if rsi and rsi > 75:
+                        continue
+                    if sma50 and prices[sym] > sma50:
+                        scored.append((sym, rsi if rsi else 50))
+                scored.sort(key=lambda x: x[1])  # Lower RSI = more room
+                top = scored[:4]
+                if top:
+                    per_stock = min(0.85 / len(top), self.config.max_position_size)
+                    return {sym: per_stock for sym, _ in top}
+                return {"SPY": 0.30, "QQQ": 0.25, "TLT": 0.10}
+            else:
+                # Negative momentum (NFP was weak)
+                return {
+                    "TLT": 0.25, "GLD": 0.20, "SHY": 0.15,
+                    "SPY": 0.10, "QQQ": 0.0, "IWM": 0.0,
+                    "XLF": 0.0, "XLI": 0.0,
+                }
+
+        # Late month: normalize to balanced
+        if spy_sma50 and spy_price > spy_sma50:
+            return {"SPY": 0.25, "QQQ": 0.20, "TLT": 0.10, "GLD": 0.10}
+        else:
+            return {"SPY": 0.15, "TLT": 0.20, "GLD": 0.15, "SHY": 0.15}
+
+
+# ---------------------------------------------------------------------------
+# 10. IPO Lock-Up Expiry
+# ---------------------------------------------------------------------------
+class IPOLockupExpiry(BasePersona):
+    """IPO lock-up expiration selling pressure strategy.
+
+    Research: IPO lock-ups typically expire 180 days after the offer
+    date. Insiders can sell after expiration, often causing price
+    drops. The market prices in selling pressure: stocks often drop
+    days BEFORE expiration. Bid-ask spreads actually improve post-
+    expiration (ScienceDirect research).
+
+    Strategy: Since we can't track actual IPO dates, we proxy
+    recently-IPO'd stocks by high-vol, high-growth names that went
+    public in the last 1-2 years. Look for stocks showing:
+    1) Elevated volume (insider selling proxy)
+    2) Price below SMA50 (distribution pattern)
+    3) RSI declining (selling pressure building)
+    These are the conditions around lock-up expiration.
+
+    When detected, avoid/underweight these names. When selling
+    pressure clears (RSI bottoms, volume normalizes), buy the
+    recovery. Recent IPOs that survive lock-up often rally 20%+
+    in the following quarter.
+
+    Source: SoFi, CapitalXchange, ScienceDirect.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="IPO Lock-Up Expiry",
+            description="Avoid IPO lock-up selling pressure, buy post-expiry recovery",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="daily",
+            universe=universe or [
+                # Recent IPOs / recently public high-growth
+                "ARM", "CART", "BIRK", "CAVA", "DUOL",
+                "KVYO", "TOST", "RKLB", "IOT", "VRT",
+                # Slightly older but still high-vol IPOs
+                "PLTR", "RIVN", "LCID", "SOFI", "HOOD",
+                # IPO / innovation ETFs
+                "IPO", "ARKK",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        sell_pressure = []  # Stocks showing lock-up selling signals
+        recovery = []  # Stocks showing post-lock-up recovery
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "Volume", "volume_sma_20",
+                 "macd", "macd_signal", "vol_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            vol20 = inds["vol_20"]
+
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+
+            # Lock-up SELLING PRESSURE signals:
+            # High volume + price below SMA50 + declining RSI
+            selling = False
+            if vol_ratio > 1.5 and price < sma50 and rsi < 45:
+                selling = True
+            # Very high volume + sharp decline = insider dump
+            if vol_ratio > 2.5 and rsi < 35:
+                selling = True
+
+            if selling:
+                sell_pressure.append(sym)
+                weights[sym] = 0.0  # Avoid during selling pressure
+                continue
+
+            # POST-LOCK-UP RECOVERY signals:
+            # RSI bottoming + price recovering toward SMA50 + volume normalizing
+            recovery_signal = 0.0
+
+            # RSI recovering from oversold
+            if 30 < rsi < 55:
+                recovery_signal += 1.0
+
+            # Price crossing back above SMA50 (distribution ended)
+            if price > sma50:
+                recovery_signal += 2.0
+
+            # MACD turning positive (momentum shift)
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                recovery_signal += 1.0
+
+            # Volume normalizing (not spiking = selling done)
+            if 0.8 < vol_ratio < 1.5:
+                recovery_signal += 0.5
+
+            # Above SMA200 (structurally sound)
+            if sma200 is not None and price > sma200:
+                recovery_signal += 0.5
+
+            if recovery_signal >= 3.0:
+                recovery.append((sym, recovery_signal))
+
+        # Allocate to recovery names
+        recovery.sort(key=lambda x: x[1], reverse=True)
+        top = recovery[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        # Zero out non-selected
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 NEWS_EVENT_STRATEGIES = {
     "news_reaction_momentum": NewsReactionMomentum,
     "earnings_surprise_drift": EarningsSurpriseDrift,
@@ -719,6 +1080,9 @@ NEWS_EVENT_STRATEGIES = {
     "earnings_whisper": EarningsWhisper,
     "merger_arbitrage": MergerArbitrage,
     "dividend_capture": DividendCapture,
+    "fomc_announcement": FOMCAnnouncement,
+    "nfp_momentum": NFPMomentum,
+    "ipo_lockup_expiry": IPOLockupExpiry,
 }
 
 

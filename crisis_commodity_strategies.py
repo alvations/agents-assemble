@@ -881,6 +881,403 @@ class ProductTankerShipping(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 10. Wartime Portfolio
+# ---------------------------------------------------------------------------
+class WartimePortfolio(BasePersona):
+    """Historical wartime winners: defense, energy, commodities, gold.
+
+    Research: During WWII, defense/energy sectors outperformed broad
+    market. Gulf War 1990: oil surged 135%, defense stocks jumped.
+    Post-9/11: gold sparked decade-long bull run. Ukraine 2022:
+    Brent +75%, wheat +50%, defense stocks hit new highs.
+    Defensive sectors outperform broader market by 8.5% during conflicts.
+    LMT backlog $179B, NOC $92.8B (Q3 2025). Gold surges 15-40%
+    during geopolitical crises.
+
+    Strategy: Anti-fragile portfolio of historical wartime winners.
+    Allocate across defense, energy, commodities, and gold. Use
+    volatility regime to adjust weights -- higher vol = heavier
+    wartime tilt. Momentum filter ensures we ride winners.
+
+    Source: CFA Institute, Stock Trader's Almanac, Hero Bullion.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Wartime Portfolio",
+            description="Anti-fragile: defense + energy + gold. Outperforms 8.5% during conflicts",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Defense (record backlogs, conflict beneficiaries)
+                "LMT", "RTX", "NOC", "GD", "LHX", "ITA",
+                # Energy (oil supply disruption beneficiaries)
+                "XLE", "XOM", "CVX", "OXY", "DVN",
+                # Commodities / safe havens
+                "GLD", "SLV", "DBA",
+                # Broad market (regime detection)
+                "SPY",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        # Detect volatility regime from SPY
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+        ann_vol = spy_vol * (252 ** 0.5) if spy_vol is not None else 0.15
+
+        defense = ["LMT", "RTX", "NOC", "GD", "LHX", "ITA"]
+        energy = ["XLE", "XOM", "CVX", "OXY", "DVN"]
+        havens = ["GLD", "SLV", "DBA"]
+
+        weights = {}
+        scored = []
+
+        # Higher vol = heavier wartime tilt
+        if ann_vol > 0.25:
+            target_defense = 0.40
+            target_energy = 0.30
+            target_haven = 0.20
+        elif ann_vol > 0.18:
+            target_defense = 0.30
+            target_energy = 0.25
+            target_haven = 0.15
+        else:
+            target_defense = 0.20
+            target_energy = 0.20
+            target_haven = 0.10
+
+        # Score defense stocks
+        def_picks = []
+        for sym in defense:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            if rsi is not None and rsi > 80:
+                weights[sym] = 0.0
+                continue
+            score = 0.0
+            if sma50 is not None and prices[sym] > sma50:
+                score += 2.0
+            if sma200 is not None and prices[sym] > sma200:
+                score += 1.0
+            if rsi is not None and 35 < rsi < 70:
+                score += 0.5
+            if score >= 2.0:
+                def_picks.append((sym, score))
+        def_picks.sort(key=lambda x: x[1], reverse=True)
+
+        # Score energy stocks
+        ene_picks = []
+        for sym in energy:
+            if sym not in prices:
+                continue
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+            if rsi is not None and rsi > 80:
+                weights[sym] = 0.0
+                continue
+            score = 0.0
+            if sma50 is not None and prices[sym] > sma50:
+                score += 2.0
+            if sma200 is not None and prices[sym] > sma200:
+                score += 1.0
+            if rsi is not None and 35 < rsi < 70:
+                score += 0.5
+            if score >= 2.0:
+                ene_picks.append((sym, score))
+        ene_picks.sort(key=lambda x: x[1], reverse=True)
+
+        # Allocate defense budget
+        if def_picks:
+            per_stock = min(target_defense / len(def_picks), self.config.max_position_size)
+            for sym, _ in def_picks:
+                weights[sym] = per_stock
+
+        # Allocate energy budget
+        if ene_picks:
+            per_stock = min(target_energy / len(ene_picks), self.config.max_position_size)
+            for sym, _ in ene_picks:
+                weights[sym] = per_stock
+
+        # Safe havens (always hold some)
+        haven_available = [s for s in havens if s in prices]
+        if haven_available:
+            per_haven = target_haven / len(haven_available)
+            for sym in haven_available:
+                rsi = self._get_indicator(data, sym, "rsi_14", date)
+                if rsi is not None and rsi > 80:
+                    weights[sym] = 0.0
+                else:
+                    weights[sym] = per_haven
+
+        # Zero out symbols not selected
+        for sym in self.config.universe:
+            if sym in prices and sym != "SPY" and sym not in weights:
+                weights[sym] = 0.0
+        return {k: v for k, v in weights.items() if k in prices and k != "SPY"}
+
+
+# ---------------------------------------------------------------------------
+# 11. Crisis Rotation
+# ---------------------------------------------------------------------------
+class CrisisRotation(BasePersona):
+    """Rotate between offense (growth) and defense (bonds/gold) by VIX regime.
+
+    Research: Safe haven comparison shows gold effective across all
+    major crises (1987, 1997, 2008). Short-term T-bills best during
+    crises (no duration risk). During Gulf War, buying during
+    uncertainty yielded 17.63% in 4 weeks. Contrarian buying during
+    2008 crisis produced outsized returns.
+
+    Strategy: Multi-regime rotation using volatility + momentum.
+    Low vol: max growth. Medium vol: balanced. High vol: defensive.
+    Extreme vol (VIX>35 proxy): contrarian buy -- historically,
+    buying during extreme fear yields 81.5% win rate at 3 weeks
+    (from VIXFearBuy research).
+
+    More sophisticated than existing CrisisAlpha (which only switches
+    between 2 states). This uses 4 regimes + contrarian signals.
+
+    Source: ScienceDirect, Morningstar, Berkshire Edge.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Crisis Rotation",
+            description="4-regime VIX rotation: growth/balanced/defensive/contrarian-buy",
+            risk_tolerance=0.5,
+            max_position_size=0.30,
+            max_positions=8,
+            rebalance_frequency="daily",
+            universe=universe or [
+                # Growth / offense
+                "SPY", "QQQ", "IWM",
+                # Defensive / safe havens
+                "TLT", "GLD", "SHY",
+                # Sector hedges
+                "XLP", "XLV", "XLU",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+        spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+        spy_sma50 = self._get_indicator(data, "SPY", "sma_50", date)
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        spy_price = prices.get("SPY")
+
+        if spy_vol is None or spy_price is None:
+            return {"SPY": 0.30, "TLT": 0.20, "GLD": 0.15}
+
+        ann_vol = spy_vol * (252 ** 0.5)
+
+        # Check for 5-day cumulative loss (weekly crisis proxy)
+        weekly_crisis = False
+        if "SPY" in data and "Close" in data["SPY"].columns:
+            try:
+                loc = int(data["SPY"].index.get_loc(date))
+                if loc >= 5:
+                    close_5d = data["SPY"]["Close"].iloc[loc - 5]
+                    if close_5d > 0:
+                        ret_5d = data["SPY"]["Close"].iloc[loc] / close_5d - 1
+                        if ret_5d < -0.05:
+                            weekly_crisis = True
+                        # Also check 10-day for deeper crisis
+                        if loc >= 10:
+                            close_10d = data["SPY"]["Close"].iloc[loc - 10]
+                            if close_10d > 0:
+                                ret_10d = data["SPY"]["Close"].iloc[loc] / close_10d - 1
+                                if ret_10d < -0.10:
+                                    weekly_crisis = True
+            except (KeyError, TypeError, ValueError):
+                pass
+
+        # Regime 1: EXTREME FEAR (VIX > 35 proxy) -- contrarian buy
+        if ann_vol > 0.35 or (spy_rsi is not None and spy_rsi < 20) or weekly_crisis:
+            # Historical: buying extreme fear yields 81.5% win at 3 weeks
+            return {
+                "SPY": 0.35, "QQQ": 0.25, "IWM": 0.15,
+                "GLD": 0.10, "TLT": 0.05,
+                "XLP": 0.0, "XLV": 0.0, "XLU": 0.0, "SHY": 0.0,
+            }
+
+        # Regime 2: HIGH VOL (VIX 25-35) -- defensive
+        if ann_vol > 0.25 or (spy_rsi is not None and spy_rsi < 30):
+            return {
+                "TLT": 0.25, "GLD": 0.20, "SHY": 0.15,
+                "XLP": 0.15, "XLV": 0.10,
+                "SPY": 0.05, "QQQ": 0.0, "IWM": 0.0,
+                "XLU": 0.0,
+            }
+
+        # Regime 3: MODERATE VOL (VIX 15-25) -- balanced
+        if ann_vol > 0.15:
+            trend_up = spy_sma50 is not None and spy_price > spy_sma50
+            if trend_up:
+                return {
+                    "SPY": 0.25, "QQQ": 0.20, "IWM": 0.10,
+                    "TLT": 0.10, "GLD": 0.10,
+                    "XLP": 0.05, "XLV": 0.05,
+                    "SHY": 0.0, "XLU": 0.0,
+                }
+            else:
+                return {
+                    "SPY": 0.15, "QQQ": 0.10,
+                    "TLT": 0.20, "GLD": 0.15,
+                    "XLP": 0.10, "XLV": 0.10,
+                    "IWM": 0.0, "SHY": 0.05, "XLU": 0.0,
+                }
+
+        # Regime 4: LOW VOL (VIX < 15) -- max growth
+        return {
+            "SPY": 0.35, "QQQ": 0.30, "IWM": 0.15,
+            "TLT": 0.05, "GLD": 0.05,
+            "XLP": 0.0, "XLV": 0.0, "XLU": 0.0, "SHY": 0.0,
+        }
+
+
+# ---------------------------------------------------------------------------
+# 12. Commodity Supercycle
+# ---------------------------------------------------------------------------
+class CommoditySupercycle(BasePersona):
+    """Ride commodity supercycles when commodities outperform stocks.
+
+    Research: Commodity supercycles average 7-15 years. Key signals:
+    broad price increases, structural demand shifts, supply bottlenecks,
+    USD weakening, commodity stocks outperforming indices. Copper demand
+    to grow 53% by 2040 (BloombergNEF). Oil surges 50-300% during
+    major conflicts. Agriculture spikes on supply disruption (wheat
+    +50%, corn +40% during Ukraine war).
+
+    Strategy: Monitor commodity ETFs vs SPY. When commodities show
+    3+ month outperformance (SMA50 > SMA200 in commodity ETFs while
+    SPY is flat/down), increase commodity allocation. Use momentum
+    across oil, copper, agriculture, and gold to ride the cycle.
+
+    Source: Capital.com, Mining.com, World Bank.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Commodity Supercycle",
+            description="Ride multi-commodity momentum when commodities outperform stocks",
+            risk_tolerance=0.6,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Energy
+                "XLE", "XOP", "USO",
+                # Metals / mining
+                "GLD", "SLV", "XME", "FCX", "SCCO",
+                # Agriculture
+                "DBA", "MOO", "NTR", "CF",
+                # Copper / base metals
+                "COPX",
+                # Broad commodity
+                "DJP", "GSG",
+                # Reference for regime detection
+                "SPY",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        # Detect supercycle regime: are commodities outperforming SPY?
+        spy_sma50 = self._get_indicator(data, "SPY", "sma_50", date)
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        spy_price = prices.get("SPY")
+
+        # Score each commodity group
+        energy = ["XLE", "XOP", "USO"]
+        metals = ["GLD", "SLV", "XME", "FCX", "SCCO"]
+        agri = ["DBA", "MOO", "NTR", "CF"]
+        base_metals = ["COPX"]
+        broad = ["DJP", "GSG"]
+
+        all_commodity = energy + metals + agri + base_metals + broad
+
+        # Count how many commodity ETFs are in uptrend
+        uptrend_count = 0
+        total_checked = 0
+        scored = []
+
+        for sym in all_commodity:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+
+            if sma50 is None:
+                continue
+
+            total_checked += 1
+
+            # Check uptrend (supercycle signal)
+            if sma200 is not None and price > sma50 > sma200:
+                uptrend_count += 1
+
+            # Skip overbought
+            if rsi is not None and rsi > 80:
+                continue
+
+            score = 0.0
+            # Momentum scoring
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+
+            # MACD confirmation
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # RSI healthy range
+            if rsi is not None and 35 < rsi < 70:
+                score += 0.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        # Determine supercycle regime
+        uptrend_pct = uptrend_count / max(total_checked, 1)
+
+        # Supercycle active: >50% of commodity ETFs in uptrend
+        if uptrend_pct > 0.50:
+            allocation_budget = 0.90  # Full commodity allocation
+        elif uptrend_pct > 0.30:
+            allocation_budget = 0.60  # Moderate allocation
+        else:
+            allocation_budget = 0.30  # Minimal allocation (some diversification)
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+
+        weights = {}
+        if top:
+            per_stock = min(allocation_budget / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        # Zero out non-selected
+        for sym in all_commodity:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return {k: v for k, v in weights.items() if k in prices and k != "SPY"}
+
+
 CRISIS_COMMODITY_STRATEGIES = {
     "geopolitical_crisis": GeopoliticalCrisis,
     "agriculture_food": AgricultureFoodSecurity,
@@ -891,6 +1288,9 @@ CRISIS_COMMODITY_STRATEGIES = {
     "water_scarcity": WaterScarcity,
     "shipping_freight_cycle": ShippingFreightCycle,
     "product_tanker_shipping": ProductTankerShipping,
+    "wartime_portfolio": WartimePortfolio,
+    "crisis_rotation": CrisisRotation,
+    "commodity_supercycle": CommoditySupercycle,
 }
 
 

@@ -1,0 +1,44 @@
+# WINNING Strategy: presidential_cycle
+
+> **What it does:** Year 3 strongest (+13.5% avg). Adjust exposure by cycle year
+>
+> **Hypothesis:** Presidential Cycle
+
+**Generated:** 2026-04-12T18:40:19.346840
+**Assessment:** BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
+
+## Performance Summary
+- **total_return:** 94.99%
+- **sharpe_ratio:** 1.56
+- **max_drawdown:** -11.19%
+- **win_rate:** 56.86%
+- **alpha:** 1.90%
+
+## Risk Parameters
+- **max_portfolio_allocation:** 15.9%
+- **stop_loss:** 13.4%
+- **take_profit_target:** 12.5%
+- **max_drawdown_tolerance:** 11.2%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** 0.5% below current price for buys
+- **timing:** SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically.
+- **scaling:** Enter in 3 tranches over 1-2 weeks to average in
+
+## Positions — Vol-Adjusted Risk (per-stock sizing)
+
+*Each position has different stop/target/size based on its volatility. Higher vol = wider stop + smaller size.*
+
+| Symbol | Action | Vol | Entry | Stop Loss | Take Profit | Size | Live Price |
+|--------|--------|-----|-------|-----------|-------------|------|------------|
+| **QQQ** | BUY | 22% | Limit 0.5% below market | 12.2% below entry | 11.4% above entry | 17.5% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=QQQ) / [Yahoo](https://finance.yahoo.com/quote/QQQ/) |
+| **SPY** | BUY | 17% | Limit 0.5% below market | 9.6% below entry | 9.0% above entry | 22.2% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=SPY) / [Yahoo](https://finance.yahoo.com/quote/SPY/) |
+| **TLT** | BUY | 13% | Limit 0.5% below market | 7.1% below entry | 6.6% above entry | 30.2% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=TLT) / [Yahoo](https://finance.yahoo.com/quote/TLT/) |
+| **GLD** | BUY | 23% | Limit 0.5% below market | 12.9% below entry | 12.0% above entry | 16.6% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=GLD) / [Yahoo](https://finance.yahoo.com/quote/GLD/) |
+| **IWM** | BUY | 22% | Limit 0.5% below market | 12.6% below entry | 11.7% above entry | 17.0% of portfolio | [Chart](https://www.tradingview.com/chart/?symbol=IWM) / [Yahoo](https://finance.yahoo.com/quote/IWM/) |
+
+> **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
+> Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
+> Click Live Price links for current market price. Apply % rules to calculate exact levels.

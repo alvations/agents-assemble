@@ -462,6 +462,256 @@ class DanLoeb(BasePersona):
 
 
 # ---------------------------------------------------------------------------
+# 8. Election Cycle Rotation
+# ---------------------------------------------------------------------------
+class ElectionCycleRotation(BasePersona):
+    """Rotate sectors by presidential cycle year.
+
+    Research: Since 1928, Year 3 (pre-election) positive 78% of time,
+    avg +13.5%. Year 2 (midterm) weakest. Sector performance varies
+    by cycle phase:
+    - Year 1 (Early Cycle): Real Estate, Financials, Consumer Disc, IT
+    - Year 2 (Midterm): Defensive sectors, lower exposure
+    - Year 3 (Pre-Election): Growth sectors, max exposure
+    - Year 4 (Election): Balanced, usually positive
+
+    Strategy: Rotate sector ETFs based on presidential cycle year.
+    Use momentum confirmation to filter within the sector universe
+    for each phase. 2025=Y1, 2026=Y2, 2027=Y3, 2028=Y4.
+
+    Source: CME Group, Fidelity, Stock Trader's Almanac.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Election Cycle Rotation",
+            description="Sector rotation by presidential cycle year. Year 3 = max growth",
+            risk_tolerance=0.5,
+            max_position_size=0.20,
+            max_positions=8,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Growth / early cycle sectors
+                "XLK", "XLY", "XLF", "XLRE", "XLI",
+                # Defensive / late cycle sectors
+                "XLP", "XLU", "XLV", "XLE", "XLB",
+                # Broad + safe havens
+                "SPY", "QQQ", "TLT", "GLD",
+            ],
+        )
+        super().__init__(config)
+
+    def _get_cycle_year(self, date):
+        """Get presidential cycle year (1-4). 2025=Year 1."""
+        year = date.year
+        return ((year - 2025) % 4) + 1
+
+    def generate_signals(self, date, prices, portfolio, data):
+        cycle_year = self._get_cycle_year(date)
+
+        # Define sector targets for each cycle year
+        if cycle_year == 1:
+            # Year 1 (Post-election honeymoon): early-cycle sectors
+            target_sectors = ["XLF", "XLY", "XLK", "XLRE", "XLI"]
+            target_weight = 0.80
+            defensive_weight = 0.10
+        elif cycle_year == 2:
+            # Year 2 (Midterm): DEFENSIVE -- weakest year historically
+            target_sectors = ["XLP", "XLU", "XLV", "XLE"]
+            target_weight = 0.50
+            defensive_weight = 0.35
+        elif cycle_year == 3:
+            # Year 3 (Pre-election): MAX GROWTH -- strongest year
+            target_sectors = ["XLK", "XLY", "XLI", "XLB", "XLE"]
+            target_weight = 0.85
+            defensive_weight = 0.05
+        else:
+            # Year 4 (Election year): balanced, usually positive
+            target_sectors = ["XLK", "XLF", "XLV", "XLI"]
+            target_weight = 0.65
+            defensive_weight = 0.20
+
+        weights = {}
+        scored = []
+
+        # Score target sectors by momentum
+        for sym in target_sectors:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_50", "sma_200", "rsi_14"], date)
+            sma50, sma200, rsi = inds["sma_50"], inds["sma_200"], inds["rsi_14"]
+
+            if sma50 is None or rsi is None:
+                continue
+
+            if rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+
+            if 30 < rsi < 70:
+                score += 1.0
+
+            if score >= 1.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:5]
+
+        if top:
+            per_sector = min(target_weight / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_sector
+
+        # Add defensive allocation
+        if defensive_weight > 0:
+            defensive_split = defensive_weight / 2
+            if "TLT" in prices:
+                weights["TLT"] = defensive_split
+            if "GLD" in prices:
+                weights["GLD"] = defensive_split
+
+        # Zero out non-selected
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 9. Policy Catalyst
+# ---------------------------------------------------------------------------
+class PolicyCatalyst(BasePersona):
+    """Trade on major policy announcement effects.
+
+    Research: Infrastructure bills, tariffs, sanctions, and major
+    policy changes create sector-specific catalysts. Event-driven
+    strategies are popular among hedge funds for profiting from
+    short-term price movements triggered by regulatory changes.
+
+    Historical examples:
+    - CHIPS Act (2022): semis surged (NVDA, AMD, INTC benefited)
+    - Infrastructure Investment Act: construction/materials jumped
+    - China tariffs: domestic manufacturers outperformed
+    - Defense spending increases: LMT, RTX, NOC benefited
+    - Clean energy policy: solar/wind stocks spiked
+
+    Strategy: Monitor sectors that benefit from government policy
+    catalysts. Use momentum + volume to detect policy-driven flows.
+    When a policy-sensitive sector shows unusual momentum (SMA crossover
+    + volume spike), it indicates a policy catalyst is being priced in.
+
+    Source: LevelFields, CME Group, Fidelity.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Policy Catalyst",
+            description="Event-driven: trade sectors benefiting from major policy announcements",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Semiconductors (CHIPS Act beneficiaries)
+                "NVDA", "AMD", "INTC", "AVGO", "TSM",
+                # Infrastructure / construction
+                "CAT", "DE", "VMC", "MLM", "URI",
+                # Defense (spending increases)
+                "LMT", "RTX", "NOC", "GD",
+                # Clean energy (climate policy)
+                "ENPH", "FSLR", "NEE", "ICLN",
+                # Domestic manufacturing (tariff beneficiaries)
+                "X", "NUE", "CLF",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal",
+                 "Volume", "volume_sma_20"], date)
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            volume = inds["Volume"]
+            vol_avg = inds["volume_sma_20"]
+
+            if any(v is None for v in [sma50, rsi]):
+                continue
+
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+
+            # Exit: overbought post-catalyst
+            if rsi > 80:
+                pos = portfolio.get_position(sym)
+                if pos and pos.quantity > 0:
+                    weights[sym] = 0.0
+                continue
+
+            # Exit: broken below SMA200 (policy failed to help)
+            if sma200 is not None and price < sma200 * 0.85:
+                weights[sym] = 0.0
+                continue
+
+            score = 0.0
+
+            # Policy catalyst proxy: strong momentum + volume
+            # Policy effects show as persistent trend (not just one-day spikes)
+            if sma200 is not None and price > sma50 > sma200:
+                score += 3.0
+            elif price > sma50:
+                score += 1.5
+
+            # MACD bullish confirmation
+            if macd is not None and macd_sig is not None and macd > macd_sig:
+                score += 1.0
+
+            # Volume elevation (institutional flows due to policy)
+            if vol_ratio > 1.3:
+                score += 1.0
+            if vol_ratio > 2.0:
+                score += 0.5  # Extra for very high volume
+
+            # RSI in healthy momentum range
+            if 40 < rsi < 70:
+                score += 0.5
+            elif 30 < rsi < 40:
+                score += 0.3  # Slight discount for tepid momentum
+
+            if score >= 3.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.85 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        # Zero out non-selected
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
 POLITICAL_STRATEGIES = {
@@ -472,6 +722,8 @@ POLITICAL_STRATEGIES = {
     "david_tepper": DavidTepper,
     "ken_griffin": KenGriffin,
     "dan_loeb": DanLoeb,
+    "election_cycle_rotation": ElectionCycleRotation,
+    "policy_catalyst": PolicyCatalyst,
 }
 
 

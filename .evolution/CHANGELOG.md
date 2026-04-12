@@ -606,3 +606,30 @@ All edits pass syntax validation. Summary of changes:
 - **Added `_get_indicators` batch method to `BasePersona`** (line 64) — performs a single index lookup per (symbol, date) pair and extracts multiple indicator values, avoiding N redundant index lookups when a strategy needs 3-5 indicators per symbol
 - **Updated `MomentumTrader` to use batch lookup** (line 243) — 5 individual `_get_indicator` calls → 1 `_get_indicators` call, reducing per-symbol overhead by ~4 function calls + 4 index lookups
 
+## [2026-04-11T00:05:40.220530+00:00] Branch: main | Run: 20260411T000043_pid8879 | Iter 28 | $1.1031
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `_sanitize_for_json` not catching numpy scalar inf/nan** — `isinstance(obj, float)` misses `numpy.float64` on numpy 2.0+ (where float64 is no longer a Python float subclass). Replaced with `math.isfinite()` in a try/except, which works on any numeric type.
+- **Fixed `predict_forward` crash on negative cumulative returns** — `cum.iloc[-1] ** (1/n_years)` raises `ValueError` when `cum.iloc[-1] < 0` (possible with leveraged/short stra
+
+## [2026-04-11T00:14:43.838656+00:00] Branch: main | Run: 20260411T000043_pid8865 | Iter 28 | $3.0183
+### app.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed JS string injection in onclick/onchange handlers** — Added `jesc()` function that escapes `\` and `'` for safe embedding in JS string literals. Applied to all 6 places where strategy names are interpolated into onclick/onchange attributes (leaderboard links, view buttons, top pick cards, strategy list links, portfolio toggle/alloc handlers). The existing `esc()` only escapes HTML entities (`<>&"`), not `\` or `'`, so a strategy nam
+
+## [2026-04-11T00:18:39.866597+00:00] Branch: main | Run: 20260411T000043_pid8879 | Iter 29 | $1.7868
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `predict_forward` `annualized_base` ValueError crash** (line 1083) — `(1 + base_return) ** (252 / days)` raises `ValueError` when `1 + base_return < 0` (negative number to fractional float power). Added `> 0` guard with `-1.0` fallback for total loss, plus `OverflowError` catch. Same bug class as the iteration 28 CAGR fix.
+- **Fixed `execute_trade` accepting `inf` price/quantity** (lines 182-185) — `not (float('inf') > 0)` is `Fals
+
+## [2026-04-11T00:22:10.651487+00:00] Branch: main | Run: 20260411T000043_pid8865 | Iter 29 | $1.9859
+### app.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `togglePortfolioStrategy` NaN propagation** (line 1403) — `parseInt(allocEl ? allocEl.value : 10)` returns `NaN` for empty/invalid input, causing `NaN` to propagate through portfolio summary table (normalized % becomes `NaN`) and `buildPortfolio` (dollar amounts become `NaN`). Added `|| 10` fallback, matching `updatePortfolioAlloc` which already had it.
+- **Fixed `buildPortfolio` division-by-zero** (line 1471) — If all selected str
+
