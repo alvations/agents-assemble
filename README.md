@@ -1,12 +1,12 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **187 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
+Trading agents and algorithms for publicly tradable instruments. **204 strategies**, 720+ tickers, ranked by Composite Score across 12 rolling windows (2020-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
 > **Start here:**
 > - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (Avg Return × Consistency × Drawdown Protection)
-> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
+> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning204 strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
@@ -24,7 +24,7 @@ Trading agents and algorithms for publicly tradable instruments. **187 strategie
 | 4 | **AI Revolution** | **0.53** | 92% | +79% avg | Broad AI theme (NVDA, AVGO, CRM, SNOW) |
 | 5 | **David Tepper** | **0.52** | 100% | +65% avg | Appaloosa macro — positive Sharpe in ALL 12 windows |
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 187 strategies with full rankings and formula details.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 204 strategies with full rankings and formula details.
 
 ## Quick Start
 
@@ -35,13 +35,13 @@ pip install -e .
 python app.py
 # Open http://localhost:8888
 
-# Run all strategies on 4-year horizon
+# Run all204 strategies on 4-year horizon
 python run_multi_horizon.py --horizon 3y
 
 # Run single strategy
 python run_multi_horizon.py --persona ai_token_economy
 
-# Run all strategies in a category
+# Run all204 strategies in a category
 python run_multi_horizon.py --category unconventional
 ```
 
@@ -73,12 +73,12 @@ for rec in result["recommendations"]:
 
 **How it works:**
 1. Enter tickers (any stock — if not in our universe, we fetch and cache it)
-2. System matches against 173 backtested strategies by universe overlap
+2. System matches against 173 backtested204 strategies by universe overlap
 3. Runs fresh backtest on the matched strategy
 4. Generates vol-adjusted positions: high-vol stocks get wider stops + smaller size
 5. If your picks are weak, size = 0% with an explanation note
 6. Claude AI reviews the whole thing
-7. **Re-roll:** GUI shows 5 strategies in a carousel with shuffle
+7. **Re-roll:** GUI shows 204 strategies in a carousel with shuffle
 
 ## Strategy Orchestrator — Regime-Adaptive Meta-Strategy
 
@@ -165,7 +165,7 @@ agents-assemble/
     engine/backtester.py        # Event-driven backtester + predictions + black swan sim
     engine/judge.py             # Strategy grading and ranking
     engine/recommender.py       # Trade recommendations with vol-adjusted sizing
-    strategies/                 # All strategy implementations (13 modules)
+   204 strategies/                 # All strategy implementations (13 modules)
 
   strategy_orchestrator.py      # Meta-strategy: regime detection + strategy activation
   stock_picker.py               # StockPick: AI strategy matcher (core GUI feature)
@@ -173,12 +173,12 @@ agents-assemble/
   run_multi_horizon.py          # Multi-horizon backtest runner
   sync_package.py               # Sync flat files → package after evolution
 
-  LEADERBOARD.md                # Definitive strategy rankings (173 strategies)
+  LEADERBOARD.md                # Definitive strategy rankings (204 strategies)
   TRADING.md                    # Public.com API execution guide
   knowledge/                    # 54 research files (NVDA supply chain, alt data, etc.)
   results/                      # Backtest JSON results
-  strategy/winning/             # Trade recs for winning strategies
-  strategy/losing/              # Failed strategies (don't repeat)
+  strategy/winning/             # Trade recs for winning204 strategies
+  strategy/losing/              # Failed204 strategies (don't repeat)
 ```
 
 ## Key Findings
@@ -188,7 +188,7 @@ agents-assemble/
 - **Regime orchestration improves Sharpe** — conservative orchestrator has 1.17 Sharpe
 - **Boring monopolies compound quietly** — insurance float, toll booths, railroads
 - **Supply chain risk is real** — NVIDIA's $110B financing book echoes Cisco 2000
-- **Always backtest** — 72 of 173 strategies lost money despite sounding good
+- **Always backtest** — 72 of 204 strategies lost money despite sounding good
 - See `knowledge/` for detailed findings
 
 ## Tax Note (K-1 Warning)
