@@ -47,3 +47,25 @@ This strategy lost money. Key issues:
 - Alpha: -19.83% (target > 0%)
 
 **DO NOT REPEAT** these patterns without fundamental strategy changes.
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | 12.6% |
+| **Avg 5Y Sharpe** | -0.34 |
+| **10Y Return** | 22.6% |
+| **10Y Sharpe** | -0.43 |
+| **HODL Composite** | 0.02 |
+| **Consistency** | 35% |
+| **Suitable for passive** | No |
+
+This strategy has **moderate long-term potential** but requires monitoring.
+
+- **Take profit:** Take profit at +50%. This strategy is inconsistent — capture gains when available.
+- **Stop loss:** Reduce position by 50% at -25% drawdown. Consistency is only 35%.
+- **Exit rule:** Review annually. Exit if strategy underperforms its benchmark for 3 consecutive years.
+
+</details>

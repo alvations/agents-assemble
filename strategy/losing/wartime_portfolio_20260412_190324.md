@@ -57,3 +57,25 @@ This strategy lost money. Key issues:
 - Alpha: -22.17% (target > 0%)
 
 **DO NOT REPEAT** these patterns without fundamental strategy changes.
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | 13.1% |
+| **Avg 5Y Sharpe** | -0.13 |
+| **10Y Return** | 20.1% |
+| **10Y Sharpe** | -0.2 |
+| **HODL Composite** | 0.02 |
+| **Consistency** | 32% |
+| **Suitable for passive** | No |
+
+This strategy has **moderate long-term potential** but requires monitoring.
+
+- **Take profit:** Rebalance when any position exceeds 2x its target weight. Trim back to target, redeploy to underweight positions.
+- **Stop loss:** NO price-based stop loss. This strategy recovered from -24% drawdown to return 20% long-term.
+- **Exit rule:** Exit when conflict de-escalates AND commodity premiums normalize.
+
+</details>
