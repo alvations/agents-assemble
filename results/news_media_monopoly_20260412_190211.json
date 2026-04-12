@@ -1,0 +1,50 @@
+{
+  "metrics": {
+    "total_return": 0.43574776329392373,
+    "cagr": 0.12859777144265538,
+    "annual_volatility": 0.1444460126074588,
+    "sharpe_ratio": 0.6403365749811575,
+    "sortino_ratio": 1.012536434504976,
+    "calmar_ratio": 0.7180596304577992,
+    "max_drawdown": -0.1790906576389315,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5139813581890812,
+    "profit_factor": 1.1874766272003046,
+    "num_trading_days": 751,
+    "skewness": 1.5451302392043602,
+    "kurtosis": 18.00922657512013,
+    "best_day": 0.09559561923224424,
+    "worst_day": -0.04641240459633367,
+    "avg_daily_return": 0.000522689803198982,
+    "black_swan_resilience": 90.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10270837593426307,
+    "beta": 0.6340916893630485,
+    "information_ratio": -0.8516238653261378,
+    "tracking_error": 0.12060297992580314
+  },
+  "trade_metrics": {
+    "num_trades": 724,
+    "num_buys": 371,
+    "num_sells": 353,
+    "total_commission": 0.0,
+    "total_slippage": 6059.318621105674,
+    "total_transaction_costs": 6059.318621105674,
+    "avg_trade_size": 8369.224614786839
+  },
+  "final_positions": {
+    "CMCSA": {
+      "qty": 787.0,
+      "avg_cost": 30.49995807166787,
+      "realized_pnl": -589.5543770682049
+    },
+    "NWSA": {
+      "qty": 824.0,
+      "avg_cost": 25.417727042170405,
+      "realized_pnl": 0.8365020751953125
+    }
+  },
+  "source": "unconventional",
+  "description": "Irreplaceable media IP and distribution: NYT, DIS, GOOG (YouTube), CMCSA"
+}

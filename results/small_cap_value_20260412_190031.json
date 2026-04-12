@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": 0.22606132102971,
+    "cagr": 0.07054612257470083,
+    "annual_volatility": 0.08332365879356841,
+    "sharpe_ratio": 0.3911616193109317,
+    "sortino_ratio": 0.6839460416988218,
+    "calmar_ratio": 0.8295461727621157,
+    "max_drawdown": -0.08504182755711531,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.2010652463382157,
+    "profit_factor": 1.3671701134220327,
+    "num_trading_days": 751,
+    "skewness": 4.088989816123235,
+    "kurtosis": 68.78684457308812,
+    "best_day": 0.07591104404669435,
+    "worst_day": -0.04043687966999698,
+    "avg_daily_return": 0.00028498723303175394,
+    "black_swan_resilience": 95.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16076002480221763,
+    "beta": 0.24102092786170978,
+    "information_ratio": -1.1617541137661258,
+    "tracking_error": 0.13837697917080966
+  },
+  "trade_metrics": {
+    "num_trades": 224,
+    "num_buys": 114,
+    "num_sells": 110,
+    "total_commission": 0.0,
+    "total_slippage": 2870.2976375894555,
+    "total_transaction_costs": 2870.2976375894555,
+    "avg_trade_size": 12813.828739238637
+  },
+  "final_positions": {
+    "SMCI": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CELH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CAVA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DUOL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RELY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CWAN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HUBS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SAIA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "RCL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BURL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DECK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "LULU": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "theme",
+  "description": "Small cap inefficiency: buy deeply oversold with volume spikes"
+}

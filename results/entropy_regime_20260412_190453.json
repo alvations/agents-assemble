@@ -1,0 +1,85 @@
+{
+  "metrics": {
+    "total_return": 0.5637904556798812,
+    "cagr": 0.16131078694994616,
+    "annual_volatility": 0.09624131063420384,
+    "sharpe_ratio": 1.199814735175524,
+    "sortino_ratio": 1.8238905620466306,
+    "calmar_ratio": 1.8480497055402711,
+    "max_drawdown": -0.08728703912365143,
+    "max_drawdown_date": "2025-03-11",
+    "win_rate": 0.5432756324900133,
+    "profit_factor": 1.3137635140922426,
+    "num_trading_days": 751,
+    "skewness": 0.08137311510516024,
+    "kurtosis": 1.6648631358406094,
+    "best_day": 0.025066382363086115,
+    "worst_day": -0.027345941726877432,
+    "avg_daily_return": 0.0006138710637100033,
+    "black_swan_resilience": 83.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.0699953604269723,
+    "beta": 0.4051844064046857,
+    "information_ratio": -0.5973368323943773,
+    "tracking_error": 0.11717904644587451
+  },
+  "trade_metrics": {
+    "num_trades": 1146,
+    "num_buys": 535,
+    "num_sells": 611,
+    "total_commission": 0.0,
+    "total_slippage": 9946.026021324162,
+    "total_transaction_costs": 9946.026021324162,
+    "avg_trade_size": 8678.90577776977
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 54.0,
+      "avg_cost": 273.8537292480469,
+      "realized_pnl": -22.338134765625
+    },
+    "GOOGL": {
+      "qty": 47.0,
+      "avg_cost": 308.003173828125,
+      "realized_pnl": 139.64166259765625
+    },
+    "SPY": {
+      "qty": 22.0,
+      "avg_cost": 676.8758544921875,
+      "realized_pnl": 109.2740478515625
+    },
+    "JPM": {
+      "qty": 46.0,
+      "avg_cost": 320.0014953613281,
+      "realized_pnl": 15.0347900390625
+    },
+    "QQQ": {
+      "qty": 24.0,
+      "avg_cost": 618.4302368164062,
+      "realized_pnl": 19.894775390625
+    },
+    "META": {
+      "qty": 23.0,
+      "avg_cost": 660.9341430664062,
+      "realized_pnl": -30.8837890625
+    },
+    "NVDA": {
+      "qty": 79.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 0.0
+    },
+    "AMZN": {
+      "qty": 64.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 0.0
+    },
+    "GLD": {
+      "qty": 37.0,
+      "avg_cost": 398.6000061035156,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "math",
+  "description": "Shannon entropy of returns: momentum in low-entropy, defensive in high"
+}

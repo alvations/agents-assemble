@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 0.7631928688990262,
+    "cagr": 0.2088763376155911,
+    "annual_volatility": 0.18443656361646782,
+    "sharpe_ratio": 0.9116535112576848,
+    "sortino_ratio": 1.313877980020744,
+    "calmar_ratio": 1.224265673207177,
+    "max_drawdown": -0.170613570393102,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5499334221038615,
+    "profit_factor": 1.2168873061669214,
+    "num_trading_days": 751,
+    "skewness": -0.09387684065671952,
+    "kurtosis": 5.772671635980256,
+    "best_day": 0.07894055003492761,
+    "worst_day": -0.06098532873885898,
+    "avg_daily_return": 0.0008228809771771923,
+    "black_swan_resilience": 77.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.022429809761327357,
+    "beta": 0.7293517274270869,
+    "information_ratio": -0.14723420172309326,
+    "tracking_error": 0.15234102877476535
+  },
+  "trade_metrics": {
+    "num_trades": 308,
+    "num_buys": 138,
+    "num_sells": 170,
+    "total_commission": 0.0,
+    "total_slippage": 2610.6869374120247,
+    "total_transaction_costs": 2610.6869374120247,
+    "avg_trade_size": 8476.256290298777
+  },
+  "final_positions": {
+    "ITOCY": {
+      "qty": 2131.0,
+      "avg_cost": 10.464928067313966,
+      "realized_pnl": 594.729803410784
+    },
+    "EWJ": {
+      "qty": 316.0,
+      "avg_cost": 77.33830089810529,
+      "realized_pnl": 46.288055419921875
+    },
+    "NMR": {
+      "qty": 3292.0,
+      "avg_cost": 7.639999866485596,
+      "realized_pnl": 0.0
+    },
+    "MUFG": {
+      "qty": 1580.0,
+      "avg_cost": 15.920000076293945,
+      "realized_pnl": 0.0
+    },
+    "MITSY": {
+      "qty": 48.0,
+      "avg_cost": 528.9400024414062,
+      "realized_pnl": 0.0
+    },
+    "SMFG": {
+      "qty": 1367.0,
+      "avg_cost": 18.399999618530273,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Japan governance reform: Toyota, Sony, Nomura, MUFG, trading houses"
+}

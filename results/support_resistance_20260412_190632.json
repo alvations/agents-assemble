@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": -0.08340180418593268,
+    "cagr": -0.028708236219288863,
+    "annual_volatility": 0.14621452866246765,
+    "sharpe_ratio": -0.3949499033335589,
+    "sortino_ratio": -0.5400406911229944,
+    "calmar_ratio": -0.09692933931839404,
+    "max_drawdown": -0.29617695138711186,
+    "max_drawdown_date": "2024-02-14",
+    "win_rate": 0.49267643142476697,
+    "profit_factor": 0.977260098112609,
+    "num_trading_days": 751,
+    "skewness": -0.2669470837523039,
+    "kurtosis": 4.665734742334167,
+    "best_day": 0.044455485968543984,
+    "worst_day": -0.05772433907856378,
+    "avg_daily_return": -7.350654181668746e-05,
+    "black_swan_resilience": 68.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.2600143835962073,
+    "beta": 0.27115443464874506,
+    "information_ratio": -1.4498166575954996,
+    "tracking_error": 0.17934294121536545
+  },
+  "trade_metrics": {
+    "num_trades": 3316,
+    "num_buys": 1604,
+    "num_sells": 1712,
+    "total_commission": 0.0,
+    "total_slippage": 27380.914504863733,
+    "total_transaction_costs": 27380.914504863733,
+    "avg_trade_size": 8257.211853095218
+  },
+  "final_positions": {
+    "CPER": {
+      "qty": 367.0,
+      "avg_cost": 33.5644468042151,
+      "realized_pnl": 496.3309169662797
+    },
+    "XLE": {
+      "qty": 412.0,
+      "avg_cost": 44.130937596949835,
+      "realized_pnl": 451.68507473337485
+    },
+    "GLD": {
+      "qty": 32.0,
+      "avg_cost": 398.6636665158155,
+      "realized_pnl": -21.18302061499594
+    },
+    "NEM": {
+      "qty": 129.0,
+      "avg_cost": 100.00729211771264,
+      "realized_pnl": -10.76884287708225
+    },
+    "SLV": {
+      "qty": 199.0,
+      "avg_cost": 64.41999816894531,
+      "realized_pnl": 0.0
+    },
+    "COPX": {
+      "qty": 179.0,
+      "avg_cost": 71.79000091552734,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "famous",
+  "description": "Breakout trading on commodity ETFs with defined S/R levels and ATR stops"
+}

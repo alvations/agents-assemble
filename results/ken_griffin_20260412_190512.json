@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 1.1878809230678486,
+    "cagr": 0.29936285808328056,
+    "annual_volatility": 0.1794181741447785,
+    "sharpe_ratio": 1.3358368763413713,
+    "sortino_ratio": 2.034642488682705,
+    "calmar_ratio": 1.824227451923789,
+    "max_drawdown": -0.1641039102703883,
+    "max_drawdown_date": "2025-04-21",
+    "win_rate": 0.5406125166444741,
+    "profit_factor": 1.3061409517312004,
+    "num_trading_days": 751,
+    "skewness": 0.1311214678161707,
+    "kurtosis": 1.8492579196075694,
+    "best_day": 0.04951885762005248,
+    "worst_day": -0.04329991250469989,
+    "avg_daily_return": 0.001106734836237426,
+    "black_swan_resilience": 80.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.0680567107063621,
+    "beta": 0.811008004388899,
+    "information_ratio": 0.5139691509479474,
+    "tracking_error": 0.1324139991297933
+  },
+  "trade_metrics": {
+    "num_trades": 296,
+    "num_buys": 145,
+    "num_sells": 151,
+    "total_commission": 0.0,
+    "total_slippage": 3906.1763850994125,
+    "total_transaction_costs": 3906.1763850994125,
+    "avg_trade_size": 13196.541841552063
+  },
+  "final_positions": {
+    "AVGO": {
+      "qty": 93.0,
+      "avg_cost": 288.07023744832173,
+      "realized_pnl": 10820.134545462472
+    },
+    "SPY": {
+      "qty": 53.0,
+      "avg_cost": 635.3294131630346,
+      "realized_pnl": 743.169041683799
+    },
+    "QQQ": {
+      "qty": 58.0,
+      "avg_cost": 566.6240756330819,
+      "realized_pnl": 591.7373413085938
+    },
+    "GOOGL": {
+      "qty": 113.0,
+      "avg_cost": 222.6115510276768,
+      "realized_pnl": 4478.817668471224
+    },
+    "AAPL": {
+      "qty": 126.0,
+      "avg_cost": 262.48486812531,
+      "realized_pnl": 13.574111938476562
+    },
+    "AMZN": {
+      "qty": 102.0,
+      "avg_cost": 253.01372572954963,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "political",
+  "description": "Mega-cap AI concentration: $4B NVDA + $3.2B AMZN, $67B AUM"
+}

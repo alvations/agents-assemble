@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.3459548864792392,
+    "cagr": 0.10448002936187262,
+    "annual_volatility": 0.08466266746595433,
+    "sharpe_ratio": 0.7567634583600911,
+    "sortino_ratio": 1.085753578157179,
+    "calmar_ratio": 1.114939380860788,
+    "max_drawdown": -0.09370915688816095,
+    "max_drawdown_date": "2023-10-19",
+    "win_rate": 0.5512649800266312,
+    "profit_factor": 1.2250044680534065,
+    "num_trading_days": 751,
+    "skewness": -0.1502825373804609,
+    "kurtosis": 1.1025802840083934,
+    "best_day": 0.02123558252182778,
+    "worst_day": -0.019088823007592515,
+    "avg_daily_return": 0.00040989435892430234,
+    "black_swan_resilience": 80.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12682611801504584,
+    "beta": 0.3657033181916923,
+    "information_ratio": -1.091666728213933,
+    "tracking_error": 0.11617659010506348
+  },
+  "trade_metrics": {
+    "num_trades": 241,
+    "num_buys": 122,
+    "num_sells": 119,
+    "total_commission": 0.0,
+    "total_slippage": 2428.4166617622373,
+    "total_transaction_costs": 2428.4166617622373,
+    "avg_trade_size": 10076.417683660737
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 29.0,
+      "avg_cost": 330.7349866467382,
+      "realized_pnl": 4053.9544137807998
+    },
+    "EEM": {
+      "qty": 271.0,
+      "avg_cost": 48.97183141787065,
+      "realized_pnl": 2712.716392825707
+    },
+    "SPY": {
+      "qty": 20.0,
+      "avg_cost": 597.6282648980256,
+      "realized_pnl": 1533.8437403433204
+    },
+    "QQQ": {
+      "qty": 16.0,
+      "avg_cost": 544.2922565734464,
+      "realized_pnl": 2125.836749706394
+    },
+    "IEF": {
+      "qty": 350.0,
+      "avg_cost": 93.1071697038114,
+      "realized_pnl": 86.28591610937764
+    },
+    "EFA": {
+      "qty": 153.0,
+      "avg_cost": 89.73072579201687,
+      "realized_pnl": 117.55270175719545
+    },
+    "IWM": {
+      "qty": 35.0,
+      "avg_cost": 233.5969852479566,
+      "realized_pnl": 23.19555484547334
+    }
+  },
+  "source": "math",
+  "description": "Each asset contributes equal risk, with momentum filter"
+}

@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": 0.5560276306281018,
+    "cagr": 0.15937936986076862,
+    "annual_volatility": 0.11067850449486963,
+    "sharpe_ratio": 1.0418276420616333,
+    "sortino_ratio": 1.4656366294196987,
+    "calmar_ratio": 1.1842789109035032,
+    "max_drawdown": -0.13457925189191777,
+    "max_drawdown_date": "2023-10-26",
+    "win_rate": 0.5579227696404794,
+    "profit_factor": 1.2599339856781155,
+    "num_trading_days": 751,
+    "skewness": -0.5113628889977989,
+    "kurtosis": 1.6650022277466672,
+    "best_day": 0.02165977950706166,
+    "worst_day": -0.03730202009206052,
+    "avg_daily_return": 0.0006132209951912543,
+    "black_swan_resilience": 73.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.07192677751614984,
+    "beta": 0.5718872585453472,
+    "information_ratio": -0.7640648580987446,
+    "tracking_error": 0.09413700519498873
+  },
+  "trade_metrics": {
+    "num_trades": 1363,
+    "num_buys": 697,
+    "num_sells": 666,
+    "total_commission": 0.0,
+    "total_slippage": 5692.790673522949,
+    "total_transaction_costs": 5692.790673522949,
+    "avg_trade_size": 4176.662269642663
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 180.0,
+      "avg_cost": 87.8981465136273,
+      "realized_pnl": -3599.292466963623
+    },
+    "GLD": {
+      "qty": 39.0,
+      "avg_cost": 350.8878865784428,
+      "realized_pnl": 12752.317853658864
+    },
+    "SPY": {
+      "qty": 91.0,
+      "avg_cost": 659.4317207924948,
+      "realized_pnl": 60.78152619906268
+    },
+    "QQQ": {
+      "qty": 76.0,
+      "avg_cost": 600.9991407518263,
+      "realized_pnl": 101.3930711622362
+    }
+  },
+  "source": "news_event",
+  "description": "Auto-defensive on sharp market drops, return when vol normalizes"
+}

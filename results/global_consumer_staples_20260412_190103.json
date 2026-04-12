@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": -0.03240894228563174,
+    "cagr": -0.010959132943244465,
+    "annual_volatility": 0.1094105725333919,
+    "sharpe_ratio": -0.40485346347983775,
+    "sortino_ratio": -0.5538468697531281,
+    "calmar_ratio": -0.065916959323765,
+    "max_drawdown": -0.16625665163674164,
+    "max_drawdown_date": "2025-12-08",
+    "win_rate": 0.49267643142476697,
+    "profit_factor": 0.9920050782083839,
+    "num_trading_days": 751,
+    "skewness": -0.18629974620179032,
+    "kurtosis": 2.529757838465774,
+    "best_day": 0.029275194982627317,
+    "worst_day": -0.03431870001783466,
+    "avg_daily_return": -2.0124935746259852e-05,
+    "black_swan_resilience": 76.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.24226528032016292,
+    "beta": 0.22312263955515077,
+    "information_ratio": -1.5316213186709733,
+    "tracking_error": 0.15817570398561875
+  },
+  "trade_metrics": {
+    "num_trades": 288,
+    "num_buys": 166,
+    "num_sells": 122,
+    "total_commission": 0.0,
+    "total_slippage": 1014.3085259265896,
+    "total_transaction_costs": 1014.3085259265896,
+    "avg_trade_size": 3521.9046039117707
+  },
+  "final_positions": {
+    "NVO": {
+      "qty": 271.0,
+      "avg_cost": 71.7829468607329,
+      "realized_pnl": -4375.708340743831
+    },
+    "CL": {
+      "qty": 159.0,
+      "avg_cost": 85.85522918741454,
+      "realized_pnl": -677.7156493500154
+    },
+    "MKC": {
+      "qty": 192.0,
+      "avg_cost": 71.59721940767191,
+      "realized_pnl": 329.3380661228615
+    },
+    "PG": {
+      "qty": 86.0,
+      "avg_cost": 152.76194037399603,
+      "realized_pnl": 103.15133810604274
+    },
+    "COST": {
+      "qty": 14.0,
+      "avg_cost": 932.9740513392857,
+      "realized_pnl": -183.15087890625
+    },
+    "UL": {
+      "qty": 116.0,
+      "avg_cost": 65.19776258797481,
+      "realized_pnl": 16.48626708984375
+    },
+    "DE": {
+      "qty": 17.0,
+      "avg_cost": 465.1358642578125,
+      "realized_pnl": 0.0
+    },
+    "KO": {
+      "qty": 109.0,
+      "avg_cost": 71.45864868164062,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Global pricing power: Unilever, Nestle, P&G, KO, Deere \u2014 income + stability"
+}

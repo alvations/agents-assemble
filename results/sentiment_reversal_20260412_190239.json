@@ -1,0 +1,115 @@
+{
+  "metrics": {
+    "total_return": 1.0825346977675818,
+    "cagr": 0.2780919641430746,
+    "annual_volatility": 0.20717285639850042,
+    "sharpe_ratio": 1.1023112337319745,
+    "sortino_ratio": 1.656267411287623,
+    "calmar_ratio": 1.0653806191851645,
+    "max_drawdown": -0.2610259273871227,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5645805592543276,
+    "profit_factor": 1.2733079113930126,
+    "num_trading_days": 751,
+    "skewness": 0.6252348996654702,
+    "kurtosis": 10.944844447687133,
+    "best_day": 0.12137428848523868,
+    "worst_day": -0.0580675542098662,
+    "avg_daily_return": 0.0010618759220468506,
+    "black_swan_resilience": 81.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.04678581676615612,
+    "beta": 1.119992783586154,
+    "information_ratio": 0.3997019232561187,
+    "tracking_error": 0.11705176794002307
+  },
+  "trade_metrics": {
+    "num_trades": 1892,
+    "num_buys": 955,
+    "num_sells": 937,
+    "total_commission": 0.0,
+    "total_slippage": 8219.977062645923,
+    "total_transaction_costs": 8219.977062645923,
+    "avg_trade_size": 4344.596756155344
+  },
+  "final_positions": {
+    "AMZN": {
+      "qty": 36.0,
+      "avg_cost": 227.17428689578483,
+      "realized_pnl": 1940.094198243371
+    },
+    "MSFT": {
+      "qty": 17.0,
+      "avg_cost": 496.8723296748388,
+      "realized_pnl": -970.1548010453218
+    },
+    "NVDA": {
+      "qty": 45.0,
+      "avg_cost": 184.92605261519034,
+      "realized_pnl": 720.8767133866908
+    },
+    "QQQ": {
+      "qty": 14.0,
+      "avg_cost": 606.9372528076171,
+      "realized_pnl": 261.3905822753917
+    },
+    "SPY": {
+      "qty": 12.0,
+      "avg_cost": 674.8005442469195,
+      "realized_pnl": 344.32204609975236
+    },
+    "AAPL": {
+      "qty": 31.0,
+      "avg_cost": 267.60677266339763,
+      "realized_pnl": 748.4375770770441
+    },
+    "AMD": {
+      "qty": 39.0,
+      "avg_cost": 238.01517133795534,
+      "realized_pnl": -1274.4191820775518
+    },
+    "GOOGL": {
+      "qty": 27.0,
+      "avg_cost": 307.3732566021858,
+      "realized_pnl": 12.598344518784188
+    },
+    "COIN": {
+      "qty": 36.0,
+      "avg_cost": 271.22334459092883,
+      "realized_pnl": -499.3802947998047
+    },
+    "MSTR": {
+      "qty": 54.0,
+      "avg_cost": 182.11778004964194,
+      "realized_pnl": -646.0600128173828
+    },
+    "NFLX": {
+      "qty": 89.0,
+      "avg_cost": 93.76399671766492,
+      "realized_pnl": 0.38600480821398264
+    },
+    "ARKK": {
+      "qty": 107.0,
+      "avg_cost": 79.1875692349728,
+      "realized_pnl": 4.55999755859375
+    },
+    "META": {
+      "qty": 13.0,
+      "avg_cost": 654.4827458308293,
+      "realized_pnl": 0.0
+    },
+    "TSLA": {
+      "qty": 18.0,
+      "avg_cost": 474.1850128173828,
+      "realized_pnl": 0.0
+    },
+    "CRM": {
+      "qty": 16.0,
+      "avg_cost": 266.2300109863281,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "Contrarian sentiment: buy extreme fear (VIX spike), sell extreme greed (VIX collapse)"
+}

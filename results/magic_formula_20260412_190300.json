@@ -1,0 +1,110 @@
+{
+  "metrics": {
+    "total_return": 0.5954563122894181,
+    "cagr": 0.1691239184487494,
+    "annual_volatility": 0.11863097157178602,
+    "sharpe_ratio": 1.0500486539870757,
+    "sortino_ratio": 1.6100849540410243,
+    "calmar_ratio": 1.39976662392544,
+    "max_drawdown": -0.12082293973724434,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5672436750998668,
+    "profit_factor": 1.2916074206605024,
+    "num_trading_days": 751,
+    "skewness": 1.1530094499401864,
+    "kurtosis": 19.5087147209101,
+    "best_day": 0.0798048986513793,
+    "worst_day": -0.04595269591816353,
+    "avg_daily_return": 0.0006499684819187745,
+    "black_swan_resilience": 93.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.06218222892816905,
+    "beta": 0.6415713365365363,
+    "information_ratio": -0.722793694652879,
+    "tracking_error": 0.08603039759226457
+  },
+  "trade_metrics": {
+    "num_trades": 478,
+    "num_buys": 255,
+    "num_sells": 223,
+    "total_commission": 0.0,
+    "total_slippage": 1714.3004195632946,
+    "total_transaction_costs": 1714.3004195632946,
+    "avg_trade_size": 3586.402551387643
+  },
+  "final_positions": {
+    "COST": {
+      "qty": 17.0,
+      "avg_cost": 954.9677333823302,
+      "realized_pnl": 4631.891958222268
+    },
+    "GOOGL": {
+      "qty": 2.0,
+      "avg_cost": 243.82211901577134,
+      "realized_pnl": 7176.45377019707
+    },
+    "AAPL": {
+      "qty": 6.0,
+      "avg_cost": 259.78286117350984,
+      "realized_pnl": 7073.977532031294
+    },
+    "QCOM": {
+      "qty": 9.0,
+      "avg_cost": 163.5562536149455,
+      "realized_pnl": 5886.009029116543
+    },
+    "MSFT": {
+      "qty": 18.0,
+      "avg_cost": 485.19108100099714,
+      "realized_pnl": 3116.6857196146293
+    },
+    "UNH": {
+      "qty": 47.0,
+      "avg_cost": 366.84918534495614,
+      "realized_pnl": -137.15509176557885
+    },
+    "TXN": {
+      "qty": 76.0,
+      "avg_cost": 172.59607216551245,
+      "realized_pnl": 3113.746171468594
+    },
+    "V": {
+      "qty": 48.0,
+      "avg_cost": 337.1115544744601,
+      "realized_pnl": 4628.058487454751
+    },
+    "MCO": {
+      "qty": 28.0,
+      "avg_cost": 486.5169802072477,
+      "realized_pnl": 3877.029583986528
+    },
+    "JNJ": {
+      "qty": 4.0,
+      "avg_cost": 169.76229664808884,
+      "realized_pnl": 3153.274711494703
+    },
+    "SPGI": {
+      "qty": 32.0,
+      "avg_cost": 510.6331698348048,
+      "realized_pnl": 5483.769491354376
+    },
+    "MA": {
+      "qty": 26.0,
+      "avg_cost": 558.0841598953485,
+      "realized_pnl": 3755.767533499766
+    },
+    "BRK-B": {
+      "qty": 26.0,
+      "avg_cost": 494.17436357920104,
+      "realized_pnl": 6158.682226252587
+    },
+    "HD": {
+      "qty": 26.0,
+      "avg_cost": 379.17703191439284,
+      "realized_pnl": 5122.44011004765
+    }
+  },
+  "source": "portfolio",
+  "description": "High earnings yield + high ROIC: quality companies at value prices"
+}

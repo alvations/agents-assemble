@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.3761265003692382,
+    "cagr": 0.11270021866192703,
+    "annual_volatility": 0.17225544825576225,
+    "sharpe_ratio": 0.48061819913688375,
+    "sortino_ratio": 0.6815029819622561,
+    "calmar_ratio": 0.568488545538581,
+    "max_drawdown": -0.19824536403834814,
+    "max_drawdown_date": "2025-04-28",
+    "win_rate": 0.46604527296937415,
+    "profit_factor": 1.144646938930929,
+    "num_trading_days": 751,
+    "skewness": -0.38927858784664515,
+    "kurtosis": 5.074352771111629,
+    "best_day": 0.04852986852964847,
+    "worst_day": -0.06875537076706639,
+    "avg_daily_return": 0.0004841780506174577,
+    "black_swan_resilience": 72.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.11860592871499143,
+    "beta": 0.5526691561223711,
+    "information_ratio": -0.7192901631336528,
+    "tracking_error": 0.16489302202920994
+  },
+  "trade_metrics": {
+    "num_trades": 571,
+    "num_buys": 252,
+    "num_sells": 319,
+    "total_commission": 0.0,
+    "total_slippage": 4454.3722565593725,
+    "total_transaction_costs": 4454.3722565593725,
+    "avg_trade_size": 7801.002200629373
+  },
+  "final_positions": {
+    "KLAC": {
+      "qty": 17.0,
+      "avg_cost": 1125.29527859158,
+      "realized_pnl": 237.49214816623225
+    },
+    "LRCX": {
+      "qty": 120.0,
+      "avg_cost": 138.12123364079608,
+      "realized_pnl": 915.2119162900605
+    },
+    "FLEX": {
+      "qty": 337.0,
+      "avg_cost": 67.23934798424605,
+      "realized_pnl": 0.8099899291992188
+    },
+    "KEYS": {
+      "qty": 102.0,
+      "avg_cost": 203.7100067138672,
+      "realized_pnl": 3.1399993896484375
+    },
+    "ENTG": {
+      "qty": 245.0,
+      "avg_cost": 85.8686294555664,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Levi Strauss principle: sell tools to AI miners, don't mine"
+}

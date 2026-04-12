@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": 0.2591047123699093,
+    "cagr": 0.08011124976841355,
+    "annual_volatility": 0.13368886390893597,
+    "sharpe_ratio": 0.3521011984385959,
+    "sortino_ratio": 0.48169227725080066,
+    "calmar_ratio": 0.3571518600855623,
+    "max_drawdown": -0.2243058449960793,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.1320643096473102,
+    "num_trading_days": 751,
+    "skewness": -0.9119536302046539,
+    "kurtosis": 13.882938063045403,
+    "best_day": 0.05419071368802242,
+    "worst_day": -0.07939279467728122,
+    "avg_daily_return": 0.00034244355009376557,
+    "black_swan_resilience": 64.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1511948976085049,
+    "beta": 0.567303699501312,
+    "information_ratio": -1.2470016660391507,
+    "tracking_error": 0.12124674868217698
+  },
+  "trade_metrics": {
+    "num_trades": 723,
+    "num_buys": 326,
+    "num_sells": 397,
+    "total_commission": 0.0,
+    "total_slippage": 1607.6229088706984,
+    "total_transaction_costs": 1607.6229088706984,
+    "avg_trade_size": 2223.544825547299
+  },
+  "final_positions": {
+    "WMT": {
+      "qty": 90.0,
+      "avg_cost": 83.02788126898497,
+      "realized_pnl": 9372.498526244784
+    },
+    "TJX": {
+      "qty": 65.0,
+      "avg_cost": 126.90860176768929,
+      "realized_pnl": 1110.2909340526362
+    },
+    "COST": {
+      "qty": 12.0,
+      "avg_cost": 926.8322041829427,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "DLTR/DG crash signals K-shaped economy \u2192 long Costco + luxury (rich don't care)"
+}

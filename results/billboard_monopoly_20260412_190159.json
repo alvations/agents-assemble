@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": 0.3809084399853977,
+    "cagr": 0.11399200290492506,
+    "annual_volatility": 0.18407641810136574,
+    "sharpe_ratio": 0.46748006820738147,
+    "sortino_ratio": 0.6560020527458774,
+    "calmar_ratio": 0.5113978473019435,
+    "max_drawdown": -0.22290278206357217,
+    "max_drawdown_date": "2023-08-21",
+    "win_rate": 0.563249001331558,
+    "profit_factor": 1.127004123742211,
+    "num_trading_days": 751,
+    "skewness": -0.2876846630383709,
+    "kurtosis": 3.771296723955608,
+    "best_day": 0.057324854139202186,
+    "worst_day": -0.07097989833346319,
+    "avg_daily_return": 0.0004971262774317268,
+    "black_swan_resilience": 72.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1173141444719934,
+    "beta": 0.6283213414777636,
+    "information_ratio": -0.7031419735323654,
+    "tracking_error": 0.1668427556424257
+  },
+  "trade_metrics": {
+    "num_trades": 200,
+    "num_buys": 92,
+    "num_sells": 108,
+    "total_commission": 0.0,
+    "total_slippage": 1186.8868915947683,
+    "total_transaction_costs": 1186.8868915947683,
+    "avg_trade_size": 5934.434457973838
+  },
+  "final_positions": {
+    "OUT": {
+      "qty": 875.0,
+      "avg_cost": 16.67301919921254,
+      "realized_pnl": 1393.0600637000098
+    },
+    "CCO": {
+      "qty": 9958.0,
+      "avg_cost": 1.2678027622047068,
+      "realized_pnl": 2009.9397821426392
+    },
+    "MSGS": {
+      "qty": 88.0,
+      "avg_cost": 228.97703881697223,
+      "realized_pnl": 0.0
+    },
+    "LAMR": {
+      "qty": 154.0,
+      "avg_cost": 116.4246826171875,
+      "realized_pnl": 76.27230834960938
+    }
+  },
+  "source": "unconventional",
+  "description": "Irreplaceable physical ad assets: billboards, airports, transit \u2014 frozen permits = moat"
+}

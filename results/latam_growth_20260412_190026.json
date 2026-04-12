@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.6298417744462912,
+    "cagr": 0.17749206411271778,
+    "annual_volatility": 0.18056238599613128,
+    "sharpe_ratio": 0.7807785911995835,
+    "sortino_ratio": 1.1675576310862021,
+    "calmar_ratio": 0.9564393526911962,
+    "max_drawdown": -0.18557586909540758,
+    "max_drawdown_date": "2024-08-05",
+    "win_rate": 0.5299600532623169,
+    "profit_factor": 1.188111846840755,
+    "num_trading_days": 751,
+    "skewness": 0.2871010173418082,
+    "kurtosis": 2.606131776049242,
+    "best_day": 0.07237247643154987,
+    "worst_day": -0.03840997518446798,
+    "avg_daily_return": 0.0007150913126392579,
+    "black_swan_resilience": 81.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.053814083264200674,
+    "beta": 0.6239783741034722,
+    "information_ratio": -0.32896845980374845,
+    "tracking_error": 0.16358432445561605
+  },
+  "trade_metrics": {
+    "num_trades": 1184,
+    "num_buys": 583,
+    "num_sells": 601,
+    "total_commission": 0.0,
+    "total_slippage": 13983.186521487945,
+    "total_transaction_costs": 13983.186521487945,
+    "avg_trade_size": 11810.123751256715
+  },
+  "final_positions": {
+    "ITUB": {
+      "qty": 2622.0,
+      "avg_cost": 6.7542973245283235,
+      "realized_pnl": 27.236316316616573
+    },
+    "NU": {
+      "qty": 1094.0,
+      "avg_cost": 16.624693709983514,
+      "realized_pnl": -0.6957742559394227
+    },
+    "STNE": {
+      "qty": 1228.0,
+      "avg_cost": 14.140000343322754,
+      "realized_pnl": 24.499993324279785
+    },
+    "FMX": {
+      "qty": 177.0,
+      "avg_cost": 101.0199966430664,
+      "realized_pnl": 0.0
+    },
+    "ILF": {
+      "qty": 599.0,
+      "avg_cost": 30.123955056344926,
+      "realized_pnl": 0.0
+    },
+    "BSBR": {
+      "qty": 3017.0,
+      "avg_cost": 6.039999961853027,
+      "realized_pnl": 0.0
+    },
+    "EWZ": {
+      "qty": 582.0,
+      "avg_cost": 31.314001083374023,
+      "realized_pnl": 0.0
+    },
+    "PBR": {
+      "qty": 1572.0,
+      "avg_cost": 11.59000015258789,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Latin American fintech, e-commerce, commodities growth"
+}

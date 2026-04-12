@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.23506403191175118,
+    "cagr": 0.07316898761587565,
+    "annual_volatility": 0.1250792870630822,
+    "sharpe_ratio": 0.31535533928711745,
+    "sortino_ratio": 0.444435256229424,
+    "calmar_ratio": 0.46296182532041136,
+    "max_drawdown": -0.15804540161650715,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5299600532623169,
+    "profit_factor": 1.1095889426122445,
+    "num_trading_days": 751,
+    "skewness": -0.11440203991686189,
+    "kurtosis": 2.393035359231342,
+    "best_day": 0.03953226238807206,
+    "worst_day": -0.036899901294093373,
+    "avg_daily_return": 0.0003121753429879653,
+    "black_swan_resilience": 77.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1581371597610428,
+    "beta": 0.5727452135514606,
+    "information_ratio": -1.4307430166177186,
+    "tracking_error": 0.11052799693887698
+  },
+  "trade_metrics": {
+    "num_trades": 293,
+    "num_buys": 134,
+    "num_sells": 159,
+    "total_commission": 0.0,
+    "total_slippage": 1568.3855034294143,
+    "total_transaction_costs": 1568.3855034294143,
+    "avg_trade_size": 5352.851547540658
+  },
+  "final_positions": {
+    "HEI": {
+      "qty": 47.0,
+      "avg_cost": 259.3721761500582,
+      "realized_pnl": 566.9577331542969
+    },
+    "AME": {
+      "qty": 74.0,
+      "avg_cost": 182.24188114557023,
+      "realized_pnl": 88.60435919114093
+    },
+    "NDSN": {
+      "qty": 62.0,
+      "avg_cost": 220.4363250732422,
+      "realized_pnl": 34.03155517578125
+    },
+    "DHR": {
+      "qty": 65.0,
+      "avg_cost": 213.3093719482422,
+      "realized_pnl": 30.133987426757812
+    },
+    "IEX": {
+      "qty": 83.0,
+      "avg_cost": 174.00511169433594,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "TDG/HEI/ROP: 15-25% CAGR machines that look expensive on P/E but are cheap on FCF"
+}

@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "total_return": 0.42942257524785954,
+    "cagr": 0.12693228988692007,
+    "annual_volatility": 0.12239599839903995,
+    "sharpe_ratio": 0.7202505371918844,
+    "sortino_ratio": 1.0545464374415279,
+    "calmar_ratio": 1.0107805086709534,
+    "max_drawdown": -0.1255784898877994,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5326231691078562,
+    "profit_factor": 1.207280380615677,
+    "num_trading_days": 751,
+    "skewness": 0.3156672748907152,
+    "kurtosis": 13.304930674070674,
+    "best_day": 0.07065558029773089,
+    "worst_day": -0.05216938580137709,
+    "avg_daily_return": 0.0005054744008747767,
+    "black_swan_resilience": 84.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10437385748999839,
+    "beta": 0.5055111064302386,
+    "information_ratio": -0.8602453945736216,
+    "tracking_error": 0.12133032986678298
+  },
+  "trade_metrics": {
+    "num_trades": 325,
+    "num_buys": 165,
+    "num_sells": 160,
+    "total_commission": 0.0,
+    "total_slippage": 2179.134924972532,
+    "total_transaction_costs": 2179.134924972532,
+    "avg_trade_size": 6705.030538377028
+  },
+  "final_positions": {
+    "KHC": {
+      "qty": 511.0,
+      "avg_cost": 27.939501984528306,
+      "realized_pnl": -1918.8892135366536
+    },
+    "PG": {
+      "qty": 87.0,
+      "avg_cost": 161.32255472629703,
+      "realized_pnl": -552.0459541441904
+    },
+    "BRK-B": {
+      "qty": 25.0,
+      "avg_cost": 500.9526064130995,
+      "realized_pnl": -222.0448860592312
+    },
+    "CB": {
+      "qty": 44.0,
+      "avg_cost": 284.49017333984375,
+      "realized_pnl": -231.1275634765625
+    },
+    "V": {
+      "qty": 39.0,
+      "avg_cost": 340.55894222422546,
+      "realized_pnl": -1.282674153645985
+    },
+    "KO": {
+      "qty": 179.0,
+      "avg_cost": 67.46751407055145,
+      "realized_pnl": -16.72841063154499
+    },
+    "MCO": {
+      "qty": 26.0,
+      "avg_cost": 496.43951416015625,
+      "realized_pnl": -87.197998046875
+    },
+    "MA": {
+      "qty": 23.0,
+      "avg_cost": 572.1541137695312,
+      "realized_pnl": -57.80029296875
+    },
+    "CVX": {
+      "qty": 84.0,
+      "avg_cost": 151.38775598435174,
+      "realized_pnl": -5.2886962890625
+    },
+    "OXY": {
+      "qty": 304.0,
+      "avg_cost": 40.49138259887695,
+      "realized_pnl": 5.620513916015625
+    }
+  },
+  "source": "famous",
+  "description": "Actual BRK holdings: AAPL, AXP, BAC, KO, CVX, GOOGL, CB, $274B"
+}

@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.3723196260941328,
+    "cagr": 0.11166969931034809,
+    "annual_volatility": 0.1394166528232976,
+    "sharpe_ratio": 0.5503462268554913,
+    "sortino_ratio": 0.7753326523586188,
+    "calmar_ratio": 0.6438685265797428,
+    "max_drawdown": -0.17343556129935767,
+    "max_drawdown_date": "2024-11-18",
+    "win_rate": 0.5233022636484687,
+    "profit_factor": 1.156717057557934,
+    "num_trading_days": 751,
+    "skewness": -0.3889524101489307,
+    "kurtosis": 4.040193605350176,
+    "best_day": 0.04328802051707492,
+    "worst_day": -0.05640182414840411,
+    "avg_daily_return": 0.0004601237867679446,
+    "black_swan_resilience": 73.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.11963644806657037,
+    "beta": 0.30475818361877555,
+    "information_ratio": -0.7069494385236665,
+    "tracking_error": 0.16922914362363597
+  },
+  "trade_metrics": {
+    "num_trades": 300,
+    "num_buys": 150,
+    "num_sells": 150,
+    "total_commission": 0.0,
+    "total_slippage": 2767.250150526525,
+    "total_transaction_costs": 2767.250150526525,
+    "avg_trade_size": 9224.167168421745
+  },
+  "final_positions": {
+    "RHHBY": {
+      "qty": 358.0,
+      "avg_cost": 40.13069657906474,
+      "realized_pnl": 23.874500274658203
+    },
+    "BAYRY": {
+      "qty": 1880.0,
+      "avg_cost": 8.059388333178582,
+      "realized_pnl": -7.460018157958984
+    },
+    "NVS": {
+      "qty": 132.0,
+      "avg_cost": 123.35795028213127,
+      "realized_pnl": -47.194326491582984
+    },
+    "TAK": {
+      "qty": 1140.0,
+      "avg_cost": 15.03252843677339,
+      "realized_pnl": -194.71740679299475
+    },
+    "AZN": {
+      "qty": 92.0,
+      "avg_cost": 168.43703211908755,
+      "realized_pnl": -78.38264465332031
+    },
+    "MRK": {
+      "qty": 165.0,
+      "avg_cost": 81.53566825173118,
+      "realized_pnl": 0.0
+    },
+    "LLY": {
+      "qty": 16.0,
+      "avg_cost": 1056.1273193359375,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Global pharma at value: Roche, AZN, MRK, GSK, TAK \u2014 deep pipelines, patent cliff fears"
+}

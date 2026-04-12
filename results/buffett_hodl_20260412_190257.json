@@ -1,0 +1,105 @@
+{
+  "metrics": {
+    "total_return": 0.6147786076692665,
+    "cagr": 0.1738408535957392,
+    "annual_volatility": 0.13056147188973943,
+    "sharpe_ratio": 0.9967401021734572,
+    "sortino_ratio": 1.4363344149472885,
+    "calmar_ratio": 1.0875870559640255,
+    "max_drawdown": -0.15984086298420364,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5619174434087882,
+    "profit_factor": 1.2706937676233643,
+    "num_trading_days": 751,
+    "skewness": -0.027263994373188816,
+    "kurtosis": 14.758068446794065,
+    "best_day": 0.07453947122989546,
+    "worst_day": -0.06023995178617869,
+    "avg_daily_return": 0.0006720619851376748,
+    "black_swan_resilience": 78.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.05746529378117926,
+    "beta": 0.6954648147059465,
+    "information_ratio": -0.6492408763745678,
+    "tracking_error": 0.08851151532859693
+  },
+  "trade_metrics": {
+    "num_trades": 454,
+    "num_buys": 210,
+    "num_sells": 244,
+    "total_commission": 0.0,
+    "total_slippage": 1442.5996158676153,
+    "total_transaction_costs": 1442.5996158676153,
+    "avg_trade_size": 3177.5321935410016
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 26.0,
+      "avg_cost": 218.52472179152147,
+      "realized_pnl": 7835.033132180148
+    },
+    "AXP": {
+      "qty": 40.0,
+      "avg_cost": 321.20484875868203,
+      "realized_pnl": 5768.681422881464
+    },
+    "OXY": {
+      "qty": 346.0,
+      "avg_cost": 43.050748604742715,
+      "realized_pnl": -1440.3031882643852
+    },
+    "MCO": {
+      "qty": 22.0,
+      "avg_cost": 479.71058726548563,
+      "realized_pnl": 5943.7043309735
+    },
+    "AMZN": {
+      "qty": 62.0,
+      "avg_cost": 224.7580718138323,
+      "realized_pnl": 10203.649263797934
+    },
+    "KO": {
+      "qty": 152.0,
+      "avg_cost": 65.32554724785308,
+      "realized_pnl": 1981.3648154322154
+    },
+    "BAC": {
+      "qty": 138.0,
+      "avg_cost": 44.12540034193068,
+      "realized_pnl": 3899.0977047670044
+    },
+    "V": {
+      "qty": 44.0,
+      "avg_cost": 326.89207432112477,
+      "realized_pnl": 3869.927219226174
+    },
+    "MA": {
+      "qty": 27.0,
+      "avg_cost": 542.8351143623736,
+      "realized_pnl": 4471.00298280362
+    },
+    "BRK-B": {
+      "qty": 21.0,
+      "avg_cost": 474.70773378021437,
+      "realized_pnl": 4156.921888144268
+    },
+    "JNJ": {
+      "qty": 35.0,
+      "avg_cost": 168.6975551081047,
+      "realized_pnl": 2454.313888622536
+    },
+    "CVX": {
+      "qty": 72.0,
+      "avg_cost": 142.3212964588031,
+      "realized_pnl": 2927.714170839484
+    },
+    "PG": {
+      "qty": 99.0,
+      "avg_cost": 156.2850404795094,
+      "realized_pnl": 2187.853483179443
+    }
+  },
+  "source": "portfolio",
+  "description": "Wide moat companies at fair prices, NEVER sell unless thesis breaks"
+}

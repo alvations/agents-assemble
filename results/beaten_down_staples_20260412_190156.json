@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 0.03244799803261511,
+    "cagr": 0.010738022613950404,
+    "annual_volatility": 0.09747701144494132,
+    "sharpe_ratio": -0.243761545326171,
+    "sortino_ratio": -0.3414447920941532,
+    "calmar_ratio": 0.09248613926120931,
+    "max_drawdown": -0.11610412868054665,
+    "max_drawdown_date": "2023-10-12",
+    "win_rate": 0.48601864181091875,
+    "profit_factor": 1.0289791947237945,
+    "num_trading_days": 751,
+    "skewness": -0.13123865744257762,
+    "kurtosis": 2.973709245342853,
+    "best_day": 0.026628826894091517,
+    "worst_day": -0.027622880899988544,
+    "avg_daily_return": 6.135959714207332e-05,
+    "black_swan_resilience": 79.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.22056812476296805,
+    "beta": 0.10761661277163881,
+    "information_ratio": -1.3182808371388137,
+    "tracking_error": 0.1673149745859064
+  },
+  "trade_metrics": {
+    "num_trades": 243,
+    "num_buys": 142,
+    "num_sells": 101,
+    "total_commission": 0.0,
+    "total_slippage": 1823.9087469215403,
+    "total_transaction_costs": 1823.9087469215403,
+    "avg_trade_size": 7505.797312434318
+  },
+  "final_positions": {
+    "CPB": {
+      "qty": 428.0,
+      "avg_cost": 35.1467842231166,
+      "realized_pnl": -1083.6265916876123
+    },
+    "CAG": {
+      "qty": 732.0,
+      "avg_cost": 21.460604419256605,
+      "realized_pnl": -359.737600962321
+    },
+    "HRL": {
+      "qty": 551.0,
+      "avg_cost": 26.56442815034286,
+      "realized_pnl": -85.39947079865831
+    },
+    "DPZ": {
+      "qty": 30.0,
+      "avg_cost": 424.2913513183594,
+      "realized_pnl": 0.0
+    },
+    "MDLZ": {
+      "qty": 229.0,
+      "avg_cost": 55.64066527920519,
+      "realized_pnl": 0.0
+    },
+    "SJM": {
+      "qty": 124.0,
+      "avg_cost": 102.06847381591797,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "Consumer staples oversold on GLP-1 fears \u2014 buy the overreaction, collect dividends"
+}

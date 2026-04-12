@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 1.0713927286311988,
+    "cagr": 0.2758007050622777,
+    "annual_volatility": 0.13047033599994973,
+    "sharpe_ratio": 1.6382042986580656,
+    "sortino_ratio": 2.483599724205823,
+    "calmar_ratio": 2.3704287212097244,
+    "max_drawdown": -0.11635055827433849,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5739014647137151,
+    "profit_factor": 1.4023383968035812,
+    "num_trading_days": 751,
+    "skewness": 0.1652565298589936,
+    "kurtosis": 4.888485444299134,
+    "best_day": 0.058034701377107645,
+    "worst_day": -0.03569978275537389,
+    "avg_daily_return": 0.0010038128202614208,
+    "black_swan_resilience": 83.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.04449455768535926,
+    "beta": 0.720864674226154,
+    "information_ratio": 0.5471335240256363,
+    "tracking_error": 0.08132303310165004
+  },
+  "trade_metrics": {
+    "num_trades": 228,
+    "num_buys": 129,
+    "num_sells": 99,
+    "total_commission": 0.0,
+    "total_slippage": 1652.569125146388,
+    "total_transaction_costs": 1652.569125146388,
+    "avg_trade_size": 7248.110198010478
+  },
+  "final_positions": {
+    "SPY": {
+      "qty": 123.0,
+      "avg_cost": 448.64593112421005,
+      "realized_pnl": 7432.20438057275
+    },
+    "BND": {
+      "qty": 568.0,
+      "avg_cost": 66.89517669863788,
+      "realized_pnl": 193.54033232510074
+    },
+    "AVGO": {
+      "qty": 47.0,
+      "avg_cost": 307.88452652199595,
+      "realized_pnl": 3252.908653516236
+    },
+    "LLY": {
+      "qty": 17.0,
+      "avg_cost": 847.3741666353666,
+      "realized_pnl": 1878.7783743051382
+    },
+    "GLD": {
+      "qty": 47.0,
+      "avg_cost": 368.7799987792969,
+      "realized_pnl": 356.4900207519531
+    },
+    "XLE": {
+      "qty": 405.0,
+      "avg_cost": 44.98017883300781,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "portfolio",
+  "description": "60% passive core (SPY+BND) + 40% active satellite (momentum+themes)"
+}

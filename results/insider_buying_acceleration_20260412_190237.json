@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": 0.017129819640082866,
+    "cagr": 0.005697196076294375,
+    "annual_volatility": 0.017106233744545483,
+    "sharpe_ratio": -1.951264249149373,
+    "sortino_ratio": -3.160914761327884,
+    "calmar_ratio": 0.19282774183488832,
+    "max_drawdown": -0.029545520899024402,
+    "max_drawdown_date": "2023-12-14",
+    "win_rate": 0.16644474034620507,
+    "profit_factor": 1.1231452815482443,
+    "num_trading_days": 751,
+    "skewness": 4.5870337597921225,
+    "kurtosis": 64.75095271983939,
+    "best_day": 0.015554975980034191,
+    "worst_day": -0.005142611758169768,
+    "avg_daily_return": 2.3194377301881055e-05,
+    "black_swan_resilience": 98.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.22560895130062408,
+    "beta": 0.047272508352370644,
+    "information_ratio": -1.5340415655712019,
+    "tracking_error": 0.1470683431036097
+  },
+  "trade_metrics": {
+    "num_trades": 11,
+    "num_buys": 6,
+    "num_sells": 5,
+    "total_commission": 0.0,
+    "total_slippage": 82.26018915939332,
+    "total_transaction_costs": 82.26018915939332,
+    "avg_trade_size": 7478.199014490301
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "WFC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PFE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "unconventional",
+  "description": "Detect insider accumulation via price/volume proxies: 52-week low bounce, oversold uptrend, volume spike"
+}

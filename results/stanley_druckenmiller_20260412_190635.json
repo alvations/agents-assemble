@@ -1,0 +1,85 @@
+{
+  "metrics": {
+    "total_return": 1.6401465363460015,
+    "cagr": 0.3836470141350272,
+    "annual_volatility": 0.18267431435975667,
+    "sharpe_ratio": 1.6609349535144213,
+    "sortino_ratio": 2.5012752363314057,
+    "calmar_ratio": 1.7912488738704448,
+    "max_drawdown": -0.21417850960378337,
+    "max_drawdown_date": "2025-04-28",
+    "win_rate": 0.5712383488681758,
+    "profit_factor": 1.367780199628462,
+    "num_trading_days": 751,
+    "skewness": -0.10125524672492736,
+    "kurtosis": 1.4027985953094673,
+    "best_day": 0.05534420091028647,
+    "worst_day": -0.04340922955221671,
+    "avg_daily_return": 0.0013596584097333312,
+    "black_swan_resilience": 74.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.15234086675810876,
+    "beta": 0.7730344219795673,
+    "information_ratio": 1.0639392869509883,
+    "tracking_error": 0.1431856766890182
+  },
+  "trade_metrics": {
+    "num_trades": 1565,
+    "num_buys": 750,
+    "num_sells": 815,
+    "total_commission": 0.0,
+    "total_slippage": 11886.151280369304,
+    "total_transaction_costs": 11886.151280369304,
+    "avg_trade_size": 7594.984843686442
+  },
+  "final_positions": {
+    "GOOGL": {
+      "qty": 73.0,
+      "avg_cost": 265.9837024974848,
+      "realized_pnl": 9947.244745817366
+    },
+    "NTRA": {
+      "qty": 85.0,
+      "avg_cost": 211.1798442185751,
+      "realized_pnl": 4708.256042636507
+    },
+    "TEVA": {
+      "qty": 624.0,
+      "avg_cost": 22.66083404683008,
+      "realized_pnl": 8665.41884251506
+    },
+    "LLY": {
+      "qty": 21.0,
+      "avg_cost": 975.8830589011864,
+      "realized_pnl": 1926.5240953233506
+    },
+    "XLF": {
+      "qty": 597.0,
+      "avg_cost": 52.60658619954036,
+      "realized_pnl": 133.00693823741034
+    },
+    "RSP": {
+      "qty": 170.0,
+      "avg_cost": 188.96243430689762,
+      "realized_pnl": 74.6520706979851
+    },
+    "PLTR": {
+      "qty": 178.0,
+      "avg_cost": 182.61941950371926,
+      "realized_pnl": 43.76564382999493
+    },
+    "META": {
+      "qty": 35.0,
+      "avg_cost": 660.9341430664062,
+      "realized_pnl": -11.23046875
+    },
+    "AMZN": {
+      "qty": 141.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "famous",
+  "description": "Macro + high-conviction growth: aggressive repositioning, concentrated bets"
+}

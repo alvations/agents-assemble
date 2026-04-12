@@ -1,0 +1,120 @@
+{
+  "metrics": {
+    "total_return": 1.5432256444383339,
+    "cagr": 0.3664455716306685,
+    "annual_volatility": 0.19397577694734386,
+    "sharpe_ratio": 1.5101967205794824,
+    "sortino_ratio": 2.31185773190936,
+    "calmar_ratio": 1.5375996509727456,
+    "max_drawdown": -0.2383231365842472,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5512649800266312,
+    "profit_factor": 1.3402260922471674,
+    "num_trading_days": 751,
+    "skewness": 0.10007451057172081,
+    "kurtosis": 2.134996054309137,
+    "best_day": 0.06442504141309202,
+    "worst_day": -0.048852824046073606,
+    "avg_daily_return": 0.0013181164588933893,
+    "black_swan_resilience": 76.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.13513942425375003,
+    "beta": 0.9856460843344103,
+    "information_ratio": 1.1131462765394444,
+    "tracking_error": 0.12140311395001226
+  },
+  "trade_metrics": {
+    "num_trades": 1880,
+    "num_buys": 991,
+    "num_sells": 889,
+    "total_commission": 0.0,
+    "total_slippage": 9988.95080365086,
+    "total_transaction_costs": 9988.95080365086,
+    "avg_trade_size": 5313.271704069604
+  },
+  "final_positions": {
+    "XLP": {
+      "qty": 41.0,
+      "avg_cost": 76.35648617061042,
+      "realized_pnl": 471.3187490045435
+    },
+    "XLU": {
+      "qty": 75.0,
+      "avg_cost": 43.19329967136628,
+      "realized_pnl": -100.38885811310558
+    },
+    "GLD": {
+      "qty": 8.0,
+      "avg_cost": 358.48358153013777,
+      "realized_pnl": 4483.479766743054
+    },
+    "TLT": {
+      "qty": 37.0,
+      "avg_cost": 86.75220567573439,
+      "realized_pnl": -1310.9263016799534
+    },
+    "XLV": {
+      "qty": 21.0,
+      "avg_cost": 143.07366859787956,
+      "realized_pnl": 669.429547879691
+    },
+    "PG": {
+      "qty": 22.0,
+      "avg_cost": 147.32973303982592,
+      "realized_pnl": -1153.496109635057
+    },
+    "JNJ": {
+      "qty": 16.0,
+      "avg_cost": 181.25191832778864,
+      "realized_pnl": -96.34310131104311
+    },
+    "KO": {
+      "qty": 46.0,
+      "avg_cost": 68.87933724476437,
+      "realized_pnl": -249.6294204566617
+    },
+    "AAPL": {
+      "qty": 130.0,
+      "avg_cost": 252.86947805551557,
+      "realized_pnl": 5136.154248047111
+    },
+    "QQQ": {
+      "qty": 33.0,
+      "avg_cost": 545.2683202587119,
+      "realized_pnl": 2724.0825958812425
+    },
+    "AMZN": {
+      "qty": 153.0,
+      "avg_cost": 231.88628782179558,
+      "realized_pnl": 1966.2689678870695
+    },
+    "META": {
+      "qty": 38.0,
+      "avg_cost": 664.4170995753839,
+      "realized_pnl": 448.4023961692792
+    },
+    "MSFT": {
+      "qty": 31.0,
+      "avg_cost": 492.06307529403347,
+      "realized_pnl": 2283.6979793787145
+    },
+    "TSLA": {
+      "qty": 77.0,
+      "avg_cost": 440.6750234855966,
+      "realized_pnl": -913.9309064528145
+    },
+    "NVDA": {
+      "qty": 148.0,
+      "avg_cost": 189.36692174425136,
+      "realized_pnl": -1607.1172737453294
+    },
+    "GOOGL": {
+      "qty": 113.0,
+      "avg_cost": 297.1973945691077,
+      "realized_pnl": 521.4686112115121
+    }
+  },
+  "source": "theme",
+  "description": "Supply chain stress early-warning: rotates Mag7 to defensive when canaries break"
+}

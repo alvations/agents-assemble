@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.4981941331674151,
+    "cagr": 0.14478430907303852,
+    "annual_volatility": 0.098447254905891,
+    "sharpe_ratio": 1.0289875945206708,
+    "sortino_ratio": 1.5279548562973373,
+    "calmar_ratio": 1.738096801050345,
+    "max_drawdown": -0.08330048647782118,
+    "max_drawdown_date": "2024-08-07",
+    "win_rate": 0.5352862849533955,
+    "profit_factor": 1.2746658315944506,
+    "num_trading_days": 751,
+    "skewness": -0.02326100955580621,
+    "kurtosis": 1.3617754916366263,
+    "best_day": 0.024374818060524328,
+    "worst_day": -0.023012554635884364,
+    "avg_daily_return": 0.0005576379739530726,
+    "black_swan_resilience": 82.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.08652183830387994,
+    "beta": 0.4726044162058823,
+    "information_ratio": -0.8255922691213495,
+    "tracking_error": 0.10479971959519711
+  },
+  "trade_metrics": {
+    "num_trades": 1921,
+    "num_buys": 979,
+    "num_sells": 942,
+    "total_commission": 0.0,
+    "total_slippage": 13301.115948059065,
+    "total_transaction_costs": 13301.115948059065,
+    "avg_trade_size": 6924.058275928725
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 87.0,
+      "avg_cost": 86.6190932206597,
+      "realized_pnl": -280.2714581619966
+    },
+    "GLD": {
+      "qty": 19.0,
+      "avg_cost": 388.15066527428536,
+      "realized_pnl": 12534.314208814945
+    },
+    "SPY": {
+      "qty": 77.0,
+      "avg_cost": 678.9934375267184,
+      "realized_pnl": 21374.01757774093
+    },
+    "QQQ": {
+      "qty": 73.0,
+      "avg_cost": 616.5519047623072,
+      "realized_pnl": 451.84800760937003
+    },
+    "IWM": {
+      "qty": 91.0,
+      "avg_cost": 253.10603600805933,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Options expiration week bias: reduce exposure during triple witching"
+}

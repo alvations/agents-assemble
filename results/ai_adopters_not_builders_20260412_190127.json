@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.4601667290087086,
+    "cagr": 0.1349820830935582,
+    "annual_volatility": 0.10587968976472427,
+    "sharpe_ratio": 0.8823240656540586,
+    "sortino_ratio": 1.3038746669477081,
+    "calmar_ratio": 1.0333980601950619,
+    "max_drawdown": -0.13061964047820962,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5486018641810919,
+    "profit_factor": 1.255011778124375,
+    "num_trading_days": 751,
+    "skewness": 0.31994311310292434,
+    "kurtosis": 8.905828586337364,
+    "best_day": 0.05350217127064627,
+    "worst_day": -0.03960410529016911,
+    "avg_daily_return": 0.0005263649355825402,
+    "black_swan_resilience": 84.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.09632406428336027,
+    "beta": 0.4858980148715717,
+    "information_ratio": -0.883925865200752,
+    "tracking_error": 0.10897301241601717
+  },
+  "trade_metrics": {
+    "num_trades": 190,
+    "num_buys": 102,
+    "num_sells": 88,
+    "total_commission": 0.0,
+    "total_slippage": 1720.771078025817,
+    "total_transaction_costs": 1720.771078025817,
+    "avg_trade_size": 9056.68988434641
+  },
+  "final_positions": {
+    "WMT": {
+      "qty": 96.0,
+      "avg_cost": 96.73234159179339,
+      "realized_pnl": 1802.6332229879417
+    },
+    "GE": {
+      "qty": 74.0,
+      "avg_cost": 250.95150179476352,
+      "realized_pnl": 407.2431640625
+    },
+    "JPM": {
+      "qty": 70.0,
+      "avg_cost": 285.810014125279,
+      "realized_pnl": 20.363525390625
+    },
+    "CAT": {
+      "qty": 38.0,
+      "avg_cost": 566.7340087890625,
+      "realized_pnl": 0.0
+    },
+    "UPS": {
+      "qty": 228.0,
+      "avg_cost": 93.91036987304688,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Walmart principle: established companies adopting AI outperform tech builders"
+}

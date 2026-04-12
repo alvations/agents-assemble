@@ -1,0 +1,84 @@
+{
+  "metrics": {
+    "total_return": 1.0129217413432494,
+    "cagr": 0.26364015289414877,
+    "annual_volatility": 0.22177118573152327,
+    "sharpe_ratio": 0.9959443505490254,
+    "sortino_ratio": 1.3253237795056592,
+    "calmar_ratio": 1.1584711020632075,
+    "max_drawdown": -0.22757594248541235,
+    "max_drawdown_date": "2025-04-25",
+    "win_rate": 0.5379494007989347,
+    "profit_factor": 1.2480764444528558,
+    "num_trading_days": 751,
+    "skewness": -2.678129802879723,
+    "kurtosis": 32.300423023886694,
+    "best_day": 0.04592660128368098,
+    "worst_day": -0.17307231843197457,
+    "avg_daily_return": 0.0010321250990764578,
+    "black_swan_resilience": 62.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.03233400551723031,
+    "beta": 0.6095209546997105,
+    "information_ratio": 0.1541097706938345,
+    "tracking_error": 0.20981152182405982
+  },
+  "trade_metrics": {
+    "num_trades": 961,
+    "num_buys": 473,
+    "num_sells": 488,
+    "total_commission": 0.0,
+    "total_slippage": 9666.293568944933,
+    "total_transaction_costs": 9666.293568944933,
+    "avg_trade_size": 10058.578115447379
+  },
+  "final_positions": {
+    "EQIX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DLR": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "VST": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CEG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NRG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "VRT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MOD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ANET": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MRVL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CCI": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "theme",
+  "description": "Railroad builders of AI: data centers, power, cooling, networking"
+}

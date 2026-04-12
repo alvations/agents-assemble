@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.8405169492927052,
+    "cagr": 0.22635596362119204,
+    "annual_volatility": 0.14390669730776093,
+    "sharpe_ratio": 1.2223119492642878,
+    "sortino_ratio": 1.8054721430781602,
+    "calmar_ratio": 1.7094773458574695,
+    "max_drawdown": -0.13241237982457876,
+    "max_drawdown_date": "2024-08-07",
+    "win_rate": 0.5672436750998668,
+    "profit_factor": 1.2946876103985674,
+    "num_trading_days": 751,
+    "skewness": -0.0447896869014954,
+    "kurtosis": 2.3748555052711495,
+    "best_day": 0.0452069884283699,
+    "worst_day": -0.036322873175189785,
+    "avg_daily_return": 0.0008536612742929893,
+    "black_swan_resilience": 79.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.004950183755726423,
+    "beta": 0.6121818996810514,
+    "information_ratio": -0.03986106606821424,
+    "tracking_error": 0.12418593489835855
+  },
+  "trade_metrics": {
+    "num_trades": 1013,
+    "num_buys": 532,
+    "num_sells": 481,
+    "total_commission": 0.0,
+    "total_slippage": 5284.704101249699,
+    "total_transaction_costs": 5284.704101249699,
+    "avg_trade_size": 5216.88460143109
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 23.0,
+      "avg_cost": 329.796807919215,
+      "realized_pnl": 10174.865019031593
+    },
+    "VIG": {
+      "qty": 84.0,
+      "avg_cost": 201.8118314016349,
+      "realized_pnl": 1230.8714958183916
+    },
+    "QQQ": {
+      "qty": 75.0,
+      "avg_cost": 583.1033657633463,
+      "realized_pnl": 3262.9146636962864
+    },
+    "NVDA": {
+      "qty": 148.0,
+      "avg_cost": 179.78272742729683,
+      "realized_pnl": 55.00230486981275
+    },
+    "MSFT": {
+      "qty": 57.0,
+      "avg_cost": 485.4229147392407,
+      "realized_pnl": 4.270263671875
+    },
+    "AMZN": {
+      "qty": 120.0,
+      "avg_cost": 233.6508243748399,
+      "realized_pnl": -6.801648749679828
+    },
+    "SHY": {
+      "qty": 113.0,
+      "avg_cost": 81.79787555664407,
+      "realized_pnl": 0.4746427957990562
+    }
+  },
+  "source": "portfolio",
+  "description": "Regime-switching: momentum in bulls, defensive in bears, quality in transitions"
+}

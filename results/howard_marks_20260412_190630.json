@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": -0.03442998178949441,
+    "cagr": -0.01165059265522872,
+    "annual_volatility": 0.028649809942319665,
+    "sharpe_ratio": -1.7651065864515567,
+    "sortino_ratio": -2.2562827106454812,
+    "calmar_ratio": -0.14196500032873194,
+    "max_drawdown": -0.08206665465608276,
+    "max_drawdown_date": "2025-04-16",
+    "win_rate": 0.3808255659121172,
+    "profit_factor": 0.9271195235900003,
+    "num_trading_days": 751,
+    "skewness": -0.5727375426311084,
+    "kurtosis": 5.845029990132378,
+    "best_day": 0.007553550806484122,
+    "worst_day": -0.01345400846364786,
+    "avg_daily_return": -4.502461431101391e-05,
+    "black_swan_resilience": 76.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.24295674003214718,
+    "beta": 0.04536300052235639,
+    "information_ratio": -1.62888530303534,
+    "tracking_error": 0.1491552165026048
+  },
+  "trade_metrics": {
+    "num_trades": 8,
+    "num_buys": 4,
+    "num_sells": 4,
+    "total_commission": 0.0,
+    "total_slippage": 115.94871466445923,
+    "total_transaction_costs": 115.94871466445923,
+    "avg_trade_size": 14493.589333057404
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "V": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "UNH": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BRK-B": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ABBV": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "famous",
+  "description": "Second-level thinking: buy quality when others panic, control risk"
+}

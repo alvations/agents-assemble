@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": 0.554643776433601,
+    "cagr": 0.1590343891962347,
+    "annual_volatility": 0.10471263054750932,
+    "sharpe_ratio": 1.0919603536866638,
+    "sortino_ratio": 1.6194009809270382,
+    "calmar_ratio": 1.3302959905901444,
+    "max_drawdown": -0.11954812336590148,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5619174434087882,
+    "profit_factor": 1.2972235076928018,
+    "num_trading_days": 751,
+    "skewness": 0.5263556754697483,
+    "kurtosis": 13.226606648865113,
+    "best_day": 0.06351970980584509,
+    "worst_day": -0.040791780716220805,
+    "avg_daily_return": 0.0006093881210774502,
+    "black_swan_resilience": 87.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.07227175818068377,
+    "beta": 0.6534329200942354,
+    "information_ratio": -1.1827764374354643,
+    "tracking_error": 0.06110348151455048
+  },
+  "trade_metrics": {
+    "num_trades": 100,
+    "num_buys": 49,
+    "num_sells": 51,
+    "total_commission": 0.0,
+    "total_slippage": 156.33982483291626,
+    "total_transaction_costs": 156.33982483291626,
+    "avg_trade_size": 1563.3982483291627
+  },
+  "final_positions": {
+    "VTI": {
+      "qty": 231.0,
+      "avg_cost": 190.4129467044905,
+      "realized_pnl": 4988.530337174809
+    },
+    "BND": {
+      "qty": 630.0,
+      "avg_cost": 65.76707940435601,
+      "realized_pnl": 248.19798250796651
+    },
+    "VXUS": {
+      "qty": 421.0,
+      "avg_cost": 48.72530502467981,
+      "realized_pnl": 1016.3071621858479
+    }
+  },
+  "source": "portfolio",
+  "description": "VTI+VXUS+BND passive baseline \u2014 beats 90% of pros"
+}

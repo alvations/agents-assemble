@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.28315409328269237,
+    "cagr": 0.08696831197223154,
+    "annual_volatility": 0.08833415694854158,
+    "sharpe_ratio": 0.5472895795925004,
+    "sortino_ratio": 0.7898223903539601,
+    "calmar_ratio": 0.8394374350230233,
+    "max_drawdown": -0.10360308981198374,
+    "max_drawdown_date": "2023-10-25",
+    "win_rate": 0.5406125166444741,
+    "profit_factor": 1.1816380024558946,
+    "num_trading_days": 751,
+    "skewness": 0.09282952550476516,
+    "kurtosis": 2.4541595581511375,
+    "best_day": 0.03399025568364089,
+    "worst_day": -0.022133494889135852,
+    "avg_daily_return": 0.00034749257556914077,
+    "black_swan_resilience": 83.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.14433783540468692,
+    "beta": 0.3428649848271056,
+    "information_ratio": -1.1704073141204658,
+    "tracking_error": 0.12332273872805852
+  },
+  "trade_metrics": {
+    "num_trades": 158,
+    "num_buys": 76,
+    "num_sells": 82,
+    "total_commission": 0.0,
+    "total_slippage": 167.47348997116094,
+    "total_transaction_costs": 167.47348997116094,
+    "avg_trade_size": 1059.9587972858285
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 559.0,
+      "avg_cost": 87.64431959484551,
+      "realized_pnl": 28.99428700251717
+    },
+    "VTI": {
+      "qty": 110.0,
+      "avg_cost": 192.95622255729282,
+      "realized_pnl": 4137.236651102013
+    },
+    "IEF": {
+      "qty": 192.0,
+      "avg_cost": 87.10777024520142,
+      "realized_pnl": 47.18962114849553
+    },
+    "GLD": {
+      "qty": 24.0,
+      "avg_cost": 184.51267196839527,
+      "realized_pnl": 2067.474232221954
+    },
+    "DBC": {
+      "qty": 410.0,
+      "avg_cost": 20.81414550144852,
+      "realized_pnl": 69.76519361879681
+    }
+  },
+  "source": "portfolio",
+  "description": "30/40/15/7.5/7.5 stocks/long bonds/mid bonds/gold/commodities"
+}

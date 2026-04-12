@@ -1,0 +1,45 @@
+{
+  "metrics": {
+    "total_return": 0.18058184329132843,
+    "cagr": 0.0570963197057055,
+    "annual_volatility": 0.043284603565326124,
+    "sharpe_ratio": 0.4024783636341403,
+    "sortino_ratio": 0.592683186676662,
+    "calmar_ratio": 1.4071480018143316,
+    "max_drawdown": -0.04057591641539293,
+    "max_drawdown_date": "2025-03-13",
+    "win_rate": 0.5552596537949401,
+    "profit_factor": 1.271553459701565,
+    "num_trading_days": 751,
+    "skewness": 0.49579385162290346,
+    "kurtosis": 5.895213763587465,
+    "best_day": 0.017875010145742776,
+    "worst_day": -0.010412670311339411,
+    "avg_daily_return": 0.00022478127713064747,
+    "black_swan_resilience": 91.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.17420982767121296,
+    "beta": 0.12772318519179315,
+    "information_ratio": -1.250157973069906,
+    "tracking_error": 0.13935025126738246
+  },
+  "trade_metrics": {
+    "num_trades": 286,
+    "num_buys": 137,
+    "num_sells": 149,
+    "total_commission": 0.0,
+    "total_slippage": 2813.4195003662126,
+    "total_transaction_costs": 2813.4195003662126,
+    "avg_trade_size": 9837.131120161577
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 52.0,
+      "avg_cost": 228.73455898109964,
+      "realized_pnl": 413.57255529843087
+    }
+  },
+  "source": "math",
+  "description": "Adaptive: momentum when trending, mean-reversion when reverting"
+}

@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 0.8717290760937426,
+    "cagr": 0.23327320485561942,
+    "annual_volatility": 0.13484761291502953,
+    "sharpe_ratio": 1.3368890690259787,
+    "sortino_ratio": 2.01405973771845,
+    "calmar_ratio": 2.0236886206649736,
+    "max_drawdown": -0.11527129345569331,
+    "max_drawdown_date": "2024-08-07",
+    "win_rate": 0.5672436750998668,
+    "profit_factor": 1.3294038516327333,
+    "num_trading_days": 751,
+    "skewness": 0.13631640967279587,
+    "kurtosis": 3.4651572330981857,
+    "best_day": 0.05576352913265503,
+    "worst_day": -0.032927334682061105,
+    "avg_daily_return": 0.0008710320044196333,
+    "black_swan_resilience": 82.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.001967057478700962,
+    "beta": 0.6066015131618961,
+    "information_ratio": 0.017147113287210934,
+    "tracking_error": 0.11471653833231972
+  },
+  "trade_metrics": {
+    "num_trades": 279,
+    "num_buys": 150,
+    "num_sells": 129,
+    "total_commission": 0.0,
+    "total_slippage": 3776.0882152042373,
+    "total_transaction_costs": 3776.0882152042373,
+    "avg_trade_size": 13534.366362739207
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 108.0,
+      "avg_cost": 86.06976600772421,
+      "realized_pnl": 665.8666914196632
+    },
+    "GLD": {
+      "qty": 24.0,
+      "avg_cost": 271.73011005172856,
+      "realized_pnl": 7150.422986090125
+    },
+    "SPY": {
+      "qty": 59.0,
+      "avg_cost": 609.6828771786797,
+      "realized_pnl": 834.476154909295
+    },
+    "QQQ": {
+      "qty": 65.0,
+      "avg_cost": 546.2331730769231,
+      "realized_pnl": 1108.4234008789062
+    },
+    "IWM": {
+      "qty": 164.0,
+      "avg_cost": 234.67283006993736,
+      "realized_pnl": 266.92425537109375
+    },
+    "AAPL": {
+      "qty": 141.0,
+      "avg_cost": 270.6675187780502,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "As January goes, so goes the year. 86% accuracy when Jan positive"
+}

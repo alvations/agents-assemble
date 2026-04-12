@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": 0.4137552672304823,
+    "cagr": 0.1227857110252395,
+    "annual_volatility": 0.09443979136902597,
+    "sharpe_ratio": 0.8624633080431856,
+    "sortino_ratio": 1.1935920347798403,
+    "calmar_ratio": 1.0734840123084184,
+    "max_drawdown": -0.11438056796132556,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5725699067909454,
+    "profit_factor": 1.2404053835130686,
+    "num_trading_days": 751,
+    "skewness": -0.6294634100685117,
+    "kurtosis": 3.518413425811807,
+    "best_day": 0.029071571937529406,
+    "worst_day": -0.03774540744570587,
+    "avg_daily_return": 0.00047886754086681207,
+    "black_swan_resilience": 73.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10852043635167896,
+    "beta": 0.5088488432103032,
+    "information_ratio": -1.1769420587336488,
+    "tracking_error": 0.09220541958407316
+  },
+  "trade_metrics": {
+    "num_trades": 626,
+    "num_buys": 309,
+    "num_sells": 317,
+    "total_commission": 0.0,
+    "total_slippage": 4073.3815005836477,
+    "total_transaction_costs": 4073.3815005836477,
+    "avg_trade_size": 6506.9992022103015
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 82.0,
+      "avg_cost": 87.10631477699059,
+      "realized_pnl": 441.1671220159634
+    },
+    "GLD": {
+      "qty": 18.0,
+      "avg_cost": 351.5994967230424,
+      "realized_pnl": 9233.283159032348
+    },
+    "SPY": {
+      "qty": 73.0,
+      "avg_cost": 670.1279263431079,
+      "realized_pnl": 0.0
+    },
+    "QQQ": {
+      "qty": 80.0,
+      "avg_cost": 609.9815322875977,
+      "realized_pnl": 19.07135009765625
+    }
+  },
+  "source": "political",
+  "description": "Political uncertainty\u2192defensive, stability\u2192risk-on (Polymarket proxy)"
+}

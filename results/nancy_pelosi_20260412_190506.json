@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 1.1884256348325666,
+    "cagr": 0.2994710525702713,
+    "annual_volatility": 0.15536730255684975,
+    "sharpe_ratio": 1.5174350216717518,
+    "sortino_ratio": 2.2704581109092214,
+    "calmar_ratio": 2.1903563666229964,
+    "max_drawdown": -0.13672252476065516,
+    "max_drawdown_date": "2025-03-13",
+    "win_rate": 0.5672436750998668,
+    "profit_factor": 1.3491275308318607,
+    "num_trading_days": 751,
+    "skewness": -0.06609860094202573,
+    "kurtosis": 1.2171345486334557,
+    "best_day": 0.04375351025044405,
+    "worst_day": -0.0337715144527061,
+    "avg_daily_return": 0.0010912045696263217,
+    "black_swan_resilience": 79.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.06816490519335283,
+    "beta": 0.7334082078172379,
+    "information_ratio": 0.594680315548315,
+    "tracking_error": 0.11462445184603516
+  },
+  "trade_metrics": {
+    "num_trades": 389,
+    "num_buys": 185,
+    "num_sells": 204,
+    "total_commission": 0.0,
+    "total_slippage": 3152.107132617951,
+    "total_transaction_costs": 3152.107132617951,
+    "avg_trade_size": 8103.103168683677
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 86.0,
+      "avg_cost": 267.1393280789702,
+      "realized_pnl": 2104.558142525809
+    },
+    "GS": {
+      "qty": 33.0,
+      "avg_cost": 627.9599322150735,
+      "realized_pnl": 3508.3196088005516
+    },
+    "GOOGL": {
+      "qty": 84.0,
+      "avg_cost": 196.19024058750696,
+      "realized_pnl": 1947.0829620361328
+    },
+    "AVGO": {
+      "qty": 68.0,
+      "avg_cost": 295.6006649241728,
+      "realized_pnl": 516.7049560546875
+    },
+    "AAPL": {
+      "qty": 93.0,
+      "avg_cost": 235.0413086593792,
+      "realized_pnl": 167.66038513183594
+    },
+    "AMZN": {
+      "qty": 113.0,
+      "avg_cost": 249.54867364663994,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "political",
+  "description": "Congressional Dem trading: tech-heavy quality momentum, +74% since 2023"
+}

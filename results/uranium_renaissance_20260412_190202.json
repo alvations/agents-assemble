@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 3.4358494709916787,
+    "cagr": 0.6458851254886957,
+    "annual_volatility": 0.4490765489592279,
+    "sharpe_ratio": 1.2497012909886387,
+    "sortino_ratio": 1.958166217237377,
+    "calmar_ratio": 1.7268998755472804,
+    "max_drawdown": -0.3740142289859191,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.5246338215712384,
+    "profit_factor": 1.2741158114168494,
+    "num_trading_days": 751,
+    "skewness": 0.4032650997051891,
+    "kurtosis": 6.627663675355388,
+    "best_day": 0.19994740712717296,
+    "worst_day": -0.1824816751113154,
+    "avg_daily_return": 0.002382679795279634,
+    "black_swan_resilience": 72.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.41457897811177724,
+    "beta": 1.0527288866459825,
+    "information_ratio": 0.9892814787531714,
+    "tracking_error": 0.4190707973571755
+  },
+  "trade_metrics": {
+    "num_trades": 1165,
+    "num_buys": 566,
+    "num_sells": 599,
+    "total_commission": 0.0,
+    "total_slippage": 9867.36174351608,
+    "total_transaction_costs": 9867.36174351608,
+    "avg_trade_size": 8469.838406451578
+  },
+  "final_positions": {
+    "CCJ": {
+      "qty": 654.0,
+      "avg_cost": 82.7628304786419,
+      "realized_pnl": 19529.527081212957
+    },
+    "DNN": {
+      "qty": 22484.0,
+      "avg_cost": 2.3805895355508344,
+      "realized_pnl": 4560.682927917605
+    },
+    "URA": {
+      "qty": 1138.0,
+      "avg_cost": 42.4497960575097,
+      "realized_pnl": 6099.230488977033
+    },
+    "LEU": {
+      "qty": 199.0,
+      "avg_cost": 289.62771582613675,
+      "realized_pnl": -2070.63456890933
+    },
+    "UUUU": {
+      "qty": 4510.0,
+      "avg_cost": 16.402437970242346,
+      "realized_pnl": 2258.073505261046
+    },
+    "UEC": {
+      "qty": 3167.0,
+      "avg_cost": 14.315361483736151,
+      "realized_pnl": -6673.499112892361
+    },
+    "NXE": {
+      "qty": 6556.0,
+      "avg_cost": 9.12250254966718,
+      "realized_pnl": -1469.1053390923614
+    },
+    "OKLO": {
+      "qty": 521.0,
+      "avg_cost": 100.84746654264433,
+      "realized_pnl": -2005.4398256914833
+    }
+  },
+  "source": "unconventional",
+  "description": "Structural uranium supply deficit: only US producer (UUUU), SMRs, 60+ reactors building"
+}

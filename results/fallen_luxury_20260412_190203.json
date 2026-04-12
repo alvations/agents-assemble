@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": -0.029145504182335857,
+    "cagr": -0.009835674231854719,
+    "annual_volatility": 0.17615106460399513,
+    "sharpe_ratio": -0.19032076093811742,
+    "sortino_ratio": -0.2896089181992321,
+    "calmar_ratio": -0.032359516510961986,
+    "max_drawdown": -0.30394997491766673,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.4909560723514212,
+    "profit_factor": 1.0067303229239968,
+    "num_trading_days": 774,
+    "skewness": 1.6593288392378636,
+    "kurtosis": 24.37405307016615,
+    "best_day": 0.1171880537830059,
+    "worst_day": -0.07998918459248183,
+    "avg_daily_return": 2.2613336380580937e-05,
+    "black_swan_resilience": 84.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.24235109486192452,
+    "beta": 0.6668094341706029,
+    "information_ratio": -1.561784205385377,
+    "tracking_error": 0.15517578806741955
+  },
+  "trade_metrics": {
+    "num_trades": 801,
+    "num_buys": 442,
+    "num_sells": 359,
+    "total_commission": 0.0,
+    "total_slippage": 3779.519758539204,
+    "total_transaction_costs": 3779.519758539204,
+    "avg_trade_size": 4718.501571209988
+  },
+  "final_positions": {
+    "RMS.PA": {
+      "qty": 6.0,
+      "avg_cost": 2122.877970377604,
+      "realized_pnl": 0.0
+    },
+    "HESAY": {
+      "qty": 47.0,
+      "avg_cost": 247.22998046875,
+      "realized_pnl": 0.0
+    },
+    "CPRI": {
+      "qty": 473.0,
+      "avg_cost": 24.610000610351562,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "Luxury brands at decade-low multiples: Kering, Coach, Burberry \u2014 brand equity doesn't depreciate"
+}

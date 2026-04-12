@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 0.914672180634164,
+    "cagr": 0.24266591431889162,
+    "annual_volatility": 0.16060931590026686,
+    "sharpe_ratio": 1.193470069802713,
+    "sortino_ratio": 1.8315494107520236,
+    "calmar_ratio": 1.3198086473421893,
+    "max_drawdown": -0.1838644676314014,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5193075898801598,
+    "profit_factor": 1.2918057211995009,
+    "num_trading_days": 751,
+    "skewness": 0.21116385059212542,
+    "kurtosis": 4.378383316924419,
+    "best_day": 0.06202247254546167,
+    "worst_day": -0.048117556775670534,
+    "avg_daily_return": 0.0009162943527057765,
+    "black_swan_resilience": 80.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.01135976694197316,
+    "beta": 0.6409187373894327,
+    "information_ratio": 0.08208037558477407,
+    "tracking_error": 0.1383980867660698
+  },
+  "trade_metrics": {
+    "num_trades": 286,
+    "num_buys": 138,
+    "num_sells": 148,
+    "total_commission": 0.0,
+    "total_slippage": 3867.0836754331585,
+    "total_transaction_costs": 3867.0836754331585,
+    "avg_trade_size": 13521.271592423633
+  },
+  "final_positions": {
+    "F": {
+      "qty": 2056.0,
+      "avg_cost": 11.646574750661639,
+      "realized_pnl": 400.8329986396254
+    },
+    "GM": {
+      "qty": 368.0,
+      "avg_cost": 72.63267517089844,
+      "realized_pnl": 0.0
+    },
+    "AMZN": {
+      "qty": 114.0,
+      "avg_cost": 233.8800048828125,
+      "realized_pnl": 0.0
+    },
+    "GOOGL": {
+      "qty": 85.0,
+      "avg_cost": 314.4627990722656,
+      "realized_pnl": 0.0
+    },
+    "XLF": {
+      "qty": 510.0,
+      "avg_cost": 52.436248779296875,
+      "realized_pnl": 0.0
+    },
+    "JD": {
+      "qty": 895.0,
+      "avg_cost": 29.889999389648438,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "political",
+  "description": "Macro mean-reversion: cyclicals + China, +24% in 2025"
+}

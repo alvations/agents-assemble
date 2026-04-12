@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 0.46755154073556326,
+    "cagr": 0.13689882708866175,
+    "annual_volatility": 0.1769798027905231,
+    "sharpe_ratio": 0.594771085268107,
+    "sortino_ratio": 0.8191856112206429,
+    "calmar_ratio": 0.8753607212803022,
+    "max_drawdown": -0.15639132960916224,
+    "max_drawdown_date": "2025-05-09",
+    "win_rate": 0.5033288948069241,
+    "profit_factor": 1.1664734232936482,
+    "num_trading_days": 751,
+    "skewness": -0.8334122658084021,
+    "kurtosis": 6.777125960262712,
+    "best_day": 0.046711843950746346,
+    "worst_day": -0.08488351062626254,
+    "avg_daily_return": 0.0005733580746017983,
+    "black_swan_resilience": 68.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.09440732028825671,
+    "beta": 0.5707924121619913,
+    "information_ratio": -0.5643378562017202,
+    "tracking_error": 0.1672886538636019
+  },
+  "trade_metrics": {
+    "num_trades": 718,
+    "num_buys": 344,
+    "num_sells": 374,
+    "total_commission": 0.0,
+    "total_slippage": 5064.146286646366,
+    "total_transaction_costs": 5064.146286646366,
+    "avg_trade_size": 7053.128532933658
+  },
+  "final_positions": {
+    "ERIC": {
+      "qty": 2333.0,
+      "avg_cost": 8.381859311350011,
+      "realized_pnl": 251.2750903122558
+    },
+    "LITE": {
+      "qty": 60.0,
+      "avg_cost": 246.4213399251302,
+      "realized_pnl": 2271.349609375
+    },
+    "VIAV": {
+      "qty": 1231.0,
+      "avg_cost": 16.7336086048046,
+      "realized_pnl": 83.63132604412539
+    },
+    "QCOM": {
+      "qty": 129.0,
+      "avg_cost": 174.13328716571513,
+      "realized_pnl": 17.814329411433306
+    },
+    "NOK": {
+      "qty": 3385.0,
+      "avg_cost": 6.539999961853027,
+      "realized_pnl": 1.8399982452392578
+    },
+    "KEYS": {
+      "qty": 108.0,
+      "avg_cost": 203.7100067138672,
+      "realized_pnl": 6.279998779296875
+    }
+  },
+  "source": "theme",
+  "description": "5G infrastructure: equipment oligopoly + semiconductor + test & measurement"
+}

@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": 0.5446178472863579,
+    "cagr": 0.15652890319585655,
+    "annual_volatility": 0.1167337011089115,
+    "sharpe_ratio": 0.9726889055401513,
+    "sortino_ratio": 1.340144858116618,
+    "calmar_ratio": 0.5746723568249528,
+    "max_drawdown": -0.27237938511724136,
+    "max_drawdown_date": "2025-04-04",
+    "win_rate": 0.5552596537949401,
+    "profit_factor": 1.2944063134385313,
+    "num_trading_days": 751,
+    "skewness": -1.0445947201644967,
+    "kurtosis": 7.223412062512631,
+    "best_day": 0.026312712405728744,
+    "worst_day": -0.04954833357298194,
+    "avg_daily_return": 0.0006062275452169702,
+    "black_swan_resilience": 60.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.07477724418106191,
+    "beta": 0.5251351097197039,
+    "information_ratio": -0.6703804988200338,
+    "tracking_error": 0.11154448005674482
+  },
+  "trade_metrics": {
+    "num_trades": 671,
+    "num_buys": 299,
+    "num_sells": 372,
+    "total_commission": 0.0,
+    "total_slippage": 3382.0633295745815,
+    "total_transaction_costs": 3382.0633295745815,
+    "avg_trade_size": 5040.332830960633
+  },
+  "final_positions": {
+    "MSFT": {
+      "qty": 25.0,
+      "avg_cost": 490.83507253644615,
+      "realized_pnl": 1961.390210627957
+    },
+    "GOOGL": {
+      "qty": 39.0,
+      "avg_cost": 192.53810692782451,
+      "realized_pnl": 3134.08274306113
+    },
+    "AAPL": {
+      "qty": 45.0,
+      "avg_cost": 230.2950871625864,
+      "realized_pnl": 413.7088539570132
+    }
+  },
+  "source": "unconventional",
+  "description": "When energy crashes, capital rotates to tech. Lower oil = lower costs + Fed easing expectations."
+}

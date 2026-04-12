@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.6169934438126881,
+    "cagr": 0.17437913243585657,
+    "annual_volatility": 0.12960260493281095,
+    "sharpe_ratio": 1.0068427971202198,
+    "sortino_ratio": 1.4514238363962222,
+    "calmar_ratio": 1.5064658632554369,
+    "max_drawdown": -0.11575378950773396,
+    "max_drawdown_date": "2024-12-18",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.2586486628694966,
+    "num_trading_days": 751,
+    "skewness": -0.48311017298580483,
+    "kurtosis": 4.6957549623867925,
+    "best_day": 0.03330266034961671,
+    "worst_day": -0.05042584385174531,
+    "avg_daily_return": 0.0006734651376508586,
+    "black_swan_resilience": 75.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.05692701494106189,
+    "beta": 0.3229160502425214,
+    "information_ratio": -0.35901575664203567,
+    "tracking_error": 0.1585641128219957
+  },
+  "trade_metrics": {
+    "num_trades": 968,
+    "num_buys": 484,
+    "num_sells": 484,
+    "total_commission": 0.0,
+    "total_slippage": 3641.4117211847306,
+    "total_transaction_costs": 3641.4117211847306,
+    "avg_trade_size": 3761.788968166044
+  },
+  "final_positions": {
+    "RTX": {
+      "qty": 88.0,
+      "avg_cost": 158.7337104719114,
+      "realized_pnl": 4339.488304975469
+    },
+    "LDOS": {
+      "qty": 106.0,
+      "avg_cost": 184.43527710613702,
+      "realized_pnl": 613.3106531577508
+    },
+    "LHX": {
+      "qty": 67.0,
+      "avg_cost": 279.3961051547813,
+      "realized_pnl": 239.37965205980407
+    },
+    "GD": {
+      "qty": 58.0,
+      "avg_cost": 329.91920115037993,
+      "realized_pnl": 365.8314584700827
+    },
+    "KTOS": {
+      "qty": 254.0,
+      "avg_cost": 80.23727487128095,
+      "realized_pnl": -1228.3429996502027
+    },
+    "NOC": {
+      "qty": 34.0,
+      "avg_cost": 561.1744659318232,
+      "realized_pnl": 69.24159509995388
+    },
+    "HII": {
+      "qty": 47.0,
+      "avg_cost": 309.8801513495303,
+      "realized_pnl": 239.3960746095629
+    },
+    "LMT": {
+      "qty": 33.0,
+      "avg_cost": 465.321119609632,
+      "realized_pnl": 104.92974130730886
+    }
+  },
+  "source": "unconventional",
+  "description": "Defense primes with locked-in backlogs. Buy dips on peace headlines \u2014 revenue is already contracted."
+}

@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": 0.14602425051232415,
+    "cagr": 0.046644095303375765,
+    "annual_volatility": 0.09399342324410827,
+    "sharpe_ratio": 0.11625607415181262,
+    "sortino_ratio": 0.16348756169449077,
+    "calmar_ratio": 0.4742135981092739,
+    "max_drawdown": -0.09836094006867235,
+    "max_drawdown_date": "2023-11-01",
+    "win_rate": 0.5126498002663116,
+    "profit_factor": 1.0964721391083307,
+    "num_trading_days": 751,
+    "skewness": -0.02578808155086624,
+    "kurtosis": 3.280059326196324,
+    "best_day": 0.03298102008008774,
+    "worst_day": -0.02513967504862069,
+    "avg_daily_return": 0.00019901218970574597,
+    "black_swan_resilience": 81.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1846620520735427,
+    "beta": 0.3521255922159082,
+    "information_ratio": -1.4689112441565877,
+    "tracking_error": 0.1257135533601086
+  },
+  "trade_metrics": {
+    "num_trades": 647,
+    "num_buys": 298,
+    "num_sells": 349,
+    "total_commission": 0.0,
+    "total_slippage": 2674.299772476195,
+    "total_transaction_costs": 2674.299772476195,
+    "avg_trade_size": 4133.3845015088045
+  },
+  "final_positions": {
+    "FCX": {
+      "qty": 224.0,
+      "avg_cost": 39.99682541861834,
+      "realized_pnl": 485.64741809301876
+    },
+    "MCD": {
+      "qty": 37.0,
+      "avg_cost": 301.7631553769281,
+      "realized_pnl": 22.207726729543538
+    },
+    "RL": {
+      "qty": 32.0,
+      "avg_cost": 348.87381052970886,
+      "realized_pnl": 37.22142791748047
+    },
+    "PKG": {
+      "qty": 55.0,
+      "avg_cost": 203.28582763671875,
+      "realized_pnl": 4.26495361328125
+    }
+  },
+  "source": "unconventional",
+  "description": "Non-traditional indicators: fashion=confidence, underwear=recession, copper=industrial"
+}

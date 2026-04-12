@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": -0.035819975976373986,
+    "cagr": -0.012126711597840956,
+    "annual_volatility": 0.04868729230309804,
+    "sharpe_ratio": -1.0331836626990478,
+    "sortino_ratio": -1.8588817370595048,
+    "calmar_ratio": -0.11482371853581644,
+    "max_drawdown": -0.105611556152994,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.11984021304926765,
+    "profit_factor": 0.8901984784435814,
+    "num_trading_days": 751,
+    "skewness": 10.064622345118984,
+    "kurtosis": 222.22121584669418,
+    "best_day": 0.06135687004304291,
+    "worst_day": -0.023447261897306837,
+    "avg_daily_return": -4.396487922704667e-05,
+    "black_swan_resilience": 94.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.24343285897475941,
+    "beta": 0.17182669732065645,
+    "information_ratio": -1.8227209150528587,
+    "tracking_error": 0.13355465280744852
+  },
+  "trade_metrics": {
+    "num_trades": 486,
+    "num_buys": 275,
+    "num_sells": 211,
+    "total_commission": 0.0,
+    "total_slippage": 5338.749310436248,
+    "total_transaction_costs": 5338.749310436248,
+    "avg_trade_size": 10985.080885671294
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JPM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "BAC": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GS": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XOM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CVX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "JNJ": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "KO": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "generic",
+  "description": "Mean-reversion: buy oversold, sell overbought, size by vol"
+}

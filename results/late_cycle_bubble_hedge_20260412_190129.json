@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 1.0828083199956926,
+    "cagr": 0.2781481296693511,
+    "annual_volatility": 0.16830769902936885,
+    "sharpe_ratio": 1.3145942495292884,
+    "sortino_ratio": 1.9217018924702822,
+    "calmar_ratio": 1.5002932495991792,
+    "max_drawdown": -0.1853958416087399,
+    "max_drawdown_date": "2025-05-14",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.3152165285189905,
+    "num_trading_days": 751,
+    "skewness": -0.24085230673521998,
+    "kurtosis": 3.622744276739316,
+    "best_day": 0.06034999905684768,
+    "worst_day": -0.062428349917410864,
+    "avg_daily_return": 0.0010336511853925106,
+    "black_swan_resilience": 74.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.04684198229243264,
+    "beta": 0.689771907147094,
+    "information_ratio": 0.33644658528911636,
+    "tracking_error": 0.13922561363546085
+  },
+  "trade_metrics": {
+    "num_trades": 1654,
+    "num_buys": 854,
+    "num_sells": 800,
+    "total_commission": 0.0,
+    "total_slippage": 11662.549358186714,
+    "total_transaction_costs": 11662.549358186714,
+    "avg_trade_size": 7051.118112567547
+  },
+  "final_positions": {
+    "NVDA": {
+      "qty": 163.0,
+      "avg_cost": 187.50004057174985,
+      "realized_pnl": 163.2202667596847
+    },
+    "AVGO": {
+      "qty": 25.0,
+      "avg_cost": 354.9421440989356,
+      "realized_pnl": 3517.626447932377
+    },
+    "QQQ": {
+      "qty": 50.0,
+      "avg_cost": 616.2656229692117,
+      "realized_pnl": 2105.8687949449595
+    },
+    "MSFT": {
+      "qty": 27.0,
+      "avg_cost": 493.2007194643128,
+      "realized_pnl": -972.0647968756615
+    },
+    "GOOGL": {
+      "qty": 98.0,
+      "avg_cost": 283.1018575423264,
+      "realized_pnl": 10753.251021081582
+    },
+    "AMD": {
+      "qty": 61.0,
+      "avg_cost": 220.50257820576294,
+      "realized_pnl": 182.83765995583616
+    },
+    "AMZN": {
+      "qty": 132.0,
+      "avg_cost": 232.0932824512574,
+      "realized_pnl": 397.5426842007415
+    },
+    "AAPL": {
+      "qty": 112.0,
+      "avg_cost": 265.68388589022396,
+      "realized_pnl": 4282.254628274426
+    }
+  },
+  "source": "theme",
+  "description": "Dynamic value/growth rotation based on AI froth detection"
+}

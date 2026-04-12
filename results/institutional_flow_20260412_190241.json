@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "total_return": 0.27960394061478633,
+    "cagr": 0.08596148937332915,
+    "annual_volatility": 0.11859216947713933,
+    "sharpe_ratio": 0.4262275829285259,
+    "sortino_ratio": 0.596659412321314,
+    "calmar_ratio": 0.7352473874540265,
+    "max_drawdown": -0.11691505585758255,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5352862849533955,
+    "profit_factor": 1.145045745925859,
+    "num_trading_days": 751,
+    "skewness": -0.1300099136266622,
+    "kurtosis": 7.902591387472837,
+    "best_day": 0.049615701850057814,
+    "worst_day": -0.05273135436631349,
+    "avg_daily_return": 0.0003562342030709898,
+    "black_swan_resilience": 79.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1453446580035893,
+    "beta": 0.6042336914406901,
+    "information_ratio": -1.5193162167184966,
+    "tracking_error": 0.09566452092344065
+  },
+  "trade_metrics": {
+    "num_trades": 439,
+    "num_buys": 215,
+    "num_sells": 224,
+    "total_commission": 0.0,
+    "total_slippage": 2336.967125366212,
+    "total_transaction_costs": 2336.967125366212,
+    "avg_trade_size": 5323.387529307997
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 39.0,
+      "avg_cost": 255.65663461149651,
+      "realized_pnl": 979.1521458444579
+    },
+    "BAC": {
+      "qty": 239.0,
+      "avg_cost": 47.87533228496086,
+      "realized_pnl": 195.4178102706851
+    },
+    "AXP": {
+      "qty": 23.0,
+      "avg_cost": 322.7817381100777,
+      "realized_pnl": 164.79806124858345
+    },
+    "GS": {
+      "qty": 13.0,
+      "avg_cost": 718.1220307961489,
+      "realized_pnl": 404.3749745686846
+    },
+    "AAPL": {
+      "qty": 44.0,
+      "avg_cost": 255.59747418490323,
+      "realized_pnl": 27.148223876953125
+    },
+    "AMZN": {
+      "qty": 35.0,
+      "avg_cost": 254.0,
+      "realized_pnl": -301.7999267578125
+    },
+    "MCO": {
+      "qty": 26.0,
+      "avg_cost": 484.8059340256911,
+      "realized_pnl": 0.0
+    },
+    "BRK-B": {
+      "qty": 21.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 0.0
+    },
+    "KO": {
+      "qty": 149.0,
+      "avg_cost": 71.45864868164062,
+      "realized_pnl": 0.0
+    },
+    "BLK": {
+      "qty": 10.0,
+      "avg_cost": 1029.173095703125,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "Smart money proxies: volume accumulation, golden cross, OBV trend, low-vol uptrend"
+}

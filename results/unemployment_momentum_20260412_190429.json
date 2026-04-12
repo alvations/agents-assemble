@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.21523714957740503,
+    "cagr": 0.06737556466254113,
+    "annual_volatility": 0.0872663738503158,
+    "sharpe_ratio": 0.34380162004335313,
+    "sortino_ratio": 0.4786723376194395,
+    "calmar_ratio": 0.5709570957601632,
+    "max_drawdown": -0.11800460168173998,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.5406125166444741,
+    "profit_factor": 1.1418187403115776,
+    "num_trading_days": 751,
+    "skewness": -0.24312301410659384,
+    "kurtosis": 1.9385895945902636,
+    "best_day": 0.026955440228943583,
+    "worst_day": -0.0261387109240796,
+    "avg_daily_return": 0.00027470669098589567,
+    "black_swan_resilience": 78.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.16393058271437733,
+    "beta": 0.3795480267188821,
+    "information_ratio": -1.4218770740758329,
+    "tracking_error": 0.11529167021764249
+  },
+  "trade_metrics": {
+    "num_trades": 861,
+    "num_buys": 437,
+    "num_sells": 424,
+    "total_commission": 0.0,
+    "total_slippage": 3020.464296947476,
+    "total_transaction_costs": 3020.464296947476,
+    "avg_trade_size": 3508.0886143408584
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 210.0,
+      "avg_cost": 85.8031240423934,
+      "realized_pnl": -488.4965160998221
+    },
+    "XLP": {
+      "qty": 236.0,
+      "avg_cost": 77.48875107697586,
+      "realized_pnl": 1674.852639420209
+    },
+    "GLD": {
+      "qty": 31.0,
+      "avg_cost": 280.1484412349686,
+      "realized_pnl": 4568.562966736176
+    },
+    "XLV": {
+      "qty": 118.0,
+      "avg_cost": 146.27142181573726,
+      "realized_pnl": -381.92275674886645
+    },
+    "XLU": {
+      "qty": 287.0,
+      "avg_cost": 37.46117583189474,
+      "realized_pnl": 1644.441238320438
+    },
+    "VNQ": {
+      "qty": 139.0,
+      "avg_cost": 87.85945127767299,
+      "realized_pnl": -42.65152203724037
+    },
+    "IEF": {
+      "qty": 128.0,
+      "avg_cost": 90.91095916273807,
+      "realized_pnl": 26.879071353422233
+    },
+    "SPY": {
+      "qty": 18.0,
+      "avg_cost": 582.0048658582899,
+      "realized_pnl": 139.359130859375
+    }
+  },
+  "source": "recession",
+  "description": "Staffing stock weakness as unemployment proxy, rotate to defensives"
+}

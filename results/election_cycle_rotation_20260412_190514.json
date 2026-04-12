@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_return": 0.24952826461149646,
+    "cagr": 0.07735650675298467,
+    "annual_volatility": 0.0816584080607674,
+    "sharpe_ratio": 0.4759896339787396,
+    "sortino_ratio": 0.6678250346282261,
+    "calmar_ratio": 1.0583270752637035,
+    "max_drawdown": -0.07309319449633256,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5486018641810919,
+    "profit_factor": 1.17871758179602,
+    "num_trading_days": 751,
+    "skewness": -0.24062782811816683,
+    "kurtosis": 1.5527266742945258,
+    "best_day": 0.019906326135161967,
+    "worst_day": -0.02121187488428189,
+    "avg_daily_return": 0.00030989016344257724,
+    "black_swan_resilience": 80.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1539496406239338,
+    "beta": 0.39810525863934937,
+    "information_ratio": -1.4374473141912032,
+    "tracking_error": 0.10709932747034655
+  },
+  "trade_metrics": {
+    "num_trades": 182,
+    "num_buys": 85,
+    "num_sells": 97,
+    "total_commission": 0.0,
+    "total_slippage": 1505.7574826774596,
+    "total_transaction_costs": 1505.7574826774596,
+    "avg_trade_size": 8273.392761964064
+  },
+  "final_positions": {
+    "TLT": {
+      "qty": 71.0,
+      "avg_cost": 87.71308139466993,
+      "realized_pnl": -369.7810796820507
+    },
+    "GLD": {
+      "qty": 16.0,
+      "avg_cost": 192.28529382113234,
+      "realized_pnl": 2670.09462362347
+    },
+    "XLY": {
+      "qty": 210.0,
+      "avg_cost": 115.63477470761254,
+      "realized_pnl": 252.7596435546875
+    },
+    "XLF": {
+      "qty": 472.0,
+      "avg_cost": 52.436248779296875,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "political",
+  "description": "Sector rotation by presidential cycle year. Year 3 = max growth"
+}

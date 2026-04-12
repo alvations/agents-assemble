@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 1.7811389458129971,
+    "cagr": 0.4079353901722662,
+    "annual_volatility": 0.2326943000096787,
+    "sharpe_ratio": 1.4235969270126836,
+    "sortino_ratio": 2.147264798266873,
+    "calmar_ratio": 1.3680606478008372,
+    "max_drawdown": -0.29818516512994064,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5193075898801598,
+    "profit_factor": 1.3167650302573657,
+    "num_trading_days": 751,
+    "skewness": -0.06935346696145309,
+    "kurtosis": 2.1443280481540343,
+    "best_day": 0.05868882698262379,
+    "worst_day": -0.07804511392073155,
+    "avg_daily_return": 0.0014701851422640644,
+    "black_swan_resilience": 70.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.17662924279534775,
+    "beta": 1.0769155524554341,
+    "information_ratio": 1.0757816101925217,
+    "tracking_error": 0.16418689548312526
+  },
+  "trade_metrics": {
+    "num_trades": 1262,
+    "num_buys": 590,
+    "num_sells": 672,
+    "total_commission": 0.0,
+    "total_slippage": 16990.105683256617,
+    "total_transaction_costs": 16990.105683256617,
+    "avg_trade_size": 13462.841270409372
+  },
+  "final_positions": {
+    "TSLA": {
+      "qty": 110.0,
+      "avg_cost": 450.31495570469576,
+      "realized_pnl": 426.4363872821512
+    },
+    "PLTR": {
+      "qty": 276.0,
+      "avg_cost": 182.16217714807263,
+      "realized_pnl": 451.9596996307369
+    },
+    "CRM": {
+      "qty": 191.0,
+      "avg_cost": 257.35158507464683,
+      "realized_pnl": 210.19577904270113
+    },
+    "NVDA": {
+      "qty": 270.0,
+      "avg_cost": 183.6800537109375,
+      "realized_pnl": 49.827301025390625
+    },
+    "AMZN": {
+      "qty": 219.0,
+      "avg_cost": 232.07000732421875,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "generic",
+  "description": "Trend-following: buy strength, cut losers fast"
+}

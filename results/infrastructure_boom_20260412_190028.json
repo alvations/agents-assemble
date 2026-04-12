@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "total_return": 0.3659469390903487,
+    "cagr": 0.10994034899059035,
+    "annual_volatility": 0.13685346333039813,
+    "sharpe_ratio": 0.5464272373958456,
+    "sortino_ratio": 0.7991250176138016,
+    "calmar_ratio": 0.8700683687080559,
+    "max_drawdown": -0.12635828739968813,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.5086551264980027,
+    "profit_factor": 1.1510930725581954,
+    "num_trading_days": 751,
+    "skewness": 0.15570330342156763,
+    "kurtosis": 2.5405709989760803,
+    "best_day": 0.05224216815473226,
+    "worst_day": -0.0384535149343308,
+    "avg_daily_return": 0.00045239771952016404,
+    "black_swan_resilience": 82.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1213657983863281,
+    "beta": 0.504191061407524,
+    "information_ratio": -0.8915439888233518,
+    "tracking_error": 0.1361299048704317
+  },
+  "trade_metrics": {
+    "num_trades": 383,
+    "num_buys": 207,
+    "num_sells": 176,
+    "total_commission": 0.0,
+    "total_slippage": 2740.409522695539,
+    "total_transaction_costs": 2740.409522695539,
+    "avg_trade_size": 7155.116247246844
+  },
+  "final_positions": {
+    "DUK": {
+      "qty": 103.0,
+      "avg_cost": 115.78559616345184,
+      "realized_pnl": -49.98800648037802
+    },
+    "EQIX": {
+      "qty": 17.0,
+      "avg_cost": 842.0971046104562,
+      "realized_pnl": -67.59299603630507
+    },
+    "TMUS": {
+      "qty": 60.0,
+      "avg_cost": 233.5517315061289,
+      "realized_pnl": -10.106589368594626
+    },
+    "VZ": {
+      "qty": 308.0,
+      "avg_cost": 41.39945323096312,
+      "realized_pnl": -14.107900712970434
+    },
+    "AMT": {
+      "qty": 71.0,
+      "avg_cost": 205.07063100035762,
+      "realized_pnl": 0.0
+    },
+    "CCI": {
+      "qty": 143.0,
+      "avg_cost": 94.35831904911495,
+      "realized_pnl": 0.0
+    },
+    "DE": {
+      "qty": 27.0,
+      "avg_cost": 470.49914761247305,
+      "realized_pnl": -22.988102353852355
+    },
+    "SO": {
+      "qty": 140.0,
+      "avg_cost": 90.5442087990897,
+      "realized_pnl": 12.754074096679688
+    },
+    "T": {
+      "qty": 484.0,
+      "avg_cost": 26.7561143848994,
+      "realized_pnl": -34.15424702265493
+    },
+    "DLR": {
+      "qty": 80.0,
+      "avg_cost": 154.09884643554688,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Infrastructure spending: construction, 5G, data centers, utilities"
+}

@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.3841672938556011,
+    "cagr": 0.1148706387678402,
+    "annual_volatility": 0.07102310443496825,
+    "sharpe_ratio": 1.0194573007631071,
+    "sortino_ratio": 1.5040007124256978,
+    "calmar_ratio": 1.392642986988438,
+    "max_drawdown": -0.08248390997627153,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.559254327563249,
+    "profit_factor": 1.3180924011954056,
+    "num_trading_days": 751,
+    "skewness": 0.05987694205627613,
+    "kurtosis": 6.842303566919874,
+    "best_day": 0.033793480272772625,
+    "worst_day": -0.02441696575667196,
+    "avg_daily_return": 0.0004429713800098699,
+    "black_swan_resilience": 83.9,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.11643550860907825,
+    "beta": 0.37305955205802116,
+    "information_ratio": -1.1088178775326343,
+    "tracking_error": 0.10500868624897453
+  },
+  "trade_metrics": {
+    "num_trades": 1123,
+    "num_buys": 568,
+    "num_sells": 555,
+    "total_commission": 0.0,
+    "total_slippage": 3775.7636053237925,
+    "total_transaction_costs": 3775.7636053237925,
+    "avg_trade_size": 3362.2115808760386
+  },
+  "final_positions": {
+    "KO": {
+      "qty": 119.0,
+      "avg_cost": 67.54249535614923,
+      "realized_pnl": 41.230470330980296
+    },
+    "PEP": {
+      "qty": 58.0,
+      "avg_cost": 144.18320198348417,
+      "realized_pnl": -167.21435758975284
+    },
+    "XOM": {
+      "qty": 69.0,
+      "avg_cost": 108.55843641553106,
+      "realized_pnl": 72.61377771070586
+    },
+    "CVX": {
+      "qty": 56.0,
+      "avg_cost": 150.66984255351719,
+      "realized_pnl": 1.6161482069227304
+    },
+    "GOOGL": {
+      "qty": 27.0,
+      "avg_cost": 314.223553692853,
+      "realized_pnl": 0.0
+    },
+    "META": {
+      "qty": 13.0,
+      "avg_cost": 640.3504028320312,
+      "realized_pnl": 25.88671875
+    },
+    "JPM": {
+      "qty": 26.0,
+      "avg_cost": 320.0014953613281,
+      "realized_pnl": 0.0
+    },
+    "BAC": {
+      "qty": 151.0,
+      "avg_cost": 55.558899380513374,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "generic",
+  "description": "Relative value: long laggard vs leader in correlated pairs"
+}

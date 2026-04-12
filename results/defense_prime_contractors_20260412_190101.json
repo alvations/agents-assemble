@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.18877947450999688,
+    "cagr": 0.059545798264057925,
+    "annual_volatility": 0.126995369135323,
+    "sharpe_ratio": 0.21129071440347258,
+    "sortino_ratio": 0.31260058572188837,
+    "calmar_ratio": 0.3574178214004361,
+    "max_drawdown": -0.16659996983571024,
+    "max_drawdown_date": "2025-02-14",
+    "win_rate": 0.4833555259653795,
+    "profit_factor": 1.1070630538645352,
+    "num_trading_days": 751,
+    "skewness": 0.720162503421953,
+    "kurtosis": 12.18320902141105,
+    "best_day": 0.07213909292650666,
+    "worst_day": -0.04530750031222863,
+    "avg_daily_return": 0.0002621297924362434,
+    "black_swan_resilience": 87.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.17176034911286053,
+    "beta": 0.2706802685608545,
+    "information_ratio": -1.0465534621518042,
+    "tracking_error": 0.16411999513116743
+  },
+  "trade_metrics": {
+    "num_trades": 181,
+    "num_buys": 100,
+    "num_sells": 81,
+    "total_commission": 0.0,
+    "total_slippage": 1374.6533353843683,
+    "total_transaction_costs": 1374.6533353843683,
+    "avg_trade_size": 7594.769808753419
+  },
+  "final_positions": {
+    "LMT": {
+      "qty": 29.0,
+      "avg_cost": 481.7245788574219,
+      "realized_pnl": -358.6962890625
+    },
+    "NOC": {
+      "qty": 23.0,
+      "avg_cost": 571.257568359375,
+      "realized_pnl": -219.9130859375
+    },
+    "BAESY": {
+      "qty": 149.0,
+      "avg_cost": 97.8499984741211,
+      "realized_pnl": -431.9698791503906
+    },
+    "LHX": {
+      "qty": 47.0,
+      "avg_cost": 286.39569091796875,
+      "realized_pnl": -225.31448364257812
+    },
+    "RTX": {
+      "qty": 76.0,
+      "avg_cost": 167.4637908935547,
+      "realized_pnl": 0.0
+    },
+    "GD": {
+      "qty": 38.0,
+      "avg_cost": 331.0277404785156,
+      "realized_pnl": 0.0
+    },
+    "LDOS": {
+      "qty": 68.0,
+      "avg_cost": 187.52801513671875,
+      "realized_pnl": 0.0
+    },
+    "HII": {
+      "qty": 41.0,
+      "avg_cost": 305.6947326660156,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "NATO spending boom: LMT, NOC, RTX, BAE, GD \u2014 cost-plus contracts = guaranteed margins"
+}

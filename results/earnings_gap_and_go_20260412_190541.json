@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": 0.15032035661205412,
+    "cagr": 0.047954806000688466,
+    "annual_volatility": 0.04683703117099548,
+    "sharpe_ratio": 0.18918229928240457,
+    "sortino_ratio": 0.32965428473537234,
+    "calmar_ratio": 1.0364558182263524,
+    "max_drawdown": -0.04626806580405107,
+    "max_drawdown_date": "2025-01-13",
+    "win_rate": 0.2170439414114514,
+    "profit_factor": 1.3756685679077592,
+    "num_trading_days": 751,
+    "skewness": 2.8857989471138437,
+    "kurtosis": 38.59788492766835,
+    "best_day": 0.03505372181903654,
+    "worst_day": -0.022676555928238695,
+    "avg_daily_return": 0.0001908115185392413,
+    "black_swan_resilience": 97.5,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.18335134137623,
+    "beta": 0.07068226922915792,
+    "information_ratio": -1.2243324987693398,
+    "tracking_error": 0.14975616636863676
+  },
+  "trade_metrics": {
+    "num_trades": 81,
+    "num_buys": 38,
+    "num_sells": 43,
+    "total_commission": 0.0,
+    "total_slippage": 1260.7156090888982,
+    "total_transaction_costs": 1260.7156090888982,
+    "avg_trade_size": 15564.390235665403
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NFLX": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "CRM": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AVGO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "PLTR": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "williams_seasonal",
+  "description": "Buy 4%+ gap-up on 3x volume (earnings proxy). 60-70% win, hold 1-5d"
+}

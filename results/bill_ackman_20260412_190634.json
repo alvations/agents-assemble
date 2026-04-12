@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.9683875347192636,
+    "cagr": 0.25421945690432346,
+    "annual_volatility": 0.1562213219206725,
+    "sharpe_ratio": 1.2822230418770177,
+    "sortino_ratio": 1.8859645789697297,
+    "calmar_ratio": 1.7161907111814605,
+    "max_drawdown": -0.14813007391778366,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5565912117177098,
+    "profit_factor": 1.2989696141226375,
+    "num_trading_days": 751,
+    "skewness": -0.1696464046183694,
+    "kurtosis": 1.7105375467084558,
+    "best_day": 0.04062789152517965,
+    "worst_day": -0.044402610934254794,
+    "avg_daily_return": 0.0009505331112006815,
+    "black_swan_resilience": 77.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.022913309527405,
+    "beta": 0.8178193414766153,
+    "information_ratio": 0.23599809277339026,
+    "tracking_error": 0.09709107924616486
+  },
+  "trade_metrics": {
+    "num_trades": 320,
+    "num_buys": 156,
+    "num_sells": 164,
+    "total_commission": 0.0,
+    "total_slippage": 3197.2524512767804,
+    "total_transaction_costs": 3197.2524512767804,
+    "avg_trade_size": 9991.413910239935
+  },
+  "final_positions": {
+    "BN": {
+      "qty": 552.0,
+      "avg_cost": 39.41251555887169,
+      "realized_pnl": 300.4435929222192
+    },
+    "GOOGL": {
+      "qty": 81.0,
+      "avg_cost": 189.75608503553602,
+      "realized_pnl": 2048.111296081543
+    },
+    "AMZN": {
+      "qty": 109.0,
+      "avg_cost": 226.66917153454702,
+      "realized_pnl": 0.0
+    },
+    "MSFT": {
+      "qty": 53.0,
+      "avg_cost": 515.3478042314638,
+      "realized_pnl": 0.0
+    },
+    "AAPL": {
+      "qty": 90.0,
+      "avg_cost": 256.39288892244036,
+      "realized_pnl": 132.2123437178763
+    },
+    "HLT": {
+      "qty": 90.0,
+      "avg_cost": 258.82073974609375,
+      "realized_pnl": 216.771240234375
+    },
+    "BRK-B": {
+      "qty": 50.0,
+      "avg_cost": 508.54998779296875,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "famous",
+  "description": "Ultra-concentrated compounders: 11 positions, 40% AI, 34% return 2025"
+}

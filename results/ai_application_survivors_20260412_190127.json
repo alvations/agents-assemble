@@ -1,0 +1,45 @@
+{
+  "metrics": {
+    "total_return": 0.03590039201698647,
+    "cagr": 0.011867235264545473,
+    "annual_volatility": 0.09210408139380472,
+    "sharpe_ratio": -0.2514068075523207,
+    "sortino_ratio": -0.35812997659595036,
+    "calmar_ratio": 0.06154944822518422,
+    "max_drawdown": -0.19280815030425813,
+    "max_drawdown_date": "2025-12-31",
+    "win_rate": 0.36351531291611183,
+    "profit_factor": 1.0386275756228323,
+    "num_trading_days": 751,
+    "skewness": 0.2211431569427276,
+    "kurtosis": 5.609427686346786,
+    "best_day": 0.03298688498299329,
+    "worst_day": -0.02422466606841478,
+    "avg_daily_return": 6.376258872080429e-05,
+    "black_swan_resilience": 80.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.21943891211237299,
+    "beta": 0.2170527908755449,
+    "information_ratio": -1.485611037341289,
+    "tracking_error": 0.14770953270856815
+  },
+  "trade_metrics": {
+    "num_trades": 385,
+    "num_buys": 170,
+    "num_sells": 215,
+    "total_commission": 0.0,
+    "total_slippage": 5111.1939907455435,
+    "total_transaction_costs": 5111.1939907455435,
+    "avg_trade_size": 13275.828547391024
+  },
+  "final_positions": {
+    "CRM": {
+      "qty": 58.0,
+      "avg_cost": 266.2300109863281,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "The Amazons of AI: real-revenue application companies that survive the bust"
+}

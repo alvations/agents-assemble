@@ -1,0 +1,88 @@
+{
+  "metrics": {
+    "total_return": -0.013277395898389277,
+    "cagr": -0.004460764253281901,
+    "annual_volatility": 0.025012523273890946,
+    "sharpe_ratio": -1.7349822867144633,
+    "sortino_ratio": -2.286282659651124,
+    "calmar_ratio": -0.08910986603183614,
+    "max_drawdown": -0.05005915115715931,
+    "max_drawdown_date": "2024-05-17",
+    "win_rate": 0.21438082556591212,
+    "profit_factor": 0.9554673379027243,
+    "num_trading_days": 751,
+    "skewness": -0.42349038521624416,
+    "kurtosis": 14.456773011333956,
+    "best_day": 0.009260969635140448,
+    "worst_day": -0.012069961760331038,
+    "avg_daily_return": -1.6557616677919898e-05,
+    "black_swan_resilience": 79.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.23576691163020036,
+    "beta": 0.028338539178588203,
+    "information_ratio": -1.5595439318137998,
+    "tracking_error": 0.15117683241920338
+  },
+  "trade_metrics": {
+    "num_trades": 718,
+    "num_buys": 337,
+    "num_sells": 381,
+    "total_commission": 0.0,
+    "total_slippage": 6300.9379058761515,
+    "total_transaction_costs": 6300.9379058761515,
+    "avg_trade_size": 8775.679534646462
+  },
+  "final_positions": {
+    "AAPL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "MSFT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "NVDA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GOOGL": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "AMZN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "META": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TSLA": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "GLD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TLT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "XLE": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "SPY": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "QQQ": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "math",
+  "description": "Donchian breakout with ATR position sizing (Turtle Trading)"
+}

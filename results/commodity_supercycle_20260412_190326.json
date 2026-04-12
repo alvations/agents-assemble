@@ -1,0 +1,90 @@
+{
+  "metrics": {
+    "total_return": -0.08145275293235776,
+    "cagr": -0.02801790977707841,
+    "annual_volatility": 0.10575567277517385,
+    "sharpe_ratio": -0.5874575498710227,
+    "sortino_ratio": -0.7622116043397652,
+    "calmar_ratio": -0.12390442467051711,
+    "max_drawdown": -0.22612517552607814,
+    "max_drawdown_date": "2025-04-07",
+    "win_rate": 0.5126498002663116,
+    "profit_factor": 0.9610118534423554,
+    "num_trading_days": 751,
+    "skewness": -0.7405142741215676,
+    "kurtosis": 4.464610279598121,
+    "best_day": 0.02674665846317348,
+    "worst_day": -0.03534827361472315,
+    "avg_daily_return": -9.088572615105962e-05,
+    "black_swan_resilience": 66.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.25932405715399687,
+    "beta": 0.23268844486343498,
+    "information_ratio": -1.6815729668091064,
+    "tracking_error": 0.1542151677462329
+  },
+  "trade_metrics": {
+    "num_trades": 1359,
+    "num_buys": 704,
+    "num_sells": 655,
+    "total_commission": 0.0,
+    "total_slippage": 5668.079840442666,
+    "total_transaction_costs": 5668.079840442666,
+    "avg_trade_size": 4170.772509523663
+  },
+  "final_positions": {
+    "DJP": {
+      "qty": 220.0,
+      "avg_cost": 36.34319458334504,
+      "realized_pnl": 426.2127349411353
+    },
+    "SCCO": {
+      "qty": 58.0,
+      "avg_cost": 134.1305305512432,
+      "realized_pnl": 423.8182313837308
+    },
+    "MOO": {
+      "qty": 114.0,
+      "avg_cost": 71.96984895920372,
+      "realized_pnl": 40.30119229892949
+    },
+    "NTR": {
+      "qty": 134.0,
+      "avg_cost": 60.362219509777724,
+      "realized_pnl": 163.73826193594704
+    },
+    "XME": {
+      "qty": 79.0,
+      "avg_cost": 99.05725747567637,
+      "realized_pnl": 438.494745607729
+    },
+    "SLV": {
+      "qty": 126.0,
+      "avg_cost": 62.470001220703125,
+      "realized_pnl": 77.88002014160156
+    },
+    "COPX": {
+      "qty": 117.0,
+      "avg_cost": 70.88785552978516,
+      "realized_pnl": 5.4619598388671875
+    },
+    "GSG": {
+      "qty": 360.0,
+      "avg_cost": 23.139999389648438,
+      "realized_pnl": 1.1400260925292969
+    },
+    "GLD": {
+      "qty": 21.0,
+      "avg_cost": 398.6000061035156,
+      "realized_pnl": 0.0
+    },
+    "FCX": {
+      "qty": 162.0,
+      "avg_cost": 51.352046966552734,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "crisis",
+  "description": "Ride multi-commodity momentum when commodities outperform stocks"
+}

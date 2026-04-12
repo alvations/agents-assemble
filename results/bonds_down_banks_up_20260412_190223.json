@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": 0.33991402541755145,
+    "cagr": 0.10281951152771329,
+    "annual_volatility": 0.1325541952556519,
+    "sharpe_ratio": 0.5113873415941982,
+    "sortino_ratio": 0.7064179905829631,
+    "calmar_ratio": 0.5052659991141588,
+    "max_drawdown": -0.20349580559146718,
+    "max_drawdown_date": "2023-10-03",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.184838623197804,
+    "num_trading_days": 751,
+    "skewness": -0.589364895473183,
+    "kurtosis": 23.975028626255096,
+    "best_day": 0.07921871288237159,
+    "worst_day": -0.07746047548370771,
+    "avg_daily_return": 0.00042464405933469965,
+    "black_swan_resilience": 69.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.12848663584920517,
+    "beta": 0.4959861133257559,
+    "information_ratio": -0.9641378161565635,
+    "tracking_error": 0.1332658398997396
+  },
+  "trade_metrics": {
+    "num_trades": 1030,
+    "num_buys": 461,
+    "num_sells": 569,
+    "total_commission": 0.0,
+    "total_slippage": 4249.310199485776,
+    "total_transaction_costs": 4249.310199485776,
+    "avg_trade_size": 4125.543882995902
+  },
+  "final_positions": {
+    "JPM": {
+      "qty": 42.0,
+      "avg_cost": 259.0797258618331,
+      "realized_pnl": 7419.468939077846
+    },
+    "GS": {
+      "qty": 15.0,
+      "avg_cost": 608.7380333647777,
+      "realized_pnl": 2996.1243334794763
+    },
+    "TLT": {
+      "qty": 154.0,
+      "avg_cost": 87.43053595920098,
+      "realized_pnl": 6.99541644009102
+    }
+  },
+  "source": "unconventional",
+  "description": "Rising rates crush bonds but boost banks (wider NIM) + insurance (float income). TLT\u2193 = XLF\u2191."
+}

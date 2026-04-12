@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "total_return": 0.41781394356806834,
+    "cagr": 0.12386282143934091,
+    "annual_volatility": 0.1268883485207624,
+    "sharpe_ratio": 0.6779273457025242,
+    "sortino_ratio": 0.9261551777689273,
+    "calmar_ratio": 0.587801781946823,
+    "max_drawdown": -0.21072209245283724,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5446071904127829,
+    "profit_factor": 1.18185180891442,
+    "num_trading_days": 751,
+    "skewness": -0.7839319598588294,
+    "kurtosis": 3.945330726992516,
+    "best_day": 0.029954596634904407,
+    "worst_day": -0.05515268239519189,
+    "avg_daily_return": 0.0004970033600660932,
+    "black_swan_resilience": 66.7,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10744332593757755,
+    "beta": 0.7442181297060784,
+    "information_ratio": -1.5857241042410237,
+    "tracking_error": 0.06775663285323094
+  },
+  "trade_metrics": {
+    "num_trades": 707,
+    "num_buys": 361,
+    "num_sells": 346,
+    "total_commission": 0.0,
+    "total_slippage": 1623.0304594230643,
+    "total_transaction_costs": 1623.0304594230643,
+    "avg_trade_size": 2295.6583584484656
+  },
+  "final_positions": {
+    "XLP": {
+      "qty": 184.0,
+      "avg_cost": 73.22554849275282,
+      "realized_pnl": 1065.3057513103206
+    },
+    "XLU": {
+      "qty": 168.0,
+      "avg_cost": 36.896560424799326,
+      "realized_pnl": 2434.8222093496875
+    },
+    "XLV": {
+      "qty": 92.0,
+      "avg_cost": 134.0859472007473,
+      "realized_pnl": 959.9288709843711
+    },
+    "SPY": {
+      "qty": 63.0,
+      "avg_cost": 577.8338778056795,
+      "realized_pnl": 60.68353271484375
+    },
+    "QQQ": {
+      "qty": 58.0,
+      "avg_cost": 513.2720678401379,
+      "realized_pnl": 570.1355865834622
+    },
+    "XLK": {
+      "qty": 147.0,
+      "avg_cost": 115.9728676926444,
+      "realized_pnl": 678.3323973763452
+    }
+  },
+  "source": "recession",
+  "description": "Rotate to staples/utilities/healthcare when recession signals fire"
+}

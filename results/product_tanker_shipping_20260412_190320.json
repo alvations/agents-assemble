@@ -1,0 +1,72 @@
+{
+  "metrics": {
+    "total_return": 0.09002270462899165,
+    "cagr": 0.029251163868632135,
+    "annual_volatility": 0.190497936450034,
+    "sharpe_ratio": 0.04113006934519425,
+    "sortino_ratio": 0.058808888414967335,
+    "calmar_ratio": 0.11347321481618439,
+    "max_drawdown": -0.25778033975697423,
+    "max_drawdown_date": "2025-07-09",
+    "win_rate": 0.41278295605858856,
+    "profit_factor": 1.0500467496687362,
+    "num_trading_days": 751,
+    "skewness": -0.05303012008175408,
+    "kurtosis": 3.8121863212297686,
+    "best_day": 0.05133082966761848,
+    "worst_day": -0.07416331795434727,
+    "avg_daily_return": 0.00018674189984009735,
+    "black_swan_resilience": 73.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.20205498350828632,
+    "beta": 0.10865549023355447,
+    "information_ratio": -0.8636639613828236,
+    "tracking_error": 0.23395092598835948
+  },
+  "trade_metrics": {
+    "num_trades": 651,
+    "num_buys": 314,
+    "num_sells": 337,
+    "total_commission": 0.0,
+    "total_slippage": 4721.319559012892,
+    "total_transaction_costs": 4721.319559012892,
+    "avg_trade_size": 7252.410996947603
+  },
+  "final_positions": {
+    "TRMD": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "FRO": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "STNG": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "INSW": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "TNK": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "DHT": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "HAFN": {
+      "qty": 0,
+      "avg_cost": 0
+    },
+    "ASC": {
+      "qty": 0,
+      "avg_cost": 0
+    }
+  },
+  "source": "crisis",
+  "description": "Product tanker cycle: aging fleet + ton-mile growth, 30-50% FCF yields at peak"
+}

@@ -1,0 +1,55 @@
+{
+  "metrics": {
+    "total_return": 0.5691173287069171,
+    "cagr": 0.1626324422614731,
+    "annual_volatility": 0.21115900405215118,
+    "sharpe_ratio": 0.6356970009759788,
+    "sortino_ratio": 0.9389369926665755,
+    "calmar_ratio": 0.8874951352165046,
+    "max_drawdown": -0.18324882673503207,
+    "max_drawdown_date": "2025-08-07",
+    "win_rate": 0.521970705725699,
+    "profit_factor": 1.154236911831933,
+    "num_trading_days": 751,
+    "skewness": 0.103607209700808,
+    "kurtosis": 3.6373978492641967,
+    "best_day": 0.06670196633490733,
+    "worst_day": -0.06720734417096341,
+    "avg_daily_return": 0.0006883210755096241,
+    "black_swan_resilience": 78.8,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.06867370511544535,
+    "beta": 0.5733510962995331,
+    "information_ratio": -0.33861398577737833,
+    "tracking_error": 0.20280823592618782
+  },
+  "trade_metrics": {
+    "num_trades": 223,
+    "num_buys": 108,
+    "num_sells": 115,
+    "total_commission": 0.0,
+    "total_slippage": 1643.060615816593,
+    "total_transaction_costs": 1643.060615816593,
+    "avg_trade_size": 7367.984824289655
+  },
+  "final_positions": {
+    "HCI": {
+      "qty": 136.0,
+      "avg_cost": 125.40145699894434,
+      "realized_pnl": 6994.145881348619
+    },
+    "OSCR": {
+      "qty": 1428.0,
+      "avg_cost": 16.50897784860862,
+      "realized_pnl": 323.5699100494385
+    },
+    "WRB": {
+      "qty": 331.0,
+      "avg_cost": 71.74166870117188,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "Niche insurers with 25%+ ROE: construction, cyber, hurricane \u2014 nobody else will touch these risks"
+}

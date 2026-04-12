@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "total_return": 0.9350972918280154,
+    "cagr": 0.24708422933205365,
+    "annual_volatility": 0.18037531507483284,
+    "sharpe_ratio": 1.101146678440061,
+    "sortino_ratio": 1.6592129362505055,
+    "calmar_ratio": 1.2940269429007396,
+    "max_drawdown": -0.19094210571704195,
+    "max_drawdown_date": "2025-05-07",
+    "win_rate": 0.507323568575233,
+    "profit_factor": 1.2592406208664735,
+    "num_trading_days": 751,
+    "skewness": 0.05613019100114946,
+    "kurtosis": 2.007439234219068,
+    "best_day": 0.04628926682078016,
+    "worst_day": -0.04513148999223304,
+    "avg_daily_return": 0.0009438231924231344,
+    "black_swan_resilience": 78.0,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": 0.015778081955135193,
+    "beta": 0.7181125955069388,
+    "information_ratio": 0.1057625196446813,
+    "tracking_error": 0.14918405885320318
+  },
+  "trade_metrics": {
+    "num_trades": 1040,
+    "num_buys": 497,
+    "num_sells": 543,
+    "total_commission": 0.0,
+    "total_slippage": 9622.457047674188,
+    "total_transaction_costs": 9622.457047674188,
+    "avg_trade_size": 9252.362545840557
+  },
+  "final_positions": {
+    "ROK": {
+      "qty": 56.0,
+      "avg_cost": 362.63444566845135,
+      "realized_pnl": 1930.1026879020214
+    },
+    "TER": {
+      "qty": 112.0,
+      "avg_cost": 181.3429812582735,
+      "realized_pnl": 1474.8906770496826
+    },
+    "GOOGL": {
+      "qty": 70.0,
+      "avg_cost": 291.73999392745327,
+      "realized_pnl": 921.0047445994601
+    },
+    "ROBO": {
+      "qty": 316.0,
+      "avg_cost": 67.9162244796753,
+      "realized_pnl": 392.0895118713379
+    },
+    "TSLA": {
+      "qty": 48.0,
+      "avg_cost": 442.09777173456155,
+      "realized_pnl": 382.41377690153286
+    },
+    "ISRG": {
+      "qty": 38.0,
+      "avg_cost": 565.9073486328125,
+      "realized_pnl": 97.45867919921875
+    },
+    "BOTZ": {
+      "qty": 602.0,
+      "avg_cost": 36.40281677246094,
+      "realized_pnl": 1.1350936889648438
+    },
+    "NVDA": {
+      "qty": 117.0,
+      "avg_cost": 188.20980834960938,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Humanoid robots + autonomous vehicles: $200B market by 2030"
+}

@@ -1,0 +1,95 @@
+{
+  "metrics": {
+    "total_return": 0.298529075803071,
+    "cagr": 0.09130738219800727,
+    "annual_volatility": 0.10529179674286629,
+    "sharpe_ratio": 0.5127210665308592,
+    "sortino_ratio": 0.7387087736621138,
+    "calmar_ratio": 1.0602605525787507,
+    "max_drawdown": -0.08611787166459295,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.5233022636484687,
+    "profit_factor": 1.1581157525058796,
+    "num_trading_days": 751,
+    "skewness": -0.09912557575855378,
+    "kurtosis": 1.982038400605119,
+    "best_day": 0.029457600263899097,
+    "worst_day": -0.0356787009120787,
+    "avg_daily_return": 0.00036987733232678996,
+    "black_swan_resilience": 81.6,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.1399987651789112,
+    "beta": 0.27716761672308526,
+    "information_ratio": -0.9528318829375543,
+    "tracking_error": 0.14692913585899212
+  },
+  "trade_metrics": {
+    "num_trades": 390,
+    "num_buys": 217,
+    "num_sells": 173,
+    "total_commission": 0.0,
+    "total_slippage": 1320.137635875702,
+    "total_transaction_costs": 1320.137635875702,
+    "avg_trade_size": 3384.968297117184
+  },
+  "final_positions": {
+    "PEP": {
+      "qty": 80.0,
+      "avg_cost": 150.54903403907966,
+      "realized_pnl": -1559.5966860533085
+    },
+    "XOM": {
+      "qty": 101.0,
+      "avg_cost": 108.72339614853519,
+      "realized_pnl": -288.4229890589794
+    },
+    "PG": {
+      "qty": 80.0,
+      "avg_cost": 163.8493757608133,
+      "realized_pnl": -798.1414918693114
+    },
+    "O": {
+      "qty": 208.0,
+      "avg_cost": 54.60478647982951,
+      "realized_pnl": -50.09123394228908
+    },
+    "HD": {
+      "qty": 33.0,
+      "avg_cost": 374.7144638519181,
+      "realized_pnl": -373.273248306626
+    },
+    "KO": {
+      "qty": 164.0,
+      "avg_cost": 69.26162233816567,
+      "realized_pnl": -108.35990486358503
+    },
+    "CVX": {
+      "qty": 78.0,
+      "avg_cost": 135.79722217516212,
+      "realized_pnl": 343.2886916011213
+    },
+    "VZ": {
+      "qty": 293.0,
+      "avg_cost": 41.4664601064593,
+      "realized_pnl": -40.362036066946246
+    },
+    "T": {
+      "qty": 460.0,
+      "avg_cost": 26.94070053100586,
+      "realized_pnl": -64.02561569213867
+    },
+    "MMM": {
+      "qty": 39.0,
+      "avg_cost": 169.71844482421875,
+      "realized_pnl": 0.0
+    },
+    "MO": {
+      "qty": 115.0,
+      "avg_cost": 57.12001037597656,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "generic",
+  "description": "Buy and hold dividend aristocrats, compound forever"
+}

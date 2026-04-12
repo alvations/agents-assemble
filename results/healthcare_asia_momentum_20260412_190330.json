@@ -1,0 +1,100 @@
+{
+  "metrics": {
+    "total_return": 0.42801565747372594,
+    "cagr": 0.12656116866955425,
+    "annual_volatility": 0.15502722556844734,
+    "sharpe_ratio": 0.5958787056175939,
+    "sortino_ratio": 0.8480368571819769,
+    "calmar_ratio": 0.5878246573243499,
+    "max_drawdown": -0.2153042869035695,
+    "max_drawdown_date": "2025-06-23",
+    "win_rate": 0.5352862849533955,
+    "profit_factor": 1.154210411067662,
+    "num_trading_days": 751,
+    "skewness": -0.2964916272038911,
+    "kurtosis": 2.10434539543004,
+    "best_day": 0.03327114436401768,
+    "worst_day": -0.052919220266355205,
+    "avg_daily_return": 0.0005222269362325848,
+    "black_swan_resilience": 72.4,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.10474497870736421,
+    "beta": 0.5852483942042972,
+    "information_ratio": -0.7403666152520327,
+    "tracking_error": 0.14147717704924787
+  },
+  "trade_metrics": {
+    "num_trades": 1850,
+    "num_buys": 869,
+    "num_sells": 981,
+    "total_commission": 0.0,
+    "total_slippage": 9585.910564137224,
+    "total_transaction_costs": 9585.910564137224,
+    "avg_trade_size": 5181.573277912011
+  },
+  "final_positions": {
+    "JNJ": {
+      "qty": 52.0,
+      "avg_cost": 181.8703987482763,
+      "realized_pnl": 275.17716252267337
+    },
+    "LLY": {
+      "qty": 10.0,
+      "avg_cost": 909.6012517755681,
+      "realized_pnl": 346.98322088068187
+    },
+    "MRK": {
+      "qty": 102.0,
+      "avg_cost": 85.71829395294189,
+      "realized_pnl": 319.39939842224123
+    },
+    "REGN": {
+      "qty": 14.0,
+      "avg_cost": 706.2049026489258,
+      "realized_pnl": 41.72105407714844
+    },
+    "ISRG": {
+      "qty": 19.0,
+      "avg_cost": 566.8900146484375,
+      "realized_pnl": 0.0
+    },
+    "TM": {
+      "qty": 50.0,
+      "avg_cost": 214.84259765625,
+      "realized_pnl": 4.6999969482421875
+    },
+    "ABBV": {
+      "qty": 47.0,
+      "avg_cost": 225.6345977783203,
+      "realized_pnl": 3.362945556640625
+    },
+    "INFY": {
+      "qty": 585.0,
+      "avg_cost": 19.135042598104885,
+      "realized_pnl": 0.0
+    },
+    "TSM": {
+      "qty": 36.0,
+      "avg_cost": 292.4559020996094,
+      "realized_pnl": 7.618560791015625
+    },
+    "XLV": {
+      "qty": 69.0,
+      "avg_cost": 155.17208862304688,
+      "realized_pnl": 0.0
+    },
+    "EWJ": {
+      "qty": 133.0,
+      "avg_cost": 81.08999633789062,
+      "realized_pnl": 0.0
+    },
+    "EWT": {
+      "qty": 170.0,
+      "avg_cost": 63.33000183105469,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "hedge_fund",
+  "description": "2025 hedge fund winner: healthcare + Asian equities momentum"
+}

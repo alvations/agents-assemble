@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.8481325915785269,
+    "cagr": 0.22805090168596043,
+    "annual_volatility": 0.1265494247119382,
+    "sharpe_ratio": 1.3818748543539239,
+    "sortino_ratio": 2.2098259045916517,
+    "calmar_ratio": 1.5782492290023318,
+    "max_drawdown": -0.1444961274146287,
+    "max_drawdown_date": "2025-04-08",
+    "win_rate": 0.5605858854860186,
+    "profit_factor": 1.3978430747678317,
+    "num_trading_days": 751,
+    "skewness": 1.6514734721669664,
+    "kurtosis": 25.360625151190092,
+    "best_day": 0.09205426274907791,
+    "worst_day": -0.04150261006169875,
+    "avg_daily_return": 0.0008496001320070661,
+    "black_swan_resilience": 92.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.0032552456909580307,
+    "beta": 0.6682853676776292,
+    "information_ratio": -0.036205888422087426,
+    "tracking_error": 0.08990928914679432
+  },
+  "trade_metrics": {
+    "num_trades": 1053,
+    "num_buys": 547,
+    "num_sells": 506,
+    "total_commission": 0.0,
+    "total_slippage": 4883.826185861593,
+    "total_transaction_costs": 4883.826185861593,
+    "avg_trade_size": 4638.011572518127
+  },
+  "final_positions": {
+    "GLD": {
+      "qty": 37.0,
+      "avg_cost": 329.0052560613907,
+      "realized_pnl": 12020.604020169892
+    },
+    "SCHD": {
+      "qty": 543.0,
+      "avg_cost": 25.828392130086375,
+      "realized_pnl": 2525.6009651805994
+    },
+    "TLT": {
+      "qty": 107.0,
+      "avg_cost": 85.98244799358878,
+      "realized_pnl": -526.4137931405966
+    },
+    "AAPL": {
+      "qty": 102.0,
+      "avg_cost": 267.50061284998407,
+      "realized_pnl": 88.37816926770486
+    },
+    "MSFT": {
+      "qty": 51.0,
+      "avg_cost": 485.7771338101091,
+      "realized_pnl": 11.850743260876982
+    },
+    "NVDA": {
+      "qty": 148.0,
+      "avg_cost": 176.5222677282385,
+      "realized_pnl": 81.39556884765625
+    },
+    "QQQ": {
+      "qty": 45.0,
+      "avg_cost": 608.9865112304688,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "unconventional",
+  "description": "Defensive when breadth narrows (QQQ >> RSP), offensive when broad participation"
+}

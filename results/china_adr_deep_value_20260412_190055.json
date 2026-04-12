@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.28235389328965455,
+    "cagr": 0.08674153740633939,
+    "annual_volatility": 0.129951415828054,
+    "sharpe_ratio": 0.40502447781500095,
+    "sortino_ratio": 0.6414118924727983,
+    "calmar_ratio": 0.6761164841455399,
+    "max_drawdown": -0.12829377694578958,
+    "max_drawdown_date": "2024-02-02",
+    "win_rate": 0.47536617842876167,
+    "profit_factor": 1.143558100767506,
+    "num_trading_days": 751,
+    "skewness": 0.8533642759734621,
+    "kurtosis": 5.402522619212313,
+    "best_day": 0.055924616541028316,
+    "worst_day": -0.036083785747297314,
+    "avg_daily_return": 0.00036451297523998355,
+    "black_swan_resilience": 91.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.14456460997057907,
+    "beta": 0.27840411159451717,
+    "information_ratio": -0.8744500082968999,
+    "tracking_error": 0.16532061135448625
+  },
+  "trade_metrics": {
+    "num_trades": 565,
+    "num_buys": 301,
+    "num_sells": 264,
+    "total_commission": 0.0,
+    "total_slippage": 2283.535833311321,
+    "total_transaction_costs": 2283.535833311321,
+    "avg_trade_size": 4041.656342143928
+  },
+  "final_positions": {
+    "LI": {
+      "qty": 601.0,
+      "avg_cost": 22.598511260690042,
+      "realized_pnl": -94.61469768783424
+    },
+    "TME": {
+      "qty": 600.0,
+      "avg_cost": 17.41055768330892,
+      "realized_pnl": 0.0
+    },
+    "JD": {
+      "qty": 353.0,
+      "avg_cost": 29.09000015258789,
+      "realized_pnl": 0.18000030517578125
+    },
+    "PDD": {
+      "qty": 90.0,
+      "avg_cost": 111.91000366210938,
+      "realized_pnl": 4.4799957275390625
+    },
+    "MNSO": {
+      "qty": 535.0,
+      "avg_cost": 19.280000686645508,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "JD/PDD 9x P/E, BABA below intrinsic \u2014 delisting resolved, stimulus pivot, geopolitical discount"
+}

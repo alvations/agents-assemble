@@ -1,0 +1,75 @@
+{
+  "metrics": {
+    "total_return": 0.2290462941899154,
+    "cagr": 0.0714171858431305,
+    "annual_volatility": 0.1294365041807221,
+    "sharpe_ratio": 0.29643633976935047,
+    "sortino_ratio": 0.41444100399222095,
+    "calmar_ratio": 0.5399638824379339,
+    "max_drawdown": -0.13226289417855563,
+    "max_drawdown_date": "2024-12-19",
+    "win_rate": 0.5339547270306259,
+    "profit_factor": 1.1050874571561071,
+    "num_trading_days": 751,
+    "skewness": -0.33527709651835014,
+    "kurtosis": 3.6049448711811705,
+    "best_day": 0.04224907308485082,
+    "worst_day": -0.05284598644565952,
+    "avg_daily_return": 0.00030791051172726874,
+    "black_swan_resilience": 76.2,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.15988896153378795,
+    "beta": 0.3926050943421535,
+    "information_ratio": -1.0825274923435164,
+    "tracking_error": 0.14769967752749755
+  },
+  "trade_metrics": {
+    "num_trades": 425,
+    "num_buys": 218,
+    "num_sells": 207,
+    "total_commission": 0.0,
+    "total_slippage": 2267.485172365187,
+    "total_transaction_costs": 2267.485172365187,
+    "avg_trade_size": 5335.259229094561
+  },
+  "final_positions": {
+    "SYK": {
+      "qty": 39.0,
+      "avg_cost": 376.79969583029276,
+      "realized_pnl": -203.93265119280164
+    },
+    "ABT": {
+      "qty": 115.0,
+      "avg_cost": 127.37718853304845,
+      "realized_pnl": 175.84029671805266
+    },
+    "HUM": {
+      "qty": 61.0,
+      "avg_cost": 242.4709885393987,
+      "realized_pnl": 131.47967529296875
+    },
+    "CI": {
+      "qty": 54.0,
+      "avg_cost": 279.38984058521413,
+      "realized_pnl": 0.0
+    },
+    "UNH": {
+      "qty": 46.0,
+      "avg_cost": 332.2417449951172,
+      "realized_pnl": 0.0
+    },
+    "ELV": {
+      "qty": 45.0,
+      "avg_cost": 326.95784844292535,
+      "realized_pnl": 0.0
+    },
+    "PFE": {
+      "qty": 587.0,
+      "avg_cost": 24.21966136172033,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "theme",
+  "description": "Demographic megatrend: healthcare, pharma, senior care"
+}

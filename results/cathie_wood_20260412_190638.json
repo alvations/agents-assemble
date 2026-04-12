@@ -1,0 +1,65 @@
+{
+  "metrics": {
+    "total_return": 0.5949968394639931,
+    "cagr": 0.16901129089019973,
+    "annual_volatility": 0.2323626436786776,
+    "sharpe_ratio": 0.6215918777947606,
+    "sortino_ratio": 0.9178782562793002,
+    "calmar_ratio": 0.6553039208579545,
+    "max_drawdown": -0.25791283328340575,
+    "max_drawdown_date": "2025-03-13",
+    "win_rate": 0.4207723035952064,
+    "profit_factor": 1.1810976077191198,
+    "num_trading_days": 751,
+    "skewness": 0.056034349085435996,
+    "kurtosis": 5.77602328706684,
+    "best_day": 0.08054492841332994,
+    "worst_day": -0.08894113896702271,
+    "avg_daily_return": 0.0007288035612578661,
+    "black_swan_resilience": 74.3,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.06229485648671873,
+    "beta": 0.8258187591006368,
+    "information_ratio": -0.31692073038385077,
+    "tracking_error": 0.1965628957476777
+  },
+  "trade_metrics": {
+    "num_trades": 624,
+    "num_buys": 324,
+    "num_sells": 300,
+    "total_commission": 0.0,
+    "total_slippage": 6888.388421269419,
+    "total_transaction_costs": 6888.388421269419,
+    "avg_trade_size": 11039.084008444579
+  },
+  "final_positions": {
+    "DDOG": {
+      "qty": 177.0,
+      "avg_cost": 154.98845770514907,
+      "realized_pnl": -13.442400251116084
+    },
+    "HOOD": {
+      "qty": 208.0,
+      "avg_cost": 122.22750267615685,
+      "realized_pnl": 0.0
+    },
+    "PATH": {
+      "qty": 1448.0,
+      "avg_cost": 16.850000381469727,
+      "realized_pnl": 0.0
+    },
+    "CRSP": {
+      "qty": 452.0,
+      "avg_cost": 53.970001220703125,
+      "realized_pnl": 0.0
+    },
+    "ARKK": {
+      "qty": 310.0,
+      "avg_cost": 78.61000061035156,
+      "realized_pnl": 0.0
+    }
+  },
+  "source": "famous",
+  "description": "Disruptive innovation: AI + genomics + robotics + crypto, 5-year horizon"
+}

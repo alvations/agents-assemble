@@ -1,0 +1,100 @@
+{
+  "metrics": {
+    "total_return": 0.30083600939163113,
+    "cagr": 0.09195548145915411,
+    "annual_volatility": 0.11025527655369856,
+    "sharpe_ratio": 0.49981604377676414,
+    "sortino_ratio": 0.738216221748623,
+    "calmar_ratio": 0.8269092990039619,
+    "max_drawdown": -0.11120383041999571,
+    "max_drawdown_date": "2023-10-27",
+    "win_rate": 0.5139813581890812,
+    "profit_factor": 1.155165747206896,
+    "num_trading_days": 751,
+    "skewness": 0.2019552866012621,
+    "kurtosis": 3.3485777898977087,
+    "best_day": 0.043076789647177094,
+    "worst_day": -0.03857683256017186,
+    "avg_daily_return": 0.0003743298474443685,
+    "black_swan_resilience": 84.1,
+    "benchmark_total_return": 0.8628177193040827,
+    "benchmark_cagr": 0.23130614737691846,
+    "alpha": -0.13935066591776435,
+    "beta": 0.46339664903327177,
+    "information_ratio": -1.1827529670043897,
+    "tracking_error": 0.11781891046166969
+  },
+  "trade_metrics": {
+    "num_trades": 373,
+    "num_buys": 180,
+    "num_sells": 193,
+    "total_commission": 0.0,
+    "total_slippage": 512.4561853218077,
+    "total_transaction_costs": 512.4561853218077,
+    "avg_trade_size": 1373.877172444525
+  },
+  "final_positions": {
+    "ADP": {
+      "qty": 47.0,
+      "avg_cost": 249.6189939145174,
+      "realized_pnl": 1271.4951798026318
+    },
+    "NOBL": {
+      "qty": 115.0,
+      "avg_cost": 90.68518610972886,
+      "realized_pnl": 829.6549689029949
+    },
+    "MMM": {
+      "qty": 47.0,
+      "avg_cost": 94.91164169393011,
+      "realized_pnl": 2558.9362175370793
+    },
+    "GPC": {
+      "qty": 72.0,
+      "avg_cost": 122.03895801599258,
+      "realized_pnl": -212.32023647158474
+    },
+    "SHW": {
+      "qty": 27.0,
+      "avg_cost": 312.00635929018097,
+      "realized_pnl": 2728.7553342577385
+    },
+    "JNJ": {
+      "qty": 39.0,
+      "avg_cost": 148.5993709157329,
+      "realized_pnl": 426.0053180085048
+    },
+    "KO": {
+      "qty": 129.0,
+      "avg_cost": 60.67698943871345,
+      "realized_pnl": 542.5612632959367
+    },
+    "ABT": {
+      "qty": 72.0,
+      "avg_cost": 112.46222592603156,
+      "realized_pnl": 1287.3855523188042
+    },
+    "PG": {
+      "qty": 81.0,
+      "avg_cost": 150.84823828582185,
+      "realized_pnl": 1338.9813261149436
+    },
+    "EMR": {
+      "qty": 60.0,
+      "avg_cost": 110.7778891292001,
+      "realized_pnl": 4106.632225315481
+    },
+    "CTAS": {
+      "qty": 64.0,
+      "avg_cost": 174.39675188630133,
+      "realized_pnl": 3264.337334041157
+    },
+    "ITW": {
+      "qty": 38.0,
+      "avg_cost": 228.86843524635927,
+      "realized_pnl": 993.9948936096998
+    }
+  },
+  "source": "portfolio",
+  "description": "25+ year dividend growers with high ROE \u2014 buy dips, hold forever"
+}
