@@ -18,7 +18,7 @@ import json
 import math
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+from datetime import date as _date, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
@@ -304,11 +304,12 @@ def compute_metrics(
     annual_vol = daily_vol * sqrt_periods
 
     # Sharpe ratio
+    # excess.std() == daily_vol: variance is invariant under constant shift,
+    # so subtracting daily_rf doesn't change the denominator.
     daily_rf = (1 + risk_free_rate) ** (1 / periods_per_year) - 1
     excess = returns - daily_rf
-    excess_std = excess.std()
-    if excess_std > 0:
-        sharpe = excess.mean() / excess_std * sqrt_periods
+    if daily_vol > 0:
+        sharpe = excess.mean() / daily_vol * sqrt_periods
     elif excess.mean() > 0:
         sharpe = float("inf")
     elif excess.mean() < 0:
@@ -446,19 +447,29 @@ def compute_trade_metrics(trades: list[Trade]) -> dict[str, Any]:
             "avg_trade_size": 0.0,
         }
 
-    total_commission = sum(t.commission for t in trades)
-    total_slippage = sum(t.slippage for t in trades)
-    buys = [t for t in trades if t.side == Side.BUY]
-    sells = [t for t in trades if t.side == Side.SELL]
+    total_commission = 0.0
+    total_slippage = 0.0
+    total_notional = 0.0
+    num_buys = 0
+    num_sells = 0
+    for t in trades:
+        total_commission += t.commission
+        total_slippage += t.slippage
+        total_notional += t.quantity * t.price
+        if t.side == Side.BUY:
+            num_buys += 1
+        else:
+            num_sells += 1
 
+    n = len(trades)
     return {
-        "num_trades": len(trades),
-        "num_buys": len(buys),
-        "num_sells": len(sells),
+        "num_trades": n,
+        "num_buys": num_buys,
+        "num_sells": num_sells,
         "total_commission": total_commission,
         "total_slippage": total_slippage,
         "total_transaction_costs": total_commission + total_slippage,
-        "avg_trade_size": sum(t.quantity * t.price for t in trades) / len(trades),
+        "avg_trade_size": total_notional / n,
     }
 
 
@@ -549,13 +560,16 @@ class Backtester:
 
         # Use Adj Close for return calculations if available (accounts for
         # dividends and splits).  Keep original Close for display purposes.
-        for sym, df in all_data.items():
+        # Copy-on-write so external DataFrames passed by caller are not mutated.
+        for sym in list(all_data.keys()):
+            df = all_data[sym]
             if "Adj Close" in df.columns:
                 adj = df["Adj Close"]
                 if adj.notna().any():
-                    # Preserve raw close for display, use adjusted for returns
+                    df = df.copy()
                     df["Close_Raw"] = df["Close"]
                     df["Close"] = adj
+                    all_data[sym] = df
 
         bench_data = None
         if self.benchmark:
@@ -611,7 +625,12 @@ class Backtester:
                 df = all_data[sym].copy()
                 df.index = df.index.tz_localize(None)
                 all_data[sym] = df
-        if bench_data is not None and bench_data.index.tz is not None:
+        # Refresh bench_data from all_data if benchmark was in symbols — the tz
+        # loop above replaced the dict entry with a copy, leaving the original
+        # bench_data reference stale (still tz-aware). Re-fetch from all_data.
+        if self.benchmark and self.benchmark in all_data:
+            bench_data = all_data[self.benchmark]
+        elif bench_data is not None and bench_data.index.tz is not None:
             bench_data = bench_data.copy()
             bench_data.index = bench_data.index.tz_localize(None)
 
@@ -645,6 +664,11 @@ class Backtester:
         enriched_data = {}
         for sym, df in all_data.items():
             enriched = df.copy()
+            # Deduplicate — external data with duplicate index dates makes
+            # df.loc[date] return a Series instead of a scalar, which breaks
+            # _get_indicator's pd.isna() check ("ambiguous truth value").
+            if enriched.index.has_duplicates:
+                enriched = enriched[~enriched.index.duplicated(keep='last')]
             close = enriched["Close"]
             sma_20 = close.rolling(20).mean()
             enriched["sma_20"] = sma_20
@@ -658,7 +682,7 @@ class Backtester:
             enriched["bb_upper"], enriched["bb_lower"] = _compute_bollinger(close, 20, 2, sma=sma_20)
             if "High" in enriched.columns and "Low" in enriched.columns:
                 enriched["atr_14"] = _compute_atr(enriched, 14)
-            enriched["daily_return"] = close.pct_change()
+            enriched["daily_return"] = close.pct_change(fill_method=None)
             enriched["vol_20"] = enriched["daily_return"].rolling(20).std()
             if "Volume" in enriched.columns:
                 enriched["volume_sma_20"] = enriched["Volume"].rolling(20).mean()
@@ -706,7 +730,7 @@ class Backtester:
                 enriched["ichimoku_senkou_b"] = (high_52 + low_52) / 2
 
             # Rate of Change (12-period)
-            enriched["roc_12"] = enriched["Close"].pct_change(12) * 100
+            enriched["roc_12"] = enriched["Close"].pct_change(12, fill_method=None) * 100
 
             # Commodity Channel Index (20-period)
             if _has_hl:
@@ -734,7 +758,9 @@ class Backtester:
         strategy_errors = 0
 
         for idx, date in enumerate(common_dates):
-            prices = prices_lookup.get(date, {})
+            # common_dates == close_prices.index == prices_lookup.keys(), so
+            # direct indexing is safe and faster than .get() with a default.
+            prices = prices_lookup[date]
 
             if not self._should_rebalance(date, common_dates, idx) or not prices:
                 snap = portfolio.snapshot(date, prices)
@@ -767,24 +793,21 @@ class Backtester:
             equity_values.append(snap["total_value"])
             equity_dates.append(date)
 
-        if not equity_values:
-            raise ValueError("No data points generated during backtest")
-
         # Compute results
         equity_curve = pd.Series(equity_values, index=equity_dates)
         # Post-wipeout 0→0 returns are 0% (not NaN from 0/0 division).
         # Without this, dropna removes all post-wipeout days, computing
         # metrics from only pre-wipeout returns which is misleading.
-        daily_returns = equity_curve.pct_change()
+        daily_returns = equity_curve.pct_change(fill_method=None)
         zero_to_zero = (equity_curve == 0) & (equity_curve.shift(1) == 0)
         daily_returns = daily_returns.where(~zero_to_zero, 0.0).dropna()
 
         bench_returns = None
         if bench_data is not None and not bench_data.empty:
-            bench_close = bench_data["Close"].dropna()
+            bench_close = bench_data["Close"].dropna().sort_index()
             if bench_close.index.has_duplicates:
                 bench_close = bench_close[~bench_close.index.duplicated(keep='last')]
-            bench_returns = bench_close.pct_change().dropna()
+            bench_returns = bench_close.pct_change(fill_method=None).dropna()
 
         metrics = compute_metrics(daily_returns, bench_returns)
         trade_metrics = compute_trade_metrics(portfolio.trades)
@@ -797,7 +820,7 @@ class Backtester:
             "daily_returns": daily_returns,
             "equity_curve": equity_curve,
             "initial_value": self.initial_cash,
-            "final_value": equity_values[-1] if equity_values else self.initial_cash,
+            "final_value": equity_values[-1],
             "final_positions": {
                 sym: {"qty": pos.quantity, "avg_cost": pos.avg_cost, "realized_pnl": pos.realized_pnl}
                 for sym, pos in portfolio.positions.items() if pos.quantity != 0
@@ -889,7 +912,7 @@ class Backtester:
                 portfolio.execute_trade(date, sym, Side.BUY, qty, price)
             else:
                 # Partial fill — buy as many shares as cash allows
-                affordable = int((portfolio.cash - portfolio.commission_per_trade) / cost_per_share) if cost_per_share > 0 else 0
+                affordable = int((portfolio.cash - portfolio.commission_per_trade) / cost_per_share)
                 if affordable > 0:
                     portfolio.execute_trade(date, sym, Side.BUY, affordable, price)
 
@@ -1017,9 +1040,11 @@ def predict_forward(
             for label, days in horizons.items()
         ]
 
-    # Trim to lookback window
-    lookback_days = int(lookback_years * 252)
-    rets = daily_returns.iloc[-lookback_days:].copy()
+    # Trim to lookback window. Guard against lookback_days <= 0: iloc[-0:] is
+    # iloc[0:] (full series), not an empty slice, so bad inputs would silently
+    # use ALL available history instead of the requested truncation.
+    lookback_days = max(int(lookback_years * 252), 60)
+    rets = daily_returns.iloc[-lookback_days:]
     rets = rets.replace([float('inf'), float('-inf')], float('nan')).dropna()
 
     if len(rets) < 60:
@@ -1194,8 +1219,9 @@ def simulate_black_swan(
         label = params.get("label", name)
 
         # Build the stressed equity curve
-        stressed = equity_curve.copy().values.astype(float)
+        stressed = equity_curve.to_numpy(dtype=float, copy=True)
         dates = equity_curve.index
+        equity_values_arr = equity_curve.to_numpy()
 
         # Pre-crash value — skip scenario if portfolio is already wiped out
         # (crash injection on a zero/negative value produces division-by-zero
@@ -1226,7 +1252,7 @@ def simulate_black_swan(
         crash_end_idx = inject_idx + actual_crash_days + 1
         if crash_end_idx < len(stressed):
             crash_bottom = stressed[min(crash_end_idx - 1, len(stressed) - 1)]
-            original_at_crash_end = equity_curve.values[min(crash_end_idx, len(equity_curve) - 1)]
+            original_at_crash_end = equity_values_arr[min(crash_end_idx, len(equity_values_arr) - 1)]
             if original_at_crash_end > 0:
                 scale_factor = crash_bottom / original_at_crash_end
             else:
@@ -1241,15 +1267,18 @@ def simulate_black_swan(
                 half_life = max(20, hist_recovery * 0.3)
                 recovery_frac = 1.0 - math.exp(-0.693 * days_since_crash / half_life)
                 stressed[i] = (
-                    scale_factor * equity_curve.values[i] * (1 - recovery_frac)
-                    + equity_curve.values[i] * recovery_frac
+                    scale_factor * equity_values_arr[i] * (1 - recovery_frac)
+                    + equity_values_arr[i] * recovery_frac
                 )
 
         stressed_series = pd.Series(stressed, index=dates)
 
         # Compute stressed metrics
-        stressed_returns = stressed_series.pct_change().dropna()
-        stressed_returns = stressed_returns.replace([float('inf'), float('-inf')], float('nan')).dropna()
+        stressed_returns = (
+            stressed_series.pct_change(fill_method=None)
+            .replace([float('inf'), float('-inf')], float('nan'))
+            .dropna()
+        )
 
         # Max drawdown of stressed curve
         cum = stressed_series / stressed_series.cummax().clip(lower=stressed_series.iloc[0])
@@ -1581,6 +1610,20 @@ def _sanitize_for_json(obj):
     """Replace float inf/nan with None and Timestamps with strings for JSON compliance."""
     if isinstance(obj, pd.Timestamp):
         return obj.strftime("%Y-%m-%d")
+    # Plain datetime / date (pd.Timestamp is a subclass, so it's already
+    # matched above — this catches standalone datetime/date objects).
+    if isinstance(obj, (datetime, _date)):
+        return obj.strftime("%Y-%m-%d")
+    # Structural types first — avoids TypeError-via-math.isfinite on every
+    # dict/list/tuple, which is a lot of caught exceptions in large results.
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    if isinstance(obj, tuple):
+        return tuple(_sanitize_for_json(v) for v in obj)
+    if hasattr(obj, "__dataclass_fields__"):
+        return _sanitize_for_json(asdict(obj))
     # Catch inf/nan for both Python float and numpy scalars (numpy 2.0+
     # where float64 is no longer a subclass of Python float).
     try:
@@ -1588,14 +1631,6 @@ def _sanitize_for_json(obj):
             return None
     except (TypeError, ValueError):
         pass
-    if hasattr(obj, "__dataclass_fields__"):
-        return _sanitize_for_json(asdict(obj))
-    if isinstance(obj, dict):
-        return {k: _sanitize_for_json(v) for k, v in obj.items()}
-    if isinstance(obj, list):
-        return [_sanitize_for_json(v) for v in obj]
-    if isinstance(obj, tuple):
-        return tuple(_sanitize_for_json(v) for v in obj)
     return obj
 
 

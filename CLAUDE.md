@@ -117,6 +117,94 @@ LEADERBOARD.md updated → git commit + push
 - Every strategy JSON MUST have `position_recommendations` populated (not empty)
 - `while True` loops in generate_signals MUST have max iteration cap (use `for _ in range(5)`)
 
+## Trading Philosophy: Patient, Thesis-Driven Fund
+
+**This is NOT a day-trading operation.** It is a patient, thesis-driven fund that
+makes 20-30 trades per YEAR, not per day.
+
+### Core Rules
+- Trade LESS, not more. A great fund makes 20-30 trades per YEAR.
+- Each position has a THESIS (why we believe this will work over 1-5 years).
+- Each position has predetermined take profit, stop loss, and exit criteria SET AT ENTRY.
+- The daily loop mostly MONITORS and WAITS. It rarely trades.
+- Pre-market research identifies OPPORTUNITIES, not daily trades.
+
+### Key Files
+- `daily_trader.py` — PatientDailyTrader (default) + HorizonDailyTrader (legacy)
+- `research_parser.py` — Parse pre-market research, score opportunities (0-100)
+- `circuit_breaker.py` — Emergency stop system (GREEN/YELLOW/RED)
+- `risk_manager.py` — Pre-trade risk checks + cost estimation
+- `trading_log.py` — Trade and P&L logging
+- `public_trader.py` — Public.com API execution
+
+### Daily Loop (PatientDailyTrader)
+```
+Morning:
+  1. Check circuit breakers (is anything in emergency?)
+  2. Check existing positions — has any hit take profit or stop loss?
+     → If yes: execute the PLANNED exit (not a panic sell)
+  3. Parse pre-market research for NEW opportunities
+     → Only act if score > 70 (HIGH_CONVICTION_THRESHOLD)
+     → Most days: no new trades (this is correct behavior)
+  4. Log everything
+
+NOT every day:
+  5. Quarterly: rebalance core (10Y) positions
+  6. Monthly: review strategic (3Y) positions
+  7. Weekly: check tactical (1Y) positions
+  8. Only on signal: opportunistic bucket
+```
+
+### Opportunity Scoring (research_parser.py)
+```
++20: Multiple strategy triggers agree
++20: Thesis aligns with 3Y+ trend (not just a 1-day move)
++15: Risk/reward ratio > 3:1
++15: Strategy has >80% consistency in rolling windows
++10: Pre-market research explicitly highlights this opportunity
++10: Position fits within a horizon bucket that has room
++10: No correlation > 0.7 with existing positions
+Threshold: only trade if score > 70
+```
+
+### Position Plans (set at entry, not changed daily)
+```python
+position_plan = {
+    'symbol': 'XOM', 'entry_date': '2026-04-13', 'entry_price': 104.50,
+    'thesis': 'Hormuz blockade → oil above $100 for 6+ months.',
+    'horizon': '1Y',
+    'take_profit': 125.40,   # +20% — set at entry, don't change
+    'stop_loss': 88.83,      # -15% — set at entry, don't change
+    'exit_trigger': 'Hormuz reopens fully OR oil drops below $70 for 30 days',
+    'review_date': '2026-07-13',
+    'max_position_pct': 0.05,
+}
+```
+
+### Key Metrics
+- Trade frequency: 2-3 per month (not per day)
+- Average hold period: 6-18 months
+- Win rate matters more than trade count
+- Sharpe on REALIZED trades, not just positions
+
+### Running
+```bash
+# Patient daily run (default — mostly does nothing)
+python daily_trader.py
+
+# Check only TP/SL exits
+python daily_trader.py --check-exits
+
+# Portfolio summary
+python daily_trader.py --summary
+
+# Legacy horizon-rebalance mode
+python daily_trader.py --horizon-mode
+
+# Parse pre-market research
+python research_parser.py
+```
+
 ## Quick Start
 
 ```bash
