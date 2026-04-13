@@ -3197,6 +3197,460 @@ def fetch_asset_bundle(
     return bundle
 
 
+# ---------------------------------------------------------------------------
+# Per-Stock Composite Score (like TipRanks Smart Score)
+# ---------------------------------------------------------------------------
+def compute_stock_score(symbol: str) -> dict[str, Any]:
+    """Compute a 1-10 composite score for a stock.
+
+    Combines fundamental, technical, and momentum factors into a single
+    integer score inspired by TipRanks Smart Score / Seeking Alpha Quant.
+
+    Returns dict with: score (1-10), breakdown (sub-scores), raw data used.
+    """
+    import yfinance as yf
+
+    ticker = yf.Ticker(symbol)
+    info = ticker.info
+
+    # --- Fundamental score (0-10 scale, will be weighted) ---
+    fund_points = 0.0
+    fund_max = 0.0
+    fund_details = {}
+
+    pe = info.get("trailingPE")
+    if isinstance(pe, (int, float)) and math.isfinite(pe) and pe > 0:
+        fund_max += 2.0
+        # PE < 15 is cheap, 15-25 is fair, >25 is expensive
+        if pe < 15:
+            fund_points += 2.0
+        elif pe < 25:
+            fund_points += 1.0
+        else:
+            fund_points += 0.0
+        fund_details["pe_ratio"] = round(pe, 2)
+
+    pb = info.get("priceToBook")
+    if isinstance(pb, (int, float)) and math.isfinite(pb) and pb > 0:
+        fund_max += 1.5
+        if pb < 1.5:
+            fund_points += 1.5
+        elif pb < 3.0:
+            fund_points += 0.75
+        else:
+            fund_points += 0.0
+        fund_details["pb_ratio"] = round(pb, 2)
+
+    roe = info.get("returnOnEquity")
+    if isinstance(roe, (int, float)) and math.isfinite(roe):
+        fund_max += 2.0
+        if roe > 0.20:
+            fund_points += 2.0
+        elif roe > 0.10:
+            fund_points += 1.0
+        elif roe > 0:
+            fund_points += 0.5
+        fund_details["roe"] = round(roe, 4)
+
+    de = info.get("debtToEquity")
+    if isinstance(de, (int, float)) and math.isfinite(de):
+        fund_max += 1.5
+        if de < 50:
+            fund_points += 1.5
+        elif de < 100:
+            fund_points += 0.75
+        else:
+            fund_points += 0.0
+        fund_details["debt_to_equity"] = round(de, 2)
+
+    div_yield = info.get("dividendYield")
+    if isinstance(div_yield, (int, float)) and math.isfinite(div_yield):
+        fund_max += 1.0
+        if div_yield > 0.03:
+            fund_points += 1.0
+        elif div_yield > 0.01:
+            fund_points += 0.5
+        fund_details["dividend_yield"] = round(div_yield, 4)
+
+    rev_growth = info.get("revenueGrowth")
+    if isinstance(rev_growth, (int, float)) and math.isfinite(rev_growth):
+        fund_max += 2.0
+        if rev_growth > 0.20:
+            fund_points += 2.0
+        elif rev_growth > 0.10:
+            fund_points += 1.5
+        elif rev_growth > 0.0:
+            fund_points += 0.75
+        fund_details["revenue_growth"] = round(rev_growth, 4)
+
+    fundamental_score = (fund_points / fund_max * 10) if fund_max > 0 else 5.0
+
+    # --- Technical score (0-10 scale) ---
+    tech_points = 0.0
+    tech_max = 0.0
+    tech_details = {}
+
+    try:
+        hist = ticker.history(period="1y")
+        if not hist.empty and len(hist) >= 50:
+            close = hist["Close"]
+            current_price = float(close.iloc[-1])
+
+            # SMA200: price above = bullish
+            if len(close) >= 200:
+                sma200 = float(close.rolling(200).mean().iloc[-1])
+                tech_max += 3.0
+                if current_price > sma200:
+                    tech_points += 3.0
+                elif current_price > sma200 * 0.95:
+                    tech_points += 1.5
+                tech_details["sma200"] = round(sma200, 2)
+                tech_details["above_sma200"] = current_price > sma200
+
+            # RSI: 30-70 is healthy, oversold/overbought are penalized
+            delta = close.diff()
+            gain = delta.where(delta > 0, 0.0).rolling(14).mean()
+            loss = (-delta.where(delta < 0, 0.0)).rolling(14).mean()
+            rs = gain.iloc[-1] / loss.iloc[-1] if loss.iloc[-1] != 0 else 0
+            rsi = 100 - (100 / (1 + rs)) if rs > 0 else 50
+            tech_max += 3.0
+            if 30 <= rsi <= 70:
+                tech_points += 3.0
+            elif 20 <= rsi <= 80:
+                tech_points += 1.5
+            else:
+                tech_points += 0.0
+            tech_details["rsi_14"] = round(rsi, 2)
+
+            # MACD: positive = bullish
+            if len(close) >= 35:
+                ema12 = close.ewm(span=12, adjust=False).mean()
+                ema26 = close.ewm(span=26, adjust=False).mean()
+                macd_line = float((ema12 - ema26).iloc[-1])
+                signal_line = float((ema12 - ema26).ewm(span=9, adjust=False).mean().iloc[-1])
+                tech_max += 4.0
+                if macd_line > signal_line and macd_line > 0:
+                    tech_points += 4.0
+                elif macd_line > signal_line:
+                    tech_points += 2.0
+                elif macd_line > 0:
+                    tech_points += 1.0
+                tech_details["macd"] = round(macd_line, 4)
+                tech_details["macd_signal"] = round(signal_line, 4)
+                tech_details["macd_bullish"] = macd_line > signal_line
+
+            tech_details["current_price"] = round(current_price, 2)
+    except Exception:
+        pass
+
+    technical_score = (tech_points / tech_max * 10) if tech_max > 0 else 5.0
+
+    # --- Momentum score (0-10 scale): 3-month return vs SPY ---
+    momentum_score = 5.0
+    momentum_details = {}
+    try:
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        stock_hist = fetch_ohlcv(symbol, start=start_date, end=end_date)
+        spy_hist = fetch_ohlcv("SPY", start=start_date, end=end_date)
+
+        if not stock_hist.empty and not spy_hist.empty and len(stock_hist) > 5:
+            stock_ret = float(stock_hist["Close"].iloc[-1] / stock_hist["Close"].iloc[0] - 1)
+            spy_ret = float(spy_hist["Close"].iloc[-1] / spy_hist["Close"].iloc[0] - 1)
+            relative = stock_ret - spy_ret
+
+            if relative > 0.10:
+                momentum_score = 10.0
+            elif relative > 0.05:
+                momentum_score = 8.0
+            elif relative > 0.0:
+                momentum_score = 6.5
+            elif relative > -0.05:
+                momentum_score = 4.0
+            elif relative > -0.10:
+                momentum_score = 2.5
+            else:
+                momentum_score = 1.0
+
+            momentum_details["stock_3m_return"] = round(stock_ret, 4)
+            momentum_details["spy_3m_return"] = round(spy_ret, 4)
+            momentum_details["relative_strength"] = round(relative, 4)
+    except Exception:
+        pass
+
+    # --- Combine into 1-10 composite ---
+    # Weights: fundamentals 40%, technical 35%, momentum 25%
+    raw_score = (fundamental_score * 0.40
+                 + technical_score * 0.35
+                 + momentum_score * 0.25)
+    composite = max(1, min(10, round(raw_score)))
+
+    return {
+        "symbol": symbol,
+        "score": composite,
+        "raw_score": round(raw_score, 2),
+        "breakdown": {
+            "fundamental": round(fundamental_score, 2),
+            "technical": round(technical_score, 2),
+            "momentum": round(momentum_score, 2),
+        },
+        "weights": {
+            "fundamental": 0.40,
+            "technical": 0.35,
+            "momentum": 0.25,
+        },
+        "details": {
+            "fundamental": fund_details,
+            "technical": tech_details,
+            "momentum": momentum_details,
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# Fair Value / DCF Estimator (like Morningstar Stars)
+# ---------------------------------------------------------------------------
+def estimate_fair_value(symbol: str, discount_rate: float = 0.10,
+                        projection_years: int = 5) -> dict[str, Any]:
+    """Estimate intrinsic fair value per share using a simple DCF model.
+
+    Uses yfinance fundamentals: freeCashflow, revenueGrowth, sharesOutstanding.
+    Discount rate defaults to 10% (typical equity cost of capital).
+
+    Returns dict with: fair_value_per_share, current_price,
+    discount_or_premium_pct, rating (undervalued/fair/overvalued), inputs used.
+    """
+    import yfinance as yf
+
+    ticker = yf.Ticker(symbol)
+    info = ticker.info
+
+    current_price = info.get("currentPrice") or info.get("regularMarketPrice")
+    fcf = info.get("freeCashflow")
+    revenue_growth = info.get("revenueGrowth")
+    shares = info.get("sharesOutstanding")
+
+    errors = []
+    if not isinstance(current_price, (int, float)) or current_price <= 0:
+        errors.append("current_price unavailable")
+    if not isinstance(fcf, (int, float)) or fcf <= 0:
+        errors.append("freeCashflow unavailable or negative")
+    if not isinstance(shares, (int, float)) or shares <= 0:
+        errors.append("sharesOutstanding unavailable")
+
+    if errors:
+        return {
+            "symbol": symbol,
+            "error": "Insufficient data for DCF",
+            "missing": errors,
+            "current_price": current_price if isinstance(current_price, (int, float)) else None,
+            "fair_value_per_share": None,
+            "discount_or_premium_pct": None,
+            "rating": "insufficient_data",
+        }
+
+    # Default growth rate: use revenueGrowth if available, else conservative 5%
+    if isinstance(revenue_growth, (int, float)) and math.isfinite(revenue_growth):
+        growth_rate = max(0.0, min(revenue_growth, 0.30))  # Cap at 30%
+    else:
+        growth_rate = 0.05
+        revenue_growth = None
+
+    # Terminal growth rate (long-term GDP-ish)
+    terminal_growth = 0.025
+
+    # Project FCF forward and discount back
+    projected_fcf = []
+    pv_sum = 0.0
+    for year in range(1, projection_years + 1):
+        future_fcf = fcf * ((1 + growth_rate) ** year)
+        pv = future_fcf / ((1 + discount_rate) ** year)
+        pv_sum += pv
+        projected_fcf.append({
+            "year": year,
+            "fcf": round(future_fcf),
+            "present_value": round(pv),
+        })
+
+    # Terminal value (Gordon Growth Model)
+    terminal_fcf = fcf * ((1 + growth_rate) ** projection_years) * (1 + terminal_growth)
+    terminal_value = terminal_fcf / (discount_rate - terminal_growth)
+    pv_terminal = terminal_value / ((1 + discount_rate) ** projection_years)
+
+    total_value = pv_sum + pv_terminal
+    fair_value_per_share = total_value / shares
+
+    # Rating
+    if current_price <= 0:
+        discount_pct = 0.0
+        rating = "insufficient_data"
+    else:
+        discount_pct = (fair_value_per_share - current_price) / current_price * 100
+        if discount_pct > 20:
+            rating = "undervalued"
+        elif discount_pct > -10:
+            rating = "fair_value"
+        else:
+            rating = "overvalued"
+
+    return {
+        "symbol": symbol,
+        "fair_value_per_share": round(fair_value_per_share, 2),
+        "current_price": round(current_price, 2),
+        "discount_or_premium_pct": round(discount_pct, 2),
+        "rating": rating,
+        "inputs": {
+            "free_cash_flow": fcf,
+            "growth_rate": round(growth_rate, 4),
+            "revenue_growth_raw": round(revenue_growth, 4) if revenue_growth is not None else None,
+            "terminal_growth": terminal_growth,
+            "discount_rate": discount_rate,
+            "shares_outstanding": shares,
+            "projection_years": projection_years,
+        },
+        "projected_fcf": projected_fcf,
+        "terminal_value": round(pv_terminal),
+        "total_enterprise_value": round(total_value),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Alert System: Strategy Trigger Checks
+# ---------------------------------------------------------------------------
+def check_strategy_triggers() -> dict[str, dict[str, Any]]:
+    """Check which of our strategy triggers are currently active.
+
+    Mirrors the actual strategy signal logic from unconventional_strategies.py
+    but only checks the current state (no backtesting). Uses live price data
+    and SMA calculations to determine if a trigger condition is met.
+
+    Returns dict of {strategy_name: {active, signal, tickers_affected, details}}.
+    """
+    triggers = {}
+
+    # Helper: get current price and SMA200 for a symbol
+    def _get_sma_status(sym: str, sma_days: int = 200) -> dict[str, Any] | None:
+        try:
+            needed_days = sma_days + 50  # buffer for weekends/holidays
+            start = (datetime.now() - timedelta(days=int(needed_days * 1.6))).strftime("%Y-%m-%d")
+            df = fetch_ohlcv(sym, start=start)
+            if df.empty or len(df) < sma_days:
+                return None
+            close = df["Close"]
+            current = float(close.iloc[-1])
+            sma = float(close.rolling(sma_days).mean().iloc[-1])
+            return {
+                "symbol": sym,
+                "current_price": round(current, 2),
+                "sma200": round(sma, 2),
+                "below_sma200": current < sma,
+                "above_sma200": current > sma,
+                "distance_pct": round((current / sma - 1) * 100, 2),
+            }
+        except Exception:
+            return None
+
+    # --- 1. Oil Down Tech Up ---
+    # Trigger: >=2 of [XLE, XOP, OIH] below SMA200
+    energy_symbols = ["XLE", "XOP", "OIH"]
+    energy_statuses = {}
+    energy_weak = 0
+    for sym in energy_symbols:
+        status = _get_sma_status(sym)
+        if status:
+            energy_statuses[sym] = status
+            if status["below_sma200"]:
+                energy_weak += 1
+
+    triggers["oil_down_tech_up"] = {
+        "active": energy_weak >= 2,
+        "signal": "Energy sector weak -- capital rotating to tech" if energy_weak >= 2
+                  else "Energy sector stable -- no rotation signal",
+        "tickers_affected": [s for s, st in energy_statuses.items() if st["below_sma200"]],
+        "details": energy_statuses,
+        "threshold": ">=2 of XLE/XOP/OIH below SMA200",
+    }
+
+    # --- 2. VIX Spike Buyback ---
+    # Trigger: VXX > 1.3x its SMA200
+    vxx_status = _get_sma_status("VXX")
+    vix_active = False
+    vix_signal = "VXX data unavailable"
+    if vxx_status:
+        vix_active = vxx_status["current_price"] > vxx_status["sma200"] * 1.3
+        if vix_active:
+            vix_signal = f"VXX at {vxx_status['current_price']} > 1.3x SMA200 ({vxx_status['sma200']}) -- fear spike, buy cash-rich buyback stocks"
+        else:
+            vix_signal = f"VXX at {vxx_status['current_price']} vs SMA200 {vxx_status['sma200']} -- no fear spike"
+
+    triggers["vix_spike_buyback"] = {
+        "active": vix_active,
+        "signal": vix_signal,
+        "tickers_affected": ["VXX"] if vix_active else [],
+        "details": {"VXX": vxx_status} if vxx_status else {},
+        "threshold": "VXX > 1.3x SMA200",
+    }
+
+    # --- 3. Job Loss Tech Boom ---
+    # Trigger: >=2 of [MAN, RHI, ASGN, ADP] below SMA200
+    staffing_symbols = ["MAN", "RHI", "ASGN", "ADP"]
+    staffing_statuses = {}
+    staffing_weak = 0
+    for sym in staffing_symbols:
+        status = _get_sma_status(sym)
+        if status:
+            staffing_statuses[sym] = status
+            if status["below_sma200"]:
+                staffing_weak += 1
+
+    triggers["job_loss_tech_boom"] = {
+        "active": staffing_weak >= 2,
+        "signal": "Staffing stocks weak -- automation/tech adoption accelerating" if staffing_weak >= 2
+                  else "Staffing sector stable -- no automation signal",
+        "tickers_affected": [s for s, st in staffing_statuses.items() if st["below_sma200"]],
+        "details": staffing_statuses,
+        "threshold": ">=2 of MAN/RHI/ASGN/ADP below SMA200",
+    }
+
+    # --- 4. Wealth Barometer ---
+    # Trigger: >=1 of [DLTR, DG] below SMA200 AND COST above SMA200
+    dollar_symbols = ["DLTR", "DG"]
+    dollar_statuses = {}
+    dollar_weak = 0
+    for sym in dollar_symbols:
+        status = _get_sma_status(sym)
+        if status:
+            dollar_statuses[sym] = status
+            if status["below_sma200"]:
+                dollar_weak += 1
+
+    cost_status = _get_sma_status("COST")
+    cost_strong = False
+    if cost_status:
+        dollar_statuses["COST"] = cost_status
+        cost_strong = cost_status["above_sma200"]
+
+    wealth_active = dollar_weak >= 1 and cost_strong
+    if wealth_active:
+        wealth_signal = "K-shaped economy: dollar stores weak, Costco strong -- long quality/luxury"
+    elif dollar_weak >= 1:
+        wealth_signal = "Dollar stores weak but Costco also weak -- broad consumer stress"
+    else:
+        wealth_signal = "Dollar stores stable -- no K-shape signal"
+
+    triggers["wealth_barometer"] = {
+        "active": wealth_active,
+        "signal": wealth_signal,
+        "tickers_affected": [s for s, st in dollar_statuses.items()
+                             if (s in ("DLTR", "DG") and st["below_sma200"])
+                             or (s == "COST" and st["above_sma200"] and dollar_weak >= 1)],
+        "details": dollar_statuses,
+        "threshold": ">=1 of DLTR/DG below SMA200 AND COST above SMA200",
+    }
+
+    return triggers
+
+
 if __name__ == "__main__":
     print(summarize_api_keys())
     print("\n=== Testing AAPL OHLCV fetch ===")

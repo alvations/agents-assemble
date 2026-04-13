@@ -2101,6 +2101,78 @@ def api_execute_trade(strategy):
         return jsonify({"error": str(e)}), 500
 
 
+# ---------------------------------------------------------------------------
+# Per-Stock Composite Score (like TipRanks Smart Score)
+# ---------------------------------------------------------------------------
+@app.route("/api/stock-score/<symbol>")
+def api_stock_score(symbol):
+    """Return 1-10 composite score for a stock with full breakdown."""
+    sym = symbol.strip().upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
+    from data_fetcher import compute_stock_score
+    try:
+        result = compute_stock_score(sym)
+    except Exception as e:
+        return jsonify({"error": f"Score computation failed for {sym}: {e}"}), 500
+    return jsonify(_sanitize_for_json(result))
+
+
+# ---------------------------------------------------------------------------
+# Fair Value / DCF Estimator (like Morningstar Stars)
+# ---------------------------------------------------------------------------
+@app.route("/api/fair-value/<symbol>")
+def api_fair_value(symbol):
+    """Return DCF-based fair value estimate for a stock."""
+    sym = symbol.strip().upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
+    from data_fetcher import estimate_fair_value
+    try:
+        discount_rate = float(request.args.get("discount_rate", 0.10))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid discount_rate parameter"}), 400
+    if discount_rate <= 0 or discount_rate >= 1 or not math.isfinite(discount_rate):
+        return jsonify({"error": "discount_rate must be between 0 and 1"}), 400
+    try:
+        result = estimate_fair_value(sym, discount_rate=discount_rate)
+    except Exception as e:
+        return jsonify({"error": f"Fair value estimation failed for {sym}: {e}"}), 500
+    return jsonify(_sanitize_for_json(result))
+
+
+# ---------------------------------------------------------------------------
+# Alert System: Strategy Trigger Status
+# ---------------------------------------------------------------------------
+@app.route("/api/alerts")
+def api_alerts():
+    """Return all currently active strategy triggers."""
+    from data_fetcher import check_strategy_triggers
+    try:
+        triggers = check_strategy_triggers()
+    except Exception as e:
+        return jsonify({"error": f"Alert check failed: {e}"}), 500
+    return jsonify(_sanitize_for_json(triggers))
+
+
+@app.route("/api/alerts/<strategy>")
+def api_alert_strategy(strategy):
+    """Return trigger status for a specific strategy."""
+    name = strategy.strip().lower().replace("-", "_")
+    if not _STRATEGY_RE.match(name):
+        return jsonify({"error": "Invalid strategy name"}), 400
+    from data_fetcher import check_strategy_triggers
+    try:
+        triggers = check_strategy_triggers()
+    except Exception as e:
+        return jsonify({"error": f"Alert check failed: {e}"}), 500
+    if name not in triggers:
+        available = list(triggers.keys())
+        return jsonify({"error": f"Unknown strategy trigger: {name}",
+                        "available": available}), 404
+    return jsonify(_sanitize_for_json(triggers[name]))
+
+
 if __name__ == "__main__":
     print("\\n  ⚡ agents-assemble Trading Terminal")
     print("  Open: http://localhost:8888\\n")

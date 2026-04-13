@@ -18,7 +18,7 @@ import json
 import math
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+from datetime import date as _date, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
@@ -549,13 +549,16 @@ class Backtester:
 
         # Use Adj Close for return calculations if available (accounts for
         # dividends and splits).  Keep original Close for display purposes.
-        for sym, df in all_data.items():
+        # Copy-on-write so external DataFrames passed by caller are not mutated.
+        for sym in list(all_data.keys()):
+            df = all_data[sym]
             if "Adj Close" in df.columns:
                 adj = df["Adj Close"]
                 if adj.notna().any():
-                    # Preserve raw close for display, use adjusted for returns
+                    df = df.copy()
                     df["Close_Raw"] = df["Close"]
                     df["Close"] = adj
+                    all_data[sym] = df
 
         bench_data = None
         if self.benchmark:
@@ -611,7 +614,12 @@ class Backtester:
                 df = all_data[sym].copy()
                 df.index = df.index.tz_localize(None)
                 all_data[sym] = df
-        if bench_data is not None and bench_data.index.tz is not None:
+        # Refresh bench_data from all_data if benchmark was in symbols — the tz
+        # loop above replaced the dict entry with a copy, leaving the original
+        # bench_data reference stale (still tz-aware). Re-fetch from all_data.
+        if self.benchmark and self.benchmark in all_data:
+            bench_data = all_data[self.benchmark]
+        elif bench_data is not None and bench_data.index.tz is not None:
             bench_data = bench_data.copy()
             bench_data.index = bench_data.index.tz_localize(None)
 
@@ -645,6 +653,11 @@ class Backtester:
         enriched_data = {}
         for sym, df in all_data.items():
             enriched = df.copy()
+            # Deduplicate — external data with duplicate index dates makes
+            # df.loc[date] return a Series instead of a scalar, which breaks
+            # _get_indicator's pd.isna() check ("ambiguous truth value").
+            if enriched.index.has_duplicates:
+                enriched = enriched[~enriched.index.duplicated(keep='last')]
             close = enriched["Close"]
             sma_20 = close.rolling(20).mean()
             enriched["sma_20"] = sma_20
@@ -889,7 +902,7 @@ class Backtester:
                 portfolio.execute_trade(date, sym, Side.BUY, qty, price)
             else:
                 # Partial fill — buy as many shares as cash allows
-                affordable = int((portfolio.cash - portfolio.commission_per_trade) / cost_per_share) if cost_per_share > 0 else 0
+                affordable = int((portfolio.cash - portfolio.commission_per_trade) / cost_per_share)
                 if affordable > 0:
                     portfolio.execute_trade(date, sym, Side.BUY, affordable, price)
 
@@ -1019,7 +1032,7 @@ def predict_forward(
 
     # Trim to lookback window
     lookback_days = int(lookback_years * 252)
-    rets = daily_returns.iloc[-lookback_days:].copy()
+    rets = daily_returns.iloc[-lookback_days:]
     rets = rets.replace([float('inf'), float('-inf')], float('nan')).dropna()
 
     if len(rets) < 60:
@@ -1580,6 +1593,10 @@ def format_report(results: dict[str, Any], title: str = "Backtest Report") -> st
 def _sanitize_for_json(obj):
     """Replace float inf/nan with None and Timestamps with strings for JSON compliance."""
     if isinstance(obj, pd.Timestamp):
+        return obj.strftime("%Y-%m-%d")
+    # Plain datetime / date (pd.Timestamp is a subclass, so it's already
+    # matched above — this catches standalone datetime/date objects).
+    if isinstance(obj, (datetime, _date)):
         return obj.strftime("%Y-%m-%d")
     # Catch inf/nan for both Python float and numpy scalars (numpy 2.0+
     # where float64 is no longer a subclass of Python float).
