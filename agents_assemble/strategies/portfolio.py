@@ -27,6 +27,9 @@ Strategies:
    21. DualMomentumGlobal           — Antonacci dual momentum: SPY vs EFA vs AGG
    22. PreferredEquityIncome        — Preferred stock ETFs with rate sensitivity
    23. TaxHarvestRotation           — Tax-loss harvesting via correlated ETF swaps
+   24. SelfStorageREIT              — Counter-cyclical self-storage REITs (PSA, EXR, CUBE)
+   25. ClosedEndFundDiscount        — CEF discount arbitrage (PDI, PTY, UTF, UTG, GOF)
+   26. CanadianAristocratIncome     — Canadian dividend aristocrats (ENB, TRP, FTS, BNS)
 """
 
 from __future__ import annotations
@@ -2089,6 +2092,241 @@ class TaxHarvestRotation(BasePersona):
 
 
 PORTFOLIO_STRATEGIES["tax_harvest_rotation"] = TaxHarvestRotation
+
+
+# ---------------------------------------------------------------------------
+# Self-Storage REIT Compounders
+# ---------------------------------------------------------------------------
+class SelfStorageREIT(BasePersona):
+    """Self-storage REITs benefiting from the "4 Ds" of demand.
+
+    Source: Death, Divorce, Downsizing, Dislocation drive counter-cyclical demand.
+    Supply growth moderating to 1.5% annually (2025-2027) due to high construction
+    costs. PSA long-term total returns rival S&P 500. Current yields 4.1-4.4%.
+
+    Implementation:
+    - Equal-weight core self-storage REITs
+    - Buy at pullbacks (RSI < 40 entry signal)
+    - Must be above 200-SMA for trend confirmation (or deep value entry)
+    - Monthly rebalance for yield + appreciation
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Self-Storage REIT",
+            description="Counter-cyclical REITs with pricing power — PSA, EXR, CUBE, NSA, REXR",
+            risk_tolerance=0.4,
+            max_position_size=0.25,
+            max_positions=5,
+            rebalance_frequency="monthly",
+            universe=universe or ["PSA", "EXR", "CUBE", "NSA", "REXR"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        base_weight = 0.18
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma200):
+                weights[sym] = base_weight * 0.8
+                continue
+
+            wt = base_weight
+
+            # Trend confirmation
+            if price > sma200:
+                # Uptrend: full weight
+                if not _is_missing(sma50) and sma50 > sma200:
+                    wt *= 1.1  # Strong uptrend bonus
+
+                # Pullback entry in uptrend
+                if not _is_missing(rsi) and rsi < 40:
+                    wt *= 1.25  # Beaten-down in uptrend = buy
+            else:
+                # Below trend but REITs are yield plays — reduce but don't exit
+                discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+                if discount > 0.15:
+                    # Deep value territory: actually increase (contrarian)
+                    wt *= 0.9
+                else:
+                    wt *= 0.6
+
+            # Don't chase overbought REITs
+            if not _is_missing(rsi) and rsi > 70:
+                wt *= 0.6
+
+            weights[sym] = min(wt, self.config.max_position_size)
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["self_storage_reit"] = SelfStorageREIT
+
+
+# ---------------------------------------------------------------------------
+# Closed-End Fund Discount Arbitrage
+# ---------------------------------------------------------------------------
+class ClosedEndFundDiscount(BasePersona):
+    """Buy CEFs trading at deep discounts to NAV for structural edge.
+
+    Source: CEFs trading at deep discounts historically mean-revert.
+    You get NAV appreciation PLUS discount compression. Yields 6-10%.
+
+    Since we cannot access real-time NAV discount data in backtests,
+    we use price-based proxies: RSI oversold + below SMA = likely at discount.
+
+    Implementation:
+    - Buy CEFs when RSI < 35 AND price below 200-SMA (proxy for deep discount)
+    - Reduce when RSI > 65 AND price above 200-SMA (proxy for premium)
+    - Collect high yields (6-10%) while waiting for discount compression
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Closed-End Fund Discount",
+            description="CEF discount arbitrage — PDI, PTY, UTF, UTG, GOF, BST, BSTZ",
+            risk_tolerance=0.4,
+            max_position_size=0.20,
+            max_positions=7,
+            rebalance_frequency="monthly",
+            universe=universe or ["PDI", "PTY", "UTF", "UTG", "GOF", "BST", "BSTZ"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        base_weight = 0.12
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma200):
+                weights[sym] = base_weight * 0.7
+                continue
+
+            wt = base_weight
+            below_sma = price < sma200
+
+            # Deep discount proxy: below 200-SMA and oversold
+            if below_sma:
+                discount_pct = (sma200 - price) / sma200 if sma200 > 0 else 0
+                if not _is_missing(rsi) and rsi < 35:
+                    # Strong buy signal: deep discount + oversold
+                    wt *= 1.5
+                elif discount_pct > 0.10:
+                    # Moderate discount
+                    wt *= 1.2
+                else:
+                    wt *= 0.9
+            else:
+                # Above SMA (proxy for premium territory)
+                if not _is_missing(rsi) and rsi > 65:
+                    # Premium + overbought: reduce (sell signal)
+                    wt *= 0.4
+                elif not _is_missing(rsi) and rsi > 55:
+                    wt *= 0.7
+                else:
+                    wt *= 1.0  # Hold at normal weight
+
+            weights[sym] = min(wt, self.config.max_position_size)
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["closed_end_fund_discount"] = ClosedEndFundDiscount
+
+
+# ---------------------------------------------------------------------------
+# Canadian Aristocrat Income
+# ---------------------------------------------------------------------------
+class CanadianAristocratIncome(BasePersona):
+    """Canadian Dividend Aristocrats with decades of dividend growth.
+
+    Source: Canadian Dividend Aristocrats returned 19.11% in 2025.
+    ENB: 31st consecutive increase. FTS: 51 consecutive years.
+    Average yield 4.06% with P/E 15.84x. Geographic diversification
+    with CAD currency exposure.
+
+    Implementation:
+    - Equal-weight Canadian aristocrats with 20+ year increase streaks
+    - Use US-listed ADRs/tickers for backtesting compatibility
+    - Trend filter: maintain weight above 200-SMA, reduce below
+    - Monthly rebalance, DRIP all dividends
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Canadian Aristocrat Income",
+            description="Decades of dividend growth — ENB, TRP, FTS, BNS, CM, BCE, TU",
+            risk_tolerance=0.3,
+            max_position_size=0.20,
+            max_positions=7,
+            rebalance_frequency="monthly",
+            universe=universe or ["ENB", "TRP", "FTS", "BNS", "CM", "BCE", "TU"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        available = [s for s in self.config.universe if s in prices]
+
+        if not available:
+            return weights
+
+        base_weight = min(0.90 / max(len(available), 1), self.config.max_position_size)
+
+        for sym in available:
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+
+            wt = base_weight
+
+            if _is_missing(sma200):
+                weights[sym] = wt * 0.8
+                continue
+
+            # Trend filter
+            if price > sma200:
+                # Above trend: full weight
+                if not _is_missing(sma50) and sma50 > sma200:
+                    wt *= 1.05  # Gentle momentum bonus
+            else:
+                # Below trend: reduce but don't exit (income play)
+                wt *= 0.65
+
+            # Pullback entry for income stocks
+            if not _is_missing(rsi) and rsi < 35:
+                wt *= 1.15  # Oversold = accumulate
+
+            # Avoid chasing
+            if not _is_missing(rsi) and rsi > 70:
+                wt *= 0.8
+
+            weights[sym] = min(wt, self.config.max_position_size)
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["canadian_aristocrat_income"] = CanadianAristocratIncome
 
 
 def get_portfolio_strategy(name: str, **kwargs) -> BasePersona:

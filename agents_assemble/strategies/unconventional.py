@@ -12,6 +12,10 @@ Strategies:
     6. TailRiskHarvest    — Sell premium (proxy: buy after sharp drops)
     + DollarCycleRotation  — Trade dollar strength/weakness via UUP vs EM ETFs
     + LeveragedTrendTactical — TQQQ/SQQQ with strict 20% max leveraged exposure
+    + WasteMonopolyCompounder — Landfill monopolies (WM, RSG, CWST, WCN, CLH)
+    + DeathCareDemographics — Funeral/death care (SCI, CSV, MATW)
+    + PawnCounterCyclical — Pawn lenders thrive in recessions (FCFS, EZPW)
+    + LongTermLoserRebound — DeBondt-Thaler contrarian mean reversion
 """
 
 from __future__ import annotations
@@ -4192,6 +4196,309 @@ class LeveragedTrendTactical(BasePersona):
 
 
 UNCONVENTIONAL_STRATEGIES["leveraged_trend_tactical"] = LeveragedTrendTactical
+
+
+# ---------------------------------------------------------------------------
+# Waste Monopoly Compounder
+# ---------------------------------------------------------------------------
+class WasteMonopolyCompounder(BasePersona):
+    """Waste management companies with irreplaceable landfill permits.
+
+    Source: Decades of outperformance data. WM 10Y ~290%, RSG 10Y ~350%.
+    Landfill permits are impossible to obtain near population centers,
+    creating local monopolies with 3-5% annual price increases.
+
+    Implementation:
+    - Equal-weight core waste haulers
+    - Momentum tilt: overweight names above 200-SMA with pullback entry
+    - Monthly rebalance
+    - Recession-resistant: trash collection never stops
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Waste Monopoly Compounder",
+            description="Landfill monopolies with pricing power — WM, RSG, CWST, WCN, CLH",
+            risk_tolerance=0.3,
+            max_position_size=0.25,
+            max_positions=5,
+            rebalance_frequency="monthly",
+            universe=universe or ["WM", "RSG", "CWST", "WCN", "CLH"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        base_weight = 0.18  # ~equal weight across 5 names
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+
+            if _is_missing(sma200):
+                # No data yet — equal weight
+                weights[sym] = base_weight
+                continue
+
+            if price > sma200:
+                # Above trend — full weight, tilt up on pullbacks
+                if not _is_missing(rsi) and rsi < 40:
+                    # Pullback in uptrend = buy opportunity
+                    weights[sym] = min(base_weight * 1.3, self.config.max_position_size)
+                else:
+                    weights[sym] = base_weight
+            else:
+                # Below trend — reduce but don't exit (these are buy-and-hold)
+                weights[sym] = base_weight * 0.6
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["waste_monopoly_compounder"] = WasteMonopolyCompounder
+
+
+# ---------------------------------------------------------------------------
+# Death Care Demographics
+# ---------------------------------------------------------------------------
+class DeathCareDemographics(BasePersona):
+    """Funeral and death care companies benefiting from aging demographics.
+
+    Source: Baby boomer demographics guarantee demand growth through 2040+.
+    SCI owns 1,900+ funeral homes, $16B preneed backlog. Death rate is
+    constant — true recession-proof sector. People don't comparison-shop funerals.
+
+    Implementation:
+    - Long-only, momentum-filtered
+    - Buy above 200-SMA with RSI < 65 (avoid chasing)
+    - Position size inverse to volatility (smaller positions in volatile names)
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Death Care Demographics",
+            description="Aging demographics = secular growth — SCI, CSV, MATW (recession-proof)",
+            risk_tolerance=0.3,
+            max_position_size=0.35,
+            max_positions=4,
+            rebalance_frequency="monthly",
+            universe=universe or ["SCI", "CSV", "MATW"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        base_weight = 0.30  # Concentrated (small universe)
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14", "vol_20"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if _is_missing(sma200):
+                weights[sym] = base_weight * 0.7
+                continue
+
+            # Trend filter: must be above 200-SMA
+            if price < sma200:
+                weights[sym] = base_weight * 0.3  # Reduced but not zero
+                continue
+
+            # RSI filter: don't chase overbought
+            if not _is_missing(rsi) and rsi > 65:
+                weights[sym] = base_weight * 0.5
+                continue
+
+            # Volatility-adjusted sizing: lower vol = larger position
+            if not _is_missing(vol) and vol > 0:
+                vol_scale = min(1.2, max(0.5, 0.25 / vol))
+            else:
+                vol_scale = 1.0
+
+            # Momentum bonus: 50-SMA above 200-SMA
+            mom_bonus = 1.1 if (not _is_missing(sma50) and sma50 > sma200) else 1.0
+
+            weights[sym] = min(base_weight * vol_scale * mom_bonus, self.config.max_position_size)
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["death_care_demographics"] = DeathCareDemographics
+
+
+# ---------------------------------------------------------------------------
+# Pawn Counter-Cyclical
+# ---------------------------------------------------------------------------
+class PawnCounterCyclical(BasePersona):
+    """Pawn lenders and alternative finance — true counter-cyclical plays.
+
+    Source: FCFS +28% YTD 2026, EZPW +52% YTD. During 2008-2012 Great
+    Recession, EZPW rose while S&P fell 55%. FirstCash gross profit per
+    store rose 50% during 2008-2012.
+
+    Thesis: Perfect recession hedge. When consumer credit tightens, pawn
+    demand surges. Counter-cyclical to everything else in portfolio.
+
+    Implementation:
+    - Inverse correlation with consumer confidence (proxy: SPY trend)
+    - When SPY below 200-SMA (risk-off): overweight pawn names
+    - When SPY above 200-SMA (risk-on): underweight but maintain exposure
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Pawn Counter-Cyclical",
+            description="Pawn lenders thrive in recessions — FCFS, EZPW, AAN, PRDO",
+            risk_tolerance=0.5,
+            max_position_size=0.30,
+            max_positions=5,
+            rebalance_frequency="monthly",
+            universe=universe or ["FCFS", "EZPW", "AAN", "PRDO", "SPY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Detect economic regime via SPY
+        spy_price = prices.get("SPY")
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        spy_sma50 = self._get_indicator(data, "SPY", "sma_50", date)
+
+        # Recession signal: SPY below 200-SMA or 50-SMA < 200-SMA
+        recession_signal = False
+        if spy_price and not _is_missing(spy_sma200):
+            if spy_price < spy_sma200:
+                recession_signal = True
+            elif not _is_missing(spy_sma50) and spy_sma50 < spy_sma200:
+                recession_signal = True
+
+        pawn_names = [s for s in self.config.universe if s != "SPY"]
+
+        if recession_signal:
+            # Risk-off: overweight pawn names (they thrive in recessions)
+            base_weight = 0.22
+        else:
+            # Risk-on: maintain modest exposure as hedge
+            base_weight = 0.12
+
+        for sym in pawn_names:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            rsi = self._get_indicator(data, sym, "rsi_14", date)
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+
+            wt = base_weight
+
+            # Trend confirmation for individual names
+            if not _is_missing(sma200) and price > sma200:
+                wt *= 1.15  # Uptrend bonus
+            elif not _is_missing(sma200) and price < sma200 * 0.85:
+                wt *= 0.7  # Deep downtrend — reduce
+
+            # RSI pullback entry
+            if not _is_missing(rsi) and rsi < 35:
+                wt *= 1.2  # Oversold = buy signal
+
+            weights[sym] = min(wt, self.config.max_position_size)
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["pawn_counter_cyclical"] = PawnCounterCyclical
+
+
+# ---------------------------------------------------------------------------
+# Long-Term Loser Rebound (DeBondt & Thaler Contrarian)
+# ---------------------------------------------------------------------------
+class LongTermLoserRebound(BasePersona):
+    """DeBondt & Thaler contrarian strategy: buy long-term losers.
+
+    Source: DeBondt & Thaler (1985) — 3-5 year losers outperform winners
+    by 24.6% over next 36 months. Overreaction hypothesis: investors
+    systematically overreact to bad news, creating mean-reversion opportunity.
+
+    Implementation (ETF proxy since we can't screen individual stocks):
+    - Use value ETFs as proxy for beaten-down stocks: IWD, SLYV, VBR
+    - Buy when RSI < 35 (deep value territory)
+    - Increase weight when price is far below 200-SMA
+    - Hold for mean reversion
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Long-Term Loser Rebound (DeBondt-Thaler)",
+            description="Buy worst performers for mean reversion — IWD, SLYV, VBR proxy",
+            risk_tolerance=0.6,
+            max_position_size=0.35,
+            max_positions=4,
+            rebalance_frequency="monthly",
+            universe=universe or ["IWD", "SLYV", "VBR", "SHY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        value_etfs = [s for s in self.config.universe if s != "SHY"]
+
+        scored = []
+        for sym in value_etfs:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma200):
+                scored.append((sym, 0.5))  # Neutral score
+                continue
+
+            # Score by how beaten-down the asset is (lower = more contrarian signal)
+            discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+            rsi_score = (50 - rsi) / 50 if not _is_missing(rsi) else 0
+
+            # Contrarian score: higher when asset is more beaten down
+            score = max(0.1, discount * 0.6 + rsi_score * 0.4)
+            scored.append((sym, score))
+
+        if not scored:
+            if "SHY" in prices:
+                weights["SHY"] = 0.90
+            return weights
+
+        # Allocate more to the most beaten-down ETFs
+        total_score = sum(s for _, s in scored)
+        allocated = 0.0
+
+        if total_score > 0:
+            for sym, sc in scored:
+                # Base allocation proportional to contrarian score
+                raw_wt = (sc / total_score) * 0.80
+                wt = min(raw_wt, self.config.max_position_size)
+                weights[sym] = wt
+                allocated += wt
+
+        # Remainder to cash proxy
+        if "SHY" in prices:
+            weights["SHY"] = max(0.0, 0.90 - allocated)
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["long_term_loser_rebound"] = LongTermLoserRebound
+
 
 if __name__ == "__main__":
     print("=== Unconventional Strategies ===\n")

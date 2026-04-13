@@ -17,6 +17,9 @@ Strategies:
     9. FaberSectorRotation  — Faber 12-month sector momentum, top 3
    10. LowVolQuality        — Lowest-vol quintile with quality ETF + individual names
    11. CrossAssetCarry       — Rank yield-bearing ETFs by carry, hold top 2
+   12. BuybackYieldSystematic — Companies reducing share count outperform (PKW, SPYB)
+   13. GrossProfitabilityValue — Novy-Marx 2013: high gross profit + value combo
+   14. AccrualsQuality        — Sloan 1996: low accruals = quality earnings (QUAL, DGRW)
 """
 
 from __future__ import annotations
@@ -1217,6 +1220,258 @@ class CrossAssetCarry(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Buyback Yield Systematic
+# ---------------------------------------------------------------------------
+class BuybackYieldSystematic(BasePersona):
+    """Companies reducing share count outperform — buyback yield strategy.
+
+    Source: Net stock issuance anomaly — conservative issuance firms outperformed
+    aggressive diluters over 30 years. Trend amplified post-COVID. FF5 investment
+    factor captures part of this, but net buyback yield adds signal.
+
+    Implementation (ETF proxy):
+    - Core: PKW (Invesco Buyback Achievers), SPYB (S&P 500 Buyback ETF)
+    - Momentum overlay: overweight when above 200-SMA
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Buyback Yield Systematic",
+            description="Companies reducing share count outperform — PKW, SPYB proxy",
+            risk_tolerance=0.4,
+            max_position_size=0.50,
+            max_positions=3,
+            rebalance_frequency="monthly",
+            universe=universe or ["PKW", "SPYB", "SHY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        buyback_etfs = [s for s in self.config.universe if s != "SHY"]
+
+        total_buyback_wt = 0.0
+        for sym in buyback_etfs:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+
+            base_wt = 0.40  # Split between two ETFs
+
+            if _is_missing(sma200):
+                weights[sym] = base_wt * 0.7
+                total_buyback_wt += base_wt * 0.7
+                continue
+
+            if price > sma200:
+                # Uptrend: full allocation
+                wt = base_wt
+                if not _is_missing(sma50) and sma50 > sma200:
+                    wt *= 1.05  # Momentum bonus
+
+                # Pullback entry
+                if not _is_missing(rsi) and rsi < 35:
+                    wt *= 1.15
+            else:
+                # Below trend: reduce to defensive
+                wt = base_wt * 0.5
+
+            # Overbought: trim
+            if not _is_missing(rsi) and rsi > 75:
+                wt *= 0.7
+
+            wt = min(wt, self.config.max_position_size)
+            weights[sym] = wt
+            total_buyback_wt += wt
+
+        # Cash proxy for remainder
+        if "SHY" in prices:
+            weights["SHY"] = max(0.0, 0.90 - total_buyback_wt)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Gross Profitability Value
+# ---------------------------------------------------------------------------
+class GrossProfitabilityValue(BasePersona):
+    """High gross profitability + value combination (Novy-Marx 2013).
+
+    Source: Gross profit / total assets predicts returns with power equal to
+    traditional value metrics. 3.7-4.4% annual premium. 6.37% alpha (3-factor
+    adjusted). Works globally across 19 developed markets.
+
+    Implementation (proxy using known high-GP names):
+    - Universe of companies with >40% gross margins: AAPL, MSFT, GOOGL, V, MA,
+      COST, NKE, MCD, SBUX, YUM, CMG
+    - Signal: above-average profitability + below-average valuation (RSI as proxy)
+    - Buy when RSI < 45 (relative value) AND above 200-SMA (quality confirmation)
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Gross Profitability Value (Novy-Marx)",
+            description="High gross profit + value: AAPL, MSFT, GOOGL, V, MA, COST, NKE, MCD",
+            risk_tolerance=0.4,
+            max_position_size=0.12,
+            max_positions=11,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "V", "MA",
+                "COST", "NKE", "MCD", "SBUX", "YUM", "CMG",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14", "vol_20"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if _is_missing(sma200):
+                scored.append((sym, 0.5))
+                continue
+
+            score = 0.0
+
+            # Quality filter: must be above 200-SMA (profitable companies trend up)
+            if price > sma200:
+                score += 0.4
+
+                # Momentum confirmation
+                if not _is_missing(sma50) and sma50 > sma200:
+                    score += 0.1
+            else:
+                # Below trend — deep value opportunity if not broken
+                discount = (sma200 - price) / sma200 if sma200 > 0 else 0
+                if discount < 0.15:
+                    score += 0.2  # Modest discount = value
+                else:
+                    score += 0.05  # Deep discount = risk
+
+            # Value signal: lower RSI = better value (proxy for valuation)
+            if not _is_missing(rsi):
+                if rsi < 35:
+                    score += 0.35  # Deep value
+                elif rsi < 45:
+                    score += 0.25  # Good value
+                elif rsi < 55:
+                    score += 0.15  # Fair value
+                elif rsi > 70:
+                    score += 0.0   # Expensive — skip
+                else:
+                    score += 0.10
+            else:
+                score += 0.15
+
+            # Low volatility bonus (quality stocks tend to be lower vol)
+            if not _is_missing(vol) and vol < 0.20:
+                score += 0.1
+
+            scored.append((sym, score))
+
+        # Rank by score, allocate to top names
+        scored.sort(key=lambda x: x[1], reverse=True)
+        n_hold = min(len(scored), self.config.max_positions)
+
+        if n_hold == 0:
+            return weights
+
+        for sym, sc in scored[:n_hold]:
+            if sc > 0.2:  # Minimum score threshold
+                weights[sym] = min(0.90 / n_hold, self.config.max_position_size)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Accruals Quality
+# ---------------------------------------------------------------------------
+class AccrualsQuality(BasePersona):
+    """Low accruals = higher quality earnings (Sloan 1996).
+
+    Source: Stocks with low accruals outperform high accruals by ~10% annually.
+    Cash-flow component of earnings better predicts future performance. Globally
+    confirmed across 17 countries (1989-2003).
+
+    Implementation (proxy — we can't access balance sheet data directly):
+    - Core: quality ETFs that screen for earnings quality (QUAL, DGRW)
+    - Individual names known for low accruals / cash-flow-heavy earnings:
+      BRK-B, JNJ, PG, KO
+    - Signal: above 200-SMA + RSI filter
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Accruals Quality (Sloan Anomaly)",
+            description="Low accruals = quality earnings — QUAL, DGRW, BRK-B, JNJ, PG, KO",
+            risk_tolerance=0.35,
+            max_position_size=0.20,
+            max_positions=6,
+            rebalance_frequency="monthly",
+            universe=universe or ["QUAL", "DGRW", "BRK-B", "JNJ", "PG", "KO"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        available = [s for s in self.config.universe if s in prices]
+
+        if not available:
+            return weights
+
+        base_weight = min(0.90 / max(len(available), 1), self.config.max_position_size)
+
+        for sym in available:
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["sma_200", "sma_50", "rsi_14"], date)
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+            rsi = inds["rsi_14"]
+
+            wt = base_weight
+
+            if _is_missing(sma200):
+                weights[sym] = wt * 0.8
+                continue
+
+            # Trend filter: quality stocks above trend get full weight
+            if price > sma200:
+                if not _is_missing(sma50) and sma50 > sma200:
+                    wt *= 1.1  # Strong uptrend bonus
+                # Pullback entry
+                if not _is_missing(rsi) and rsi < 35:
+                    wt *= 1.15  # Oversold quality = buy
+            else:
+                # Below trend: reduce but quality names tend to recover
+                wt *= 0.6
+
+            # Avoid chasing
+            if not _is_missing(rsi) and rsi > 72:
+                wt *= 0.7
+
+            weights[sym] = min(wt, self.config.max_position_size)
+
+        return weights
+
+
 RESEARCH_STRATEGIES = {
     "dual_momentum": DualMomentum,
     "multi_factor_smart_beta": MultiFactorSmartBeta,
@@ -1231,6 +1486,9 @@ RESEARCH_STRATEGIES = {
     "multi_factor_combined": MultiFactorCombined,
     "low_vol_quality": LowVolQuality,
     "cross_asset_carry": CrossAssetCarry,
+    "buyback_yield_systematic": BuybackYieldSystematic,
+    "gross_profitability_value": GrossProfitabilityValue,
+    "accruals_quality": AccrualsQuality,
 }
 
 
