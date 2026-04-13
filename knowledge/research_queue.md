@@ -8,7 +8,7 @@ This file tracks strategies discovered by research agents that need to be:
 
 **Any agent working on this repo should check this file first.**
 
-## Status: 2026-04-08
+## Status: 2026-04-13
 
 ### Implemented (need backtest + strategy files)
 - [x] stat_arb_medallion (hedge_fund) — Renaissance-style stat arb with mean reversion
@@ -27,14 +27,14 @@ This file tracks strategies discovered by research agents that need to be:
 ### Pending Implementation — User Ticker Requests (2026-04-08)
 User requested strategies incorporating these tickers. Group into thematic strategies:
 
-- [ ] **Utility & Infrastructure Income**: SO, D, DUK, PPL, EQIX, PG, COST, TMUS, SCHW
-- [ ] **Japan Industrial ADR**: MKTAY (Makita), construction ADRs, NMR (Nomura), SMFG, MUFG
-- [ ] **Global Bond & Fixed Income**: FBND, SPBO, SCHI, VWOB, VTEB
-- [ ] **News & Media Monopoly**: NYT, CMCSA (Comcast), WBD
-- [ ] **Defense Prime Contractors**: LMT, NOC, RTX, BA, BAESY
-- [ ] **Global Consumer Brands**: UL, MKC, DE, NVO, PG, COST, EL
-- [ ] **Emerging Market Value**: NU, VNM, EWY, EWS, EPI
-- [ ] **Pharma & Biotech Pipeline**: RHHBY (Roche), MRK, BAYRY (Bayer), NVS, UBS
+- [x] **Utility & Infrastructure Income**: SO, D, DUK, PPL, EQIX, PG, COST, TMUS, SCHW — `utility_infra_income` (theme)
+- [x] **Japan Industrial ADR**: MKTAY (Makita), construction ADRs, NMR (Nomura), SMFG, MUFG — `japan_industrial_finance` (theme)
+- [x] **Global Bond & Fixed Income**: FBND, SPBO, SCHI, VWOB, VTEB — `bond_fixed_income` (portfolio)
+- [x] **News & Media Monopoly**: NYT, CMCSA (Comcast), WBD — `news_media_monopoly` (unconventional)
+- [x] **Defense Prime Contractors**: LMT, NOC, RTX, BA, BAESY — `defense_prime_contractors` (theme)
+- [x] **Global Consumer Brands**: UL, MKC, DE, NVO, PG, COST, EL — `global_consumer_staples` (theme)
+- [x] **Emerging Market Value**: NU, VNM, EWY, EWS, EPI — `emerging_market_etf_value` (theme)
+- [x] **Pharma & Biotech Pipeline**: RHHBY (Roche), MRK, BAYRY (Bayer), NVS, UBS — `global_pharma_pipeline` (theme)
 - [x] **Singapore Heritage Consumer**: H02.SI (Haw Par/Tiger Balm), F34.SI (Wilmar), Y92.SI (Thai Bev) — combined with Singapore REITs into `singapore_alpha` (theme)
 - [x] **Product Tanker Shipping**: TRMD (TORM), FRO (Frontline), STNG (Scorpio), INSW (International Seaways) — `product_tanker_shipping` (crisis_commodity)
 - [x] **UK & European Banking Value**: NWG (NatWest), BARC (Barclays), HSBC, UBS, BNPQF, DB — `uk_european_banking` (theme)
@@ -42,8 +42,8 @@ User requested strategies incorporating these tickers. Group into thematic strat
 - [x] **Telecom Equipment & 5G**: ERIC (Ericsson), NOK (Nokia), QCOM, MRVL, KEYS — `telecom_equipment_5g` (theme)
 - [x] **Gig Economy & SaaS Disruptors**: UPWK (Upwork), FVRR (Fiverr), TOST (Toast), RKLB (Rocket Lab) — `gig_economy_saas` (theme)
 - [x] **Cannabis & Alt Consumer**: TLRY (Tilray), CGC (Canopy), MJ ETF — `cannabis_alt_consumer` (unconventional)
-- [ ] **Cloud & Cybersecurity Value**: NET, DDOG, SNOW, CRWD, CRM, ZS, S (SentinelOne)
-- [ ] **Airlines & Travel Recovery**: DAL, LUV, UAL, C6L.SI (SIA), RKUNY (ANA), TCOM, BKNG
+- [x] **Cloud & Cybersecurity Value**: NET, DDOG, SNOW, CRWD, CRM, ZS, S (SentinelOne) — `cloud_cyber_value` (theme)
+- [x] **Airlines & Travel Recovery**: DAL, LUV, UAL, C6L.SI (SIA), RKUNY (ANA), TCOM, BKNG — `global_airlines_travel` (theme)
 - [x] **Korean Chaebols & Fintech**: CPNG (Coupang), SKM (SK Telecom), SSNLF (Samsung), KB (Kookmin), SHG (Shinhan), PKX (POSCO) — `korean_chaebols` (theme)
 - [x] **Fallen Blue Chip Value**: PFE (Pfizer), INTC (Intel), WMT (Walmart), SBUX (Starbucks), NKE (Nike), CSCO (Cisco), VZ (Verizon), TGT (Target) — `fallen_blue_chip_value` (unconventional)
 - [x] **Rideshare & Mobility**: UBER, LYFT, GRAB, DASH (DoorDash) — `rideshare_mobility` (theme)

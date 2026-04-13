@@ -499,6 +499,12 @@ button.ghost:hover { color: var(--cream); border-color: var(--warm-gray); backgr
     <div id="top-picks-list" class="loading">Loading top picks...</div>
 </div>
 
+<!-- Strategy Trigger Alerts -->
+<div class="panel full" style="margin-bottom:20px; border-color:rgba(212,175,55,0.15);">
+    <h2>Strategy Trigger Alerts</h2>
+    <div id="alerts-dashboard" class="loading">Loading alerts...</div>
+</div>
+
 <div class="grid">
     <!-- Market Overview -->
     <div class="panel">
@@ -843,6 +849,113 @@ function loadMarket() {
 }
 loadMarket();
 
+// ==================== STRATEGY TRIGGER ALERTS ====================
+function loadAlerts() {
+    fetchJSON('/api/alerts').then(data => {
+        if (!data || typeof data !== 'object') {
+            document.getElementById('alerts-dashboard').innerHTML = '<p class="loading">No alert data available.</p>';
+            return;
+        }
+        const names = Object.keys(data);
+        if (names.length === 0) {
+            document.getElementById('alerts-dashboard').innerHTML = '<p class="loading">No triggers configured.</p>';
+            return;
+        }
+        let html = '<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">';
+        const iconMap = {
+            'oil_down_tech_up': 'OIL',
+            'vix_spike_buyback': 'VIX',
+            'job_loss_tech_boom': 'JOBS',
+            'wealth_barometer': 'WEALTH'
+        };
+        names.forEach(name => {
+            const t = data[name];
+            const active = t.active;
+            const borderColor = active ? 'rgba(52,211,153,0.3)' : 'rgba(248,113,113,0.15)';
+            const statusTag = active
+                ? '<span class="tag tag-green">ACTIVE</span>'
+                : '<span class="tag tag-red">INACTIVE</span>';
+            const label = (iconMap[name] || name.toUpperCase().substring(0, 6));
+            html += '<div class="panel" style="border-color:' + borderColor + '; padding:16px;">';
+            html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
+            html += '<span style="font-weight:600; font-size:11px; letter-spacing:1px; color:var(--gold);">' + esc(label) + '</span>';
+            html += statusTag;
+            html += '</div>';
+            html += '<p style="font-size:12px; line-height:1.5; color:var(--warm-gray-light); font-family:var(--font); margin-bottom:6px;">' + esc(t.signal || '') + '</p>';
+            if (t.tickers_affected && t.tickers_affected.length > 0) {
+                html += '<p style="font-size:11px; color:var(--warm-gray);"><b>Tickers:</b> ';
+                t.tickers_affected.forEach(sym => {
+                    html += '<span class="tag tag-yellow" style="margin:2px;">' + esc(sym) + '</span>';
+                });
+                html += '</p>';
+            }
+            if (t.threshold) {
+                html += '<p style="font-size:10px; color:var(--warm-gray); margin-top:4px; font-family:var(--mono);">Rule: ' + esc(t.threshold) + '</p>';
+            }
+            html += '</div>';
+        });
+        html += '</div>';
+        document.getElementById('alerts-dashboard').innerHTML = html;
+    }).catch(e => {
+        document.getElementById('alerts-dashboard').innerHTML = '<p class="negative">Alerts unavailable: ' + esc(String(e)) + '</p>';
+    });
+}
+loadAlerts();
+
+// ==================== STOCK SCORE & FAIR VALUE ====================
+function loadStockScore(symbol, targetEl) {
+    fetchJSON('/api/stock-score/' + encodeURIComponent(symbol)).then(data => {
+        if (data.error) { targetEl.innerHTML = '<p class="negative" style="font-size:12px;">Score: ' + esc(data.error) + '</p>'; return; }
+        const score = data.score || 0;
+        const color = score >= 7 ? 'var(--emerald)' : score >= 4 ? 'var(--gold)' : 'var(--rose)';
+        let html = '<div style="display:flex; align-items:center; gap:12px; margin:8px 0;">';
+        html += '<div style="width:48px; height:48px; border-radius:50%; border:3px solid ' + color + '; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:600; color:' + color + '; font-family:var(--mono);">' + score + '</div>';
+        html += '<div>';
+        html += '<p style="font-size:13px; font-weight:500; color:var(--warm-white);">Stock Score: ' + score + '/10</p>';
+        if (data.breakdown) {
+            const b = data.breakdown;
+            html += '<p style="font-size:11px; color:var(--warm-gray); font-family:var(--mono);">';
+            html += 'Fund: ' + (b.fundamental || 0).toFixed(1) + ' | Tech: ' + (b.technical || 0).toFixed(1) + ' | Mom: ' + (b.momentum || 0).toFixed(1);
+            html += '</p>';
+        }
+        html += '</div></div>';
+        targetEl.innerHTML = html;
+    }).catch(e => {
+        targetEl.innerHTML = '<p style="font-size:11px; color:var(--warm-gray);">Score unavailable</p>';
+    });
+}
+
+function loadFairValue(symbol, targetEl) {
+    fetchJSON('/api/fair-value/' + encodeURIComponent(symbol)).then(data => {
+        if (data.error && !data.fair_value_per_share) {
+            targetEl.innerHTML = '<p style="font-size:11px; color:var(--warm-gray);">Fair value: ' + esc(data.error || 'unavailable') + '</p>';
+            return;
+        }
+        const fv = data.fair_value_per_share;
+        const cp = data.current_price;
+        const disc = data.discount_or_premium_pct || 0;
+        const rating = data.rating || 'unknown';
+        const ratingColor = rating === 'undervalued' ? 'var(--emerald)' : rating === 'overvalued' ? 'var(--rose)' : 'var(--gold)';
+        const ratingTag = rating === 'undervalued' ? 'tag-green' : rating === 'overvalued' ? 'tag-red' : 'tag-yellow';
+        let html = '<div style="margin:8px 0; padding:10px; background:rgba(255,255,255,0.02); border-radius:var(--radius-sm); border:1px solid var(--border);">';
+        html += '<div style="display:flex; justify-content:space-between; align-items:center;">';
+        html += '<span style="font-size:12px; color:var(--warm-gray);">Fair Value (DCF)</span>';
+        html += '<span class="tag ' + ratingTag + '">' + esc(rating.toUpperCase().replace('_', ' ')) + '</span>';
+        html += '</div>';
+        if (fv) {
+            html += '<p style="font-size:16px; font-weight:500; font-family:var(--mono); margin:6px 0; color:' + ratingColor + ';">$' + fv.toFixed(2) + '</p>';
+            if (cp) {
+                html += '<p style="font-size:11px; color:var(--warm-gray);">Current: $' + cp.toFixed(2) + ' &middot; '
+                    + '<span style="color:' + ratingColor + '">' + (disc > 0 ? '+' : '') + disc.toFixed(1) + '%</span></p>';
+            }
+        }
+        html += '</div>';
+        targetEl.innerHTML = html;
+    }).catch(e => {
+        targetEl.innerHTML = '<p style="font-size:11px; color:var(--warm-gray);">Fair value unavailable</p>';
+    });
+}
+
 // ==================== TOP PICKS ====================
 let topPicksView = 'active';
 let topPicksData = [];
@@ -989,6 +1102,22 @@ function openStrategyDetail(strategyName) {
             html += '</div>';
         }
 
+        // Stock Scores for top positions in this strategy
+        const modalSymbols = (data.positions || []).slice(0, 3).map(p => p.symbol).filter(Boolean);
+        if (modalSymbols.length > 0) {
+            html += '<div class="panel" style="margin-bottom:20px; border-color:rgba(212,175,55,0.12);">';
+            html += '<h3>Score & Valuation (Top Positions)</h3>';
+            html += '<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">';
+            modalSymbols.forEach(sym => {
+                html += '<div>';
+                html += '<p style="font-weight:600; font-size:13px; color:var(--warm-white); margin-bottom:4px;">' + esc(sym) + '</p>';
+                html += '<div id="modal-score-' + esc(sym) + '"><span class="loading" style="font-size:11px;">Loading...</span></div>';
+                html += '<div id="modal-fv-' + esc(sym) + '"><span class="loading" style="font-size:11px;">Loading...</span></div>';
+                html += '</div>';
+            });
+            html += '</div></div>';
+        }
+
         html += '<div class="modal-divider"></div>';
         html += '<div style="display:flex; gap:10px; margin-top:16px;">';
         html += '<button onclick="closeStrategyModal(); showSection(\'trade\', document.querySelector(\'[onclick*=trade]\'));">Generate Trade Plan</button>';
@@ -996,6 +1125,15 @@ function openStrategyDetail(strategyName) {
         html += '</div>';
 
         body.innerHTML = html;
+
+        // Async load stock scores and fair values for top positions
+        const _modalSyms = (data.positions || []).slice(0, 3).map(p => p.symbol).filter(Boolean);
+        _modalSyms.forEach(sym => {
+            const scoreEl = document.getElementById('modal-score-' + sym);
+            const fvEl = document.getElementById('modal-fv-' + sym);
+            if (scoreEl) loadStockScore(sym, scoreEl);
+            if (fvEl) loadFairValue(sym, fvEl);
+        });
     }).catch(e => {
         body.innerHTML = '<p class="negative">Error loading strategy: ' + esc(String(e)) + '</p><button class="ghost" onclick="closeStrategyModal()" style="margin-top:12px;">Close</button>';
     });
@@ -1022,7 +1160,13 @@ function scanTicker() {
         if (data.patterns) {
             html += '<p style="color:var(--warm-gray);font-size:12px;margin-top:4px;">Events: <span style="font-family:var(--mono)">' + data.patterns.total_events + '</span> (' + data.patterns.up_events + ' up / ' + data.patterns.down_events + ' down)</p>';
         }
+        // Inline containers for stock score and fair value
+        html += '<div id="scan-score" style="margin-top:8px;"></div>';
+        html += '<div id="scan-fairvalue" style="margin-top:4px;"></div>';
         document.getElementById('scan-results').innerHTML = html;
+        // Load stock score and fair value asynchronously
+        loadStockScore(sym, document.getElementById('scan-score'));
+        loadFairValue(sym, document.getElementById('scan-fairvalue'));
     }).catch(e => {
         document.getElementById('scan-results').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
@@ -1283,8 +1427,34 @@ function showPickResult() {
     }
     html += '<p style="color:var(--warm-gray);font-size:12px;">' + pickData.total_strategies_matched + ' strategies matched your picks. Showing top ' + pickRecs.length + '.</p>';
     html += renderPickRecommendation(pickRecs[pickIdx], pickIdx, pickRecs.length);
+
+    // Add stock score and fair value section for user's picks
+    const userPicks = (pickRecs[pickIdx].positions || []).filter(p => p.is_user_pick).map(p => p.symbol).filter(Boolean);
+    if (userPicks.length > 0) {
+        html += '<div class="panel" style="margin:12px 0; border-color:rgba(212,175,55,0.12);">';
+        html += '<h3>Stock Scores & Fair Value</h3>';
+        html += '<p style="color:var(--warm-gray);font-size:11px;margin-bottom:10px;">Composite score (1-10) and DCF fair value for your picks.</p>';
+        html += '<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">';
+        userPicks.forEach(sym => {
+            html += '<div style="padding:8px;">';
+            html += '<p style="font-weight:600; font-size:13px; color:var(--warm-white); margin-bottom:4px;">' + esc(sym) + '</p>';
+            html += '<div id="pick-score-' + esc(sym) + '"><span class="loading" style="font-size:11px;">Loading score...</span></div>';
+            html += '<div id="pick-fv-' + esc(sym) + '"><span class="loading" style="font-size:11px;">Loading fair value...</span></div>';
+            html += '</div>';
+        });
+        html += '</div></div>';
+    }
+
     html += '<p style="color:var(--warm-gray);font-size:11px;margin-top:16px;">Not financial advice. Past performance does not predict future results.</p>';
     document.getElementById('pick-results').innerHTML = html;
+
+    // Load scores and fair values asynchronously after rendering
+    userPicks.forEach(sym => {
+        const scoreEl = document.getElementById('pick-score-' + sym);
+        const fvEl = document.getElementById('pick-fv-' + sym);
+        if (scoreEl) loadStockScore(sym, scoreEl);
+        if (fvEl) loadFairValue(sym, fvEl);
+    });
 }
 
 function nextPick() {

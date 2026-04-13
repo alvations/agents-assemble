@@ -159,6 +159,31 @@ class Position:
         return realized
 
 
+def estimate_spread_bps(avg_daily_volume: float | None) -> float:
+    """Estimate bid-ask spread in basis points from average daily volume.
+
+    Uses a simple empirical model:
+    - Very liquid (>10M shares/day): ~1 bp spread
+    - Liquid (1M-10M): ~3 bps
+    - Moderate (100K-1M): ~8 bps
+    - Illiquid (10K-100K): ~15 bps
+    - Very illiquid (<10K): ~30 bps
+
+    Returns spread as a fraction (e.g. 0.0003 for 3 bps).
+    """
+    if avg_daily_volume is None or not math.isfinite(avg_daily_volume) or avg_daily_volume <= 0:
+        return 0.0005  # 5 bps default when volume unknown
+    if avg_daily_volume > 10_000_000:
+        return 0.0001  # 1 bp
+    if avg_daily_volume > 1_000_000:
+        return 0.0003  # 3 bps
+    if avg_daily_volume > 100_000:
+        return 0.0008  # 8 bps
+    if avg_daily_volume > 10_000:
+        return 0.0015  # 15 bps
+    return 0.0030  # 30 bps
+
+
 @dataclass
 class Portfolio:
     """Tracks cash, positions, and portfolio value over time."""
@@ -170,11 +195,31 @@ class Portfolio:
 
     # Transaction cost model
     commission_per_trade: float = 0.0  # Robinhood = $0
-    slippage_pct: float = 0.001  # 10 bps default slippage
+    slippage_pct: float = 0.0005  # 5 bps default slippage
+    spread_model: str = "fixed"  # "fixed" or "volume" (ADV-based spread)
+    _volume_spreads: dict[str, float] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.cash is None:
             self.cash = self.initial_cash
+
+    def set_volume_spreads(self, volume_data: dict[str, float]) -> None:
+        """Pre-compute spread estimates from average daily volumes.
+
+        Args:
+            volume_data: {symbol: avg_daily_volume} mapping
+        """
+        self._volume_spreads = {
+            sym: estimate_spread_bps(vol)
+            for sym, vol in volume_data.items()
+        }
+
+    def _get_slippage_pct(self, symbol: str) -> float:
+        """Get effective slippage for a symbol (spread model or fixed)."""
+        if self.spread_model == "volume" and symbol in self._volume_spreads:
+            # Half-spread (we pay one side) plus base slippage for market impact
+            return self._volume_spreads[symbol] / 2 + self.slippage_pct
+        return self.slippage_pct
 
     def execute_trade(self, date: pd.Timestamp, symbol: str, side: Side,
                       quantity: float, price: float) -> Trade:
@@ -184,7 +229,8 @@ class Portfolio:
         if not (price > 0) or not math.isfinite(price):
             raise ValueError(f"Price must be a finite positive number, got {price}")
 
-        slippage = price * self.slippage_pct * quantity
+        effective_slippage_pct = self._get_slippage_pct(symbol)
+        slippage = price * effective_slippage_pct * quantity
         commission = self.commission_per_trade
 
         trade = Trade(date=date, symbol=symbol, side=side, quantity=quantity,
@@ -504,10 +550,11 @@ class Backtester:
         end: str | None = None,
         initial_cash: float = 100_000.0,
         commission: float = 0.0,
-        slippage_pct: float = 0.001,
+        slippage_pct: float = 0.0005,
         benchmark: str = "SPY",
         rebalance_frequency: str = "daily",  # daily, weekly, monthly
         data: dict[str, pd.DataFrame] | None = None,
+        spread_model: str = "fixed",  # "fixed" or "volume"
     ):
         if not callable(strategy):
             raise TypeError(f"strategy must be callable, got {type(strategy).__name__}")
@@ -536,6 +583,9 @@ class Backtester:
             )
         self.rebalance_frequency = rebalance_frequency
         self._external_data = data
+        if spread_model not in ("fixed", "volume"):
+            raise ValueError(f"spread_model must be 'fixed' or 'volume', got {spread_model!r}")
+        self.spread_model = spread_model
 
     def _load_data(self) -> tuple[dict[str, pd.DataFrame], pd.DataFrame | None]:
         """Load price data for all symbols + benchmark.
@@ -638,7 +688,20 @@ class Backtester:
             initial_cash=self.initial_cash,
             commission_per_trade=self.commission,
             slippage_pct=self.slippage_pct,
+            spread_model=self.spread_model,
         )
+
+        # If volume-based spread model, compute average daily volumes
+        if self.spread_model == "volume":
+            volume_data = {}
+            for sym, df in all_data.items():
+                if "Volume" in df.columns:
+                    # Use last 60 days of volume for ADV estimate
+                    recent_vol = df["Volume"].tail(60)
+                    avg_vol = recent_vol.mean()
+                    if math.isfinite(avg_vol) and avg_vol > 0:
+                        volume_data[sym] = avg_vol
+            portfolio.set_volume_spreads(volume_data)
 
         # Build close prices matrix — union index with forward-fill for partial data
         close_prices = pd.DataFrame({sym: df["Close"] for sym, df in all_data.items()})
@@ -812,9 +875,24 @@ class Backtester:
         metrics = compute_metrics(daily_returns, bench_returns)
         trade_metrics = compute_trade_metrics(portfolio.trades)
 
+        # Transaction cost summary
+        cost_summary = {
+            "commission_per_trade": self.commission,
+            "slippage_pct": self.slippage_pct,
+            "spread_model": self.spread_model,
+            "total_commission": trade_metrics.get("total_commission", 0.0),
+            "total_slippage": trade_metrics.get("total_slippage", 0.0),
+            "total_costs": trade_metrics.get("total_transaction_costs", 0.0),
+            "costs_as_pct_of_initial": (
+                trade_metrics.get("total_transaction_costs", 0.0) / self.initial_cash * 100
+                if self.initial_cash > 0 else 0.0
+            ),
+        }
+
         return {
             "metrics": metrics,
             "trade_metrics": trade_metrics,
+            "cost_summary": cost_summary,
             "portfolio_history": portfolio.history,
             "trades": portfolio.trades,
             "daily_returns": daily_returns,

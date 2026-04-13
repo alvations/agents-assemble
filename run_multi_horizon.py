@@ -13,8 +13,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
+import time
 import traceback
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -124,36 +127,110 @@ def run_single(strategy_info: Dict, horizon_name: str, start: str, end: str,
         }
 
 
-def run_multi_horizon(
+def _run_single_worker(args: tuple) -> Dict[str, Any]:
+    """Top-level worker for ProcessPoolExecutor (must be picklable).
+
+    Accepts a tuple of (strategy_key, source, getter_module, getter_name, horizon_name, start, end)
+    and re-imports the getter function in the worker process.
+    """
+    key, source, getter_module, getter_name, horizon_name, start, end = args
+    import importlib
+    try:
+        mod = importlib.import_module(getter_module)
+        getter = getattr(mod, getter_name)
+    except Exception as e:
+        return {
+            "key": key, "source": source, "horizon": horizon_name,
+            "status": "error", "error": f"Import failed: {e}",
+        }
+    strategy_info = {"key": key, "source": source, "getter": getter}
+    return run_single(strategy_info, horizon_name, start, end, verbose=False)
+
+
+def run_multi_horizon_parallel(
     strategies: Optional[List[Dict]] = None,
     horizons: Optional[Dict[str, tuple]] = None,
+    max_workers: int = 4,
     verbose: bool = True,
 ) -> pd.DataFrame:
-    """Run all strategies across all horizons. Returns DataFrame of results."""
+    """Run all strategies across all horizons using parallel processes.
+
+    Each strategy+horizon pair is dispatched to a ProcessPoolExecutor.
+    Data fetching uses cached parquet files, so parallel workers benefit
+    from the cache without redundant network calls.
+
+    Args:
+        strategies: List of strategy dicts (default: all).
+        horizons: Dict of horizon_name -> (start, end) (default: HORIZONS).
+        max_workers: Number of parallel processes (default: 4).
+        verbose: Print progress.
+
+    Returns:
+        DataFrame of results (same schema as run_multi_horizon).
+    """
     if strategies is None:
         strategies = _get_all_strategies()
     if horizons is None:
         horizons = HORIZONS
 
-    all_results = []
-    total = len(strategies) * len(horizons)
-    done = 0
+    # Build work items as picklable tuples.
+    # Map getter functions to their module+name for re-import in workers.
+    _getter_registry = {
+        "get_persona": ("personas", "get_persona"),
+        "get_famous_investor": ("famous_investors", "get_famous_investor"),
+        "get_theme_strategy": ("theme_strategies", "get_theme_strategy"),
+        "get_recession_strategy": ("recession_strategies", "get_recession_strategy"),
+        "get_unconventional_strategy": ("unconventional_strategies", "get_unconventional_strategy"),
+        "get_research_strategy": ("research_strategies", "get_research_strategy"),
+        "get_math_strategy": ("math_strategies", "get_math_strategy"),
+    }
 
+    work_items = []
     for horizon_name, (start, end) in horizons.items():
-        if verbose:
-            print(f"\n{'='*60}")
-            print(f"  Horizon: {horizon_name} ({start} to {end})")
-            print(f"{'='*60}")
-
         for strat in strategies:
-            result = run_single(strat, horizon_name, start, end, verbose=verbose)
+            getter_name = strat["getter"].__name__
+            if getter_name not in _getter_registry:
+                # Fallback: try to resolve from getter's module
+                mod_name = strat["getter"].__module__
+                _getter_registry[getter_name] = (mod_name, getter_name)
+            mod_name, func_name = _getter_registry[getter_name]
+            work_items.append((
+                strat["key"], strat["source"], mod_name, func_name,
+                horizon_name, start, end,
+            ))
+
+    total = len(work_items)
+    if verbose:
+        print(f"Dispatching {total} backtests across {max_workers} workers...")
+
+    all_results = []
+    t0 = time.monotonic()
+
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(_run_single_worker, item): item for item in work_items}
+        done_count = 0
+        for future in as_completed(futures):
+            result = future.result()
             all_results.append(result)
-            done += 1
+            done_count += 1
+            if verbose and (done_count % 10 == 0 or done_count == total):
+                elapsed = time.monotonic() - t0
+                rate = done_count / elapsed if elapsed > 0 else 0
+                eta = (total - done_count) / rate if rate > 0 else 0
+                status = result.get("status", "?")
+                print(f"  [{done_count}/{total}] {result.get('key', '?')}@{result.get('horizon', '?')} "
+                      f"({status}) — {elapsed:.0f}s elapsed, ~{eta:.0f}s remaining")
 
-            if verbose and done % 10 == 0:
-                print(f"  ... {done}/{total} complete")
+    elapsed = time.monotonic() - t0
+    if verbose:
+        print(f"\nCompleted {total} backtests in {elapsed:.1f}s "
+              f"({elapsed/total:.1f}s/backtest avg)")
 
-    # Build results DataFrame
+    return _results_to_dataframe(all_results)
+
+
+def _results_to_dataframe(all_results: List[Dict]) -> pd.DataFrame:
+    """Convert list of result dicts to DataFrame."""
     rows = []
     for r in all_results:
         if r["status"] == "success":
@@ -188,9 +265,39 @@ def run_multi_horizon(
                 "num_trades": None,
                 "error": r.get("error", ""),
             })
+    return pd.DataFrame(rows)
 
-    df = pd.DataFrame(rows)
-    return df
+
+def run_multi_horizon(
+    strategies: Optional[List[Dict]] = None,
+    horizons: Optional[Dict[str, tuple]] = None,
+    verbose: bool = True,
+) -> pd.DataFrame:
+    """Run all strategies across all horizons. Returns DataFrame of results."""
+    if strategies is None:
+        strategies = _get_all_strategies()
+    if horizons is None:
+        horizons = HORIZONS
+
+    all_results = []
+    total = len(strategies) * len(horizons)
+    done = 0
+
+    for horizon_name, (start, end) in horizons.items():
+        if verbose:
+            print(f"\n{'='*60}")
+            print(f"  Horizon: {horizon_name} ({start} to {end})")
+            print(f"{'='*60}")
+
+        for strat in strategies:
+            result = run_single(strat, horizon_name, start, end, verbose=verbose)
+            all_results.append(result)
+            done += 1
+
+            if verbose and done % 10 == 0:
+                print(f"  ... {done}/{total} complete")
+
+    return _results_to_dataframe(all_results)
 
 
 def save_multi_horizon_report(df: pd.DataFrame) -> Path:
@@ -217,7 +324,7 @@ def save_multi_horizon_report(df: pd.DataFrame) -> Path:
         if h_data.empty:
             continue
 
-        start, end = HORIZONS[horizon]
+        start, end = ALL_HORIZONS[horizon]
         lines.append(f"\n## {horizon.upper()} ({start} to {end})")
         lines.append("")
         lines.append("| Rank | Strategy | Source | Return | Sharpe | Max DD | Alpha |")
@@ -260,6 +367,10 @@ def main():
     parser.add_argument("--horizon", help="Run only this horizon (1w/2w/1m/3m/6m/1y/3y/5y/10y)")
     parser.add_argument("--short", action="store_true", help="Include short horizons (1w/2w/1m/3m/6m)")
     parser.add_argument("--all-horizons", action="store_true", help="Run ALL horizons (short + long)")
+    parser.add_argument("--parallel", action="store_true",
+                        help="Run backtests in parallel using multiple processes")
+    parser.add_argument("--workers", "-w", type=int, default=4,
+                        help="Number of parallel workers (default: 4, max: cpu_count)")
     parser.add_argument("--quiet", "-q", action="store_true")
     args = parser.parse_args()
 
@@ -284,9 +395,17 @@ def main():
             parser.error(f"Unknown horizon: {args.horizon!r}. Choose from: {', '.join(ALL_HORIZONS)}")
         horizons = {args.horizon: ALL_HORIZONS[args.horizon]}
 
-    print(f"Running {len(strategies)} strategies x {len(horizons)} horizons = {len(strategies) * len(horizons)} backtests")
+    total_backtests = len(strategies) * len(horizons)
+    mode = "parallel" if args.parallel else "sequential"
+    print(f"Running {len(strategies)} strategies x {len(horizons)} horizons = "
+          f"{total_backtests} backtests ({mode})")
 
-    df = run_multi_horizon(strategies, horizons, verbose=not args.quiet)
+    if args.parallel:
+        max_w = min(args.workers, os.cpu_count() or 4, total_backtests)
+        df = run_multi_horizon_parallel(
+            strategies, horizons, max_workers=max_w, verbose=not args.quiet)
+    else:
+        df = run_multi_horizon(strategies, horizons, verbose=not args.quiet)
     report_path = save_multi_horizon_report(df)
 
     successes = df[df["total_return"].notna()]
