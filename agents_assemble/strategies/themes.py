@@ -48,6 +48,9 @@ Themes:
     + LateCycleBubbleHedge       — 1999 detector: rotate to value when AI gets frothy
     + PicksAndShovelsAI          — Levi Strauss principle: sell tools to AI miners
     + InfrastructureReshoring    — US infrastructure spending: PAVE, heavy equipment, materials
+    + AnthropicEcosystem         — Anthropic supply chain + investors pre-IPO (Q4 2026)
+    + OpenAIEcosystem            — OpenAI/Microsoft-centric AI ecosystem
+    + AIInfraPicksShovels        — Arms dealer: wins regardless of which AI company dominates
 """
 
 from __future__ import annotations
@@ -4313,6 +4316,410 @@ class InfrastructureReshoring(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Anthropic Ecosystem (Pre-IPO Play)
+# ---------------------------------------------------------------------------
+class AnthropicEcosystem(BasePersona):
+    """Invest in the Anthropic supply chain, investors, and customers before
+    its expected Q4 2026 IPO.
+
+    Source: knowledge/anthropic_ecosystem_research.md
+    Anthropic is the fastest-growing enterprise AI company ($30B+ ARR as of
+    April 2026, ~1400% YoY). IPO expected Q4 2026 at $380B+ valuation.
+    80% enterprise revenue mix, multi-cloud strategy (AWS, Google Cloud, Azure).
+
+    Universe (tiered):
+    - Tier 1-2 (Direct/Investor, 2x weight): AMZN ($8B invested, 7.8% stake),
+      GOOGL ($3B+, 14% stake), MSFT (up to $5B), NVDA (up to $10B), CRM (investor)
+    - Tier 3 (Supply chain, 1.5x weight): AVGO (TPU design, $21-42B est revenue),
+      ANET (DC networking), VRT (power+cooling), EQIX (data center REIT),
+      MU (HBM memory), CLS (AI server mfg)
+    - Tier 4 (Customers, 1x weight): SNOW ($200M partnership), ACN (30K trained),
+      GTLB (marketplace partner)
+    - Tier 5 (Power, 1x weight): CEG (largest US nuclear), VST (2nd largest)
+
+    Signal logic:
+    - Core holdings (AMZN, GOOGL, AVGO, NVDA) get 2x base weight
+    - Momentum tilt: above SMA50 = full weight, below = half weight
+    - Risk-off filter: if SPY RSI > 75, reduce all to 50%
+    - Equal-weight base across tiers with tier multipliers
+
+    ## Passive Investor Section
+    For buy-and-hold investors who want Anthropic pre-IPO exposure without
+    active management: equal-weight AMZN, GOOGL, MSFT, NVDA, AVGO. These 5
+    names give direct investor exposure + supply chain. Rebalance quarterly.
+    Expected to outperform SPY as Anthropic IPO catalysts emerge in H2 2026.
+    """
+
+    # Tier assignments for weight multipliers
+    TIER_12 = {"AMZN", "GOOGL", "MSFT", "NVDA", "CRM"}  # 2x
+    TIER_3 = {"AVGO", "ANET", "VRT", "EQIX", "MU", "CLS"}  # 1.5x
+    TIER_45 = {"SNOW", "ACN", "GTLB", "CEG", "VST"}  # 1x
+    CORE = {"AMZN", "GOOGL", "AVGO", "NVDA"}  # extra 2x conviction
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Anthropic Ecosystem",
+            description="Anthropic supply chain + investors pre-IPO (Q4 2026 expected)",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Tier 1-2: Direct investors
+                "AMZN", "GOOGL", "MSFT", "NVDA", "CRM",
+                # Tier 3: Supply chain
+                "AVGO", "ANET", "VRT", "EQIX", "MU", "CLS",
+                # Tier 4: Customers
+                "SNOW", "ACN", "GTLB",
+                # Tier 5: Power
+                "CEG", "VST",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # --- Risk-off filter: check SPY RSI ---
+        risk_off_mult = 1.0
+        if "SPY" in data:
+            spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+            if not _is_missing(spy_rsi) and spy_rsi > 75:
+                risk_off_mult = 0.5  # Overbought market -> reduce exposure
+
+        # --- Score and weight each ticker ---
+        qualified = []  # (sym, tier_mult, momentum_mult)
+
+        for sym in self.config.universe:
+            if sym not in data or sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma50):
+                continue
+
+            # Skip extremely overbought individual names
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Skip broken trends (>25% below SMA200)
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            # Tier multiplier
+            if sym in self.TIER_12:
+                tier_mult = 2.0
+            elif sym in self.TIER_3:
+                tier_mult = 1.5
+            else:
+                tier_mult = 1.0
+
+            # Core conviction bonus
+            if sym in self.CORE:
+                tier_mult *= 2.0
+
+            # Momentum tilt: above SMA50 = full, below = half
+            if price > sma50:
+                momentum_mult = 1.0
+            else:
+                momentum_mult = 0.5
+
+            qualified.append((sym, tier_mult * momentum_mult))
+
+        # --- Distribute weights proportionally ---
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult * risk_off_mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out anything not qualified
+        for sym in self.config.universe:
+            if sym not in weights and sym in prices:
+                weights[sym] = 0.0
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# OpenAI Ecosystem (Microsoft-centric)
+# ---------------------------------------------------------------------------
+class OpenAIEcosystem(BasePersona):
+    """Invest in OpenAI's ecosystem -- Microsoft-centric since MSFT is the
+    primary partner (49% stake, $13B+ invested).
+
+    Source: knowledge/ai_competitors_research.md
+    OpenAI at $852B valuation, $24B ARR. Microsoft is the dominant public
+    proxy: Azure AI at $13B run-rate, GitHub Copilot at 26M+ users,
+    Copilot in M365 with only 3.3% conversion (massive upside).
+
+    Universe:
+    - Direct/Investor: MSFT (49% stake, 3x weight), ORCL (Stargate project, 2x),
+      NVDA (GPU supplier)
+    - Supply chain: AVGO, AMD, TSM, ASML, ANET, VRT, MU
+    - Infrastructure: EQIX, DLR, CEG, VST
+    - Customers/Partners: CRM (Einstein GPT), NOW (ServiceNow), ADBE
+
+    Signal logic:
+    - MSFT gets 3x base weight (dominant OpenAI exposure)
+    - ORCL gets 2x (Stargate project)
+    - Momentum tilt: above SMA50 = full weight, below = half
+    - Risk-off filter: SPY RSI > 75 -> reduce all to 50%
+
+    ## Passive Investor Section
+    For buy-and-hold: MSFT (40%), ORCL (15%), NVDA (15%), AVGO (10%),
+    CRM (10%), NOW (10%). MSFT is the single best public proxy for OpenAI.
+    Rebalance quarterly. If MSFT Copilot conversion goes from 3.3% to 10%,
+    that alone is $20B+ incremental revenue.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="OpenAI Ecosystem",
+            description="OpenAI ecosystem play: Microsoft-centric, Stargate infrastructure",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Direct/Investor
+                "MSFT", "ORCL", "NVDA",
+                # Supply chain
+                "AVGO", "AMD", "TSM", "ASML", "ANET", "VRT", "MU",
+                # Infrastructure
+                "EQIX", "DLR", "CEG", "VST",
+                # Customers/Partners
+                "CRM", "NOW", "ADBE",
+            ],
+        )
+        super().__init__(config)
+
+    # Weight overrides
+    _WEIGHT_OVERRIDE = {"MSFT": 3.0, "ORCL": 2.0}
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # --- Risk-off filter: check SPY RSI ---
+        risk_off_mult = 1.0
+        if "SPY" in data:
+            spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+            if not _is_missing(spy_rsi) and spy_rsi > 75:
+                risk_off_mult = 0.5
+
+        # --- Score each ticker ---
+        qualified = []  # (sym, weight_mult)
+
+        for sym in self.config.universe:
+            if sym not in data or sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma50):
+                continue
+
+            # Skip overbought
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Skip broken trend (>25% below SMA200)
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            # Base multiplier from override or 1.0
+            base_mult = self._WEIGHT_OVERRIDE.get(sym, 1.0)
+
+            # Momentum tilt: above SMA50 = full, below = half
+            if price > sma50:
+                momentum_mult = 1.0
+            else:
+                momentum_mult = 0.5
+
+            qualified.append((sym, base_mult * momentum_mult))
+
+        # --- Distribute weights proportionally ---
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult * risk_off_mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out anything not qualified
+        for sym in self.config.universe:
+            if sym not in weights and sym in prices:
+                weights[sym] = 0.0
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# AI Infrastructure Picks & Shovels (Arms Dealer)
+# ---------------------------------------------------------------------------
+class AIInfraPicksShovels(BasePersona):
+    """The 'arms dealer' strategy -- companies that win regardless of which
+    AI company dominates. Pure picks-and-shovels infrastructure play.
+
+    Source: knowledge/anthropic_ecosystem_research.md + ai_competitors_research.md
+    Every AI company needs the same infrastructure: chips, data centers,
+    networking, power, memory. This strategy owns the shared layer.
+
+    Universe:
+    - Chips: NVDA, AVGO, AMD, TSM, ASML, AMAT, LRCX, MRVL, ARM
+    - Data centers: EQIX, DLR, VRT, ETN, CLS, ANET
+    - Power: CEG, VST
+    - Memory: MU
+
+    Signal logic:
+    - Equal-weight across all tickers
+    - Semiconductor over-weight when SOX proxy (NVDA+AMD+AVGO avg) momentum
+      is positive (above SMA50)
+    - Power stocks get bonus weight when VIX > 20 (defensive quality)
+    - Momentum tilt: above SMA200 = full weight, below = half weight
+      (longer-term trend for infrastructure)
+
+    ## Passive Investor Section
+    For buy-and-hold: equal-weight NVDA, AVGO, TSM, ASML, EQIX, ANET, CEG.
+    These 7 names span the full AI infrastructure stack: chips, foundry,
+    lithography, data centers, networking, power. Rebalance quarterly.
+    This portfolio wins whether Anthropic, OpenAI, Google, or Meta leads AI.
+    """
+
+    CHIP_NAMES = {"NVDA", "AVGO", "AMD", "TSM", "ASML", "AMAT", "LRCX", "MRVL", "ARM"}
+    POWER_NAMES = {"CEG", "VST"}
+    SOX_PROXY = ["NVDA", "AMD", "AVGO"]  # Average momentum as semi cycle proxy
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="AI Infrastructure Picks & Shovels",
+            description="Arms dealer strategy: wins regardless of which AI company dominates",
+            risk_tolerance=0.6,
+            max_position_size=0.12,
+            max_positions=15,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Chips
+                "NVDA", "AVGO", "AMD", "TSM", "ASML", "AMAT", "LRCX", "MRVL", "ARM",
+                # Data centers
+                "EQIX", "DLR", "VRT", "ETN", "CLS", "ANET",
+                # Power
+                "CEG", "VST",
+                # Memory
+                "MU",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # --- SOX proxy: average of NVDA+AMD+AVGO above their SMA50 ---
+        sox_above = 0
+        sox_total = 0
+        for leader in self.SOX_PROXY:
+            if leader in data and leader in prices:
+                sox_total += 1
+                sma50 = self._get_indicator(data, leader, "sma_50", date)
+                if not _is_missing(sma50) and prices[leader] > sma50:
+                    sox_above += 1
+        semi_momentum_positive = sox_total > 0 and sox_above > sox_total / 2
+
+        # --- VIX proxy: use SPY volatility via RSI (no direct VIX data) ---
+        # High volatility regime when SPY RSI < 40 (fear) as proxy for VIX > 20
+        high_vol_regime = False
+        if "SPY" in data:
+            spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+            if not _is_missing(spy_rsi) and spy_rsi < 40:
+                high_vol_regime = True
+
+        # --- Score each ticker ---
+        qualified = []  # (sym, weight_mult)
+
+        for sym in self.config.universe:
+            if sym not in data or sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma200):
+                # ARM and other newer tickers may not have SMA200 history
+                # Fall back to SMA50 for these
+                if _is_missing(sma50):
+                    continue
+                # Use SMA50 as trend proxy for short-history tickers
+                if price > sma50:
+                    momentum_mult = 1.0
+                else:
+                    momentum_mult = 0.5
+            else:
+                # Skip severely broken trend (>30% below SMA200)
+                if sma200 > 0 and price < sma200 * 0.70:
+                    weights[sym] = 0.0
+                    continue
+
+                # Momentum tilt: above SMA200 = full, below = half
+                if price > sma200:
+                    momentum_mult = 1.0
+                else:
+                    momentum_mult = 0.5
+
+            # Skip extremely overbought
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Base weight = 1.0 (equal weight)
+            weight_mult = 1.0
+
+            # Semiconductor over-weight when semi momentum is positive
+            if sym in self.CHIP_NAMES and semi_momentum_positive:
+                weight_mult *= 1.5
+
+            # Power stocks bonus when volatility is high (defensive quality)
+            if sym in self.POWER_NAMES and high_vol_regime:
+                weight_mult *= 1.5
+
+            qualified.append((sym, weight_mult * momentum_mult))
+
+        # --- Distribute weights proportionally ---
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out anything not qualified
+        for sym in self.config.universe:
+            if sym not in weights and sym in prices:
+                weights[sym] = 0.0
+
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -4363,6 +4770,10 @@ THEME_STRATEGIES = {
     "southeast_asia_growth": SoutheastAsiaGrowth,
     # Infrastructure spending
     "infrastructure_reshoring": InfrastructureReshoring,
+    # AI ecosystem plays (research-backed)
+    "anthropic_ecosystem": AnthropicEcosystem,
+    "openai_ecosystem": OpenAIEcosystem,
+    "ai_infra_picks_shovels": AIInfraPicksShovels,
 }
 
 

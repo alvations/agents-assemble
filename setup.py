@@ -13,7 +13,8 @@ setup(
         "requests>=2.25.0",
     ],
     extras_require={
-        "dev": ["pytest", "pytest-cov"],
+        "dev": ["pytest", "pytest-cov", "pytest-mock", "flask"],
+        "test": ["pytest", "pytest-cov", "pytest-mock", "flask"],
     },
     entry_points={
         "console_scripts": [
