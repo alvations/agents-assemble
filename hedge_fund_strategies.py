@@ -10,6 +10,7 @@ Strategies:
     5. MarketMakingMomentum  — Citadel-style momentum with mean-reversion overlay
     6. GrowthConcentration   — Tiger Global-style concentrated growth bets
     7. ActivistDistressed    — Elliott Management-style activist / distressed value
+    8. ManagedFuturesProxy   — DBMF + KMLM trend-following with crisis alpha overlay
 """
 
 from __future__ import annotations
@@ -675,6 +676,98 @@ class ActivistDistressed(BasePersona):
         return weights
 
 
+
+# ---------------------------------------------------------------------------
+# 8. Managed Futures Proxy
+# ---------------------------------------------------------------------------
+class ManagedFuturesProxy(BasePersona):
+    """Managed futures proxy strategy using trend-following ETFs.
+
+    Source: AQR Managed Futures research, Man AHL trend studies.
+
+    Uses DBMF (iMGP DBi Managed Futures Strategy) and KMLM (KFA Mount
+    Lucas Managed Futures) as CTA/managed futures proxies.
+
+    Trend-following rules:
+    - If 12-month return > 0 (price > SMA200): hold full position
+    - If 12-month return < 0: reduce to 50% (trend broken but
+      may still provide crisis alpha)
+
+    CTA overlay: when SPY < SMA200, increase DBMF weight. This captures
+    crisis alpha — managed futures historically profit during equity
+    drawdowns via short equity / long bonds / long commodities.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Managed Futures Proxy",
+            description="DBMF + KMLM trend-following with crisis alpha overlay",
+            risk_tolerance=0.5,
+            max_position_size=0.50,
+            max_positions=4,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "DBMF",  # iMGP managed futures
+                "KMLM",  # KFA Mount Lucas managed futures
+                "SPY",   # Regime detection
+                "SHY",   # Cash fallback
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Detect equity regime via SPY
+        spy_price = prices.get("SPY")
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        equity_crisis = False
+        if spy_price is not None and not _isna(spy_sma200) and spy_sma200 > 0:
+            if spy_price < spy_sma200:
+                equity_crisis = True
+
+        mf_etfs = ["DBMF", "KMLM"]
+        for sym in mf_etfs:
+            if sym not in prices:
+                continue
+
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+
+            if _isna(sma200) or sma200 <= 0:
+                # No trend data: moderate allocation
+                weights[sym] = 0.25
+                continue
+
+            positive_trend = price > sma200
+
+            if sym == "DBMF":
+                if equity_crisis:
+                    # Crisis alpha: increase DBMF (managed futures shine in crises)
+                    weights[sym] = 0.50 if positive_trend else 0.35
+                else:
+                    weights[sym] = 0.35 if positive_trend else 0.18
+            else:  # KMLM
+                if equity_crisis:
+                    weights[sym] = 0.35 if positive_trend else 0.20
+                else:
+                    weights[sym] = 0.30 if positive_trend else 0.15
+
+        # If both managed futures are in negative trend and no crisis,
+        # shift some to cash
+        total_mf = sum(weights.get(s, 0) for s in mf_etfs)
+        if total_mf < 0.40 and not equity_crisis:
+            if "SHY" in prices:
+                weights["SHY"] = 0.90 - total_mf
+
+        # Zero unallocated
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights and sym != "SPY":
+                weights[sym] = 0.0
+
+        return weights
+
+
 HEDGE_FUND_STRATEGIES = {
     "healthcare_asia_momentum": HealthcareAsiaMomentum,
     "dynamic_ensemble": DynamicEnsemble,
@@ -683,6 +776,7 @@ HEDGE_FUND_STRATEGIES = {
     "market_making_momentum": MarketMakingMomentum,
     "growth_concentration": GrowthConcentration,
     "activist_distressed": ActivistDistressed,
+    "managed_futures_proxy": ManagedFuturesProxy,
 }
 
 

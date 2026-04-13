@@ -971,13 +971,14 @@ class PrinceAlwaleed(BasePersona):
             price = prices[sym]
             inds = self._get_indicators(
                 data, sym,
-                ["sma_200", "rsi_14", "Volume", "volume_sma_20"],
+                ["sma_200", "rsi_14", "Volume", "volume_sma_20", "sma_50"],
                 date,
             )
             sma200 = inds["sma_200"]
             rsi = inds["rsi_14"]
             volume = inds["Volume"]
             vol_avg = inds["volume_sma_20"]
+            sma50 = inds["sma_50"]
             if any(v is None for v in [sma200, rsi]):
                 continue
 
@@ -989,9 +990,12 @@ class PrinceAlwaleed(BasePersona):
                 if volume is not None and vol_avg is not None and vol_avg > 0 and volume / vol_avg > 2:
                     score *= 1.5  # Crisis volume
                 candidates.append((sym, score))
-            # Also accumulate blue chips on moderate dips
+            # Accumulate blue chips on moderate dips
             elif discount > 0 and rsi < 45:
                 candidates.append((sym, discount * 3))
+            # Alwaleed also holds quality blue chips in uptrends at fair value
+            elif sma50 is not None and price > sma50 and rsi < 60:
+                candidates.append((sym, 0.5 + (60 - rsi) * 0.01))
             elif rsi > 70 and discount < -0.15:
                 weights[sym] = 0.0
 
@@ -1001,6 +1005,10 @@ class PrinceAlwaleed(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -1082,6 +1090,13 @@ class HowardMarks(BasePersona):
             elif not fear_mode and discount > 0.15 and rsi < 30:
                 # Even in calm markets, buy extreme fear in individual names
                 candidates.append((sym, discount * 3))
+            # Marks also holds quality names in uptrends (prepared, not
+            # predictive) -- low vol + above SMA200 = quality hold
+            elif not fear_mode and discount < 0 and rsi < 60:
+                vol_penalty = vol if vol is not None else 0.02
+                if vol_penalty < 0.025:
+                    quality_hold = (1 / max(vol_penalty, 0.005)) * 0.01
+                    candidates.append((sym, quality_hold))
 
         candidates.sort(key=lambda x: x[1], reverse=True)
         top = candidates[:self.config.max_positions]
@@ -1089,6 +1104,10 @@ class HowardMarks(BasePersona):
             per_stock = min(0.85 / len(top), self.config.max_position_size)
             for sym, _ in top:
                 weights[sym] = per_stock
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -1714,14 +1733,24 @@ class BenjaminGraham(BasePersona):
             if any(v is None for v in [sma200, rsi]):
                 continue
             discount = (sma200 - price) / sma200 if sma200 > 0 else 0
-            # Graham: extreme deep value
+            vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
+            # Graham Tier 1: extreme deep value (original strict criteria)
             if discount > 0.15 and rsi < 30:
-                vol_ratio = volume / vol_avg if volume is not None and vol_avg is not None and vol_avg > 0 else 1
                 score = discount * 8
                 if vol_ratio > 2:
                     score *= 1.5  # Capitulation bonus
                 if rsi < 20:
                     score += 1.0  # Extreme oversold bonus
+                candidates.append((sym, score))
+            # Graham Tier 2: moderate value (below SMA200 + oversold)
+            elif discount > 0.05 and rsi < 45:
+                score = discount * 4
+                if vol_ratio > 1.5:
+                    score *= 1.2
+                candidates.append((sym, score))
+            # Graham Tier 3: slight discount with low RSI (margin of safety)
+            elif discount > 0 and rsi < 40:
+                score = discount * 2
                 candidates.append((sym, score))
             # Take profits on recovery
             elif rsi > 65 and discount < -0.10:

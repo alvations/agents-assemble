@@ -47,6 +47,7 @@ Themes:
     + AIAdoptersNotBuilders      — Walmart principle: established companies adopting AI
     + LateCycleBubbleHedge       — 1999 detector: rotate to value when AI gets frothy
     + PicksAndShovelsAI          — Levi Strauss principle: sell tools to AI miners
+    + InfrastructureReshoring    — US infrastructure spending: PAVE, heavy equipment, materials
 """
 
 from __future__ import annotations
@@ -4219,6 +4220,99 @@ class SoutheastAsiaGrowth(BasePersona):
         return weights
 
 
+
+# ---------------------------------------------------------------------------
+# Infrastructure Reshoring
+# ---------------------------------------------------------------------------
+class InfrastructureReshoring(BasePersona):
+    """Infrastructure reshoring theme strategy.
+
+    Source: IIJA ($1.2T), CHIPS Act ($280B), IRA ($369B) — secular US
+    infrastructure spending spanning bridges, roads, data centers,
+    domestic manufacturing.
+
+    Universe:
+    - PAVE (Global X US Infrastructure ETF)
+    - CAT (Caterpillar — heavy equipment)
+    - DE (Deere — construction/ag equipment)
+    - VMC (Vulcan Materials — aggregates/cement)
+    - MLM (Martin Marietta — aggregates)
+    - URI (United Rentals — equipment rental)
+
+    Equal weight with momentum tilt: overweight names above SMA50
+    (active spending phase), underweight names below (project delays).
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Infrastructure Reshoring",
+            description="US infrastructure spending: PAVE, heavy equipment, materials",
+            risk_tolerance=0.6,
+            max_position_size=0.20,
+            max_positions=6,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "PAVE",  # US Infrastructure ETF
+                "CAT",   # Caterpillar
+                "DE",    # Deere
+                "VMC",   # Vulcan Materials
+                "MLM",   # Martin Marietta
+                "URI",   # United Rentals
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        above_sma = []
+        below_sma = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            # Skip if severely broken trend (>20% below SMA200)
+            if not _is_missing(sma200) and sma200 > 0:
+                if price < sma200 * 0.80:
+                    weights[sym] = 0.0
+                    continue
+
+            # RSI filter: skip extremely overbought
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Momentum tilt: classify above/below SMA50
+            if not _is_missing(sma50) and price > sma50:
+                above_sma.append(sym)
+            else:
+                below_sma.append(sym)
+
+        # Equal weight with momentum tilt
+        # Above SMA50 names get 1.5x the weight of below-SMA50 names
+        total_units = len(above_sma) * 1.5 + len(below_sma) * 1.0
+        if total_units > 0:
+            base_weight = min(0.90 / total_units, self.config.max_position_size)
+            for sym in above_sma:
+                weights[sym] = base_weight * 1.5
+            for sym in below_sma:
+                weights[sym] = base_weight * 1.0
+
+        # Close non-qualifying
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -4267,6 +4361,8 @@ THEME_STRATEGIES = {
     "esg_momentum": ESGMomentum,
     "africa_frontier": AfricaFrontier,
     "southeast_asia_growth": SoutheastAsiaGrowth,
+    # Infrastructure spending
+    "infrastructure_reshoring": InfrastructureReshoring,
 }
 
 

@@ -10,6 +10,8 @@ Strategies:
     4. DogsOfTheDow       — Buy worst performers yearly (contrarian)
     5. QualityFactor      — Low vol + high profitability + low leverage
     6. TailRiskHarvest    — Sell premium (proxy: buy after sharp drops)
+    + DollarCycleRotation  — Trade dollar strength/weakness via UUP vs EM ETFs
+    + LeveragedTrendTactical — TQQQ/SQQQ with strict 20% max leveraged exposure
 """
 
 from __future__ import annotations
@@ -3407,8 +3409,9 @@ class InsiderBuyingAcceleration(BasePersona):
             if pct_from_low < 0.05 and vol_ratio > 2.0:
                 signals += 1
 
-            # Require 2+ confirming signals
-            if signals >= 2:
+            # Require 1+ confirming signals (2+ was too restrictive,
+            # causing the strategy to stay in cash most of the time)
+            if signals >= 1:
                 score = float(signals)
                 # Bonus for extreme oversold
                 if rsi < 25:
@@ -3422,8 +3425,13 @@ class InsiderBuyingAcceleration(BasePersona):
         top = scored[:self.config.max_positions]
         if top:
             total = sum(s for _, s in top)
-            for sym, sc in top:
-                weights[sym] = min((sc / total) * 0.90, self.config.max_position_size)
+            if total > 0:
+                for sym, sc in top:
+                    weights[sym] = min((sc / total) * 0.90, self.config.max_position_size)
+        # Close stale positions for symbols not allocated
+        for sym in self.config.universe:
+            if sym in prices:
+                weights.setdefault(sym, 0.0)
         return weights
 
 
@@ -3949,30 +3957,33 @@ class InsiderBuyingReal(BasePersona):
             if _is_missing(low_52w) or low_52w <= 0:
                 continue
 
-            # === ALL 4 SIGNALS MUST CONFIRM ===
+            # === REQUIRE 3 OF 4 SIGNALS ===
+            # (All 4 was too restrictive, causing the strategy to never fire)
 
             # Signal 1: Volume surge (>1.5x average)
             vol_ratio = cur_vol / vol_avg
             signal_volume = vol_ratio > 1.5
 
-            # Signal 2: Price near 52-week low (within 15%)
+            # Signal 2: Price near 52-week low (within 20%)
             pct_from_low = (price - low_52w) / low_52w
-            signal_near_low = pct_from_low < 0.15
+            signal_near_low = pct_from_low < 0.20
 
             # Signal 3: Stabilization after decline
-            # Price above SMA50 OR price recovering toward SMA50 (within 3%)
+            # Price above SMA50 OR price recovering toward SMA50 (within 5%)
             if not _is_missing(sma50) and sma50 > 0:
                 dist_to_sma50 = (price - sma50) / sma50
-                signal_stabilized = dist_to_sma50 > -0.03
+                signal_stabilized = dist_to_sma50 > -0.05
             else:
                 signal_stabilized = False
 
             # Signal 4: RSI recovering from oversold
-            # RSI must be between 30 and 45 (was recently oversold, now recovering)
-            signal_rsi_recovery = 30 <= rsi <= 45
+            # RSI must be between 25 and 50 (was recently oversold, now recovering)
+            signal_rsi_recovery = 25 <= rsi <= 50
 
-            # ALL must pass
-            if signal_volume and signal_near_low and signal_stabilized and signal_rsi_recovery:
+            # Require 3 of 4 signals
+            signals_confirmed = sum([signal_volume, signal_near_low,
+                                     signal_stabilized, signal_rsi_recovery])
+            if signals_confirmed >= 3:
                 # Score by conviction (how strong each signal is)
                 score = 0.0
                 score += min(vol_ratio - 1.5, 2.0)       # Volume excess
@@ -3991,6 +4002,196 @@ class InsiderBuyingReal(BasePersona):
 
 
 UNCONVENTIONAL_STRATEGIES["insider_buying_real"] = InsiderBuyingReal
+
+
+# ---------------------------------------------------------------------------
+# Dollar Cycle Rotation
+# ---------------------------------------------------------------------------
+class DollarCycleRotation(BasePersona):
+    """Trade the dollar cycle: strong dollar vs weak dollar regimes.
+
+    Source: Morgan Stanley "Dollar Smile" theory, Gourinchas & Rey (2007).
+
+    The US dollar cycle creates predictable winners:
+    - Dollar strengthening: UUP (dollar bull ETF) benefits
+    - Dollar weakening: EEM/VWO (emerging markets) benefit as EM
+      assets become cheaper in dollar terms and EM currencies appreciate
+
+    Signal: UUP momentum as DXY proxy.
+    - UUP > SMA50: dollar strengthening -> hold UUP
+    - UUP < SMA50: dollar weakening -> hold EEM + VWO
+
+    Use SMA200 as secondary confirmation for trend strength.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Dollar Cycle Rotation",
+            description="Trade dollar strength/weakness via UUP vs EM ETFs",
+            risk_tolerance=0.5,
+            max_position_size=0.50,
+            max_positions=3,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "UUP",  # Dollar bull ETF (DXY proxy)
+                "EEM",  # iShares MSCI Emerging Markets
+                "VWO",  # Vanguard FTSE Emerging Markets
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Get UUP trend signals
+        uup_price = prices.get("UUP")
+        uup_sma50 = self._get_indicator(data, "UUP", "sma_50", date)
+        uup_sma200 = self._get_indicator(data, "UUP", "sma_200", date)
+
+        if uup_price is None or _is_missing(uup_sma50):
+            # No dollar signal: equal weight across EM as default
+            em_etfs = [s for s in ["EEM", "VWO"] if s in prices]
+            if em_etfs:
+                per = 0.40
+                for sym in em_etfs:
+                    weights[sym] = per
+            return weights
+
+        dollar_strong = uup_price > uup_sma50
+        dollar_confirmed = (
+            not _is_missing(uup_sma200)
+            and uup_sma50 > uup_sma200
+        )
+
+        if dollar_strong:
+            # Dollar strengthening: hold UUP
+            weights["UUP"] = 0.70 if dollar_confirmed else 0.50
+            # Reduce EM exposure
+            for sym in ["EEM", "VWO"]:
+                if sym in prices:
+                    weights[sym] = 0.0 if dollar_confirmed else 0.10
+        else:
+            # Dollar weakening: hold EM
+            weights["UUP"] = 0.0
+            em_etfs = [s for s in ["EEM", "VWO"] if s in prices]
+            if em_etfs:
+                dollar_weak_confirmed = (
+                    not _is_missing(uup_sma200)
+                    and uup_sma50 < uup_sma200
+                )
+                per = 0.40 if dollar_weak_confirmed else 0.30
+                for sym in em_etfs:
+                    weights[sym] = per
+
+        # Zero unallocated
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["dollar_cycle_rotation"] = DollarCycleRotation
+
+
+# ---------------------------------------------------------------------------
+# Leveraged Trend Tactical
+# ---------------------------------------------------------------------------
+class LeveragedTrendTactical(BasePersona):
+    """Leveraged trend-following with strict position sizing.
+
+    Source: AQR "Time Series Momentum" (2012), Hurst et al.
+
+    Uses leveraged ETFs to amplify confirmed trends in QQQ:
+    - TQQQ (3x bull) when QQQ in confirmed uptrend:
+      QQQ SMA50 > SMA200 AND QQQ > SMA50
+    - SQQQ (3x bear) when QQQ in confirmed downtrend:
+      QQQ SMA50 < SMA200 AND QQQ < SMA50
+    - SHY (cash) when signals are mixed
+
+    STRICT position sizing: max 20% in leveraged ETFs, rest in QQQ
+    or SHY. This prevents catastrophic losses from 3x leverage.
+
+    WARNING: Leveraged ETFs suffer from volatility decay. This strategy
+    is for tactical, short-duration trend captures only.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Leveraged Trend Tactical",
+            description="TQQQ/SQQQ with strict 20% max leveraged exposure",
+            risk_tolerance=0.7,
+            max_position_size=0.60,
+            max_positions=3,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "QQQ",   # Unleveraged base (and signal source)
+                "TQQQ",  # 3x bull Nasdaq
+                "SQQQ",  # 3x bear Nasdaq
+                "SHY",   # Cash proxy
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Get QQQ trend signals
+        qqq_price = prices.get("QQQ")
+        qqq_sma50 = self._get_indicator(data, "QQQ", "sma_50", date)
+        qqq_sma200 = self._get_indicator(data, "QQQ", "sma_200", date)
+        qqq_rsi = self._get_indicator(data, "QQQ", "rsi_14", date)
+
+        if qqq_price is None or _is_missing(qqq_sma50) or _is_missing(qqq_sma200):
+            # Insufficient data: full cash
+            if "SHY" in prices:
+                weights["SHY"] = 0.90
+            return weights
+
+        uptrend = qqq_sma50 > qqq_sma200 and qqq_price > qqq_sma50
+        downtrend = qqq_sma50 < qqq_sma200 and qqq_price < qqq_sma50
+        # RSI extremes: avoid entering leveraged at extremes
+        overbought = not _is_missing(qqq_rsi) and qqq_rsi > 80
+        oversold = not _is_missing(qqq_rsi) and qqq_rsi < 20
+
+        if uptrend and not overbought:
+            # Confirmed uptrend: 20% TQQQ + 60% QQQ + 10% SHY
+            if "TQQQ" in prices:
+                weights["TQQQ"] = 0.20  # STRICT: max 20% leveraged
+            if "QQQ" in prices:
+                weights["QQQ"] = 0.60
+            if "SHY" in prices:
+                weights["SHY"] = 0.10
+            # Ensure no short exposure
+            if "SQQQ" in prices:
+                weights["SQQQ"] = 0.0
+        elif downtrend and not oversold:
+            # Confirmed downtrend: 20% SQQQ + 70% SHY
+            if "SQQQ" in prices:
+                weights["SQQQ"] = 0.20  # STRICT: max 20% leveraged
+            if "SHY" in prices:
+                weights["SHY"] = 0.70
+            # Close long positions
+            if "QQQ" in prices:
+                weights["QQQ"] = 0.0
+            if "TQQQ" in prices:
+                weights["TQQQ"] = 0.0
+        else:
+            # Mixed signals or RSI extreme: cash + unleveraged
+            if "QQQ" in prices:
+                weights["QQQ"] = 0.40
+            if "SHY" in prices:
+                weights["SHY"] = 0.50
+            # Close all leveraged
+            if "TQQQ" in prices:
+                weights["TQQQ"] = 0.0
+            if "SQQQ" in prices:
+                weights["SQQQ"] = 0.0
+
+        return weights
+
+
+UNCONVENTIONAL_STRATEGIES["leveraged_trend_tactical"] = LeveragedTrendTactical
 
 if __name__ == "__main__":
     print("=== Unconventional Strategies ===\n")

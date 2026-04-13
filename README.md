@@ -1,6 +1,6 @@
 # agents-assemble
 
-Trading agents and algorithms for publicly tradable instruments. **214 strategies**, 720+ tickers, ranked by Composite Score across 28 rolling windows (2015-2025).
+Trading agents and algorithms for publicly tradable instruments. **224 strategies**, 720+ tickers, ranked by Composite Score across 28 rolling windows (2015-2025).
 
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
@@ -24,7 +24,7 @@ Trading agents and algorithms for publicly tradable instruments. **214 strategie
 | 4 | **AI Revolution** | **0.53** | 92% | +79% avg | Broad AI theme (NVDA, AVGO, CRM, SNOW) |
 | 5 | **David Tepper** | **0.52** | 100% | +65% avg | Appaloosa macro — positive Sharpe in ALL 12 windows |
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 214 strategies with full rankings and formula details.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 224 strategies with full rankings and formula details.
 
 ## Quick Start
 
@@ -35,13 +35,13 @@ pip install -e .
 python app.py
 # Open http://localhost:8888
 
-# Run all 214 strategies on 4-year horizon
+# Run all 224 strategies on 4-year horizon
 python run_multi_horizon.py --horizon 3y
 
 # Run single strategy
 python run_multi_horizon.py --persona ai_token_economy
 
-# Run all 214 strategies in a category
+# Run all 224 strategies in a category
 python run_multi_horizon.py --category unconventional
 ```
 
@@ -73,12 +73,12 @@ for rec in result["recommendations"]:
 
 **How it works:**
 1. Enter tickers (any stock — if not in our universe, we fetch and cache it)
-2. System matches against 214 backtested strategies by universe overlap
+2. System matches against 224 backtested strategies by universe overlap
 3. Runs fresh backtest on the matched strategy
 4. Generates vol-adjusted positions: high-vol stocks get wider stops + smaller size
 5. If your picks are weak, size = 0% with an explanation note
 6. Claude AI reviews the whole thing
-7. **Re-roll:** GUI shows 214 strategies in a carousel with shuffle
+7. **Re-roll:** GUI shows 224 strategies in a carousel with shuffle
 
 ## Strategy Orchestrator — Regime-Adaptive Meta-Strategy
 
@@ -165,7 +165,7 @@ agents-assemble/
     engine/backtester.py        # Event-driven backtester + predictions + black swan sim
     engine/judge.py             # Strategy grading and ranking
     engine/recommender.py       # Trade recommendations with vol-adjusted sizing
-    strategies/                    # All strategy implementations (13 modules, 214 strategies)
+    strategies/                    # All strategy implementations (13 modules, 224 strategies)
 
   strategy_orchestrator.py      # Meta-strategy: regime detection + strategy activation
   stock_picker.py               # StockPick: AI strategy matcher (core GUI feature)
@@ -173,7 +173,7 @@ agents-assemble/
   run_multi_horizon.py          # Multi-horizon backtest runner
   sync_package.py               # Sync flat files → package after evolution
 
-  LEADERBOARD.md                # Definitive strategy rankings (214 strategies)
+  LEADERBOARD.md                # Definitive strategy rankings (224 strategies)
   TRADING.md                    # Public.com API execution guide
   knowledge/                    # 54 research files (NVDA supply chain, alt data, etc.)
   results/                      # Backtest JSON results
@@ -188,7 +188,7 @@ agents-assemble/
 - **Regime orchestration improves Sharpe** — conservative orchestrator has 1.17 Sharpe
 - **Boring monopolies compound quietly** — insurance float, toll booths, railroads
 - **Supply chain risk is real** — NVIDIA's $110B financing book echoes Cisco 2000
-- **Always backtest** — 72+ of 214 strategies lost money despite sounding good
+- **Always backtest** — 72+ of 224 strategies lost money despite sounding good
 - See `knowledge/` for detailed findings
 
 ## Tax Note (K-1 Warning)

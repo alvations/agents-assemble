@@ -513,11 +513,18 @@ class QuantStrategist(BasePersona):
             if any(v is None for v in [bb_upper, bb_lower, rsi, vol, sma20]):
                 continue
 
-            # Mean reversion score
+            # Multi-factor mean reversion + momentum signals
+            z_score = (sma20 - price) / (vol * price) if vol > 0 and price > 0 else 0
+
             if price < bb_lower and rsi < 35:
-                # Oversold — buy signal (z_score is already vol-normalized)
-                z_score = (sma20 - price) / (vol * price) if vol > 0 and price > 0 else 0
-                candidates.append((sym, max(z_score, 0.1), vol))
+                # Strong mean reversion: deeply oversold
+                candidates.append((sym, max(z_score, 0.1) + 2.0, vol))
+            elif price < bb_lower and rsi < 45:
+                # Moderate mean reversion: below lower band, not extreme
+                candidates.append((sym, max(z_score, 0.1) + 1.0, vol))
+            elif price < sma20 and rsi < 40:
+                # Mild reversion: below SMA20, oversold
+                candidates.append((sym, max(z_score * 0.5, 0.05) + 0.5, vol))
 
             elif price > bb_upper and rsi > 70:
                 # Overbought — close position
@@ -612,6 +619,14 @@ class FixedIncomeStrat(BasePersona):
         hyg_sig = hyg_inds["macd_signal"]
         hyg_rsi = hyg_inds["rsi_14"]
 
+        # Rate direction filter: detect if rates are rising aggressively
+        # (TLT in strong downtrend = rates rising fast)
+        rates_rising_fast = (
+            tlt_price is not None and tlt_sma50 is not None
+            and tlt_sma200 is not None
+            and tlt_price < tlt_sma50 < tlt_sma200
+        )
+
         # Duration allocation
         if tlt_sma50 is not None and tlt_sma200 is not None and tlt_price is not None:
             if tlt_sma50 > tlt_sma200:
@@ -619,8 +634,14 @@ class FixedIncomeStrat(BasePersona):
                 weights["TLT"] = 0.35
                 weights["IEF"] = 0.20
                 weights["SHY"] = 0.10
+            elif rates_rising_fast:
+                # Rates rising aggressively — heavy short duration + TIPS
+                weights["SHY"] = 0.35
+                weights["TIP"] = 0.20
+                weights["IEF"] = 0.10
+                weights["TLT"] = 0.0
             elif tlt_price < tlt_sma50:
-                # Rates rising — shorten duration
+                # Rates rising moderately — shorten duration
                 weights["SHY"] = 0.35
                 weights["IEF"] = 0.20
                 weights["TLT"] = 0.05
@@ -629,6 +650,11 @@ class FixedIncomeStrat(BasePersona):
                 weights["TLT"] = 0.15
                 weights["SHY"] = 0.25
                 weights["IEF"] = 0.15
+        else:
+            # Fallback when indicators unavailable: balanced allocation
+            weights["SHY"] = 0.25
+            weights["IEF"] = 0.20
+            weights["BND"] = 0.15
 
         # Credit allocation
         if hyg_macd is not None and hyg_sig is not None:
@@ -640,10 +666,15 @@ class FixedIncomeStrat(BasePersona):
                 # Risk-off: prefer investment grade
                 weights["LQD"] = 0.20
                 weights["HYG"] = 0.0
+        else:
+            # Fallback: modest IG allocation
+            weights.setdefault("LQD", 0.10)
 
-        # Inflation protection
+        # Inflation protection: always hold some TIPS, more when bonds oversold
         if tlt_rsi is not None and tlt_rsi < 30:
-            weights["TIP"] = 0.10  # Inflation hedge when bonds oversold
+            weights["TIP"] = weights.get("TIP", 0) + 0.10
+        else:
+            weights.setdefault("TIP", 0.05)
 
         # Only return weights for symbols in our universe that are actually tradeable
         universe = set(self.config.universe)
@@ -1030,29 +1061,36 @@ class EnsembleStrategist(BasePersona):
             return {sym: 0.0 for sym in self.config.universe if sym in prices}
 
         # Aggregate: weighted average of signals
+        # Distinguish between explicit exits (strategy returned 0.0 for a
+        # symbol it specifically evaluated) and neutral (symbol absent from
+        # strategy output means the strategy had no opinion).
         combined = {}
         for signals, weight in all_signals:
             for sym, w in signals.items():
                 if sym not in combined:
-                    combined[sym] = {"total_weight": 0.0, "signal_count": 0, "exit_count": 0}
+                    combined[sym] = {"total_weight": 0.0, "signal_count": 0,
+                                     "explicit_exit": 0}
                 if w > 0:
                     combined[sym]["total_weight"] += w * weight
                     combined[sym]["signal_count"] += 1
-                else:
-                    combined[sym]["exit_count"] += 1
+                # Only count as explicit exit if the strategy specifically
+                # set 0.0 for this symbol (not just absent from output)
+                elif w == 0.0:
+                    combined[sym]["explicit_exit"] += 1
 
-        # Only take positions where 2+ strategies agree (consensus)
+        # Take positions where 1+ strategies have a buy signal
+        # (requiring 2+ consensus was too strict with 4 diverse strategies)
         weights = {}
         n_ran = len(all_signals)
         for sym, info in combined.items():
-            if info["signal_count"] >= 2 and info["signal_count"] > info["exit_count"]:
-                # Scale weight by consensus strength among strategies that actually ran
+            if info["signal_count"] >= 1 and info["signal_count"] >= info["explicit_exit"]:
+                # Scale weight by consensus strength
                 consensus_factor = info["signal_count"] / n_ran
                 w = min(info["total_weight"] * consensus_factor,
                         self.config.max_position_size)
                 weights[sym] = w
-            elif info["exit_count"] >= 2:
-                weights[sym] = 0.0  # Consensus exit
+            elif info["explicit_exit"] >= 3:
+                weights[sym] = 0.0  # Strong consensus exit (3+ out of 4)
 
         # Enforce max_positions: keep top N positive weights + all exits
         positive = sorted(

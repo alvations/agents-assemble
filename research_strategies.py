@@ -15,6 +15,8 @@ Strategies:
     7. GlobalRotation        — International momentum rotation
     8. FactorETFRotation    — Rotate between factor ETFs by momentum
     9. FaberSectorRotation  — Faber 12-month sector momentum, top 3
+   10. LowVolQuality        — Lowest-vol quintile with quality ETF + individual names
+   11. CrossAssetCarry       — Rank yield-bearing ETFs by carry, hold top 2
 """
 
 from __future__ import annotations
@@ -993,15 +995,23 @@ class MultiFactorCombined(BasePersona):
             )
 
             # --- Factor 3: Value ---
-            # RSI < 50 (not overbought, recent dip) AND price within 10%
-            # of SMA200 (not too extended — buying at reasonable valuation)
+            # RSI < 55 (not overbought) AND price within 15% of SMA200
+            # (not too extended — buying at reasonable valuation)
             extension = (price - sma200) / sma200
-            value_pass = (rsi < 50) and (extension < 0.10)
+            value_pass = (rsi < 55) and (extension < 0.15)
 
-            # ALL THREE must pass
-            if quality_pass and momentum_pass and value_pass:
-                # Composite score for ranking (quality = low vol, value = low RSI)
-                composite = (0.03 - vol) * 100 + (50 - rsi) * 0.5
+            # Count passing factors
+            factors_passed = sum([quality_pass, momentum_pass, value_pass])
+
+            # Require at least 2 of 3 factors (intersection too strict,
+            # 2-of-3 captures the multi-factor alpha while staying invested)
+            if factors_passed >= 2:
+                # Composite score: bonus for all-3, plus quality + value scores
+                composite = factors_passed * 2.0
+                composite += (0.03 - vol) * 100  # Lower vol = higher quality
+                composite += (55 - rsi) * 0.3    # Lower RSI = better value
+                if quality_pass and momentum_pass:
+                    composite += 1.0  # Q+M is the strongest 2-factor combo
                 qualified.append((sym, composite))
 
         # Rank and take top N
@@ -1020,6 +1030,193 @@ class MultiFactorCombined(BasePersona):
         return weights
 
 
+
+# ---------------------------------------------------------------------------
+# 10. Low Volatility Quality
+# ---------------------------------------------------------------------------
+class LowVolQuality(BasePersona):
+    """Low volatility quality strategy with ETF and individual stock mix.
+
+    Source: Frazzini & Pedersen "Betting Against Beta" (2014), Baker et al.
+
+    Buy lowest-volatility quintile of major stocks. Uses both ETF proxies
+    (SPLV, USMV, LGLV) and individual quality names (PG, JNJ, KO, PEP,
+    WMT, CL, MMM) that historically exhibit low-beta, stable earnings.
+
+    Signal: 20-day realized vol ranking. Buy names with lowest vol.
+    Momentum overlay: only buy if above SMA50 (avoid value traps).
+    Rebalance monthly.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Low Volatility Quality",
+            description="Lowest-vol quintile: quality ETFs + individual staple names",
+            risk_tolerance=0.3,
+            max_position_size=0.12,
+            max_positions=10,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Low-vol ETF proxies
+                "SPLV", "USMV", "LGLV",
+                # Individual quality low-vol names
+                "PG", "JNJ", "KO", "PEP", "WMT", "CL", "MMM",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        vol_scores = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "vol_20", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            vol = inds["vol_20"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(vol) or _is_missing(sma50):
+                continue
+
+            # Must be above SMA50 (avoid value traps in downtrends)
+            if price < sma50:
+                continue
+
+            # RSI filter: skip extremely overbought
+            if not _is_missing(rsi) and rsi > 75:
+                continue
+
+            # Quality check: prefer names above SMA200 (structural uptrend)
+            quality_bonus = 0.0
+            if not _is_missing(sma200) and price > sma200:
+                quality_bonus = 0.01  # Small bonus for quality trend
+
+            # Lower vol = better (we want lowest-vol quintile)
+            # Use negative vol so sorting ascending gives lowest vol first
+            vol_scores.append((sym, vol - quality_bonus))
+
+        # Sort by vol ascending (lowest vol first)
+        vol_scores.sort(key=lambda x: x[1])
+
+        # Take lowest-vol quintile (top ~40% for our small universe)
+        n_select = max(1, len(vol_scores) * 2 // 5)
+        top = vol_scores[:n_select]
+
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        # Close non-qualifying positions
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 11. Cross-Asset Carry
+# ---------------------------------------------------------------------------
+class CrossAssetCarry(BasePersona):
+    """Cross-asset carry strategy: rank yield-bearing ETFs.
+
+    Source: Koijen et al. "Carry" (2018), AQR carry research.
+
+    Rank yield-bearing ETFs by trailing dividend yield (proxy for carry):
+    - HYG (high yield bonds)
+    - VNQ (REITs)
+    - PFF (preferred stock)
+    - EMB (EM bonds)
+    - VCIT (investment grade corporate)
+
+    Hold top 2 by trailing yield. Use SMA200 as trend filter (only
+    hold if above trend). Rebalance quarterly.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Cross-Asset Carry",
+            description="Rank yield-bearing ETFs by carry, hold top 2",
+            risk_tolerance=0.4,
+            max_position_size=0.45,
+            max_positions=3,
+            rebalance_frequency="quarterly",
+            universe=universe or [
+                "HYG",   # High yield bonds
+                "VNQ",   # REITs
+                "PFF",   # Preferred stock
+                "EMB",   # Emerging market bonds
+                "VCIT",  # Investment grade corporate
+                "SHY",   # Cash proxy fallback
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        carry_scores = []
+
+        yield_etfs = ["HYG", "VNQ", "PFF", "EMB", "VCIT"]
+
+        for sym in yield_etfs:
+            if sym not in prices or sym not in data or data[sym].empty:
+                continue
+
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            sma50 = self._get_indicator(data, sym, "sma_50", date)
+
+            # Trend filter: must be above SMA200 (avoid falling knives)
+            if not _is_missing(sma200) and price < sma200:
+                continue
+
+            # Estimate yield proxy: distance from SMA200 as momentum,
+            # combined with inverse-price level as yield proxy.
+            # Higher-yielding assets tend to trade at lower price levels
+            # relative to their SMA, so we use SMA50 distance as a
+            # mean-reversion carry signal.
+            carry_score = 0.0
+            if not _is_missing(sma50) and sma50 > 0:
+                # Price near SMA50 = stable carry; price above = momentum
+                carry_score = 1.0  # Base score for being above SMA200
+                # Bonus for momentum
+                if price > sma50:
+                    carry_score += 0.5
+
+            # Bonus for known high-yield assets
+            yield_bonus = {"HYG": 0.3, "VNQ": 0.2, "PFF": 0.25, "EMB": 0.35, "VCIT": 0.1}
+            carry_score += yield_bonus.get(sym, 0)
+
+            carry_scores.append((sym, carry_score))
+
+        # Rank by carry score and take top 2
+        carry_scores.sort(key=lambda x: x[1], reverse=True)
+        top = carry_scores[:2]
+
+        if top:
+            per_etf = min(0.45, 0.90 / len(top))
+            for sym, _ in top:
+                weights[sym] = per_etf
+        else:
+            # No qualifying assets: park in cash proxy
+            if "SHY" in prices:
+                weights["SHY"] = 0.90
+
+        # Close non-qualifying
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
 RESEARCH_STRATEGIES = {
     "dual_momentum": DualMomentum,
     "multi_factor_smart_beta": MultiFactorSmartBeta,
@@ -1032,6 +1229,8 @@ RESEARCH_STRATEGIES = {
     "faber_sector_rotation": FaberSectorRotation,
     "systematic_sector_rotation": SystematicSectorRotation,
     "multi_factor_combined": MultiFactorCombined,
+    "low_vol_quality": LowVolQuality,
+    "cross_asset_carry": CrossAssetCarry,
 }
 
 

@@ -1,0 +1,57 @@
+# LOSING Strategy: managed_futures_proxy
+
+**Generated:** 2026-04-13T18:32:38.774464
+**Assessment:** NEUTRAL — Mixed signals. Paper trade before committing capital.
+
+## Performance Summary
+- **total_return:** 2.07%
+- **sharpe_ratio:** -0.72
+- **max_drawdown:** -6.57%
+- **win_rate:** 50.00%
+- **alpha:** N/A
+
+## Risk Parameters
+- **max_portfolio_allocation:** 0.0%
+- **stop_loss:** 6.6%
+- **take_profit_target:** 5.0%
+- **max_drawdown_tolerance:** 6.6%
+- **rebalance_frequency:** weekly
+
+## Execution Guidance
+- **order_type:** limit
+- **limit_offset:** limit: Buy 0.5% below market in uptrend.
+- **timing:** SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically.
+- **scaling:** Enter in 3 tranches over 1-2 weeks.
+## Lessons Learned
+
+This strategy lost money. Key issues:
+- Sharpe ratio: -0.72 (target > 0.5)
+- Max drawdown: -6.57% (target > -20%)
+- Alpha: N/A (target > 0%)
+
+**DO NOT REPEAT** these patterns without fundamental strategy changes.
+
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | 15.8% |
+| **Avg 5Y Sharpe** | -0.52 |
+| **Avg 5Y Max DD** | -9.4% |
+| **10Y Return (2015-2024)** | 23.7% |
+| **10Y Sharpe** | -0.29 |
+| **10Y Max DD** | -14.5% |
+| **HODL Composite** | 0.03 |
+| **Windows Tested** | 28 |
+| **Consistency** | 32% |
+
+### How to Use This Strategy Passively
+
+This strategy is **NOT recommended for passive investing**.
+
+**If you still want exposure:** Limit to 5% of your portfolio maximum.
+
+</details>

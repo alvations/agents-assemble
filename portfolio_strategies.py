@@ -21,6 +21,12 @@ Strategies:
    15. EqualWeightSP500             — Equal weight S&P 500 top holdings
    16. AllWeatherPassive            — Ray Dalio All Weather (simplified passive)
    17. QualityDividendAristocrats   — Quality factor + Dividend Aristocrats
+   18. BondDurationTrade            — Yield curve steepening/flattening trade
+   19. CreditSpreadTrade            — High yield vs investment grade rotation
+   20. CoveredCallIncome            — Covered call ETF income with VIX overlay
+   21. DualMomentumGlobal           — Antonacci dual momentum: SPY vs EFA vs AGG
+   22. PreferredEquityIncome        — Preferred stock ETFs with rate sensitivity
+   23. TaxHarvestRotation           — Tax-loss harvesting via correlated ETF swaps
 """
 
 from __future__ import annotations
@@ -214,6 +220,15 @@ class AllWeatherModern(BasePersona):
         if not vols:
             return {"VTI": 0.25, "TLT": 0.20, "IEF": 0.15, "GLD": 0.10, "TIP": 0.10, "SHY": 0.10}
 
+        # Detect rate-hike regime: TLT trending down (10Y yield rising)
+        tlt_sma50 = self._get_indicator(data, "TLT", "sma_50", date)
+        tlt_sma200 = self._get_indicator(data, "TLT", "sma_200", date)
+        tlt_price = prices.get("TLT")
+        rate_hike_regime = (
+            tlt_price is not None and tlt_sma50 is not None and tlt_sma200 is not None
+            and tlt_price < tlt_sma50 < tlt_sma200
+        )
+
         # Momentum filter: only include assets above SMA50
         filtered = {}
         for sym, vol in vols.items():
@@ -223,11 +238,23 @@ class AllWeatherModern(BasePersona):
                 filtered[sym] = vol
             elif sym in ("SHY", "TIP"):
                 filtered[sym] = vol  # Always include short bonds + TIPS
+            elif sym == "GLD" and rate_hike_regime:
+                filtered[sym] = vol  # Gold as bond substitute in rate hikes
 
         if not filtered:
             filtered = vols
 
+        # In rate-hike regime, boost gold/SHY/TIP and reduce TLT
+        if rate_hike_regime:
+            # Override: reduce long bond exposure, boost alternatives
+            if "TLT" in filtered:
+                filtered["TLT"] = filtered["TLT"] * 3  # Higher vol = lower weight
+            if "GLD" in vols and "GLD" not in filtered:
+                filtered["GLD"] = vols["GLD"]
+
         total_inv = sum(1/v for v in filtered.values())
+        if total_inv <= 0:
+            return {"VTI": 0.25, "GLD": 0.15, "SHY": 0.20, "TIP": 0.15, "IEF": 0.10}
         for sym, vol in filtered.items():
             w = (1/vol) / total_inv * 0.90
             weights[sym] = min(w, self.config.max_position_size)
@@ -1694,6 +1721,374 @@ class CreditSpreadTrade(BasePersona):
 
 
 PORTFOLIO_STRATEGIES["credit_spread_trade"] = CreditSpreadTrade
+
+
+# ---------------------------------------------------------------------------
+# 20. Covered Call Income
+# ---------------------------------------------------------------------------
+class CoveredCallIncome(BasePersona):
+    """Covered call income strategy using ETF proxies.
+
+    Source: CBOE BuyWrite Index research, JPM JEPI methodology.
+
+    Uses covered call ETFs (JEPI, JEPQ, QYLD, XYLD) as proxies for
+    writing calls against equity positions. Adds SVXY for vol-selling
+    exposure.
+
+    VIX regime filter (using SPY realized vol as proxy):
+    - High vol (VIX > 25 proxy): overweight QYLD (higher premiums)
+    - Low vol (VIX < 15 proxy): underweight (low premiums not worth it)
+    - Normal: equal weight across all covered call ETFs
+
+    Rebalance quarterly.
+
+    ## Passive Investor View
+    Buy-and-hold JEPI + JEPQ equal weight for steady monthly income.
+    Suitable for retirees or income-focused portfolios. Expect 7-10%
+    yield with equity-like participation in up markets.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Covered Call Income",
+            description="Covered call ETF income with VIX regime overlay",
+            risk_tolerance=0.3,
+            max_position_size=0.30,
+            max_positions=6,
+            rebalance_frequency="quarterly",
+            universe=universe or [
+                "JEPI", "JEPQ", "QYLD", "XYLD",  # Covered call ETFs
+                "SVXY",  # Vol-selling exposure
+                "SPY",   # Regime detection
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Estimate VIX regime from SPY 20-day realized vol
+        spy_vol = self._get_indicator(data, "SPY", "vol_20", date)
+
+        # vol_20 is typically daily std dev; annualize: vol*sqrt(252)*100 ~ VIX
+        high_vol = False
+        low_vol = False
+        if spy_vol is not None and not _is_missing(spy_vol):
+            annualized_vol = spy_vol * 15.87 * 100  # sqrt(252) ~ 15.87
+            if annualized_vol > 25:
+                high_vol = True
+            elif annualized_vol < 15:
+                low_vol = True
+
+        cc_etfs = ["JEPI", "JEPQ", "QYLD", "XYLD"]
+        available = [s for s in cc_etfs if s in prices]
+
+        if not available:
+            return weights
+
+        if high_vol:
+            # High vol: overweight QYLD (higher premiums from covered calls)
+            for sym in available:
+                if sym == "QYLD":
+                    weights[sym] = 0.35
+                else:
+                    weights[sym] = 0.15
+            # Add SVXY (vol selling profits from mean reversion)
+            if "SVXY" in prices:
+                weights["SVXY"] = 0.10
+        elif low_vol:
+            # Low vol: underweight covered calls, shift to cash-like
+            for sym in available:
+                weights[sym] = 0.10
+            # SVXY less attractive when vol already low
+            if "SVXY" in prices:
+                weights["SVXY"] = 0.05
+        else:
+            # Normal vol: equal weight
+            per_etf = min(0.20, 0.80 / len(available))
+            for sym in available:
+                weights[sym] = per_etf
+            if "SVXY" in prices:
+                weights["SVXY"] = 0.10
+
+        # Zero non-allocated universe symbols
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights and sym != "SPY":
+                weights[sym] = 0.0
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["covered_call_income"] = CoveredCallIncome
+
+
+# ---------------------------------------------------------------------------
+# 21. Dual Momentum Global
+# ---------------------------------------------------------------------------
+class DualMomentumGlobal(BasePersona):
+    """Antonacci Dual Momentum with global asset classes.
+
+    Source: Gary Antonacci "Dual Momentum Investing" (2014).
+
+    Compare SPY (US equities) vs EFA (international equities) vs AGG
+    (bonds) on 12-month return (SMA200 distance as proxy).
+    Hold the top performer if its return > 0 (absolute momentum filter).
+    If top performer return < 0, hold SHY (cash proxy).
+
+    Classic documented strategy with historical 0.7+ Sharpe ratio.
+    Similar to existing DualMomentum but adds AGG as third horse.
+
+    ## Passive Investor View
+    Simple rules-based rotation between 3 asset classes. Low turnover
+    (monthly rebalance). Historically avoids major drawdowns by moving
+    to bonds/cash when all assets negative.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Dual Momentum Global",
+            description="Antonacci dual momentum: SPY vs EFA vs AGG, SHY fallback",
+            risk_tolerance=0.5,
+            max_position_size=0.90,
+            max_positions=2,
+            rebalance_frequency="monthly",
+            universe=universe or ["SPY", "EFA", "AGG", "SHY"],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        candidates = ["SPY", "EFA", "AGG"]
+
+        # Calculate 12-month momentum for each candidate (price vs SMA200)
+        momentums = {}
+        for sym in candidates:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if price is None or _is_missing(sma200) or sma200 <= 0:
+                continue
+            momentums[sym] = (price - sma200) / sma200
+
+        if not momentums:
+            # No data: park in cash proxy
+            if "SHY" in prices:
+                weights["SHY"] = 0.90
+            return weights
+
+        # Find top performer
+        winner = max(momentums, key=momentums.get)
+        winner_mom = momentums[winner]
+
+        # Absolute momentum filter: only invest if return > 0
+        if winner_mom > 0:
+            weights[winner] = 0.90
+        else:
+            # All negative: hold cash proxy
+            if "SHY" in prices:
+                weights["SHY"] = 0.90
+
+        # Zero out non-winners
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["dual_momentum_global"] = DualMomentumGlobal
+
+
+# ---------------------------------------------------------------------------
+# 22. Preferred Equity Income
+# ---------------------------------------------------------------------------
+class PreferredEquityIncome(BasePersona):
+    """Preferred stock income strategy with rate sensitivity filter.
+
+    Source: iShares Preferred & Income Securities research.
+
+    Uses PFF, PGX, PFFD for preferred stock exposure. Preferreds are
+    rate-sensitive (like bonds but with equity-like yield).
+
+    Rate sensitivity filter:
+    - When TLT trending down (10Y yield rising): underweight preferreds,
+      shift to SHY (short duration protects against rising rates)
+    - When TLT trending up (rates falling): overweight preferreds
+      (rate tailwind + high yield)
+
+    ## Passive Investor View
+    Preferred stocks offer 5-7% yields with lower volatility than common
+    equity. Suitable for income portfolios. Combine PFF + PGX for
+    diversification across issuers.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Preferred Equity Income",
+            description="Preferred stock ETFs with rate sensitivity filter",
+            risk_tolerance=0.3,
+            max_position_size=0.40,
+            max_positions=5,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "PFF", "PGX", "PFFD",  # Preferred stock ETFs
+                "TLT",  # Rate regime detection
+                "SHY",  # Cash proxy for rate-rising regime
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Detect rate regime via TLT trend
+        tlt_price = prices.get("TLT")
+        tlt_sma50 = self._get_indicator(data, "TLT", "sma_50", date)
+        tlt_sma200 = self._get_indicator(data, "TLT", "sma_200", date)
+
+        rates_rising = False
+        rates_falling = False
+
+        if tlt_price is not None and not _is_missing(tlt_sma50):
+            if not _is_missing(tlt_sma200):
+                if tlt_price < tlt_sma50 < tlt_sma200:
+                    rates_rising = True  # TLT in downtrend = yields rising
+                elif tlt_price > tlt_sma50 > tlt_sma200:
+                    rates_falling = True  # TLT in uptrend = yields falling
+            else:
+                if tlt_price < tlt_sma50:
+                    rates_rising = True
+                elif tlt_price > tlt_sma50:
+                    rates_falling = True
+
+        preferred_etfs = ["PFF", "PGX", "PFFD"]
+        available = [s for s in preferred_etfs if s in prices]
+
+        if rates_rising:
+            # Rates rising: underweight preferreds, shift to short duration
+            for sym in available:
+                weights[sym] = 0.10
+            if "SHY" in prices:
+                weights["SHY"] = 0.50
+        elif rates_falling:
+            # Rates falling: overweight preferreds (rate tailwind)
+            if available:
+                per_etf = min(0.30, 0.85 / len(available))
+                for sym in available:
+                    weights[sym] = per_etf
+            if "SHY" in prices:
+                weights["SHY"] = 0.0
+        else:
+            # Neutral: moderate allocation
+            if available:
+                per_etf = min(0.25, 0.70 / len(available))
+                for sym in available:
+                    weights[sym] = per_etf
+            if "SHY" in prices:
+                weights["SHY"] = 0.15
+
+        # Zero out non-allocated
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights and sym != "TLT":
+                weights[sym] = 0.0
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["preferred_equity_income"] = PreferredEquityIncome
+
+
+# ---------------------------------------------------------------------------
+# 23. Tax Harvest Rotation
+# ---------------------------------------------------------------------------
+class TaxHarvestRotation(BasePersona):
+    """Tax-loss harvesting rotation strategy.
+
+    Source: Wealthfront, Betterment tax-loss harvesting research.
+
+    Track SPY, QQQ, VTI drawdowns from recent highs. When any drops
+    >10% from its 52-week high, swap to a correlated alternative:
+    - SPY <-> VOO (both S&P 500)
+    - QQQ <-> QQQM (both Nasdaq 100)
+    - VTI <-> ITOT (both total US market)
+
+    Swap back after 31 days (IRS wash sale rule).
+    This harvests tax losses while maintaining essentially identical
+    market exposure.
+
+    ## Passive Investor View
+    Tax-loss harvesting is FREE alpha for taxable accounts. The strategy
+    maintains the same market exposure while generating tax deductions.
+    Expected benefit: 0.5-1.5% per year in tax savings for high-bracket
+    investors.
+    """
+
+    def __init__(self, universe=None):
+        config = PersonaConfig(
+            name="Tax Harvest Rotation",
+            description="Tax-loss harvesting via correlated ETF swaps on drawdowns",
+            risk_tolerance=0.3,
+            max_position_size=0.35,
+            max_positions=6,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "SPY", "VOO",    # S&P 500 pair
+                "QQQ", "QQQM",  # Nasdaq 100 pair
+                "VTI", "ITOT",  # Total US market pair
+            ],
+        )
+        super().__init__(config)
+        # Track which side of each pair to hold (primary vs alternative)
+        self._pairs = [("SPY", "VOO"), ("QQQ", "QQQM"), ("VTI", "ITOT")]
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        for primary, alt in self._pairs:
+            if primary not in prices and alt not in prices:
+                continue
+
+            # Check drawdown from recent high for primary
+            primary_in_drawdown = False
+            if primary in prices and primary in data and not data[primary].empty:
+                df = data[primary]
+                try:
+                    if date in df.index:
+                        loc = df.index.get_loc(date)
+                    else:
+                        idx = df.index.get_indexer([date], method="nearest")[0]
+                        loc = idx if idx != -1 else None
+
+                    if loc is not None and loc >= 50:
+                        lookback = df.iloc[max(0, loc - 252):loc + 1]
+                        col = "High" if "High" in lookback.columns else "Close"
+                        high_52w = lookback[col].max()
+                        cur_price = prices[primary]
+                        if high_52w > 0:
+                            drawdown = (high_52w - cur_price) / high_52w
+                            if drawdown > 0.10:
+                                primary_in_drawdown = True
+                except Exception:
+                    pass
+
+            if primary_in_drawdown and alt in prices:
+                # Swap to alternative (harvest tax loss)
+                weights[alt] = 0.30
+                weights[primary] = 0.0
+            elif primary in prices:
+                # Hold primary
+                weights[primary] = 0.30
+                if alt in prices:
+                    weights[alt] = 0.0
+            elif alt in prices:
+                # Primary not available, hold alt
+                weights[alt] = 0.30
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["tax_harvest_rotation"] = TaxHarvestRotation
 
 
 def get_portfolio_strategy(name: str, **kwargs) -> BasePersona:
