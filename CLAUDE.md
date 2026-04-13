@@ -39,18 +39,24 @@ agents-assemble/
   LEADERBOARD.md                  — Definitive multi-horizon rankings
 ```
 
-## 59 Strategies (8 categories)
+## 214 Strategies (15 categories)
 
-| Category | Count | Top Performer | Avg Sharpe |
-|----------|-------|--------------|-----------|
-| Generic | 10 | Momentum (1.08) | — |
-| Famous Investors | 13 | Masayoshi Son (0.87) | — |
-| Themes | 11 | AI Revolution (0.94) | — |
-| Recession | 4 | Defensive Rotation (0.59) | — |
-| Unconventional | 6 | Quality Factor (0.20) | — |
-| Research | 10 | Momentum Crash-Hedged (1.05) | — |
-| Math | 5 | Kelly Optimal (0.67) | — |
-| Hedge Fund | 2 | Healthcare+Asia (0.81) | — |
+| Category | Count | File |
+|----------|-------|------|
+| Unconventional | 45 | unconventional_strategies.py |
+| Themes | 42 | theme_strategies.py |
+| Famous Investors | 20 | famous_investors.py |
+| Portfolio | 17 | portfolio_strategies.py |
+| Crisis/Commodity | 12 | crisis_commodity_strategies.py |
+| Williams Seasonal | 12 | williams_seasonal_strategies.py |
+| News/Event | 10 | news_event_strategies.py |
+| Recession | 10 | recession_strategies.py |
+| Generic | 10 | personas.py |
+| Research | 10 | research_strategies.py |
+| Political | 9 | political_strategies.py |
+| Math | 8 | math_strategies.py |
+| Hedge Fund | 7 | hedge_fund_strategies.py |
+| Orchestrator | 2 | strategy_orchestrator.py |
 
 ## Universe
 
