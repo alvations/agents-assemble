@@ -4720,6 +4720,138 @@ class AIInfraPicksShovels(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Open-Source AI Ecosystem (HuggingFace + Mistral proxy + fine-tuning infra)
+# ---------------------------------------------------------------------------
+class OpenSourceAIEcosystem(BasePersona):
+    """Invest in the open-source / emerging AI ecosystem -- HuggingFace investors,
+    Mistral proxy (ASML), fine-tuning infrastructure, and companies building on
+    open-source models.
+
+    Source: knowledge/emerging_ai_ecosystem_research.md
+    Open-source models capture 30% of global AI usage in 2026 (up from 1.2%
+    in late 2024). HuggingFace ($4.5B val, $130M rev, 5M+ users) is the
+    distribution layer; Mistral AI ($14B val, ASML owns 11%) is the leading
+    European open-source model provider; Unsloth/Reka/Thinking Machines are
+    driving fine-tuning and inference demand.
+
+    Universe (tiered by exposure):
+    - ASML: 2x weight (11% Mistral ownership -- only public proxy for open-source
+      model layer; also enables ALL chip manufacturing)
+    - NVDA: 2x weight (invested in HuggingFace, Reka, Thinking Machines, Mistral;
+      acquired Groq; 92% GPU market share)
+    - META: 1.5x weight (Llama is THE dominant open-source model family)
+    - HuggingFace investors (1x): GOOGL, AMZN, CRM, INTC, AMD, QCOM, IBM
+    - Infrastructure (1x): TSM, AVGO, MU, ANET, VRT, EQIX
+    - Enterprise adopters (1x): SNOW (Reka co-lead, open model user),
+      NOW (ServiceNow, Thinking Machines investor)
+
+    Signal logic:
+    - Momentum tilt: above SMA50 = full weight, below = half weight
+    - Risk-off filter: SPY RSI > 75 -> reduce all to 50%
+    - Skip overbought (RSI > 80) and broken trends (>25% below SMA200)
+    - Monthly rebalance
+
+    ## Passive Investor Section
+    For buy-and-hold investors who want open-source AI exposure without active
+    management: equal-weight NVDA, ASML, META, GOOGL, AMZN, TSM. These 6 names
+    span GPU monopoly, Mistral proxy, Llama ecosystem, HuggingFace investors,
+    and chip fabrication. Rebalance quarterly. Expected to outperform SPY as
+    open-source AI usage grows from 30% toward 50%+ of global AI workloads.
+    """
+
+    # Weight multipliers by tier
+    _WEIGHT_OVERRIDE = {
+        "ASML": 2.0,   # 11% Mistral ownership = best open-source model proxy
+        "NVDA": 2.0,   # HuggingFace + Reka + Thinking Machines + Mistral investor
+        "META": 1.5,   # Llama = dominant open-source model
+    }
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Open-Source AI Ecosystem",
+            description="HuggingFace investors, Mistral proxy (ASML), open-source AI infrastructure",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=15,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # Tier 1: Conviction overweights
+                "ASML", "NVDA", "META",
+                # Tier 2: HuggingFace Series D investors
+                "GOOGL", "AMZN", "CRM", "INTC", "AMD", "QCOM", "IBM",
+                # Tier 3: Infrastructure (chip fab, memory, networking, power, DC)
+                "TSM", "AVGO", "MU", "ANET", "VRT", "EQIX",
+                # Tier 4: Enterprise adopters of open-source models
+                "SNOW", "NOW",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # --- Risk-off filter: check SPY RSI ---
+        risk_off_mult = 1.0
+        if "SPY" in data:
+            spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+            if not _is_missing(spy_rsi) and spy_rsi > 75:
+                risk_off_mult = 0.5  # Overbought market -> reduce exposure
+
+        # --- Score each ticker ---
+        qualified = []  # (sym, weight_mult)
+
+        for sym in self.config.universe:
+            if sym not in data or sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma50):
+                continue
+
+            # Skip extremely overbought individual names
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Skip broken trends (>25% below SMA200)
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            # Base multiplier from override or 1.0
+            base_mult = self._WEIGHT_OVERRIDE.get(sym, 1.0)
+
+            # Momentum tilt: above SMA50 = full weight, below = half
+            if price > sma50:
+                momentum_mult = 1.0
+            else:
+                momentum_mult = 0.5
+
+            qualified.append((sym, base_mult * momentum_mult))
+
+        # --- Distribute weights proportionally ---
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult * risk_off_mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out anything not qualified
+        for sym in self.config.universe:
+            if sym not in weights and sym in prices:
+                weights[sym] = 0.0
+
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -4774,6 +4906,7 @@ THEME_STRATEGIES = {
     "anthropic_ecosystem": AnthropicEcosystem,
     "openai_ecosystem": OpenAIEcosystem,
     "ai_infra_picks_shovels": AIInfraPicksShovels,
+    "open_source_ai_ecosystem": OpenSourceAIEcosystem,
 }
 
 
