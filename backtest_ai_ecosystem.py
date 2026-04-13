@@ -2,9 +2,9 @@
 """Backtest 3 AI ecosystem strategies on all 28 rolling windows.
 
 Strategies:
-- anthropic_ecosystem: Anthropic supply chain + investors pre-IPO
-- openai_ecosystem: OpenAI/Microsoft-centric AI ecosystem
-- ai_infra_picks_shovels: Arms dealer picks-and-shovels play
+  1. anthropic_ecosystem — Anthropic supply chain + investors pre-IPO
+  2. openai_ecosystem — OpenAI/Microsoft-centric ecosystem
+  3. ai_infra_picks_shovels — Arms dealer: wins regardless of AI winner
 """
 import sys, json, os, traceback
 from datetime import datetime
@@ -41,18 +41,6 @@ WINDOWS = {
 
 LB_WINDOWS = ['1Y_2022','1Y_2023','1Y_2024','1Y_2025','3Y_2022_2024','3Y_2023_2025']
 
-DESCRIPTIONS = {
-    'anthropic_ecosystem': 'Anthropic supply chain + investors pre-IPO (Q4 2026 expected)',
-    'openai_ecosystem': 'OpenAI ecosystem play: Microsoft-centric, Stargate infrastructure',
-    'ai_infra_picks_shovels': 'Arms dealer strategy: wins regardless of which AI company dominates',
-}
-
-HYPOTHESES = {
-    'anthropic_ecosystem': 'Anthropic is the fastest-growing enterprise AI company ($30B+ ARR). Investing in its supply chain and investors before Q4 2026 IPO captures the pre-IPO appreciation in public equities.',
-    'openai_ecosystem': 'OpenAI at $852B valuation with Microsoft as 49% owner. MSFT is the dominant public proxy with massive Copilot upside (only 3.3% M365 conversion).',
-    'ai_infra_picks_shovels': 'Every AI company needs chips, data centers, networking, power, and memory. The infrastructure layer wins regardless of which model company leads.',
-}
-
 
 def main():
     # Load existing MW data
@@ -65,10 +53,7 @@ def main():
 
     total = len(STRATEGIES)
     for idx, name in enumerate(STRATEGIES, 1):
-        print(f'\n{"="*60}')
-        print(f'[{idx}/{total}] Backtesting {name}...')
-        print(f'{"="*60}', flush=True)
-
+        print(f'\n[{idx}/{total}] Backtesting {name}...', flush=True)
         cls = THEME_STRATEGIES.get(name)
         if cls is None:
             print(f'  SKIP -- class not found for {name}')
@@ -84,12 +69,8 @@ def main():
         symbols = persona.config.universe
         rebal = persona.config.rebalance_frequency
 
-        print(f'  Universe: {len(symbols)} tickers, rebalance={rebal}')
-        print(f'  Tickers: {", ".join(symbols)}')
-
         window_results = {}
-        best_result = None  # Keep best 3Y result for recommendation
-
+        best_result = None  # Store full result from best 3Y window for recs
         for wname, (start, end) in WINDOWS.items():
             try:
                 bt = Backtester(
@@ -103,23 +84,18 @@ def main():
                 sh = m.get('sharpe_ratio', 0)
                 if sh != sh:  # NaN check
                     sh = 0
-                ret = m.get('total_return', 0)
-                dd = m.get('max_drawdown', 0)
                 window_results[wname] = {
-                    'ret': round(ret, 4),
+                    'ret': round(m.get('total_return', 0), 4),
                     'sh': round(sh, 2),
-                    'dd': round(dd, 4),
+                    'dd': round(m.get('max_drawdown', 0), 4),
                 }
-                print(f'  {wname:20s}  ret={ret:+.2%}  sharpe={sh:.2f}  dd={dd:.2%}', flush=True)
-
-                # Save best 3Y result for recommendations
+                # Track best 3Y result for recommendations
                 if wname in ('3Y_2023_2025', '3Y_2022_2024'):
                     if best_result is None or sh > best_result.get('metrics', {}).get('sharpe_ratio', -999):
                         best_result = result
-
             except Exception as e:
                 window_results[wname] = {'ret': 0, 'sh': 0, 'dd': 0}
-                print(f'  {wname:20s}  ERROR: {e}')
+                print(f'    {wname}: ERROR - {e}')
 
         # Compute composites
         all_sh = [w['sh'] for w in window_results.values()]
@@ -144,19 +120,22 @@ def main():
         best_3y = window_results.get('3Y_2023_2025', window_results.get('3Y_2022_2024', {}))
         is_winning = best_3y.get('sh', 0) > 0
 
-        verdict = 'WINNING' if is_winning else 'LOSING'
-        print(f'\n  >>> {verdict}: {name}')
-        print(f'      LB={lb_composite:.4f}  HODL={hodl_composite:.4f}  consistency={consistency:.0%}')
-
-        # Update MW data
         mw_data[name] = {
-            'src': 'ai_ecosystem',
-            'desc': DESCRIPTIONS.get(name, ''),
+            'src': 'theme',
+            'desc': persona.config.description,
             'w': window_results,
             'consistency': round(consistency, 2),
             'composite': lb_composite,
             'hodl_composite': hodl_composite,
         }
+
+        verdict = 'W' if is_winning else 'L'
+        print(f'  {verdict} {name:40s} LB={lb_composite:.4f} HODL={hodl_composite:.4f} con={consistency:.0%}', flush=True)
+
+        # Print all window results
+        for wname in sorted(window_results.keys()):
+            wr = window_results[wname]
+            print(f'    {wname:20s}  ret={wr["ret"]:+.2%}  sh={wr["sh"]:+.2f}  dd={wr["dd"]:.2%}')
 
         # Save individual result
         ts = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -173,34 +152,32 @@ def main():
         with open(f'results/{name}_{ts}.json', 'w') as f:
             json.dump(ind_result, f, indent=2, default=str)
 
-        # Generate recommendation (.md + .json)
+        # Generate recommendation files
         try:
             if best_result:
                 rec_path = save_strategy_recommendation(
-                    name=name,
-                    results=best_result,
+                    name, best_result,
                     persona_config={
                         'name': persona.config.name,
+                        'description': persona.config.description,
                         'universe': persona.config.universe,
                         'rebalance_frequency': persona.config.rebalance_frequency,
-                        'risk_tolerance': persona.config.risk_tolerance,
                     },
-                    description=DESCRIPTIONS.get(name, ''),
-                    hypothesis=HYPOTHESES.get(name, ''),
+                    description=persona.config.description,
+                    hypothesis=persona.__doc__.split('\n')[0] if persona.__doc__ else '',
                 )
-                print(f'      Recommendation saved: {rec_path}')
+                print(f'  REC saved: {rec_path}')
         except Exception as e:
-            print(f'      Recommendation save failed: {e}')
+            print(f'  REC failed: {e}')
+            traceback.print_exc()
 
     # Save updated MW
     ts = datetime.now().strftime('%Y%m%d_%H%M%S')
     mw_out = f'results/_multi_window_full_{ts}.json'
     with open(mw_out, 'w') as f:
         json.dump(mw_data, f, indent=2, default=str)
-    print(f'\n{"="*60}')
-    print(f'DONE: {total}/{total} strategies backtested')
-    print(f'MW data saved: {mw_out} (total strategies: {len(mw_data)})')
-    print(f'{"="*60}')
+    print(f'\nDONE: {total}/{total}, total MW entries: {len(mw_data)}')
+    print(f'Saved: {mw_out}')
 
 
 if __name__ == '__main__':

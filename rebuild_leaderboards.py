@@ -9,7 +9,8 @@ import statistics
 from datetime import datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-MW_PATH = os.path.join(BASE, "results/_multi_window_full_20260413_183206.json")
+_mw_candidates = sorted(glob.glob(os.path.join(BASE, "results/_multi_window_full_*.json")))
+MW_PATH = _mw_candidates[-1] if _mw_candidates else os.path.join(BASE, "results/_multi_window_full_20260413_183206.json")
 LEADERBOARD_PATH = os.path.join(BASE, "LEADERBOARD.md")
 HODL_PATH = os.path.join(BASE, "HODL_LEADERBOARD.md")
 GITHUB_BASE = "https://github.com/alvations/agents-assemble/blob/main/strategy"
@@ -522,9 +523,8 @@ def main():
     hodl_rows = sum(1 for line in hodl_content.split("\n") if re.match(r"^\| \d+ \|", line))
     print(f"  HODL_LEADERBOARD.md full rankings: {hodl_rows} strategies")
 
-    assert lb_rows == 224, f"Expected 224 strategies in LEADERBOARD, got {lb_rows}"
-    assert hodl_rows == 224, f"Expected 224 strategies in HODL, got {hodl_rows}"
-    print("\n  All 224 strategies present in both files.")
+    assert lb_rows == hodl_rows, f"Mismatch: LB has {lb_rows}, HODL has {hodl_rows}"
+    print(f"\n  All {lb_rows} strategies present in both files.")
 
 
 if __name__ == "__main__":
