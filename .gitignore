@@ -14,3 +14,10 @@ charts/
 regen_missing.py
 post_evolve_test.sh
 .evolution/
+
+# Hedge fund trading system (internal, not public)
+daily_trader.py
+risk_manager.py
+circuit_breaker.py
+trading_log.py
+research_parser.py
