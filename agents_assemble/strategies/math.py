@@ -858,6 +858,123 @@ class OptimalStopping(BasePersona):
 
 
 # ---------------------------------------------------------------------------
+# 9. Volatility Premium Harvest (low-vol anomaly with quantitative sizing)
+# ---------------------------------------------------------------------------
+class VolatilityPremium(BasePersona):
+    """Harvest the volatility premium: long low-vol, avoid high-vol.
+
+    Source: Frazzini & Pedersen (2014) "Betting Against Beta". Fischer Black
+    (1972) first documented the low-beta anomaly. SPLV (low vol ETF) delivers
+    similar returns to SPY but with 13.3% vol vs 16.3% — virtually identical
+    Sharpe. With mathematical risk-normalization, the low-vol portfolio
+    outperforms on a risk-adjusted basis.
+
+    Academic evidence: Low-volatility stocks outperform high-volatility stocks
+    on a risk-adjusted basis consistently across all major equity markets and
+    over 50+ years of data. The anomaly persists because of leverage constraints,
+    lottery preferences, and benchmarking to market-cap-weighted indices.
+
+    Implementation:
+    - Compute 20-day realized vol for each stock
+    - Rank by vol, split into low-vol quintile and high-vol quintile
+    - Long low-vol stocks (buy SPLV and lowest-vol individual names)
+    - Avoid high-vol stocks (never buy SPHB or highest-vol names)
+    - Weight inversely proportional to vol (risk parity within low-vol)
+    - Apply leverage-like effect: allocate more total capital to low-vol
+      (up to 90% vs typical 50-60%) since vol is lower
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Volatility Premium Harvest",
+            description="Long low-vol stocks, avoid high-vol: harvesting the low-volatility anomaly",
+            risk_tolerance=0.3,
+            max_position_size=0.15,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "SPLV",   # Low Volatility ETF (core holding)
+                # 10 historically low-beta S&P names
+                "JNJ", "PG", "KO", "PEP", "WMT",
+                "MCD", "CL", "MMM", "SO", "DUK",
+                # High-beta ETF (benchmark, never buy)
+                "SPHB",
+                # Additional low-vol candidates
+                "NEE", "WEC", "AEP", "ED", "BRK-B",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        vol_data = []
+
+        # Never buy the high-beta ETF
+        high_vol_avoid = {"SPHB"}
+
+        for sym in self.config.universe:
+            if sym in high_vol_avoid:
+                if sym in prices:
+                    weights[sym] = 0.0
+                continue
+            if sym not in prices:
+                continue
+
+            price = prices[sym]
+            inds = self._get_indicators(data, sym, ["vol_20", "sma_200", "sma_50"], date)
+            vol = inds["vol_20"]
+            sma200 = inds["sma_200"]
+            sma50 = inds["sma_50"]
+
+            if vol is None or not (vol == vol) or vol <= 0:
+                continue
+
+            # Must be above SMA200 (not in structural downtrend)
+            if sma200 is not None and sma200 == sma200 and price < sma200 * 0.95:
+                continue
+
+            # Bonus for being above SMA50 (positive momentum)
+            momentum_bonus = 1.0
+            if sma50 is not None and sma50 == sma50 and price > sma50:
+                momentum_bonus = 1.2
+
+            vol_data.append((sym, vol, momentum_bonus))
+
+        if not vol_data:
+            # Fallback to SPLV if available
+            if "SPLV" in prices:
+                weights["SPLV"] = 0.90
+            return weights
+
+        # Sort by vol ascending (lowest vol first)
+        vol_data.sort(key=lambda x: x[1])
+
+        # Take low-vol quintile (bottom 20%) or at least top 3
+        n_low = max(3, len(vol_data) // 5)
+        low_vol = vol_data[:min(n_low, self.config.max_positions)]
+
+        # Inverse-vol weighting within low-vol group
+        total_inv_vol = sum(m / v for _, v, m in low_vol)
+        if total_inv_vol <= 0:
+            return weights
+
+        cap = self.config.max_position_size
+        budget = 0.90
+
+        for sym, vol, mom in low_vol:
+            raw_w = (mom / vol) / total_inv_vol * budget
+            weights[sym] = min(raw_w, cap)
+
+        # Explicitly close non-qualifying positions
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
 # Registry
 # ---------------------------------------------------------------------------
 MATH_STRATEGIES = {
@@ -869,6 +986,7 @@ MATH_STRATEGIES = {
     "entropy_regime": EntropyRegime,
     "cointegration_pairs": CointegrationPairs,
     "optimal_stopping": OptimalStopping,
+    "volatility_premium": VolatilityPremium,
 }
 
 

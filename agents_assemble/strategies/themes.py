@@ -3894,6 +3894,331 @@ class PicksAndShovelsAI(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# ESG Momentum
+# ---------------------------------------------------------------------------
+class ESGMomentum(BasePersona):
+    """ESG momentum: ride institutional flows favoring ESG leaders.
+
+    Source: ESGU returned ~19% over past year edging out SPY's 18%.
+    Five-year: ESGU +76% vs SPY +74%. ESGV 3-year return 20.64%.
+    A $100 investment in sustainable funds in Dec 2018 grew to $136
+    vs $131 for traditional funds. However ESG saw $84B net outflows
+    in 2025, so this is a momentum play on when flows return.
+
+    Thesis: When institutional flows favor ESG (ESGU/ESGV trending up),
+    ESG leaders outperform. When ESG is out of favor, rotate to
+    high-quality ESG-rated individual names that outperform regardless.
+
+    Implementation:
+    - Track ESGU and ESGV momentum as ESG flow proxy
+    - When ESG ETFs trend up (above SMA50): overweight ESG ETFs + leaders
+    - When ESG ETFs trend down: focus on quality individual ESG names
+      with strong momentum (these outperform regardless of ESG flows)
+    - Weekly rebalance
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="ESG Momentum",
+            description="ESG leaders when institutional flows favor sustainability, quality names always",
+            risk_tolerance=0.5,
+            max_position_size=0.15,
+            max_positions=10,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # ESG ETFs (flow proxy)
+                "ESGU",   # iShares ESG Aware MSCI USA
+                "ESGV",   # Vanguard ESG U.S. Stock
+                "SUSL",   # iShares ESG MSCI USA Leaders
+                # Top ESG-rated individual stocks
+                "MSFT", "CRM", "ADBE", "NVDA", "GOOGL", "PG", "JNJ",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Determine ESG flow regime from ETF momentum
+        esg_etfs = ["ESGU", "ESGV", "SUSL"]
+        esg_strong = 0
+        esg_total = 0
+
+        for etf in esg_etfs:
+            if etf not in prices:
+                continue
+            esg_total += 1
+            sma50 = self._get_indicator(data, etf, "sma_50", date)
+            if not _is_missing(sma50) and prices[etf] > sma50:
+                esg_strong += 1
+
+        esg_flow_positive = esg_total > 0 and esg_strong >= (esg_total / 2)
+
+        scored = []
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma50):
+                continue
+
+            score = 0.0
+
+            if esg_flow_positive and sym in esg_etfs:
+                # ESG flows strong — overweight ETFs
+                if price > sma50:
+                    score += 3.0
+                    if not _is_missing(sma200) and sma50 > sma200:
+                        score += 1.0
+            else:
+                # Focus on individual quality names
+                if price > sma50:
+                    score += 2.0
+                    if not _is_missing(sma200) and price > sma200:
+                        score += 1.0
+
+            if not _is_missing(rsi) and 35 < rsi < 70:
+                score += 0.5
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Africa & Frontier Markets
+# ---------------------------------------------------------------------------
+class AfricaFrontier(BasePersona):
+    """Africa and frontier markets: diversification + growth.
+
+    Source: AFK (VanEck Africa Index ETF) returned 57.5% YTD in 2025,
+    outperforming both IEMG (29.4%) and EMXC (24.7%). MSCI Frontier
+    Markets Africa Index returned 40.81% (gross) in 2025 and 9.84%
+    in 2024. However, since inception AFK has posted -2.3% annualized,
+    showing the importance of momentum timing.
+
+    Thesis: Frontier markets are largely uncorrelated with US equities,
+    providing genuine diversification. When momentum aligns (above SMA),
+    Africa/frontier exposure can add alpha. When momentum is negative,
+    stay out entirely.
+
+    Implementation:
+    - Universe: Africa and frontier ETFs + gold miners (African exposure)
+    - Strict momentum filter: only buy when above SMA50 AND SMA200
+    - Include GOLD, HMY, SBSW for gold/Africa mining exposure
+    - Weekly rebalance with trend following
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Africa & Frontier Markets",
+            description="Frontier markets for diversification: Africa, Nigeria, S. Africa + gold miners",
+            risk_tolerance=0.7,
+            max_position_size=0.15,
+            max_positions=8,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                "AFK",   # VanEck Africa Index ETF
+                "FM",    # iShares MSCI Frontier and Select EM ETF
+                "NGE",   # Global X MSCI Nigeria ETF
+                "EZA",   # iShares MSCI South Africa ETF
+                "GOLD",  # Barrick Gold (Africa mining ops)
+                "HMY",   # Harmony Gold Mining (South Africa)
+                "SBSW",  # Sibanye Stillwater (S. Africa)
+                "VALE",  # Vale (Brazil/Africa mining)
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "vol_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if _is_missing(sma50) or _is_missing(sma200):
+                continue
+
+            # Strict momentum: must be above BOTH SMAs
+            if price <= sma50 or price <= sma200:
+                continue
+
+            score = 0.0
+
+            # Trend alignment
+            if sma50 > sma200:
+                score += 3.0  # Golden cross
+            else:
+                score += 1.5  # Above both but not yet crossed
+
+            # RSI sweet spot
+            if not _is_missing(rsi):
+                if 40 < rsi < 70:
+                    score += 1.0
+                elif rsi >= 75:
+                    continue  # Overbought frontier = dangerous
+
+            # Prefer lower vol (frontier can be very volatile)
+            if not _is_missing(vol) and vol > 0:
+                score *= min(1.5, 0.025 / vol)
+
+            if score >= 2.0:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Southeast Asia Growth
+# ---------------------------------------------------------------------------
+class SoutheastAsiaGrowth(BasePersona):
+    """Southeast Asia / ASEAN growth play.
+
+    Source: ASEAN GDP growth forecast 4.6-4.8% for 2024-2025 (vs US ~2%).
+    ASEA ETF returned 28.13% in the past year. Young demographics,
+    rising middle class, and manufacturing shift from China create a
+    structural growth tailwind.
+
+    Thesis: ASEAN economies are growing 5%+, with young demographics
+    and rising middle class driving consumption. Vietnam, Indonesia,
+    and Philippines are the fastest growers. Singapore is the financial
+    hub. When momentum aligns, ASEAN ETFs offer growth + diversification.
+
+    Implementation:
+    - Country ETFs for targeted ASEAN exposure
+    - Momentum filter: above SMA50 for entry
+    - Rank by relative strength, take top positions
+    - Monthly rebalance (ASEAN markets less liquid)
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Southeast Asia Growth",
+            description="ASEAN growth play: 5%+ GDP, young demographics, rising middle class",
+            risk_tolerance=0.6,
+            max_position_size=0.20,
+            max_positions=6,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "EWS",   # iShares MSCI Singapore
+                "EWM",   # iShares MSCI Malaysia
+                "THD",   # iShares MSCI Thailand
+                "VNM",   # VanEck Vietnam ETF
+                "EIDO",  # iShares MSCI Indonesia
+                "EPHE",  # iShares MSCI Philippines
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "vol_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if _is_missing(sma50):
+                continue
+
+            # Momentum filter: above SMA50
+            if price <= sma50:
+                continue
+
+            score = 0.0
+
+            # Trend strength
+            if not _is_missing(sma200) and price > sma200:
+                score += 2.0
+                if sma50 > sma200:
+                    score += 1.5  # Strong uptrend
+            else:
+                score += 1.0  # Above SMA50 but not SMA200 yet
+
+            # RSI filter
+            if not _is_missing(rsi):
+                if 40 < rsi < 65:
+                    score += 1.0  # Sweet spot
+                elif 65 <= rsi < 75:
+                    score += 0.5
+                elif rsi >= 75:
+                    continue  # Overbought EM = risk
+
+            # Vol adjustment (prefer lower vol EM)
+            if not _is_missing(vol) and vol > 0:
+                score *= min(1.3, 0.02 / vol)
+
+            if score >= 1.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -3938,6 +4263,10 @@ THEME_STRATEGIES = {
     "ai_adopters_not_builders": AIAdoptersNotBuilders,
     "late_cycle_bubble_hedge": LateCycleBubbleHedge,
     "picks_and_shovels_ai": PicksAndShovelsAI,
+    # Regional & thematic growth
+    "esg_momentum": ESGMomentum,
+    "africa_frontier": AfricaFrontier,
+    "southeast_asia_growth": SoutheastAsiaGrowth,
 }
 
 

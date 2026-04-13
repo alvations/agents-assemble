@@ -51,6 +51,14 @@ def _valid_date(s):
     except ValueError:
         return False
 
+def _is_finite_number(val):
+    """True iff val is a finite int/float (bools and NaN/inf rejected)."""
+    if isinstance(val, bool):
+        return False
+    if not isinstance(val, (int, float)):
+        return False
+    return math.isfinite(val)
+
 def _sanitize_for_json(obj):
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
@@ -79,6 +87,8 @@ def _safe_metric(val, ndigits=4):
             val = val.item()
         except (ValueError, TypeError):
             return 0
+    if isinstance(val, bool):
+        return 0
     if not isinstance(val, (int, float)) or not math.isfinite(val):
         return 0
     return round(val, ndigits)
@@ -725,6 +735,7 @@ function showSection(name, el) {
     document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
     if (el) el.classList.add('active');
     if (name === 'portfolio' && !portfolioStrategiesLoaded) loadPortfolioStrategies();
+    if (name === 'strategies' && !strategiesLoaded) loadStrategies();
 }
 
 // Update status time
@@ -997,8 +1008,9 @@ function closeStrategyModal() {
 
 // ==================== QUICK SCAN ====================
 function scanTicker() {
-    const sym = document.getElementById('scan-ticker').value.toUpperCase();
-    document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + sym + '...</p>';
+    const sym = document.getElementById('scan-ticker').value.trim().toUpperCase();
+    if (!sym) { document.getElementById('scan-results').innerHTML = '<p class="negative">Enter a ticker symbol.</p>'; return; }
+    document.getElementById('scan-results').innerHTML = '<p class="loading">Scanning ' + esc(sym) + '...</p>';
     fetchJSON('/api/scan/' + encodeURIComponent(sym)).then(data => {
         let html = '<h3 style="color:var(--warm-white); font-size:15px; margin-bottom:8px;">' + sym + '</h3>';
         if (data.industry) html += '<p style="color:var(--warm-gray);font-size:12px;margin-bottom:8px;">' + esc(data.industry) + '</p>';
@@ -1017,8 +1029,9 @@ function scanTicker() {
 }
 
 function runCatalyst() {
-    const sym = document.getElementById('catalyst-ticker').value.toUpperCase();
-    document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + sym + '... (this takes ~30s)</p>';
+    const sym = document.getElementById('catalyst-ticker').value.trim().toUpperCase();
+    if (!sym) { document.getElementById('catalyst-results').innerHTML = '<p class="negative">Enter a ticker symbol.</p>'; return; }
+    document.getElementById('catalyst-results').innerHTML = '<p class="loading">Analyzing ' + esc(sym) + '... (this takes ~30s)</p>';
     fetchJSON('/api/catalyst/' + encodeURIComponent(sym)).then(data => {
         let html = '<h3 style="color:var(--warm-white); font-size:16px; margin-bottom:12px;">' + sym;
         if (data.industry) html += ' <span style="color:var(--warm-gray);font-weight:300;font-size:13px;">&mdash; ' + esc(data.industry) + '</span>';
@@ -1087,7 +1100,7 @@ function generateTradePlan() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading">Generating trade plan for ' + esc(strat) + '...</p>';
-    fetchJSON('/api/trade-plan/' + strat + '?amount=' + amt).then(data => {
+    fetchJSON('/api/trade-plan/' + encodeURIComponent(strat) + '?amount=' + encodeURIComponent(amt)).then(data => {
         let html = '<h3 style="font-weight:300; font-size:18px; color:var(--warm-white); margin-bottom:8px;">' + esc(data.strategy || '') + ' <span class="tag tag-yellow">DRY RUN</span></h3>';
         const planAmt = data.amount || 100000;
         html += '<p style="color:var(--warm-gray);font-size:12px;margin-bottom:16px;">Portfolio: <span style="font-family:var(--mono)">$' + planAmt.toLocaleString() + '</span> &middot; Slippage: 10bps &middot; Positions: ' + (data.orders||[]).length + '</p>';
@@ -1130,7 +1143,7 @@ function executeTrades() {
     const strat = document.getElementById('trade-strategy').value;
     const amt = document.getElementById('trade-amount').value;
     document.getElementById('trade-results').innerHTML = '<p class="loading" style="color:var(--rose)">Executing live trades for ' + esc(strat) + '...</p>';
-    fetchJSON('/api/execute-trade/' + strat, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(data => {
+    fetchJSON('/api/execute-trade/' + encodeURIComponent(strat), {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({amount: parseFloat(amt)})}).then(data => {
         let html = '<h3 style="color:var(--rose); font-weight:300; font-size:18px;">Execution Result: ' + esc(strat) + '</h3>';
         if (data.error) {
             html += '<p class="negative">' + esc(data.error) + '</p>';
@@ -1276,7 +1289,7 @@ function showPickResult() {
 
 function nextPick() {
     pickIdx++;
-    if (pickIdx >= pickRecs.length) { pickIdx = 0; pickCycleCount++; pickRecs = shuffleArray(pickRecs); }
+    if (pickIdx >= pickRecs.length) { pickIdx = 0; pickCycleCount++; }
     showPickResult();
 }
 
@@ -1342,6 +1355,7 @@ function analyzeStockPick() {
 }
 
 // ==================== STRATEGIES LIST ====================
+let strategiesLoaded = false;
 function loadStrategies() {
     document.getElementById('all-strategies').innerHTML = '<p class="loading">Loading...</p>';
     fetchJSON('/api/strategies').then(data => {
@@ -1357,11 +1371,12 @@ function loadStrategies() {
         });
         html += '</table>';
         document.getElementById('all-strategies').innerHTML = html;
+        strategiesLoaded = true;
     }).catch(e => {
         document.getElementById('all-strategies').innerHTML = '<p class="negative">Error: ' + esc(String(e)) + '</p>';
     });
 }
-document.querySelector('[onclick*="strategies"]').addEventListener('click', function() { setTimeout(loadStrategies, 100); });
+document.querySelector('[onclick*="strategies"]').addEventListener('click', function() { if (!strategiesLoaded) setTimeout(loadStrategies, 100); });
 
 // ==================== PORTFOLIO BUILDER ====================
 let portfolioStrategiesLoaded = false;
@@ -1566,31 +1581,29 @@ def api_leaderboard():
         if not results_dir.is_dir():
             _leaderboard_cache[horizon] = (time.monotonic(), [])
             return jsonify([])
-        results = []
+        seen = {}
         for f in sorted(results_dir.glob("*.json"), key=_mtime):
             try:
                 data = json.loads(f.read_text())
-                metrics = data.get("metrics", data)
+                metrics = data.get("metrics") or data
                 name = _DATE_SUFFIX_RE.sub('', f.stem)
                 if not name:
                     continue
                 ret = metrics.get("total_return", 0)
-                if isinstance(ret, (int, float)) and not isinstance(ret, bool):
+                if _is_finite_number(ret):
                     source = data.get("source", data.get("category", "backtest"))
-                    results.append({
+                    seen[name] = {
                         "name": name, "source": source,
                         "return": _safe_metric(ret),
                         "sharpe": _safe_metric(metrics.get("sharpe_ratio", 0), 2),
                         "max_dd": _safe_metric(metrics.get("max_drawdown", 0)),
-                    })
+                    }
             except Exception:
                 pass
-        seen = {}
-        for r in results:
-            seen[r["name"]] = r
         results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)[:30]
         results = _sanitize_for_json(results)
-        _leaderboard_cache[horizon] = (time.monotonic(), results)
+        if results:
+            _leaderboard_cache[horizon] = (time.monotonic(), results)
         return jsonify(results)
 
     # For other horizons, run backtests (slower but cached after first load)
@@ -1605,9 +1618,12 @@ def api_leaderboard():
             r = run_single(s, horizon, start, end, verbose=False)
             if r["status"] == "success":
                 m = r["metrics"]
+                ret = m.get("total_return", 0)
+                if not _is_finite_number(ret):
+                    continue
                 results.append({
                     "name": s["key"], "source": s["source"],
-                    "return": _safe_metric(m.get("total_return", 0)),
+                    "return": _safe_metric(ret),
                     "sharpe": _safe_metric(m.get("sharpe_ratio", 0), 2),
                     "max_dd": _safe_metric(m.get("max_drawdown", 0)),
                 })
@@ -1618,7 +1634,8 @@ def api_leaderboard():
         seen[r["name"]] = r
     results = sorted(seen.values(), key=lambda x: x["return"], reverse=True)
     results = _sanitize_for_json(results[:30])
-    _leaderboard_cache[horizon] = (time.monotonic(), results)
+    if results:
+        _leaderboard_cache[horizon] = (time.monotonic(), results)
     return jsonify(results)
 
 _strategies_cache = {}  # {"data": [...], "ts": monotonic_time}
@@ -1646,8 +1663,9 @@ def api_strategies():
         except Exception:
             results.append({"name": s["key"], "source": s["source"],
                             "universe_size": 0, "rebalance": "?", "risk": "?"})
-    _strategies_cache["data"] = results
-    _strategies_cache["ts"] = time.monotonic()
+    if results:
+        _strategies_cache["data"] = results
+        _strategies_cache["ts"] = time.monotonic()
     return jsonify(results)
 
 _market_cache = {}  # {"data": {...}, "ts": monotonic_time}
@@ -1673,7 +1691,7 @@ def api_market():
                 continue
             last = float(df["Close"].iloc[-1])
             ref = float(df["Close"].iloc[-20]) if len(df) > 20 else float(df["Close"].iloc[0])
-            change = (last / ref - 1) if ref > 0 else 0
+            change = (last / ref - 1) if (math.isfinite(ref) and ref > 0) else float('nan')
             if last > 0 and math.isfinite(last) and math.isfinite(change):
                 data[sym] = {"price": last, "change": change}
         except Exception:
@@ -1682,7 +1700,10 @@ def api_market():
         _market_cache["data"] = data
         _market_cache["ts"] = time.monotonic()
         return jsonify(data)
-    elif _market_cache.get("data"):
+    # Serve stale cache only if it's not wildly out of date (<=1h) to avoid
+    # showing week-old prices when upstream fetch keeps failing.
+    stale_ts = _market_cache.get("ts", 0)
+    if _market_cache.get("data") and time.monotonic() - stale_ts < 3600:
         return jsonify(_market_cache["data"])
     return jsonify(data)
 
@@ -1713,8 +1734,7 @@ def api_scan(symbol):
                         bts[f'{strat}_10d'] = r
                 except Exception:
                     pass
-        valid_bts = {k: v for k, v in bts.items()
-                     if isinstance(v.total_return, (int, float)) and not isinstance(v.total_return, bool) and math.isfinite(v.total_return)}
+        valid_bts = {k: v for k, v in bts.items() if _is_finite_number(v.total_return)}
         if valid_bts:
             best_key = max(valid_bts, key=lambda k: valid_bts[k].total_return)
             best_dict = valid_bts[best_key].to_dict()
@@ -1748,11 +1768,11 @@ def api_chart(symbol):
     if not _SYMBOL_RE.match(sym):
         return jsonify({"error": "Invalid symbol"}), 400
     from terminal import Terminal
-    start = request.args.get("start", "2024-01-01")
+    start = request.args.get("start", (date.today() - timedelta(days=365)).isoformat())
     if not _valid_date(start):
         return jsonify({"error": "Invalid start date (expected valid YYYY-MM-DD)"}), 400
-    t = Terminal()
     try:
+        t = Terminal()
         path = t.equity_chart(sym, start=start)
     except Exception as e:
         return jsonify({"error": f"Chart generation failed for {sym}: {e}"}), 500
@@ -1797,7 +1817,7 @@ def api_trade_plan(strategy):
     enriched = {}
     prices = {}
     for sym, raw_df in all_data.items():
-        if raw_df.empty: continue
+        if raw_df is None or raw_df.empty: continue
         df = raw_df.copy()
         if df.index.tz is not None: df.index = df.index.tz_convert(None)
         close = df["Close"]
@@ -1835,16 +1855,15 @@ def api_trade_plan(strategy):
 
     orders = []
     remaining = amount
-    numeric_weights = {s: w for s, w in weights.items()
-                       if isinstance(w, (int, float)) and not isinstance(w, bool) and math.isfinite(w)}
+    numeric_weights = {s: w for s, w in weights.items() if _is_finite_number(w)}
     max_pos = persona.config.max_position_size
     capped = {s: w for s, w in numeric_weights.items()
-              if w > 0 and s in prices and prices[s] > 0}
+              if w > 0 and s in prices}
     total_w = sum(capped.values())
     if total_w > 1.0:
         capped = {s: w / total_w for s, w in capped.items()}
     capped = {s: min(w, max_pos) for s, w in capped.items()}
-    for sym, w in sorted(capped.items(), key=lambda x: -x[1]):
+    for sym, w in sorted(capped.items(), key=lambda x: x[1], reverse=True):
         if remaining <= 0:
             break
         alloc = min(amount * w, remaining)
@@ -1860,10 +1879,15 @@ def api_trade_plan(strategy):
 def api_stock_pick():
     """StockPick: Analyze user stock picks, match to strategy, generate recs."""
     raw = request.args.get("symbols", "")
-    symbols = [s.strip().upper() for s in raw.split(",") if s.strip()]
+    seen_syms = set()
+    symbols = []
+    for s in raw.split(","):
+        s = s.strip().upper()
+        if s and s not in seen_syms:
+            seen_syms.add(s)
+            symbols.append(s)
     if not symbols:
         return jsonify({"error": "No symbols provided. Enter tickers separated by commas."}), 400
-    # Validate each symbol
     for s in symbols:
         if not _SYMBOL_RE.match(s):
             return jsonify({"error": f"Invalid ticker: {s}"}), 400
@@ -1909,15 +1933,18 @@ def api_stock_pick():
 # Top Picks & Strategy Detail (Iterations 1-2, 5)
 # ---------------------------------------------------------------------------
 _top_picks_cache = {}
+_CACHE_TTL_TOP_PICKS = 300  # 5 min — winning/ directory updates are infrequent
 
 @app.route("/api/top-picks")
 def api_top_picks():
     """Return top strategies with their current positions from winning/ directory."""
-    if _top_picks_cache and time.monotonic() - _top_picks_cache.get("ts", 0) < 300:
+    if _top_picks_cache and time.monotonic() - _top_picks_cache.get("ts", 0) < _CACHE_TTL_TOP_PICKS:
         return jsonify(_top_picks_cache["data"])
 
     winning_dir = Path(__file__).parent / "strategy" / "winning"
     if not winning_dir.is_dir():
+        _top_picks_cache["data"] = []
+        _top_picks_cache["ts"] = time.monotonic()
         return jsonify([])
 
     # Read all winning strategy JSONs, deduplicate by name (keep newest)
@@ -1944,9 +1971,9 @@ def api_top_picks():
             if not math.isfinite(ret_f):
                 ret_f = 0
 
-            positions = data.get("position_recommendations", [])
-            risk_params = data.get("risk_parameters", {})
-            exec_guidance = data.get("execution_guidance", {})
+            positions = data.get("position_recommendations") or []
+            risk_params = data.get("risk_parameters") or {}
+            exec_guidance = data.get("execution_guidance") or {}
             rebalance = risk_params.get("rebalance_frequency", "?")
 
             strategies[name] = {
@@ -2010,10 +2037,10 @@ def api_strategy_detail(name):
     except Exception as e:
         return jsonify({"error": f"Failed to read strategy: {e}"}), 500
 
-    ms = data.get("metrics_summary", {})
-    positions = data.get("position_recommendations", [])
-    risk_params = data.get("risk_parameters", {})
-    exec_guidance = data.get("execution_guidance", {})
+    ms = data.get("metrics_summary") or {}
+    positions = data.get("position_recommendations") or []
+    risk_params = data.get("risk_parameters") or {}
+    exec_guidance = data.get("execution_guidance") or {}
 
     # Generate rolling return approximation from results/ files if available
     rolling_returns = []
@@ -2027,17 +2054,16 @@ def api_strategy_detail(name):
             try:
                 rdata = json.loads(result_files[0].read_text())
                 eq = rdata.get("equity_curve")
-                mr = rdata.get("monthly_returns") if eq is None else None
+                mr = rdata.get("monthly_returns")
                 if isinstance(mr, list) and len(mr) > 0:
                     # monthly_returns are already percentage values — use directly
-                    rolling_returns = [round(float(v), 1) for v in mr
-                                       if isinstance(v, (int, float)) and not isinstance(v, bool)]
+                    rolling_returns = [round(float(v), 1) for v in mr if _is_finite_number(v)]
                 elif isinstance(eq, list) and len(eq) > 1:
                     # Convert equity curve to approximate monthly returns
                     step = max(1, len(eq) // 12)
                     for i in range(step, len(eq), step):
-                        prev = eq[i - step] if isinstance(eq[i - step], (int, float)) and not isinstance(eq[i - step], bool) else 0
-                        curr = eq[i] if isinstance(eq[i], (int, float)) and not isinstance(eq[i], bool) else 0
+                        prev = eq[i - step] if _is_finite_number(eq[i - step]) else 0
+                        curr = eq[i] if _is_finite_number(eq[i]) else 0
                         if prev > 0:
                             rolling_returns.append(round((curr / prev - 1) * 100, 1))
             except Exception:
@@ -2096,7 +2122,79 @@ def api_execute_trade(strategy):
         return jsonify({"error": str(e)}), 500
 
 
+# ---------------------------------------------------------------------------
+# Per-Stock Composite Score (like TipRanks Smart Score)
+# ---------------------------------------------------------------------------
+@app.route("/api/stock-score/<symbol>")
+def api_stock_score(symbol):
+    """Return 1-10 composite score for a stock with full breakdown."""
+    sym = symbol.strip().upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
+    from data_fetcher import compute_stock_score
+    try:
+        result = compute_stock_score(sym)
+    except Exception as e:
+        return jsonify({"error": f"Score computation failed for {sym}: {e}"}), 500
+    return jsonify(_sanitize_for_json(result))
+
+
+# ---------------------------------------------------------------------------
+# Fair Value / DCF Estimator (like Morningstar Stars)
+# ---------------------------------------------------------------------------
+@app.route("/api/fair-value/<symbol>")
+def api_fair_value(symbol):
+    """Return DCF-based fair value estimate for a stock."""
+    sym = symbol.strip().upper()
+    if not _SYMBOL_RE.match(sym):
+        return jsonify({"error": "Invalid symbol"}), 400
+    from data_fetcher import estimate_fair_value
+    try:
+        discount_rate = float(request.args.get("discount_rate", 0.10))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid discount_rate parameter"}), 400
+    if discount_rate <= 0 or discount_rate >= 1 or not math.isfinite(discount_rate):
+        return jsonify({"error": "discount_rate must be between 0 and 1"}), 400
+    try:
+        result = estimate_fair_value(sym, discount_rate=discount_rate)
+    except Exception as e:
+        return jsonify({"error": f"Fair value estimation failed for {sym}: {e}"}), 500
+    return jsonify(_sanitize_for_json(result))
+
+
+# ---------------------------------------------------------------------------
+# Alert System: Strategy Trigger Status
+# ---------------------------------------------------------------------------
+@app.route("/api/alerts")
+def api_alerts():
+    """Return all currently active strategy triggers."""
+    from data_fetcher import check_strategy_triggers
+    try:
+        triggers = check_strategy_triggers()
+    except Exception as e:
+        return jsonify({"error": f"Alert check failed: {e}"}), 500
+    return jsonify(_sanitize_for_json(triggers))
+
+
+@app.route("/api/alerts/<strategy>")
+def api_alert_strategy(strategy):
+    """Return trigger status for a specific strategy."""
+    name = strategy.strip().lower().replace("-", "_")
+    if not _STRATEGY_RE.match(name):
+        return jsonify({"error": "Invalid strategy name"}), 400
+    from data_fetcher import check_strategy_triggers
+    try:
+        triggers = check_strategy_triggers()
+    except Exception as e:
+        return jsonify({"error": f"Alert check failed: {e}"}), 500
+    if name not in triggers:
+        available = list(triggers.keys())
+        return jsonify({"error": f"Unknown strategy trigger: {name}",
+                        "available": available}), 404
+    return jsonify(_sanitize_for_json(triggers[name]))
+
+
 if __name__ == "__main__":
-    print("\\n  ⚡ agents-assemble Trading Terminal")
-    print("  Open: http://localhost:8888\\n")
+    print("\n  ⚡ agents-assemble Trading Terminal")
+    print("  Open: http://localhost:8888\n")
     app.run(host="0.0.0.0", port=8888, debug=False)

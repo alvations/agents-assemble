@@ -1072,6 +1072,126 @@ class IPOLockupExpiry(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Spin-Off Alpha
+# ---------------------------------------------------------------------------
+class SpinoffAlpha(BasePersona):
+    """Spinoff alpha: buy companies that recently spun off divisions.
+
+    Source: Purdue University research (McConnell et al., 2013): spun-off
+    subsidiaries earned average annual return of 22.2% vs 17.4% for the
+    benchmark over 36 years. CBS Copenhagen study: "Spin-off performance:
+    An unrelenting anomaly" — both parent and spinoff outperform.
+
+    Reasons: Freed from conglomerate structure, spinoffs cut costs, refocus
+    strategy, and improve margins. Assets previously neglected receive
+    proper investment. Institutional forced selling (index funds must sell
+    small-cap spinoffs) creates temporary undervaluation.
+
+    Implementation:
+    - Universe: recent major spinoffs (2020-2025 vintage)
+    - Buy spinoffs showing positive momentum (above SMA50)
+    - Include both parents and spinoffs for full alpha capture
+    - Hold for 12-22 months (the outperformance window)
+    - Weekly rebalance with momentum filter
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Spinoff Alpha",
+            description="Buy recent corporate spinoffs: historically +22% annual vs 17% benchmark",
+            risk_tolerance=0.6,
+            max_position_size=0.10,
+            max_positions=12,
+            rebalance_frequency="weekly",
+            universe=universe or [
+                # Recent spinoffs (2020-2025)
+                "GEHC",  # GE HealthCare (from GE, 2023)
+                "GEV",   # GE Vernova (from GE, 2024)
+                "KD",    # Kyndryl (from IBM, 2021)
+                "KVUE",  # Kenvue (from JNJ, 2023)
+                "OGN",   # Organon (from MRK, 2021)
+                "VTRS",  # Viatris (from PFE, 2020)
+                "SOLV",  # Solventum (from MMM, 2024)
+                "CARR",  # Carrier (from UTX/RTX, 2020)
+                "OTIS",  # Otis Worldwide (from UTX/RTX, 2020)
+                # Parents (also tend to outperform post-spin)
+                "GE",    # Parent after spinning off GEHC + GEV
+                "IBM",   # Parent after KD spin
+                "JNJ",   # Parent after KVUE spin
+                "MRK",   # Parent after OGN spin
+                "PFE",   # Parent after VTRS spin
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        scored = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "vol_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            vol = inds["vol_20"]
+
+            if sma50 is None or (sma50 is not None and sma50 != sma50):
+                continue
+
+            # Momentum filter: must be above SMA50 (in uptrend)
+            if price <= sma50:
+                continue
+
+            # Score: momentum strength + trend alignment
+            score = 0.0
+
+            # Above both SMAs = strong
+            if sma200 is not None and sma200 == sma200 and price > sma200:
+                score += 2.0
+                if sma50 > sma200:
+                    score += 1.0  # Golden cross alignment
+
+            # RSI in sweet spot (not overbought)
+            if rsi is not None and rsi == rsi:
+                if 40 < rsi < 65:
+                    score += 1.0
+                elif rsi >= 65 and rsi < 75:
+                    score += 0.5
+                elif rsi >= 75:
+                    continue  # Skip overbought spinoffs
+
+            # Prefer lower vol (more stable)
+            if vol is not None and vol == vol and vol > 0:
+                if vol < 0.02:
+                    score += 0.5
+
+            if score >= 1.5:
+                scored.append((sym, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top = scored[:self.config.max_positions]
+
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        # Explicitly close non-qualifying positions
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
 NEWS_EVENT_STRATEGIES = {
     "news_reaction_momentum": NewsReactionMomentum,
     "earnings_surprise_drift": EarningsSurpriseDrift,
@@ -1083,6 +1203,7 @@ NEWS_EVENT_STRATEGIES = {
     "fomc_announcement": FOMCAnnouncement,
     "nfp_momentum": NFPMomentum,
     "ipo_lockup_expiry": IPOLockupExpiry,
+    "spinoff_alpha": SpinoffAlpha,
 }
 
 

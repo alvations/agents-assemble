@@ -633,3 +633,108 @@ All edits pass syntax validation. Summary of changes:
 - **Fixed `togglePortfolioStrategy` NaN propagation** (line 1403) — `parseInt(allocEl ? allocEl.value : 10)` returns `NaN` for empty/invalid input, causing `NaN` to propagate through portfolio summary table (normalized % becomes `NaN`) and `buildPortfolio` (dollar amounts become `NaN`). Added `|| 10` fallback, matching `updatePortfolioAlloc` which already had it.
 - **Fixed `buildPortfolio` division-by-zero** (line 1471) — If all selected str
 
+## [2026-04-13T14:47:48.837734+00:00] Branch: main | Run: 20260413T144438_pid31036 | Iter 30 | $1.0725
+### backtester.py
+Syntax is valid. Summary of changes:
+
+- **Fixed `_load_data` mutating caller's external DataFrames** — the adjusted-close handling did `df["Close_Raw"] = df["Close"]` and `df["Close"] = adj` in-place on the shared DataFrame object from `self._external_data`. Now copy-on-write: copies before mutating and reassigns into `all_data`, leaving the caller's dict untouched.
+- **Removed dead `.copy()` in `predict_forward`** (line 1022) — `daily_returns.iloc[-lookback_days:].copy()` was immediately follow
+
+## [2026-04-13T14:54:57.822499+00:00] Branch: main | Run: 20260413T144438_pid31036 | Iter 31 | $1.7750
+### backtester.py
+Syntax is valid. Summary of changes:
+
+- **Fixed stale `bench_data` reference after tz normalization** (`run`): When the benchmark was in `symbols`, the tz loop replaced `all_data[benchmark]` with a new tz-naive copy but `bench_data` still held the old tz-aware reference, causing redundant re-copying and a split between the dict entry and the variable. Now re-fetches from `all_data` when applicable.
+- **Removed dead `cost_per_share > 0` guard** (`_rebalance` partial-fill path): `price > 0` is val
+
+## [2026-04-13T14:59:33.044803+00:00] Branch: main | Run: 20260413T144438_pid31036 | Iter 32 | $1.6352
+### backtester.py
+Syntax valid. Summary of changes:
+
+- **Added `fill_method=None` to 5 `pct_change()` calls** (lines 674, 722, 791, 800, 1264) — pandas 2.1+ default implicitly forward-fills NaN returns, which silently inflates post-gap returns and triggers a `FutureWarning`; explicit `None` matches the pandas 3.0 default and makes gap handling honest.
+- **Fixed `predict_forward` zero-lookback silent bug** — `int(0 * 252) = 0` makes `iloc[-0:]` evaluate to `iloc[0:]` (full series) not an empty slice, so `lookback_
+
+## [2026-04-13T15:04:53.256716+00:00] Branch: main | Run: 20260413T144438_pid31036 | Iter 33 | $1.4601
+### backtester.py
+All edits pass syntax validation. Summary of changes:
+
+- **Combined `compute_trade_metrics` into a single pass** — was iterating the trade list 5 times (sums, list-comps, generator); now one loop aggregates commission/slippage/notional/buys/sells. Pure perf; no behavior change.
+- **Removed dead `if not equity_values: raise` check** in `run()` — `common_dates` is already validated non-empty and every iteration of the main loop appends to `equity_values`, so the guard was unreachable. Also simplif
+
+## [2026-04-13T15:09:31.070534+00:00] Branch: main | Run: 20260413T144438_pid31036 | Iter 34 | $1.4735
+### backtester.py
+Syntax valid. Summary of changes:
+
+- **Removed redundant `excess.std()` in `compute_metrics`** — `(returns - daily_rf).std()` equals `returns.std()` since variance is invariant under constant shift. Reuses already-computed `daily_vol` in the Sharpe calculation, saving a duplicate full-series std pass.
+- **Reordered `_sanitize_for_json` type checks** — structural types (dict/list/tuple/dataclass) are now checked *before* the `math.isfinite(obj)` call. Previously every container triggered and caug
+
+## [2026-04-13T17:13:46.042548+00:00] Branch: main | Run: 20260413T171111_pid36924 | Iter 35 | $1.6511
+### data_fetcher.py
+Syntax valid. Summary of changes:
+
+- **`estimate_fair_value` crash guards** — Added `math.isfinite()` to `current_price`/`fcf`/`shares` validation so `inf` values don't silently pass through and poison the DCF math. Also guards `discount_rate <= 0.025` which previously caused `ZeroDivisionError` (when equal to `terminal_growth`) or negative terminal value (when less).
+- **`fetch_multiple_ohlcv` parallelized** — Replaced the sequential for-loop over uncached symbols with a `ThreadPoolExecutor(max
+
+## [2026-04-13T17:14:56.463174+00:00] Branch: main | Run: 20260413T171111_pid36923 | Iter 35 | $1.3968
+### app.py
+Syntax valid. Summary of changes:
+
+- **Fixed `_safe_metric` numpy bool leak** — `np.bool_(True).item()` returns a Python `bool` which passes `isinstance(val, (int, float))` (since `bool ⊂ int`), so numpy bools silently graded as `1`/`0` instead of the invalid-value sentinel. Re-check `isinstance(val, bool)` after `.item()`.
+- **Removed dead `prices[s] > 0` check in `api_trade_plan`** — `prices` is already filtered at the `last_close > 0 and math.isfinite(last_close)` gate above, so the secondary
+
+## [2026-04-13T17:16:22.814585+00:00] Branch: main | Run: 20260413T171111_pid36924 | Iter 36 | $1.9808
+### data_fetcher.py
+Syntax valid. Summary of changes:
+
+- **Parallelized `fetch_steam_all_players`** — 14 sequential HTTP calls with `time.sleep(0.1)` between each (~1.5s minimum) replaced with `ThreadPoolExecutor(max_workers=8)`, bringing latency down to roughly one request time.
+- **Parallelized `check_strategy_triggers` SMA fetches** — 11 symbols (XLE, XOP, OIH, VXX, MAN, RHI, ASGN, ADP, DLTR, DG, COST) were fetched sequentially via `_get_sma_status`. Now pre-fetched concurrently into `_sma_cache` and all four tr
+
+## [2026-04-13T17:18:47.885628+00:00] Branch: main | Run: 20260413T171111_pid36923 | Iter 36 | $1.2971
+### app.py
+Syntax valid. Summary of changes:
+
+- **Fixed `api_chart` stale hardcoded default** (line 1758): `"2024-01-01"` → `(date.today() - timedelta(days=365)).isoformat()` — the hardcoded date was 2+ years old and drifted further every day, returning increasingly stale chart ranges as a silent default.
+- **Fixed `api_top_picks` null-valued JSON fields**: `data.get("risk_parameters", {})` returns `None` when the JSON has `"risk_parameters": null` (not missing). A subsequent `.get("rebalance_frequency")` 
+
+## [2026-04-13T17:20:06.156945+00:00] Branch: main | Run: 20260413T171111_pid36924 | Iter 37 | $1.8304
+### data_fetcher.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed `scan_52_week_lows` using Close for 52w extremes** (line 2277) — yfinance's `fiftyTwoWeekLow`/`fiftyTwoWeekHigh` use intraday Low/High, but this function was computing from Close only, so a stock that tagged an intraday low would report the wrong 52w low. Now uses `hist["Low"].min()` / `hist["High"].max()` when those columns exist, falling back to Close otherwise. Also added `math.isfinite` guard so all-NaN Low/High columns are rej
+
+## [2026-04-13T17:21:18.666731+00:00] Branch: main | Run: 20260413T171111_pid36923 | Iter 37 | $1.0008
+### app.py
+Syntax valid. Summary of changes:
+
+- **Fixed non-3y leaderboard cache poisoning** (line 1625): transient backtest failures no longer cache an empty `[]` for 30 minutes — only non-empty results are cached, so the next request retries.
+- **Fixed `_strategies_cache` poisoning**: same class — empty strategy list (e.g., import failure during dynamic loading) no longer gets cached for 10 minutes.
+- **Fixed `api_market` silent zero-change on NaN ref** (line 1680): when `ref` was NaN, `ref > 0` was Fals
+
+## [2026-04-13T17:23:03.136216+00:00] Branch: main | Run: 20260413T171111_pid36924 | Iter 38 | $1.7662
+### data_fetcher.py
+All edits pass syntax validation. Summary of changes:
+
+- **Fixed substring-match bug in `fetch_reddit_sentiment`** — `w in text` matched keywords inside unrelated words ("bag" in "bags", "long" in "belonging", "rip" in "trip"), inflating both bull/bear counts and corrupting sentiment scores. Now tokenizes via `_WORD_RE` and does set intersection for clean word-boundary matching.
+- **Fixed same bug in `fetch_aggregate_sentiment` news headline block** — identical substring-match issue on `positive
+
+## [2026-04-13T17:25:12.314757+00:00] Branch: main | Run: 20260413T171111_pid36923 | Iter 38 | $1.0690
+### app.py
+Syntax is valid. Summary of changes:
+
+- **Fixed `api_leaderboard` crash on `"metrics": null`** (line 1580) — `data.get("metrics", data)` returned `None` when the key existed with a null value, crashing the next `.get()` call (silently swallowed by the outer `except`, causing the strategy to disappear). Changed to `data.get("metrics") or data`.
+- **Fixed NaN/inf returns silently landing in 3y leaderboard at 0%** (line 1585) — added `math.isfinite(ret)` to the filter. A broken strategy with NaN `t
+
+## [2026-04-13T17:26:21.186906+00:00] Branch: main | Run: 20260413T171111_pid36924 | Iter 39 | $1.8763
+### data_fetcher.py
+All edits pass syntax validation. Summary of changes:
+
+- **Removed redundant local `import re`** in `migrate_cache` and `refresh_cache` — `re` is already imported at module level; the local re-imports were dead code.
+- **Fixed intraday tz leak in `fetch_ohlcv`** — The daily path strips `index.tz_localize(None)` but the intraday path did not, leaving tz-aware Timestamps in cached intraday DataFrames. This causes downstream join/compare bugs (mixing tz-aware with the tz-naive daily data used elsew
+
+## [2026-04-13T17:28:11.116071+00:00] Branch: main | Run: 20260413T171111_pid36923 | Iter 39 | $1.1781
+### app.py
+All edits pass syntax validation. Summary of changes:
+
+- **Added `_is_finite_number(val)` helper** — replaces the `isinstance(val, (int, float)) and not isinstance(val, bool) and math.isfinite(val)` pattern that appeared 7 times in long inline form, reducing future drift risk.
+- **Applied helper to 6 sites**: `api_leaderboard` (3y file path + computed path), `api_scan` (valid_bts filter), `api_trade_plan` (numeric_weights filter), `api_strategy_detail` (rolling_returns filter + equity curve prev
+

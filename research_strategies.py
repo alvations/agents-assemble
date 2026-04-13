@@ -794,6 +794,232 @@ class FaberSectorRotation(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# 10. Systematic Sector Rotation (3-month relative strength)
+# ---------------------------------------------------------------------------
+class SystematicSectorRotation(BasePersona):
+    """Systematic sector rotation using 3-month relative strength vs SPY.
+
+    Source: Faber (2007), Quantpedia "Sector Momentum Rotational System".
+    Mebane Faber found sector momentum outperformed buy-and-hold ~70% of
+    the time over 80+ years of data. A sector rotation model selecting
+    top sectors by relative momentum delivered beta-adjusted alpha of ~4%
+    annualized over 30 years.
+
+    Implementation:
+    - Rank all 11 GICS sector ETFs by 3-month relative strength vs SPY
+      (sector return - SPY return over ~63 trading days, proxied by
+      price / SMA200 relative to SPY price / SPY SMA200)
+    - Long top 3 sectors with positive absolute momentum (above SMA200)
+    - Avoid bottom 3 sectors entirely
+    - When fewer than 3 sectors have positive momentum, allocate
+      remainder to bonds (TLT, IEF)
+    - Monthly rebalance
+    """
+
+    _SAFE_HAVENS = ("TLT", "IEF")
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Systematic Sector Rotation",
+            description="Rank 11 GICS sectors by 3-month relative strength vs SPY, long top 3",
+            risk_tolerance=0.5,
+            max_position_size=0.35,
+            max_positions=3,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "XLK", "XLV", "XLF", "XLE", "XLI", "XLP",
+                "XLY", "XLU", "XLRE", "XLC", "XLB",
+                "SPY",  # Benchmark for relative strength
+                "TLT", "IEF",  # Safe havens
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Get SPY relative strength baseline
+        spy_price = prices.get("SPY")
+        spy_sma200 = self._get_indicator(data, "SPY", "sma_200", date)
+        if spy_price is None or _is_missing(spy_sma200) or spy_sma200 <= 0:
+            # Can't compute relative strength — fall back to safe havens
+            for sym in self._SAFE_HAVENS:
+                if sym in self.config.universe and sym in prices:
+                    weights[sym] = 0.35
+            for sym in self.config.universe:
+                if sym in prices and sym not in weights:
+                    weights[sym] = 0.0
+            return weights
+
+        spy_rel = spy_price / spy_sma200  # SPY's own momentum baseline
+
+        # Rank sectors by relative strength vs SPY
+        sectors = [
+            "XLK", "XLV", "XLF", "XLE", "XLI", "XLP",
+            "XLY", "XLU", "XLRE", "XLC", "XLB",
+        ]
+        scored = []
+        for sym in sectors:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if _is_missing(sma200) or sma200 <= 0:
+                continue
+
+            # 3-month relative strength: sector momentum vs SPY momentum
+            sector_mom = price / sma200
+            relative_strength = sector_mom - spy_rel
+
+            # Absolute momentum filter: must be above its own SMA200
+            if sector_mom > 1.0:
+                scored.append((sym, relative_strength))
+
+        # Sort by relative strength descending
+        scored.sort(key=lambda x: x[1], reverse=True)
+
+        # Top 3 with positive relative strength
+        top = [s for s in scored if s[1] > 0][:self.config.max_positions]
+
+        if top:
+            per_sector = min(0.90 / len(top), self.config.max_position_size)
+            total_alloc = per_sector * len(top)
+            for sym, _ in top:
+                weights[sym] = per_sector
+            # Allocate remainder to safe havens
+            remainder = 0.90 - total_alloc
+            if remainder > 0.05:
+                havens = [s for s in self._SAFE_HAVENS
+                          if s in self.config.universe and s in prices]
+                if havens:
+                    per_haven = min(remainder / len(havens),
+                                    self.config.max_position_size)
+                    for s in havens:
+                        weights[s] = per_haven
+        else:
+            # No sectors with positive momentum — full safe haven
+            havens = [s for s in self._SAFE_HAVENS
+                      if s in self.config.universe and s in prices]
+            if havens:
+                per_haven = min(0.90 / len(havens), self.config.max_position_size)
+                for s in havens:
+                    weights[s] = per_haven
+
+        # Explicitly close non-qualifying positions
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# 11. Multi-Factor Combined (quality + momentum + value)
+# ---------------------------------------------------------------------------
+class MultiFactorCombined(BasePersona):
+    """Multi-factor combination: quality AND momentum AND value must all align.
+
+    Source: MSCI "Foundations of Factor Investing", AQR, S&P DJIA research.
+    Quality + Momentum combination has 93% outperformance rate with positive
+    bottom 25th percentile returns of +2.57% (strongest of all factor combos).
+    Adding value as a third filter creates a more conservative but robust
+    selection of stocks scoring in the top quintile on ALL three factors.
+
+    Implementation:
+    - Quality: price > SMA200 (structural uptrend, healthy) + low vol
+    - Momentum: MACD > signal + price > SMA50 (positive trend)
+    - Value: RSI < 50 (not overbought / recent dip) + price near SMA200
+      (not extended)
+    - Require ALL THREE factors to confirm (intersection, not union)
+    - Universe: top S&P stocks, equal-weight top 20 qualifying
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Multi-Factor Combined (Q+M+V)",
+            description="Long stocks in top quintile of ALL of quality, momentum, and value",
+            risk_tolerance=0.4,
+            max_position_size=0.06,
+            max_positions=20,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA",
+                "JPM", "V", "MA", "UNH", "JNJ", "PG", "KO",
+                "HD", "MCD", "WMT", "COST", "ABBV", "MRK",
+                "XOM", "CVX", "BAC", "GS", "LLY", "TMO",
+                "ABT", "NEE", "CRM", "AVGO", "PEP", "NFLX",
+                "BRK-B", "LOW", "CMCSA", "TXN", "INTC", "QCOM",
+                "MDT", "MMM",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        qualified = []
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym,
+                ["sma_50", "sma_200", "rsi_14", "macd", "macd_signal", "vol_20"],
+                date,
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+            macd = inds["macd"]
+            macd_sig = inds["macd_signal"]
+            vol = inds["vol_20"]
+
+            if any(_is_missing(v) for v in [sma50, sma200, rsi, vol]):
+                continue
+            if vol <= 0 or sma200 <= 0:
+                continue
+
+            # --- Factor 1: Quality ---
+            # Must be above SMA200 (healthy uptrend) and have reasonable vol
+            quality_pass = (price > sma200) and (vol < 0.03)
+
+            # --- Factor 2: Momentum ---
+            # MACD > signal AND price > SMA50
+            momentum_pass = (
+                not _is_missing(macd) and not _is_missing(macd_sig)
+                and macd > macd_sig
+                and price > sma50
+            )
+
+            # --- Factor 3: Value ---
+            # RSI < 50 (not overbought, recent dip) AND price within 10%
+            # of SMA200 (not too extended — buying at reasonable valuation)
+            extension = (price - sma200) / sma200
+            value_pass = (rsi < 50) and (extension < 0.10)
+
+            # ALL THREE must pass
+            if quality_pass and momentum_pass and value_pass:
+                # Composite score for ranking (quality = low vol, value = low RSI)
+                composite = (0.03 - vol) * 100 + (50 - rsi) * 0.5
+                qualified.append((sym, composite))
+
+        # Rank and take top N
+        qualified.sort(key=lambda x: x[1], reverse=True)
+        top = qualified[:self.config.max_positions]
+
+        if top:
+            per_stock = min(0.90 / len(top), self.config.max_position_size)
+            for sym, _ in top:
+                weights[sym] = per_stock
+
+        # Explicitly close non-qualifying positions
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+        return weights
+
+
 RESEARCH_STRATEGIES = {
     "dual_momentum": DualMomentum,
     "multi_factor_smart_beta": MultiFactorSmartBeta,
@@ -804,6 +1030,8 @@ RESEARCH_STRATEGIES = {
     "global_rotation": GlobalRotation,
     "factor_etf_rotation": FactorETFRotation,
     "faber_sector_rotation": FaberSectorRotation,
+    "systematic_sector_rotation": SystematicSectorRotation,
+    "multi_factor_combined": MultiFactorCombined,
 }
 
 

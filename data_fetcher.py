@@ -12,12 +12,15 @@ Premium sources (API key required): Alpha Vantage, Polygon.io, Quandl,
 from __future__ import annotations
 
 import os
+import re
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 import math
+
+_WORD_RE = re.compile(r"[a-z']+")
 
 import pandas as pd
 import requests
@@ -182,8 +185,6 @@ def migrate_cache() -> dict[str, int]:
     one ohlcv_{SYM}_{interval}.parquet per ticker, then deletes the old files.
     Returns counts of files migrated and removed.
     """
-    import re
-
     if not CACHE_DIR.exists():
         return {"migrated": 0, "removed": 0}
 
@@ -248,8 +249,6 @@ def refresh_cache(max_age_days: int = 1) -> dict[str, int]:
 
     Returns counts of tickers updated and skipped.
     """
-    import re
-
     if not CACHE_DIR.exists():
         return {"updated": 0, "skipped": 0, "failed": 0}
 
@@ -336,6 +335,8 @@ def fetch_ohlcv(
         df = ticker.history(start=start, end=end, interval=interval)
         if df.empty:
             raise ValueError(f"No data returned for {symbol}")
+        if df.index.tz is not None:
+            df.index = df.index.tz_localize(None)
         if "Close" in df.columns:
             df = df.dropna(subset=["Close"])
             if df.empty:
@@ -486,15 +487,25 @@ def fetch_multiple_ohlcv(
     if not need_any_fetch:
         return results
 
-    # Batch fetch uncached symbols — each goes through fetch_ohlcv
-    # which handles canonical caching internally
-    for sym in need_any_fetch:
+    # Fetch uncached symbols in parallel — each call is mostly HTTP I/O
+    # (yfinance download + parquet write) so a thread pool is ideal.
+    from concurrent.futures import ThreadPoolExecutor
+
+    def _fetch_one(sym: str) -> tuple[str, pd.DataFrame] | None:
         try:
             df = fetch_ohlcv(sym, start=start, end=end, interval=interval, cache=True)
             if not df.empty:
-                results[sym] = df
+                return (sym, df)
         except Exception:
             pass
+        return None
+
+    if need_any_fetch:
+        workers = min(8, len(need_any_fetch))
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            for out in executor.map(_fetch_one, need_any_fetch):
+                if out is not None:
+                    results[out[0]] = out[1]
 
     return results
 
@@ -540,9 +551,17 @@ def fetch_fundamentals(symbol: str) -> dict[str, Any]:
         "institutional_holders_pct": info.get("heldPercentInstitutions"),
     }
     # yfinance .info can return NaN or Infinity for numeric fields;
-    # sanitize to None so downstream `is not None` checks work correctly
-    return {k: (None if isinstance(v, float) and not math.isfinite(v) else v)
-            for k, v in result.items()}
+    # sanitize to None so downstream `is not None` checks work correctly.
+    # Use try/except on math.isfinite so numpy scalars (which are NOT float
+    # subclasses on numpy 2.0+) also get sanitized.
+    def _clean(v: Any) -> Any:
+        try:
+            if not math.isfinite(v):
+                return None
+        except TypeError:
+            pass
+        return v
+    return {k: _clean(v) for k, v in result.items()}
 
 
 def fetch_earnings(symbol: str) -> pd.DataFrame:
@@ -1025,43 +1044,53 @@ def fetch_news_rss(
 # ---------------------------------------------------------------------------
 # FREE DATA: SEC EDGAR 8-K filings (material events -- no API key)
 # ---------------------------------------------------------------------------
+# Module-level cache: ticker → padded-CIK. Built lazily on first call,
+# avoids re-reading the 2MB JSON file and O(n) linear search on every lookup.
+_CIK_MAP: dict[str, str] | None = None
+
+
 def _get_cik_for_symbol(symbol: str) -> str | None:
     """Look up SEC CIK number for a ticker symbol via EDGAR company tickers JSON."""
+    global _CIK_MAP
     cache_file = CACHE_DIR / "sec_company_tickers.json"
     import json
 
-    # Cache the tickers file (~2MB, changes rarely)
-    tickers_data = None
-    if cache_file.exists():
-        age_hours = (time.time() - cache_file.stat().st_mtime) / 3600
-        if age_hours < 24:
-            try:
-                tickers_data = json.loads(cache_file.read_text())
-            except Exception:
-                pass
+    if _CIK_MAP is None:
+        # Cache the tickers file (~2MB, changes rarely)
+        tickers_data = None
+        if cache_file.exists():
+            age_hours = (time.time() - cache_file.stat().st_mtime) / 3600
+            if age_hours < 24:
+                try:
+                    tickers_data = json.loads(cache_file.read_text())
+                except Exception:
+                    pass
 
-    if tickers_data is None:
-        try:
-            resp = requests.get(
-                "https://www.sec.gov/files/company_tickers.json",
-                headers=SEC_HEADERS,
-                timeout=15,
-            )
-            if resp.status_code == 200:
-                tickers_data = resp.json()
-                cache_file.write_text(json.dumps(tickers_data))
-        except Exception:
+        if tickers_data is None:
+            try:
+                resp = requests.get(
+                    "https://www.sec.gov/files/company_tickers.json",
+                    headers=SEC_HEADERS,
+                    timeout=15,
+                )
+                if resp.status_code == 200:
+                    tickers_data = resp.json()
+                    cache_file.write_text(json.dumps(tickers_data))
+            except Exception:
+                return None
+
+        if tickers_data is None:
             return None
 
-    if tickers_data is None:
-        return None
+        built: dict[str, str] = {}
+        for entry in tickers_data.values():
+            ticker = entry.get("ticker", "")
+            cik_raw = entry.get("cik_str", "")
+            if ticker and cik_raw not in (None, "", 0):
+                built[ticker.upper()] = str(cik_raw).zfill(10)
+        _CIK_MAP = built
 
-    sym_upper = symbol.upper()
-    for entry in tickers_data.values():
-        if entry.get("ticker", "").upper() == sym_upper:
-            cik = str(entry.get("cik_str", ""))
-            return cik.zfill(10)  # Pad to 10 digits
-    return None
+    return _CIK_MAP.get(symbol.upper())
 
 
 def fetch_sec_8k_filings(
@@ -1111,15 +1140,16 @@ def fetch_sec_8k_filings(
     cutoff = (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
     results = []
 
-    for i in range(min(len(forms), len(dates), len(accessions))):
-        form = forms[i] if i < len(forms) else ""
+    n_iter = min(len(forms), len(dates), len(accessions))
+    for i in range(n_iter):
+        form = forms[i]
         if not form.startswith("8-K"):
             continue
-        filed = dates[i] if i < len(dates) else ""
+        filed = dates[i]
         if filed < cutoff:
             continue
 
-        acc = accessions[i] if i < len(accessions) else ""
+        acc = accessions[i]
         acc_no_dash = acc.replace("-", "")
         doc = primary_docs[i] if i < len(primary_docs) else ""
         desc = descriptions[i] if i < len(descriptions) else ""
@@ -1185,9 +1215,9 @@ def fetch_reddit_posts(
     if subreddits is None:
         subreddits = _FINANCE_SUBREDDITS
 
-    all_posts: list[dict[str, Any]] = []
+    from concurrent.futures import ThreadPoolExecutor
 
-    for sub in subreddits:
+    def _fetch_sub(sub: str) -> list[dict[str, Any]]:
         url = f"https://www.reddit.com/r/{sub}/search.json"
         params = {
             "q": f"${symbol} OR {symbol}",
@@ -1196,17 +1226,20 @@ def fetch_reddit_posts(
             "t": "week",
             "limit": max_per_sub,
         }
+        out: list[dict[str, Any]] = []
         try:
             resp = requests.get(
                 url, params=params, headers=_REDDIT_HEADERS, timeout=15
             )
             if resp.status_code != 200:
-                continue
+                return out
             data = resp.json()
+            if not isinstance(data, dict):
+                return out
             children = data.get("data", {}).get("children", [])
             for child in children:
                 post = child.get("data", {})
-                all_posts.append({
+                out.append({
                     "title": post.get("title", ""),
                     "body": (post.get("selftext", "") or "")[:500],
                     "score": post.get("score", 0),
@@ -1217,7 +1250,13 @@ def fetch_reddit_posts(
                     "source": "reddit",
                 })
         except Exception:
-            continue
+            return out
+        return out
+
+    all_posts: list[dict[str, Any]] = []
+    with ThreadPoolExecutor(max_workers=min(8, len(subreddits))) as executor:
+        for posts in executor.map(_fetch_sub, subreddits):
+            all_posts.extend(posts)
 
     all_posts.sort(key=lambda x: x.get("score", 0), reverse=True)
     return all_posts
@@ -1268,8 +1307,9 @@ def fetch_reddit_sentiment(symbol: str) -> dict[str, Any]:
 
     for post in posts:
         text = f"{post['title']} {post['body']}".lower()
-        bull_count = sum(1 for w in bullish_words if w in text)
-        bear_count = sum(1 for w in bearish_words if w in text)
+        tokens = set(_WORD_RE.findall(text))
+        bull_count = len(tokens & bullish_words)
+        bear_count = len(tokens & bearish_words)
         total_kw = bull_count + bear_count
         if total_kw > 0:
             sentiment = (bull_count - bear_count) / total_kw
@@ -1291,10 +1331,8 @@ def fetch_reddit_sentiment(symbol: str) -> dict[str, Any]:
     else:
         label = "neutral"
 
-    avg_score = sum(p.get("score", 0) for p in posts) / len(posts) if posts else 0
-    avg_comments = (
-        sum(p.get("num_comments", 0) for p in posts) / len(posts) if posts else 0
-    )
+    avg_score = sum(p.get("score", 0) for p in posts) / len(posts)
+    avg_comments = sum(p.get("num_comments", 0) for p in posts) / len(posts)
 
     return {
         "symbol": symbol,
@@ -1345,6 +1383,11 @@ def fetch_stocktwits_sentiment(
             "sentiment_label": "unavailable",
         }
 
+    if not isinstance(data, dict):
+        return {
+            "symbol": symbol, "total_messages": 0,
+            "sentiment_label": "unavailable",
+        }
     messages = data.get("messages", [])[:max_messages]
     if not messages:
         return {"symbol": symbol, "total_messages": 0, "sentiment_label": "neutral"}
@@ -1605,8 +1648,9 @@ def fetch_aggregate_sentiment(symbol: str) -> dict[str, Any]:
             bear = 0
             for n in news:
                 title = n.get("title", "").lower()
-                bull += sum(1 for w in positive if w in title)
-                bear += sum(1 for w in negative if w in title)
+                tokens = set(_WORD_RE.findall(title))
+                bull += len(tokens & positive)
+                bear += len(tokens & negative)
             total_kw = bull + bear
             if total_kw > 0:
                 news_score = (bull - bear) / total_kw
@@ -2256,8 +2300,14 @@ def scan_52_week_lows(
         price = close.iloc[-1]
         if pd.isna(price) or price <= 0:
             continue
-        low_52 = float(close.min())
-        high_52 = float(close.max())
+        # Use intraday Low/High when available (matches yfinance's
+        # fiftyTwoWeekLow semantics); fall back to Close extremes otherwise.
+        low_src = hist["Low"] if "Low" in hist.columns else close
+        high_src = hist["High"] if "High" in hist.columns else close
+        low_52 = float(low_src.min())
+        high_52 = float(high_src.max())
+        if not (math.isfinite(low_52) and math.isfinite(high_52)):
+            continue
         if low_52 <= 0 or high_52 <= 0:
             continue
 
@@ -2331,7 +2381,7 @@ def scan_volatile_stocks(
             last_close = close.iloc[-1]
             if pd.isna(last_close):
                 continue
-            daily_vol = close.pct_change().std()
+            daily_vol = close.pct_change(fill_method=None).std()
             if pd.isna(daily_vol) or daily_vol < min_vol:
                 continue
             avg_vol = hist["Volume"].mean() if "Volume" in hist.columns else 0.0
@@ -2496,11 +2546,14 @@ def fetch_google_trends_related(
         pytrends = TrendReq(hl="en-US", tz=360)
         pytrends.build_payload([keyword], cat=0, timeframe=timeframe, geo=geo)
         related = pytrends.related_queries()
-        result = {}
+        result: dict[str, pd.DataFrame] = {
+            "top": pd.DataFrame(), "rising": pd.DataFrame(),
+        }
         if keyword in related:
             for key in ("top", "rising"):
                 val = related[keyword].get(key)
-                result[key] = val if val is not None else pd.DataFrame()
+                if val is not None:
+                    result[key] = val
         return result
     except Exception:
         return {"top": pd.DataFrame(), "rising": pd.DataFrame()}
@@ -2845,7 +2898,7 @@ def fetch_steam_player_count(app_id: int) -> int | None:
     Returns:
         Current number of players, or None on failure.
     """
-    url = f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/"
+    url = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/"
     try:
         resp = requests.get(url, params={"appid": app_id}, timeout=10)
         resp.raise_for_status()
@@ -2871,12 +2924,15 @@ def fetch_steam_all_players(cache: bool = True) -> dict[str, int]:
         if cached is not None:
             return cached.to_dict().get("players", {})
 
-    results = {}
-    for name, app_id in STEAM_GAME_IDS.items():
-        count = fetch_steam_player_count(app_id)
+    from concurrent.futures import ThreadPoolExecutor
+
+    results: dict[str, int] = {}
+    items = list(STEAM_GAME_IDS.items())
+    with ThreadPoolExecutor(max_workers=min(8, len(items))) as executor:
+        counts = list(executor.map(lambda it: (it[0], fetch_steam_player_count(it[1])), items))
+    for name, count in counts:
         if count is not None:
             results[name] = count
-        time.sleep(0.1)  # Be polite
 
     if cache and results:
         df = pd.DataFrame({"players": results})
@@ -3075,6 +3131,8 @@ def fetch_reddit_trending_stocks(
             resp = requests.get(url, timeout=15)
             resp.raise_for_status()
             data = resp.json()
+            if not isinstance(data, dict):
+                break
             results = data.get("results", [])
             if not results:
                 break
@@ -3105,7 +3163,7 @@ def fetch_reddit_stock_sentiment(ticker: str) -> dict[str, Any]:
     Returns dict with mentions, rank, upvotes, and 24h changes.
     """
     df = fetch_reddit_trending_stocks(filter_name="all-stocks", pages=3)
-    if df.empty:
+    if df.empty or "ticker" not in df.columns:
         return {"ticker": ticker, "found": False}
 
     match = df[df["ticker"].str.upper() == ticker.upper()]
@@ -3183,15 +3241,31 @@ def fetch_asset_bundle(
     """
     ohlcv_data = fetch_multiple_ohlcv(symbols, start=start, end=end)
     bundle = {}
+
+    # Fetch fundamentals in parallel — each call is a separate HTTP request
+    fundamentals: dict[str, dict[str, Any]] = {}
+    if include_fundamentals:
+        from concurrent.futures import ThreadPoolExecutor
+
+        needed = [s for s in symbols if s in ohlcv_data]
+
+        def _fetch_f(sym: str) -> tuple[str, dict[str, Any]]:
+            try:
+                return (sym, fetch_fundamentals(sym))
+            except Exception:
+                return (sym, {})
+
+        if needed:
+            with ThreadPoolExecutor(max_workers=min(8, len(needed))) as executor:
+                for sym, f in executor.map(_fetch_f, needed):
+                    fundamentals[sym] = f
+
     for sym in symbols:
         if sym not in ohlcv_data:
             continue
         entry: dict[str, Any] = {"ohlcv": ohlcv_data[sym]}
         if include_fundamentals:
-            try:
-                entry["fundamentals"] = fetch_fundamentals(sym)
-            except Exception:
-                entry["fundamentals"] = {}
+            entry["fundamentals"] = fundamentals.get(sym, {})
         bundle[sym] = entry
 
     return bundle
@@ -3311,8 +3385,15 @@ def compute_stock_score(symbol: str) -> dict[str, Any]:
             delta = close.diff()
             gain = delta.where(delta > 0, 0.0).rolling(14).mean()
             loss = (-delta.where(delta < 0, 0.0)).rolling(14).mean()
-            rs = gain.iloc[-1] / loss.iloc[-1] if loss.iloc[-1] != 0 else 0
-            rsi = 100 - (100 / (1 + rs)) if rs > 0 else 50
+            last_gain = gain.iloc[-1]
+            last_loss = loss.iloc[-1]
+            if not (math.isfinite(last_gain) and math.isfinite(last_loss)):
+                rsi = 50.0
+            elif last_loss == 0:
+                rsi = 100.0 if last_gain > 0 else 50.0
+            else:
+                rs = last_gain / last_loss
+                rsi = 100 - (100 / (1 + rs))
             tech_max += 3.0
             if 30 <= rsi <= 70:
                 tech_points += 3.0
@@ -3431,12 +3512,16 @@ def estimate_fair_value(symbol: str, discount_rate: float = 0.10,
     shares = info.get("sharesOutstanding")
 
     errors = []
-    if not isinstance(current_price, (int, float)) or current_price <= 0:
+    if not isinstance(current_price, (int, float)) or not math.isfinite(current_price) or current_price <= 0:
         errors.append("current_price unavailable")
-    if not isinstance(fcf, (int, float)) or fcf <= 0:
+    if not isinstance(fcf, (int, float)) or not math.isfinite(fcf) or fcf <= 0:
         errors.append("freeCashflow unavailable or negative")
-    if not isinstance(shares, (int, float)) or shares <= 0:
+    if not isinstance(shares, (int, float)) or not math.isfinite(shares) or shares <= 0:
         errors.append("sharesOutstanding unavailable")
+    # Terminal value via Gordon Growth requires discount_rate > terminal_growth,
+    # else `discount_rate - terminal_growth` is zero/negative → crash or nonsense
+    if discount_rate <= 0.025:
+        errors.append("discount_rate must exceed terminal_growth (0.025)")
 
     if errors:
         return {
@@ -3480,18 +3565,14 @@ def estimate_fair_value(symbol: str, discount_rate: float = 0.10,
     total_value = pv_sum + pv_terminal
     fair_value_per_share = total_value / shares
 
-    # Rating
-    if current_price <= 0:
-        discount_pct = 0.0
-        rating = "insufficient_data"
+    # Rating — current_price is guaranteed > 0 and finite by validation above
+    discount_pct = (fair_value_per_share - current_price) / current_price * 100
+    if discount_pct > 20:
+        rating = "undervalued"
+    elif discount_pct > -10:
+        rating = "fair_value"
     else:
-        discount_pct = (fair_value_per_share - current_price) / current_price * 100
-        if discount_pct > 20:
-            rating = "undervalued"
-        elif discount_pct > -10:
-            rating = "fair_value"
-        else:
-            rating = "overvalued"
+        rating = "overvalued"
 
     return {
         "symbol": symbol,
@@ -3526,6 +3607,8 @@ def check_strategy_triggers() -> dict[str, dict[str, Any]]:
 
     Returns dict of {strategy_name: {active, signal, tickers_affected, details}}.
     """
+    from concurrent.futures import ThreadPoolExecutor
+
     triggers = {}
 
     # Helper: get current price and SMA200 for a symbol
@@ -3550,13 +3633,19 @@ def check_strategy_triggers() -> dict[str, dict[str, Any]]:
         except Exception:
             return None
 
+    # Pre-fetch all SMA statuses concurrently — each call is a separate HTTP fetch.
+    all_symbols = ["XLE", "XOP", "OIH", "VXX", "MAN", "RHI", "ASGN", "ADP", "DLTR", "DG", "COST"]
+    with ThreadPoolExecutor(max_workers=min(8, len(all_symbols))) as executor:
+        status_pairs = list(executor.map(lambda s: (s, _get_sma_status(s)), all_symbols))
+    _sma_cache: dict[str, dict[str, Any] | None] = dict(status_pairs)
+
     # --- 1. Oil Down Tech Up ---
     # Trigger: >=2 of [XLE, XOP, OIH] below SMA200
     energy_symbols = ["XLE", "XOP", "OIH"]
     energy_statuses = {}
     energy_weak = 0
     for sym in energy_symbols:
-        status = _get_sma_status(sym)
+        status = _sma_cache.get(sym)
         if status:
             energy_statuses[sym] = status
             if status["below_sma200"]:
@@ -3573,7 +3662,7 @@ def check_strategy_triggers() -> dict[str, dict[str, Any]]:
 
     # --- 2. VIX Spike Buyback ---
     # Trigger: VXX > 1.3x its SMA200
-    vxx_status = _get_sma_status("VXX")
+    vxx_status = _sma_cache.get("VXX")
     vix_active = False
     vix_signal = "VXX data unavailable"
     if vxx_status:
@@ -3597,7 +3686,7 @@ def check_strategy_triggers() -> dict[str, dict[str, Any]]:
     staffing_statuses = {}
     staffing_weak = 0
     for sym in staffing_symbols:
-        status = _get_sma_status(sym)
+        status = _sma_cache.get(sym)
         if status:
             staffing_statuses[sym] = status
             if status["below_sma200"]:
@@ -3618,13 +3707,13 @@ def check_strategy_triggers() -> dict[str, dict[str, Any]]:
     dollar_statuses = {}
     dollar_weak = 0
     for sym in dollar_symbols:
-        status = _get_sma_status(sym)
+        status = _sma_cache.get(sym)
         if status:
             dollar_statuses[sym] = status
             if status["below_sma200"]:
                 dollar_weak += 1
 
-    cost_status = _get_sma_status("COST")
+    cost_status = _sma_cache.get("COST")
     cost_strong = False
     if cost_status:
         dollar_statuses["COST"] = cost_status

@@ -32,6 +32,11 @@ import numpy as np
 from agents_assemble.strategies.generic import BasePersona, PersonaConfig
 
 
+def _is_missing(v) -> bool:
+    """Check if indicator value is None or NaN (nearest-date path can leak NaN)."""
+    return v is None or v != v
+
+
 # ---------------------------------------------------------------------------
 # 1. Staples-Hedged Growth
 # ---------------------------------------------------------------------------
@@ -1460,6 +1465,235 @@ PORTFOLIO_STRATEGIES = {
     "all_weather_passive": AllWeatherPassive,
     "quality_dividend_aristocrats": QualityDividendAristocrats,
 }
+
+
+# ---------------------------------------------------------------------------
+# 18. Bond Duration Trade (yield curve steepening/flattening)
+# ---------------------------------------------------------------------------
+class BondDurationTrade(BasePersona):
+    """Yield curve duration strategy: rotate between long and short duration bonds.
+
+    Source: CFA Institute yield curve strategies, CME Group yield curve research.
+    Duration measures bond price sensitivity to yield changes. TLT (duration ~17)
+    moves aggressively with rate expectations. SHY (duration ~2) is defensive.
+
+    When yield curve steepens (long rates rise faster than short rates, i.e.
+    TLT underperforms SHY): long-duration bonds are cheap -> buy TLT.
+    When curve flattens/inverts (TLT outperforms SHY or short rates rise):
+    short-duration bonds are safer -> buy SHY/BIL.
+
+    We detect the regime by comparing TLT vs SHY relative momentum.
+    Steepening = TLT weakening relative to SHY (TLT below its SMA, SHY above).
+    Flattening = TLT strengthening relative to SHY.
+
+    Implementation:
+    - Compute TLT momentum (price vs SMA50) and SHY momentum (price vs SMA50)
+    - If TLT > SMA50 and TLT momentum > SHY momentum: curve flattening, long TLT
+    - If SHY > SMA50 and SHY momentum > TLT momentum: curve steepening, short
+      duration (SHY, BIL)
+    - Include IEF, TIP, GOVT for diversification in the intermediate space
+    - Monthly rebalance
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Bond Duration Trade",
+            description="Yield curve regime: long duration in flattening, short duration in steepening",
+            risk_tolerance=0.3,
+            max_position_size=0.40,
+            max_positions=4,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "TLT",   # Long duration (~17y)
+                "IEF",   # Intermediate duration (~7y)
+                "SHY",   # Short duration (~2y)
+                "BIL",   # Ultra-short (T-bills)
+                "TIP",   # TIPS (inflation protected)
+                "GOVT",  # Broad Treasury
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # Get momentum for TLT and SHY
+        tlt_price = prices.get("TLT")
+        shy_price = prices.get("SHY")
+        tlt_sma50 = self._get_indicator(data, "TLT", "sma_50", date)
+        shy_sma50 = self._get_indicator(data, "SHY", "sma_50", date)
+        tlt_sma200 = self._get_indicator(data, "TLT", "sma_200", date)
+
+        if tlt_price is None or shy_price is None:
+            # Missing data — equal weight available bonds
+            available = [s for s in self.config.universe if s in prices]
+            if available:
+                per = min(0.90 / len(available), self.config.max_position_size)
+                for s in available:
+                    weights[s] = per
+            return weights
+
+        # Determine curve regime from TLT vs SHY momentum
+        tlt_mom = 0.0
+        shy_mom = 0.0
+        if not _is_missing(tlt_sma50) and tlt_sma50 > 0:
+            tlt_mom = (tlt_price - tlt_sma50) / tlt_sma50
+        if not _is_missing(shy_sma50) and shy_sma50 > 0:
+            shy_mom = (shy_price - shy_sma50) / shy_sma50
+
+        # Additional trend check: TLT above/below SMA200
+        tlt_uptrend = (
+            not _is_missing(tlt_sma200)
+            and tlt_sma200 > 0
+            and tlt_price > tlt_sma200
+        )
+
+        if tlt_mom > shy_mom and tlt_mom > 0 and tlt_uptrend:
+            # Flattening / rates falling — long duration wins
+            weights["TLT"] = 0.40
+            weights["IEF"] = 0.25
+            weights["TIP"] = 0.15
+            # Close short duration
+            weights["SHY"] = 0.0
+            weights["BIL"] = 0.0
+        elif shy_mom > tlt_mom or tlt_mom < -0.01:
+            # Steepening / rates rising — short duration safer
+            weights["SHY"] = 0.35
+            weights["BIL"] = 0.25
+            weights["IEF"] = 0.15
+            weights["TIP"] = 0.10
+            # Close long duration
+            weights["TLT"] = 0.0
+        else:
+            # Neutral — balanced across curve
+            weights["IEF"] = 0.30
+            weights["TIP"] = 0.20
+            weights["SHY"] = 0.15
+            weights["TLT"] = 0.15
+
+        # Zero out any universe members not allocated
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["bond_duration_trade"] = BondDurationTrade
+
+
+# ---------------------------------------------------------------------------
+# 19. Credit Spread Trade (high yield vs investment grade rotation)
+# ---------------------------------------------------------------------------
+class CreditSpreadTrade(BasePersona):
+    """Credit spread rotation: risk-on high yield vs risk-off investment grade.
+
+    Source: SSRN "Credit-Spread Timing between High-Yield Bonds and Treasuries"
+    (Situ, 2024). Monthly rotation between HYG and IEF using price-ratio and
+    return-spread signals improved long-run growth with controlled drawdowns
+    vs a 50/50 benchmark.
+
+    When credit spreads widen (HYG drops relative to LQD): risk-off signal,
+    buy quality bonds (LQD, AGG, BND). When spreads tighten (HYG outperforms
+    LQD): risk-on signal, buy high yield (HYG, JNK).
+
+    We detect the regime by comparing HYG vs LQD momentum.
+    HYG outperforming LQD = spreads tightening = risk-on.
+    LQD outperforming HYG = spreads widening = risk-off.
+
+    Note: LQD has ~8.4y duration vs HYG ~4.1y, so we also check the
+    absolute trend of HYG to avoid false signals from duration mismatch.
+    """
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Credit Spread Trade",
+            description="Rotate high yield vs investment grade based on credit spread regime",
+            risk_tolerance=0.4,
+            max_position_size=0.40,
+            max_positions=4,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "HYG",   # High yield corporate
+                "LQD",   # Investment grade corporate
+                "JNK",   # High yield (SPDR)
+                "AGG",   # Broad aggregate bond
+                "BND",   # Total bond market
+                "VCIT",  # Intermediate corporate
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        hyg_price = prices.get("HYG")
+        lqd_price = prices.get("LQD")
+
+        if hyg_price is None or lqd_price is None:
+            # Fallback: balanced bond allocation
+            available = [s for s in self.config.universe if s in prices]
+            if available:
+                per = min(0.90 / len(available), self.config.max_position_size)
+                for s in available:
+                    weights[s] = per
+            return weights
+
+        # Get momentum indicators for HYG and LQD
+        hyg_sma50 = self._get_indicator(data, "HYG", "sma_50", date)
+        lqd_sma50 = self._get_indicator(data, "LQD", "sma_50", date)
+        hyg_sma200 = self._get_indicator(data, "HYG", "sma_200", date)
+        hyg_rsi = self._get_indicator(data, "HYG", "rsi_14", date)
+
+        hyg_mom = 0.0
+        lqd_mom = 0.0
+        if not _is_missing(hyg_sma50) and hyg_sma50 > 0:
+            hyg_mom = (hyg_price - hyg_sma50) / hyg_sma50
+        if not _is_missing(lqd_sma50) and lqd_sma50 > 0:
+            lqd_mom = (lqd_price - lqd_sma50) / lqd_sma50
+
+        # Absolute trend check for HYG
+        hyg_uptrend = (
+            not _is_missing(hyg_sma200)
+            and hyg_sma200 > 0
+            and hyg_price > hyg_sma200
+        )
+
+        if hyg_mom > lqd_mom and hyg_uptrend:
+            # Risk-on: credit spreads tightening, HYG outperforming
+            weights["HYG"] = 0.40
+            weights["JNK"] = 0.25
+            weights["VCIT"] = 0.15
+            # Close quality
+            weights["LQD"] = 0.0
+            weights["AGG"] = 0.0
+            weights["BND"] = 0.0
+        elif lqd_mom > hyg_mom or (not _is_missing(hyg_rsi) and hyg_rsi < 40):
+            # Risk-off: credit spreads widening or HYG oversold
+            weights["LQD"] = 0.35
+            weights["AGG"] = 0.25
+            weights["BND"] = 0.20
+            # Close high yield
+            weights["HYG"] = 0.0
+            weights["JNK"] = 0.0
+            weights["VCIT"] = 0.0
+        else:
+            # Neutral — blended allocation
+            weights["LQD"] = 0.25
+            weights["VCIT"] = 0.20
+            weights["HYG"] = 0.15
+            weights["AGG"] = 0.15
+            weights["BND"] = 0.05
+
+        # Zero out any unallocated
+        for sym in self.config.universe:
+            if sym in prices and sym not in weights:
+                weights[sym] = 0.0
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["credit_spread_trade"] = CreditSpreadTrade
 
 
 def get_portfolio_strategy(name: str, **kwargs) -> BasePersona:
