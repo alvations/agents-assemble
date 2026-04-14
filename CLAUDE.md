@@ -11,14 +11,14 @@ agents-assemble/
     engine/backtester.py          — Event-driven backtesting engine
     engine/judge.py               — Strategy grading, ranking, diagnosis
     engine/recommender.py         — Trade recommendation generator
-    strategies/generic.py         — 10 built-in personas
-    strategies/famous.py          — 13 famous investor personas
-    strategies/themes.py          — 11 theme-based strategies
-    strategies/recession.py       — 4 recession strategies + regime detector
-    strategies/unconventional.py  — 6 unconventional strategies
-    strategies/research.py        — 10 research-backed strategies
-    strategies/math.py            — 5 math-driven strategies
-    strategies/hedge_fund.py      — 2 hedge fund-inspired strategies
+   248 strategies/generic.py         — 10 built-in personas
+   248 strategies/famous.py          — 13 famous investor personas
+   248 strategies/themes.py          — 11 theme-based248 strategies
+   248 strategies/recession.py       — 4 recession248 strategies + regime detector
+   248 strategies/unconventional.py  — 6 unconventional248 strategies
+   248 strategies/research.py        — 10 research-backed248 strategies
+   248 strategies/math.py            — 5 math-driven248 strategies
+   248 strategies/hedge_fund.py      — 2 hedge fund-inspired248 strategies
 
   # Flat source files (for self-evolution)
   backtester.py, personas.py, famous_investors.py, theme_strategies.py,
@@ -35,7 +35,7 @@ agents-assemble/
   knowledge/                      — Research findings, results, failures
   results/                        — Backtest result JSON files
   strategy/winning/               — Winning trade recommendations
-  strategy/losing/                — Losing strategies (don't repeat!)
+  strategy/losing/                — Losing248 strategies (don't repeat!)
   LEADERBOARD.md                  — Definitive multi-horizon rankings
 ```
 
@@ -84,7 +84,7 @@ python3 sync_package.py  # After evolution, sync to package
 - **Bond fallback fails in rate hike cycles** — use gold/cash as third option
 - **Factor ETF rotation doesn't work** — ETFs too correlated with SPY
 - **Insider buying proxy** — distance from 52-week high is #1 predictor
-- See knowledge/failures_log.md for strategies NOT to repeat
+- See knowledge/failures_log.md for248 strategies NOT to repeat
 
 ## API Keys (env vars, optional)
 
@@ -98,7 +98,7 @@ python3 sync_package.py  # After evolution, sync to package
 
 **Before self-evolving or doing any other work, agents MUST:**
 
-1. Check `knowledge/research_queue.md` for pending strategies
+1. Check `knowledge/research_queue.md` for pending248 strategies
 2. If any items are marked `[ ]` (not implemented), implement them FIRST
 3. Follow the process in that file: implement → backtest → save → update leaderboard → commit
 
@@ -112,7 +112,7 @@ LEADERBOARD.md updated → git commit + push
 **Key files:**
 - `knowledge/research_queue.md` — Source of truth for pending strategy research
 - `stock_picker.py` — StockPick feature (core GUI: AI strategy matcher)
-- `regen_missing.py` — Batch backtest + commit script for missing strategies
+- `regen_missing.py` — Batch backtest + commit script for missing248 strategies
 - `sync_package.py` — MUST run after editing any strategy file
 
 **Rules:**
@@ -216,12 +216,12 @@ python research_parser.py
 ```bash
 pip install -e .
 
-# Run all strategies on 3-year horizon
+# Run all248 strategies on 3-year horizon
 python run_multi_horizon.py --horizon 3y
 
 # Run single strategy
 python run_multi_horizon.py --persona momentum_crash_hedge
 
-# Run all strategies in a category
+# Run all248 strategies in a category
 python run_multi_horizon.py --category research
 ```

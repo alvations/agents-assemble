@@ -51,6 +51,7 @@ Themes:
     + AnthropicEcosystem         — Anthropic supply chain + investors pre-IPO (Q4 2026)
     + OpenAIEcosystem            — OpenAI/Microsoft-centric AI ecosystem
     + AIInfraPicksShovels        — Arms dealer: wins regardless of which AI company dominates
+    + AIMegaEcosystem            — All 41 AI tickers, conviction-weighted mega-strategy
 """
 
 from __future__ import annotations
@@ -4852,6 +4853,142 @@ class OpenSourceAIEcosystem(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# AI Mega Ecosystem (union of all 6 AI strategies, conviction-weighted)
+# ---------------------------------------------------------------------------
+class AIMegaEcosystem(BasePersona):
+    """Diversified mega-strategy combining ALL tickers from the 6 individual AI
+    ecosystem strategies into one conviction-weighted portfolio.
+
+    The 6 component strategies:
+    1. ai_revolution — Broad AI theme (GPUs, cloud, AI apps)
+    2. ai_token_economy — NVDA compute demand proxy
+    3. anthropic_ecosystem — Anthropic supply chain + investors
+    4. openai_ecosystem — Microsoft/Stargate-centric
+    5. ai_infra_picks_shovels — Arms dealers, win regardless
+    6. open_source_ai_ecosystem — HuggingFace/Mistral/Llama
+
+    Conviction weighting: Tickers appearing in more sub-strategies get higher
+    base weight (6/6 = 3x, 5/6 = 2.5x, 4/6 = 2x, 3/6 = 1.5x, 1-2/6 = 1x).
+
+    Signal logic:
+    - Apply conviction weights as base
+    - Momentum tilt: above SMA50 = full weight, below SMA50 = half weight
+    - Risk-off: if SPY RSI > 75, reduce all to 60%
+    - Monthly rebalance
+
+    ## Passive Investor Section
+    For buy-and-hold investors who want maximum AI diversification without active
+    management: equal-weight the top-conviction names NVDA, AVGO, ANET, EQIX,
+    VRT, AMD, TSM, ASML. These 8 names span GPU monopoly, networking, data
+    centers, cooling, and fabrication -- the entire AI infrastructure stack.
+    Rebalance quarterly. This is the "own the whole AI economy" passive play.
+    """
+
+    # Conviction multipliers based on how many of the 6 strategies each ticker appears in
+    CONVICTION = {
+        # 6/6 highest conviction
+        "NVDA": 3.0, "AVGO": 3.0,
+        # 5/6
+        "ANET": 2.5, "EQIX": 2.5, "VRT": 2.5, "AMD": 2.5,
+        # 4/6
+        "CEG": 2.0, "VST": 2.0, "ASML": 2.0, "TSM": 2.0, "MU": 2.0,
+        # 3/6
+        "DLR": 1.5, "MRVL": 1.5, "CRM": 1.5, "MSFT": 1.5,
+        "AMZN": 1.5, "SNOW": 1.5, "GOOGL": 1.5,
+        # 1-2/6 (all others default to 1.0)
+    }
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="AI Mega Ecosystem",
+            description="All 41 AI tickers conviction-weighted: 6 strategies combined into one diversified mega-portfolio",
+            risk_tolerance=0.7,
+            max_position_size=0.08,
+            max_positions=41,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                # 6/6 conviction (highest)
+                "NVDA", "AVGO",
+                # 5/6 conviction
+                "ANET", "EQIX", "VRT", "AMD",
+                # 4/6 conviction
+                "CEG", "VST", "ASML", "TSM", "MU",
+                # 3/6 conviction
+                "DLR", "MRVL", "CRM", "MSFT", "AMZN", "SNOW", "GOOGL",
+                # 1-2/6 conviction
+                "ACN", "ADBE", "AI", "AMAT", "ARM", "CLS", "DELL",
+                "ETN", "GTLB", "HPE", "IBM", "INTC", "LRCX", "META",
+                "NOW", "NRG", "ORCL", "PATH", "PLTR", "QCOM", "SMCI",
+                "SMH", "SOXX",
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+
+        # --- Risk-off filter: SPY RSI > 75 -> reduce to 60% ---
+        risk_off_mult = 1.0
+        if "SPY" in data:
+            spy_rsi = self._get_indicator(data, "SPY", "rsi_14", date)
+            if not _is_missing(spy_rsi) and spy_rsi > 75:
+                risk_off_mult = 0.6
+
+        # --- Score each ticker ---
+        qualified = []  # (sym, weight_mult)
+
+        for sym in self.config.universe:
+            if sym not in data or sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            if _is_missing(sma50):
+                continue
+
+            # Skip extremely overbought individual names
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Skip broken trends (>25% below SMA200)
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            # Conviction weight from sub-strategy overlap count
+            conviction_mult = self.CONVICTION.get(sym, 1.0)
+
+            # Momentum tilt: above SMA50 = full weight, below = half
+            if price > sma50:
+                momentum_mult = 1.0
+            else:
+                momentum_mult = 0.5
+
+            qualified.append((sym, conviction_mult * momentum_mult))
+
+        # --- Distribute weights proportionally ---
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult * risk_off_mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out anything not qualified
+        for sym in self.config.universe:
+            if sym not in weights and sym in prices:
+                weights[sym] = 0.0
+
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -4907,6 +5044,7 @@ THEME_STRATEGIES = {
     "openai_ecosystem": OpenAIEcosystem,
     "ai_infra_picks_shovels": AIInfraPicksShovels,
     "open_source_ai_ecosystem": OpenSourceAIEcosystem,
+    "ai_mega_ecosystem": AIMegaEcosystem,
 }
 
 
