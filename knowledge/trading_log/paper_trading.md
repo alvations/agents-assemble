@@ -122,3 +122,67 @@ Each day I will log:
 *Entry trigger:* Always on. Currently in "normal" mode (SPY/QQQ heavy, VIX 18, no drawdown). Will auto-shift if conditions deteriorate.
 *Risk:* In a slow grind-down (no sharp crash), the rotation may be too slow. Also, bonds and equities can fall together (like 2022). GLD is the true safe haven here.
 
+
+### 2026-04-14 Midday Update (12:03 PM ET)
+
+**Market:** SPY +0.83% ($693.39), VIX 18.4 (calm), Oil -2.7% (Iran deal effect)
+
+**Notable:** META +3.3% — new AI model released + Q1 earnings date announced. Fits our momentum thesis. If we had capital, this confirms META as a momentum entry.
+
+**Other watchlist:** NVDA +2.0%, AVGO +0.7%, V +0.8%, GLD +0.7%. All in line, no surprises. CCJ -2.9% (uranium pulling back but still above SMA50). COST flat.
+
+**Paper trades:** None (no capital). Tracking only.
+
+**If we had $5K today, we would:**
+- Enter META at $664.48 (momentum, +3.3% with catalyst)
+- Enter NVDA at $194.65 (momentum, +2.0%, above SMA50)
+- Hold on CCJ (pulling back, wait for stabilization)
+- Hold on COST ($974 — not at our $950 buy target yet)
+
+
+### 2026-04-14 Close Review (4:07 PM ET) — Day 1
+
+**Market:** SPY closed +0.98% at $694.46. Second straight day of rally. VIX 18.4 (calm). Iran deal optimism holding.
+
+**Watchlist Close Prices:**
+
+| Ticker | Strategy | Open | Close | Change |
+|--------|----------|------|-------|--------|
+| SPY | core_satellite | $687.69 | $694.46 | +0.98% |
+| AVGO | core_satellite | $377.90 | $380.78 | +0.76% |
+| GLD | core_satellite | $439.32 | $445.09 | +1.31% |
+| NVDA | momentum | $190.83 | $196.51 | **+2.98%** |
+| META | momentum | $643.01 | $662.49 | **+3.03%** |
+| CCJ | uranium_renaissance | $119.50 | $116.06 | **-2.88%** |
+| URA | uranium_renaissance | $53.03 | $52.84 | -0.36% |
+| V | gross_profitability_value | $308.47 | $311.37 | +0.94% |
+| COST | gross_profitability_value | $974.01 | $974.80 | +0.08% |
+| QQQ | drawdown_severity_rotation | $620.27 | $628.60 | +1.34% |
+
+**Hypothetical paper P&L (if $5K deployed at open): +$49.59 (+0.99%)**
+
+**Winners:** META +3.0%, NVDA +3.0%, GLD +1.3%, QQQ +1.3%, SPY +1.0%
+**Losers:** CCJ -2.9% (uranium pullback), URA -0.4%
+
+**Day 1 Observations:**
+1. Momentum strategy would have been the best performer (+3% on both NVDA and META)
+2. Core satellite solid — SPY + GLD both green
+3. Uranium weakness — CCJ dropped despite being above SMA50 at open. Iran de-escalation reducing energy/nuclear premium? Watch tomorrow.
+4. Quality value (V, COST) steady but boring — exactly as expected
+5. GLD +1.3% — gold still rising even as stocks rally. Unusual. Worth noting.
+
+**Triggers Status:**
+- All 6 SMA50 triggers still ABOVE (confirmed at open, assume held)
+- No TP/SL triggered (no positions)
+- No VIX alert (18.4, well below 25)
+
+**After-Hours Watch:**
+- WFC and C earnings came out today — need to check if bank thesis changes
+- TSM earnings Thursday — key catalyst for opportunistic entry
+- PPI data released at 8:30 AM today — check if it moved rate expectations
+
+**Paper trades executed:** 0 (no capital)
+**Running paper P&L:** +$49.59 (Day 1 hypothetical)
+
+---
+
