@@ -14,15 +14,15 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 >
 > **Pre-Market Research: [Tuesday Apr 14](knowledge/premarket-research/20260414.md) — Iran deal talks, S&P reversal to 6886, VIX 18, JPM earnings miss
 
-## Top 5 Strategies (by Composite Score, 2020-2025)
+## Top 5 Strategies (by Composite Score, 6 windows 2022-2025)
 
-| Rank | Strategy | Composite | Consistency | Avg Return | Type |
-|------|----------|-----------|-------------|------------|------|
-| 1 | **AI Token Economy** | **1.10** | 92% | +156% avg | NVDA compute demand proxy → AI infra stack |
-| 2 | **Uranium Renaissance** | **0.74** | 92% | +134% avg | Structural uranium supply deficit (UUUU, CCJ, LEU) |
-| 3 | **Concentrate Winners** | **0.62** | 92% | +89% avg | Top 3-5 stocks outperform equal-weight |
-| 4 | **AI Revolution** | **0.53** | 92% | +79% avg | Broad AI theme (NVDA, AVGO, CRM, SNOW) |
-| 5 | **David Tepper** | **0.52** | 100% | +65% avg | Appaloosa macro — positive Sharpe in ALL 12 windows |
+| Rank | Strategy | Composite | 3Y Return | 3Y Sharpe | Consistency | Type |
+|------|----------|-----------|-----------|-----------|-------------|------|
+| 1 | **AI Token Economy** | **0.81** | 342.5% | 1.65 | 83% | NVDA compute demand proxy → AI infra stack |
+| 2 | **Core Satellite** | **0.61** | 255.4% | 0.87 | 83% | Core index + satellite alpha positions |
+| 3 | **AI Infra Picks & Shovels** | **0.57** | 329.1% | 1.56 | 83% | Arms dealers: NVDA, AVGO, TSM, ASML, ANET |
+| 4 | **Anthropic Ecosystem** | **0.54** | 302.3% | 1.78 | 83% | Anthropic supply chain + investors pre-IPO |
+| 5 | **Uranium Renaissance** | **0.48** | 353.1% | 1.27 | 83% | Structural uranium supply deficit (UUUU, CCJ, LEU) |
 
 See **[LEADERBOARD.md](LEADERBOARD.md)** for all 248 strategies with full rankings and formula details.
 
@@ -93,23 +93,24 @@ strategy = get_orchestrated_strategy("conservative_regime")
 
 Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-shape), energy vs tech divergence, bond trend. Activates appropriate sub-strategies per regime.
 
-## 175 Strategies Across 13 Categories
+## 248 Strategies Across 14 Categories
 
 | Category | Count | Top Performer |
 |----------|-------|---------------|
-| Unconventional | 41 | AI Token Economy (1.10 composite), Warflation Hedge, Defense Budget Floor |
-| Themes | 37 | Uranium Renaissance (0.74 composite), Subscription Monopoly |
-| Famous Investors | 20 | David Tepper (+108%), Druckenmiller (+97%) |
-| Recession | 10 | K-Shape Economy, V-Shape Recovery, L-Shape Stagnation |
-| Generic | 10 | Momentum (+85%), Concentrate Winners (+78%) |
-| Portfolio | 9 | Barbell, Core-Satellite, Dividend Aristocrat Blue Chips |
-| Crisis/Commodity | 9 | Product Tanker Shipping (+93%), Shipping Freight Cycle |
-| Math | 8 | Cointegration Pairs, Entropy Regime, Optimal Stopping |
-| Williams/Seasonal | 8 | Energy Seasonal, Short Seller Dip Buy (+65%) |
-| Hedge Fund | 7 | Growth Concentration (+45%), Stat Arb Medallion |
-| News/Event | 7 | FDA Catalyst, Earnings Whisper, Merger Arbitrage |
-| Political | 7 | Nancy Pelosi, GOP Trading, Polymarket Signal |
-| Orchestrator | 2 | Conservative Regime (+70%, 1.17 Sharpe) |
+| Unconventional | 52 | AI Token Economy (0.81 composite), Warflation Hedge, Waste Monopoly |
+| Themes | 51 | AI Infra Picks & Shovels (0.57), Anthropic Ecosystem, Infrastructure Reshoring |
+| Portfolio | 26 | Core-Satellite (0.61), Drawdown Severity Rotation, Covered Call Income |
+| Famous Investors | 20 | David Tepper, Prince Alwaleed, Stanley Druckenmiller |
+| Research | 16 | Gross Profitability Value (0.64 HODL), Cross-Asset Carry, Low Vol Quality |
+| Crisis/Commodity | 12 | Product Tanker Shipping, Crisis Rotation, Commodity Supercycle |
+| Williams/Seasonal | 12 | Energy Seasonal, Short Seller Dip Buy, Triple Witching |
+| News/Event | 11 | FOMC Announcement, Crisis Alpha, IPO Lockup Expiry |
+| Generic | 10 | Momentum, Concentrate Winners, Value |
+| Recession | 10 | Recession Detector, K-Shape Economy, V-Shape Recovery |
+| Political | 9 | Nancy Pelosi, Election Cycle Rotation, Polymarket Signal |
+| Math | 9 | Kelly Optimal, Z-Score Reversion, Mean-Variance Optimal |
+| Hedge Fund | 8 | Managed Futures Proxy, Growth Concentration, Stat Arb |
+| Orchestrator | 2 | Conservative Regime (1.17 Sharpe) |
 
 ### Inverse Correlation Strategies (regime-activated)
 
