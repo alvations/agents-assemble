@@ -96,7 +96,7 @@ def _safe_metric(val, ndigits=4):
 # ---------------------------------------------------------------------------
 # HTML Template (single-page app with Bloomberg dark theme)
 # ---------------------------------------------------------------------------
-HTML = """
+HTML = r"""
 <!DOCTYPE html>
 <html lang="en">
 <head>

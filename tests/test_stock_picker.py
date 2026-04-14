@@ -1,4 +1,5 @@
 """Tests for StockPick feature. Run with: python -m pytest tests/test_stock_picker.py -v"""
+import os
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -224,6 +225,10 @@ class TestCanonicalCache:
         path = _canonical_cache_path("AAPL", "1d")
         assert path.name == "ohlcv_AAPL_1d.parquet"
 
+    @pytest.mark.skipif(
+        os.environ.get("CI") == "true" or os.environ.get("GITHUB_ACTIONS") == "true",
+        reason="Requires network access to yfinance"
+    )
     def test_fetch_uses_canonical_cache(self):
         """After fetch, canonical cache file should exist (no date range in name)."""
         from data_fetcher import fetch_ohlcv, _canonical_cache_path
@@ -231,6 +236,10 @@ class TestCanonicalCache:
         path = _canonical_cache_path("SPY", "1d")
         assert path.exists(), "Canonical cache file should exist after fetch"
 
+    @pytest.mark.skipif(
+        os.environ.get("CI") == "true" or os.environ.get("GITHUB_ACTIONS") == "true",
+        reason="Requires network access to yfinance"
+    )
     def test_different_date_ranges_same_cache(self):
         """Different date ranges should use the same canonical cache file."""
         from data_fetcher import fetch_ohlcv, _canonical_cache_path
