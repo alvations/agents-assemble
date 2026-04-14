@@ -327,7 +327,7 @@ Composite = Avg Return x Consistency x (1 - Avg |Max Drawdown|)
 | 247 | [**global_airlines_travel**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/global_airlines_travel_20260412_190058.md) | -20.9% | -28.0% | -0.27 | 36% | -0.02 | No |
 | 248 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | -17.6% | -32.1% | -0.09 | 50% | -0.02 | No |
 
-*Updated: 2026-04-14 07:40*
+*Updated: 2026-04-14 07:51*
 
 ---
 

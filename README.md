@@ -5,7 +5,9 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
 > **Start here:**
-> - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (Avg Return × Consistency × Drawdown Protection)
+> - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (components collapsed under combined strategies)
+> - **[ALL_LEADERBOARD.md](ALL_LEADERBOARD.md)** — Flat ranking of ALL 248 strategies (no collapsing)
+> - **[HODL_LEADERBOARD.md](HODL_LEADERBOARD.md)** — For passive investors (28 windows, 177 suitable for buy-and-hold)
 > - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
@@ -18,13 +20,13 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 
 | Rank | Strategy | Composite | 3Y Return | 3Y Sharpe | Consistency | Type |
 |------|----------|-----------|-----------|-----------|-------------|------|
-| 1 | **AI Token Economy** | **0.81** | 342.5% | 1.65 | 83% | NVDA compute demand proxy → AI infra stack |
-| 2 | **Core Satellite** | **0.61** | 255.4% | 0.87 | 83% | Core index + satellite alpha positions |
-| 3 | **AI Infra Picks & Shovels** | **0.57** | 329.1% | 1.56 | 83% | Arms dealers: NVDA, AVGO, TSM, ASML, ANET |
-| 4 | **Anthropic Ecosystem** | **0.54** | 302.3% | 1.78 | 83% | Anthropic supply chain + investors pre-IPO |
-| 5 | **Uranium Renaissance** | **0.48** | 353.1% | 1.27 | 83% | Structural uranium supply deficit (UUUU, CCJ, LEU) |
+| 1 | **Core Satellite** | **0.61** | 255.4% | 0.87 | 83% | Core index + satellite alpha positions |
+| 2 | **Uranium Renaissance** | **0.48** | 353.1% | 1.27 | 83% | Structural uranium supply deficit (UUUU, CCJ, LEU) |
+| 3 | **Momentum** | **0.45** | 218.6% | 1.58 | 83% | Classic momentum factor |
+| 4 | **AI Mega Ecosystem** | **0.45** | 247.3% | 1.54 | 83% | 41-ticker AI combined (6 sub-strategies collapsed) |
+| 5 | **Yield Curve Inversion** | **0.40** | 172.7% | 0.76 | 83% | Trade yield curve regime changes |
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 248 strategies with full rankings and formula details.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 248 strategies (242 ranked + 6 components collapsed). See **[ALL_LEADERBOARD.md](ALL_LEADERBOARD.md)** for the flat view.
 
 ## Quick Start
 

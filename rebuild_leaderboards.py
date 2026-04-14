@@ -185,16 +185,17 @@ def risk_text(risk):
 def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
     """Build LEADERBOARD.md content."""
     # Compute 6-window data for all strategies
-    strategies = []
+    all_strategies = []
+    component_map = {}  # parent -> [components sorted by composite]
     for name, entry in mw.items():
         data = compute_6win_data(entry)
-        # Get 3Y_2023_2025 window data
         w = entry["w"]
         ret_3y = w.get("3Y_2023_2025", {}).get("ret", 0)
         sh_3y = w.get("3Y_2023_2025", {}).get("sh", 0)
         dd_3y = w.get("3Y_2023_2025", {}).get("dd", 0)
         positions = get_positions_count(name, result_jsons)
-        strategies.append({
+        stype = entry.get("type", "standalone")
+        s = {
             "name": name,
             "entry": entry,
             "composite": data["composite"],
@@ -205,15 +206,29 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
             "sh_3y": sh_3y,
             "dd_3y": dd_3y,
             "positions": positions,
-        })
+            "type": stype,
+        }
+        all_strategies.append(s)
+        if stype == "component":
+            parent = entry.get("parent", "")
+            component_map.setdefault(parent, []).append(s)
 
-    # Sort by composite descending
+    # Sort components by composite descending (highest first)
+    for parent, comps in component_map.items():
+        comps.sort(key=lambda x: x["composite"], reverse=True)
+
+    # Ranked strategies = standalone + combined (skip components)
+    strategies = [s for s in all_strategies if s["type"] != "component"]
     strategies.sort(key=lambda x: x["composite"], reverse=True)
+
+    n_ranked = len(strategies)
+    n_components = sum(len(v) for v in component_map.values())
+    n_total = len(all_strategies)
 
     lines = []
     lines.append("# LEADERBOARD")
     lines.append("")
-    lines.append(f"**{len(strategies)} strategies** ranked by **Composite Score** (6 rolling windows, 2022-2025).")
+    lines.append(f"**{n_total} strategies** ({n_ranked} ranked + {n_components} components collapsed under combined strategies).")
     lines.append("")
     lines.append("## Ranking Formula")
     lines.append("")
@@ -290,7 +305,7 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
     lines.append("")
 
     # Full rankings table
-    lines.append(f"## Full Rankings ({len(strategies)} Strategies)")
+    lines.append(f"## Full Rankings ({n_ranked} Ranked + {n_components} Components)")
     lines.append("")
     lines.append("| # | Strategy | 3Y Ret | 3Y Sharpe | 3Y DD | Pos | Consistency | Avg Ret | Composite |")
     lines.append("|---|----------|--------|-----------|-------|-----|------------|---------|-----------|")
@@ -302,12 +317,27 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
         cons_pct = f"{s['consistency'] * 100:.0f}%"
         avg_ret_pct = f"{s['avg_ret'] * 100:.1f}%"
         comp_str = fmt_composite(s["composite"])
+        combined_tag = " **[combined]**" if s["type"] == "combined" else ""
 
         lines.append(
-            f"| {i+1} | [**{name}**]({link}) | "
+            f"| {i+1} | [**{name}**]({link}){combined_tag} | "
             f"{s['ret_3y']*100:.1f}% | {s['sh_3y']:.2f} | {s['dd_3y']*100:.1f}% | "
             f"{pos} | {cons_pct} | {avg_ret_pct} | {comp_str} |"
         )
+
+        # Show components nested under combined strategies
+        if s["type"] == "combined" and name in component_map:
+            for cs in component_map[name]:
+                clink = strategy_link(cs["name"], strat_files)
+                cpos = cs["positions"] if cs["positions"] is not None else "?"
+                ccons = f"{cs['consistency'] * 100:.0f}%"
+                cavg = f"{cs['avg_ret'] * 100:.1f}%"
+                ccomp = fmt_composite(cs["composite"])
+                lines.append(
+                    f"| ↳ | [{cs['name']}]({clink}) | "
+                    f"{cs['ret_3y']*100:.1f}% | {cs['sh_3y']:.2f} | {cs['dd_3y']*100:.1f}% | "
+                    f"{cpos} | {ccons} | {cavg} | {ccomp} |"
+                )
 
     lines.append("")
     lines.append(f"*Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
@@ -481,10 +511,73 @@ def build_hodl_leaderboard(mw, strat_files):
     return "\n".join(lines) + "\n"
 
 
+def build_all_leaderboard(mw, strat_files, result_jsons, strat_jsons):
+    """Build ALL_LEADERBOARD.md — flat list of ALL strategies including components."""
+    strategies = []
+    for name, entry in mw.items():
+        data = compute_6win_data(entry)
+        w = entry["w"]
+        ret_3y = w.get("3Y_2023_2025", {}).get("ret", 0)
+        sh_3y = w.get("3Y_2023_2025", {}).get("sh", 0)
+        dd_3y = w.get("3Y_2023_2025", {}).get("dd", 0)
+        positions = get_positions_count(name, result_jsons)
+        strategies.append({
+            "name": name, "entry": entry, "composite": data["composite"],
+            "avg_ret": data["avg_ret"], "consistency": data["consistency"],
+            "avg_dd": data["avg_dd"], "ret_3y": ret_3y, "sh_3y": sh_3y,
+            "dd_3y": dd_3y, "positions": positions,
+            "type": entry.get("type", "standalone"),
+        })
+    strategies.sort(key=lambda x: x["composite"], reverse=True)
+
+    lines = [
+        "# ALL STRATEGIES LEADERBOARD",
+        "",
+        f"**{len(strategies)} strategies** — flat ranking of ALL strategies (no collapsing).",
+        "",
+        "This is the complete, unfiltered list. See [LEADERBOARD.md](LEADERBOARD.md) for the collapsed view",
+        "where component strategies are nested under their combined parent.",
+        "",
+        "Ranked by **Composite Score** (6 rolling windows, 2022-2025).",
+        "",
+        "---",
+        "",
+        "| # | Strategy | Type | 3Y Ret | 3Y Sharpe | 3Y DD | Pos | Consistency | Avg Ret | Composite |",
+        "|---|----------|------|--------|-----------|-------|-----|------------|---------|-----------|",
+    ]
+
+    for i, s in enumerate(strategies):
+        name = s["name"]
+        link = strategy_link(name, strat_files)
+        pos = s["positions"] if s["positions"] is not None else "?"
+        cons_pct = f"{s['consistency'] * 100:.0f}%"
+        avg_ret_pct = f"{s['avg_ret'] * 100:.1f}%"
+        comp_str = fmt_composite(s["composite"])
+        stype = s["type"]
+
+        lines.append(
+            f"| {i+1} | [**{name}**]({link}) | {stype} | "
+            f"{s['ret_3y']*100:.1f}% | {s['sh_3y']:.2f} | {s['dd_3y']*100:.1f}% | "
+            f"{pos} | {cons_pct} | {avg_ret_pct} | {comp_str} |"
+        )
+
+    lines.append("")
+    lines.append(f"*Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
+    return "\n".join(lines) + "\n"
+
+
+ALL_LB_PATH = os.path.join(BASE, "ALL_LEADERBOARD.md")
+
+
 def main():
     print("Loading multi-window results...")
     mw = load_mw()
     print(f"  {len(mw)} strategies loaded")
+
+    n_standalone = sum(1 for d in mw.values() if d.get("type", "standalone") == "standalone")
+    n_combined = sum(1 for d in mw.values() if d.get("type") == "combined")
+    n_component = sum(1 for d in mw.values() if d.get("type") == "component")
+    print(f"  {n_standalone} standalone + {n_combined} combined + {n_component} components")
 
     print("Finding strategy files...")
     strat_files = find_strategy_files()
@@ -498,33 +591,38 @@ def main():
     strat_jsons = find_strategy_jsons()
     print(f"  {len(strat_jsons)} strategy JSONs found")
 
-    # Build LEADERBOARD.md
-    print("\nBuilding LEADERBOARD.md...")
+    # Build LEADERBOARD.md (collapsed — components nested under combined)
+    print("\nBuilding LEADERBOARD.md (collapsed)...")
     lb_content = build_leaderboard(mw, strat_files, result_jsons, strat_jsons)
     with open(LEADERBOARD_PATH, "w") as f:
         f.write(lb_content)
-    lb_lines = lb_content.count("\n")
-    print(f"  Written {lb_lines} lines")
+    print(f"  Written {lb_content.count(chr(10))} lines")
+
+    # Build ALL_LEADERBOARD.md (flat — every strategy ranked independently)
+    print("\nBuilding ALL_LEADERBOARD.md (flat)...")
+    all_content = build_all_leaderboard(mw, strat_files, result_jsons, strat_jsons)
+    with open(ALL_LB_PATH, "w") as f:
+        f.write(all_content)
+    print(f"  Written {all_content.count(chr(10))} lines")
 
     # Build HODL_LEADERBOARD.md
     print("\nBuilding HODL_LEADERBOARD.md...")
     hodl_content = build_hodl_leaderboard(mw, strat_files)
     with open(HODL_PATH, "w") as f:
         f.write(hodl_content)
-    hodl_lines = hodl_content.count("\n")
-    print(f"  Written {hodl_lines} lines")
+    print(f"  Written {hodl_content.count(chr(10))} lines")
 
-    # Verify counts
+    # Verify
     print("\nVerification:")
-    # Count strategy rows in LEADERBOARD full rankings
-    lb_rows = sum(1 for line in lb_content.split("\n") if re.match(r"^\| \d+ \|", line))
-    print(f"  LEADERBOARD.md full rankings: {lb_rows} strategies")
-
+    lb_ranked = sum(1 for line in lb_content.split("\n") if re.match(r"^\| \d+ \|", line))
+    lb_components = lb_content.count("| ↳ |")
+    all_rows = sum(1 for line in all_content.split("\n") if re.match(r"^\| \d+ \|", line))
     hodl_rows = sum(1 for line in hodl_content.split("\n") if re.match(r"^\| \d+ \|", line))
-    print(f"  HODL_LEADERBOARD.md full rankings: {hodl_rows} strategies")
 
-    assert lb_rows == hodl_rows, f"Mismatch: LB has {lb_rows}, HODL has {hodl_rows}"
-    print(f"\n  All {lb_rows} strategies present in both files.")
+    print(f"  LEADERBOARD.md: {lb_ranked} ranked + {lb_components} components nested")
+    print(f"  ALL_LEADERBOARD.md: {all_rows} strategies (flat)")
+    print(f"  HODL_LEADERBOARD.md: {hodl_rows} strategies")
+    print(f"\n  Total strategies in MW: {len(mw)}")
 
 
 if __name__ == "__main__":
