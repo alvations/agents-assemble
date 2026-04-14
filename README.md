@@ -5,9 +5,7 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 **Platforms:** Robinhood, Public.com, Tiger Brokers, IBKR, eToro, IG
 
 > **Start here:**
-> - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (components collapsed under combined strategies)
-> - **[ALL_LEADERBOARD.md](ALL_LEADERBOARD.md)** — Flat ranking of ALL 248 strategies (no collapsing)
-> - **[HODL_LEADERBOARD.md](HODL_LEADERBOARD.md)** — For passive investors (28 windows, 177 suitable for buy-and-hold)
+> - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (248 strategies, components collapsed)
 > - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
 > - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
@@ -26,7 +24,7 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 | 4 | **AI Mega Ecosystem** | **0.45** | 247.3% | 1.54 | 83% | 41-ticker AI combined (6 sub-strategies collapsed) |
 | 5 | **Yield Curve Inversion** | **0.40** | 172.7% | 0.76 | 83% | Trade yield curve regime changes |
 
-See **[LEADERBOARD.md](LEADERBOARD.md)** for all 248 strategies (242 ranked + 6 components collapsed). See **[ALL_LEADERBOARD.md](ALL_LEADERBOARD.md)** for the flat view.
+See **[LEADERBOARD.md](LEADERBOARD.md)** for all 248 strategies with full rankings and formula details.
 
 ## Quick Start
 
