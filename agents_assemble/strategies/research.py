@@ -1150,7 +1150,7 @@ class CrossAssetCarry(BasePersona):
             risk_tolerance=0.4,
             max_position_size=0.45,
             max_positions=3,
-            rebalance_frequency="quarterly",
+            rebalance_frequency="monthly",
             universe=universe or [
                 "HYG",   # High yield bonds
                 "VNQ",   # REITs

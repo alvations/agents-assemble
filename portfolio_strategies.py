@@ -1758,7 +1758,7 @@ class CoveredCallIncome(BasePersona):
             risk_tolerance=0.3,
             max_position_size=0.30,
             max_positions=6,
-            rebalance_frequency="quarterly",
+            rebalance_frequency="monthly",
             universe=universe or [
                 "JEPI", "JEPQ", "QYLD", "XYLD",  # Covered call ETFs
                 "SVXY",  # Vol-selling exposure
