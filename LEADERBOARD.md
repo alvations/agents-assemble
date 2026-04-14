@@ -124,32 +124,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 3Y_2023_2025 | 302.3% | 1.78 | -31.7% |
 </details>
 
-### #5 [tax_harvest_rotation](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/tax_harvest_rotation_20260414_072441.md)
-
-| 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
-|-----------|-----------|-----------|-----------|------------|------------|-----------|
-| **210.8%** | **0.93** | -18.6% | 0 | 83% | 74.6% | **0.51** |
-
-> BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
-
-Risk: Stop loss 18.5% | Take profit 23.0% | Max allocation 21.9%
-
-Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — higher vol stocks get smaller positions automatically.
-
-<details>
-<summary>Rolling window breakdown</summary>
-
-| Window | Return | Sharpe | Max DD |
-|--------|--------|--------|--------|
-| 1Y_2022 | -22.3% | -1.09 | -26.1% |
-| 1Y_2023 | 31.6% | 1.85 | -9.2% |
-| 1Y_2024 | 103.4% | 1.18 | -8.8% |
-| 1Y_2025 | 16.7% | 0.73 | -18.5% |
-| 3Y_2022_2024 | 107.4% | 0.62 | -26.1% |
-| 3Y_2023_2025 | 210.8% | 0.93 | -18.6% |
-</details>
-
-### #6 [uranium_renaissance](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260412_190203.md)
+### #5 [uranium_renaissance](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260412_190203.md)
 
 | 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
 |-----------|-----------|-----------|-----------|------------|------------|-----------|
@@ -174,7 +149,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 3Y_2023_2025 | 353.1% | 1.27 | -37.4% |
 </details>
 
-### #7 [openai_ecosystem](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/openai_ecosystem_20260413_190648.md)
+### #6 [openai_ecosystem](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/openai_ecosystem_20260413_190648.md)
 
 | 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
 |-----------|-----------|-----------|-----------|------------|------------|-----------|
@@ -199,7 +174,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 3Y_2023_2025 | 246.1% | 1.55 | -31.7% |
 </details>
 
-### #8 [ai_revolution](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_revolution_20260412_190016.md)
+### #7 [ai_revolution](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_revolution_20260412_190016.md)
 
 | 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
 |-----------|-----------|-----------|-----------|------------|------------|-----------|
@@ -224,7 +199,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 3Y_2023_2025 | 214.6% | 1.37 | -27.0% |
 </details>
 
-### #9 [momentum](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_20260412_190553.md)
+### #8 [momentum](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_20260412_190553.md)
 
 | 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
 |-----------|-----------|-----------|-----------|------------|------------|-----------|
@@ -249,7 +224,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 3Y_2023_2025 | 218.6% | 1.58 | -29.5% |
 </details>
 
-### #10 [ai_mega_ecosystem](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_mega_ecosystem_20260414_063940.md)
+### #9 [ai_mega_ecosystem](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_mega_ecosystem_20260414_063940.md)
 
 | 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
 |-----------|-----------|-----------|-----------|------------|------------|-----------|
@@ -274,6 +249,31 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 3Y_2023_2025 | 247.3% | 1.54 | -31.8% |
 </details>
 
+### #10 [yield_curve_inversion](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/yield_curve_inversion_20260412_190427.md)
+
+| 3Y Return | 3Y Sharpe | 3Y Max DD | Positions | Consistency | Avg Return | Composite |
+|-----------|-----------|-----------|-----------|------------|------------|-----------|
+| **172.7%** | **0.76** | -13.5% | 7 | 83% | 57.5% | **0.40** |
+
+> BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
+
+Risk: Stop loss 13.5% | Take profit 9.2% | Max allocation 13.5%
+
+Timing: SAFE TO BUY. Even better: add more when interest rates are rising — banks earn wider margins on loans.
+
+<details>
+<summary>Rolling window breakdown</summary>
+
+| Window | Return | Sharpe | Max DD |
+|--------|--------|--------|--------|
+| 1Y_2022 | -15.4% | -1.05 | -20.9% |
+| 1Y_2023 | 17.4% | 1.44 | -5.6% |
+| 1Y_2024 | 97.2% | 1.04 | -6.7% |
+| 1Y_2025 | 18.4% | 1.03 | -13.4% |
+| 3Y_2022_2024 | 54.7% | 0.39 | -34.8% |
+| 3Y_2023_2025 | 172.7% | 0.76 | -13.5% |
+</details>
+
 ---
 
 ## Full Rankings (248 Strategies)
@@ -284,78 +284,78 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 2 | [**core_satellite**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/core_satellite_20260412_190248.md) | 255.4% | 0.87 | -11.6% | 6 | 83% | 86.6% | 0.61 |
 | 3 | [**ai_infra_picks_shovels**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_infra_picks_shovels_20260413_190736.md) | 329.1% | 1.56 | -38.9% | 18 | 83% | 99.8% | 0.57 |
 | 4 | [**anthropic_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/anthropic_ecosystem_20260413_190600.md) | 302.3% | 1.78 | -31.7% | 16 | 83% | 89.1% | 0.54 |
-| 5 | [**tax_harvest_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/tax_harvest_rotation_20260414_072441.md) | 210.8% | 0.93 | -18.6% | 0 | 83% | 74.6% | 0.51 |
-| 6 | [**uranium_renaissance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260412_190203.md) | 353.1% | 1.27 | -37.4% | 8 | 83% | 89.8% | 0.48 |
-| 7 | [**openai_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/openai_ecosystem_20260413_190648.md) | 246.1% | 1.55 | -31.7% | 17 | 83% | 77.1% | 0.47 |
-| 8 | [**ai_revolution**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_revolution_20260412_190016.md) | 214.6% | 1.37 | -27.0% | 8 | 83% | 74.7% | 0.46 |
-| 9 | [**momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_20260412_190553.md) | 218.6% | 1.58 | -29.5% | 5 | 83% | 71.8% | 0.45 |
-| 10 | [**ai_mega_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_mega_ecosystem_20260414_063940.md) | 247.3% | 1.54 | -31.8% | 40 | 83% | 75.0% | 0.45 |
-| 11 | [**yield_curve_inversion**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/yield_curve_inversion_20260412_190427.md) | 172.7% | 0.76 | -13.5% | 7 | 83% | 57.5% | 0.4 |
-| 12 | [**concentrate_winners**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/concentrate_winners_20260412_190150.md) | 177.6% | 1.28 | -29.6% | 5 | 83% | 62.7% | 0.4 |
-| 13 | [**recession_detector**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/recession_detector_20260412_190423.md) | 142.8% | 0.69 | -14.1% | 5 | 83% | 55.0% | 0.39 |
-| 14 | [**open_source_ai_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/open_source_ai_ecosystem_20260413_191458.md) | 232.6% | 1.57 | -26.8% | ? | 83% | 63.8% | 0.37 |
-| 15 | [**ipo_lockup_expiry**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ipo_lockup_expiry_20260412_190422.md) | 162.8% | 1.18 | -22.1% | 2 | 83% | 56.6% | 0.37 |
-| 16 | [**david_tepper**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/david_tepper_20260412_190511.md) | 93.9% | 1.22 | -18.4% | 6 | 100% | 43.3% | 0.36 |
-| 17 | [**crisis_alpha**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/crisis_alpha_20260412_190401.md) | 174.9% | 0.71 | -11.5% | 4 | 83% | 53.0% | 0.36 |
-| 18 | [**crisis_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/crisis_rotation_20260412_190325.md) | 140.9% | 0.84 | -13.6% | 5 | 83% | 49.6% | 0.36 |
-| 19 | [**sentiment_reversal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/sentiment_reversal_20260412_190240.md) | 179.2% | 1.22 | -25.8% | 15 | 83% | 56.1% | 0.35 |
-| 20 | [**stanley_druckenmiller**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/stanley_druckenmiller_20260412_190636.md) | 161.7% | 1.62 | -21.2% | 9 | 83% | 51.4% | 0.35 |
-| 21 | [**triple_witching_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/triple_witching_momentum_20260412_190550.md) | 141.0% | 0.68 | -8.0% | 5 | 83% | 46.1% | 0.33 |
-| 22 | [**presidential_cycle**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/presidential_cycle_20260412_190551.md) | 111.8% | 1.02 | -9.2% | 5 | 83% | 43.8% | 0.33 |
-| 23 | [**multi_factor_smart_beta**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/multi_factor_smart_beta_20260408_141543.md) | 81.6% | 1.23 | -10.9% | 12 | 100% | 36.7% | 0.33 |
-| 24 | [**mag7_domino_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/mag7_domino_hedge_20260412_190123.md) | 177.2% | 1.57 | -23.2% | 16 | 83% | 51.4% | 0.32 |
-| 25 | [**late_cycle_bubble_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/late_cycle_bubble_hedge_20260412_190130.md) | 126.0% | 1.40 | -18.3% | 8 | 83% | 46.0% | 0.32 |
-| 26 | [**barbell_portfolio**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/barbell_portfolio_20260412_190245.md) | 144.8% | 1.63 | -12.1% | 7 | 83% | 46.2% | 0.32 |
-| 27 | [**equal_weight_sp500**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/equal_weight_sp500_20260412_190303.md) | 124.8% | 1.72 | -14.6% | 16 | 83% | 44.9% | 0.32 |
-| 28 | [**midstream_toll_road**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/midstream_toll_road_20260412_190208.md) | 76.0% | 0.99 | -16.4% | 7 | 83% | 45.1% | 0.32 |
-| 29 | [**vix_mean_reversion**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/vix_mean_reversion_20260412_190132.md) | 137.3% | 0.83 | -10.6% | 4 | 83% | 43.4% | 0.31 |
-| 30 | [**uk_european_banking**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uk_european_banking_20260412_190110.md) | 91.3% | 1.35 | -14.5% | 5 | 100% | 36.0% | 0.31 |
-| 31 | [**nvidia_chain_diversified**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/nvidia_chain_diversified_20260412_190231.md) | 152.2% | 1.37 | -18.9% | 3 | 83% | 44.7% | 0.3 |
-| 32 | [**momentum_crash_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_crash_hedge_20260408_141550.md) | 122.8% | 1.20 | -20.7% | 10 | 83% | 44.5% | 0.3 |
-| 33 | [**nancy_pelosi**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/nancy_pelosi_20260412_190506.md) | 117.5% | 1.51 | -13.7% | 6 | 83% | 42.1% | 0.3 |
-| 34 | [**breadth_divergence**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/breadth_divergence_20260412_190243.md) | 113.1% | 1.17 | -14.4% | 7 | 83% | 40.9% | 0.3 |
-| 35 | [**consumer_credit_stress**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/consumer_credit_stress_20260412_190428.md) | 119.6% | 0.67 | -16.7% | 7 | 67% | 51.4% | 0.29 |
-| 36 | [**gop_trading**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/gop_trading_20260412_190508.md) | 102.6% | 1.30 | -11.7% | 9 | 83% | 40.0% | 0.29 |
-| 37 | [**polymarket_signal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/polymarket_signal_20260412_190510.md) | 112.4% | 0.73 | -11.3% | 4 | 83% | 40.0% | 0.29 |
-| 38 | [**prince_alwaleed**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/prince_alwaleed_20260414_072438.md) | 98.8% | 1.49 | -12.3% | 0 | 83% | 38.3% | 0.28 |
-| 39 | [**george_soros**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/george_soros_20260412_190616.md) | 111.1% | 1.40 | -13.3% | 5 | 67% | 47.1% | 0.27 |
-| 40 | [**contrastive_pairs**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/contrastive_pairs_20260412_190046.md) | 125.2% | 1.25 | -25.1% | 10 | 83% | 41.0% | 0.27 |
-| 41 | [**pawn_counter_cyclical**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/pawn_counter_cyclical_20260413_194617.md) | 57.9% | 1.00 | -8.5% | 0 | 100% | 29.6% | 0.27 |
-| 42 | [**conservative_regime**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/conservative_regime_20260412_190649.md) | 89.9% | 1.24 | -13.4% | 11 | 83% | 36.5% | 0.27 |
-| 43 | [**fomc_announcement**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/fomc_announcement_20260412_190416.md) | 108.2% | 0.72 | -5.2% | 5 | 83% | 35.7% | 0.27 |
-| 44 | [**santa_claus_rally**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/santa_claus_rally_20260412_190549.md) | 110.3% | 1.00 | -6.2% | 8 | 83% | 35.0% | 0.26 |
-| 45 | [**semiconductor_value**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/semiconductor_value_20260412_190043.md) | 152.3% | 1.06 | -33.7% | 10 | 83% | 44.2% | 0.26 |
-| 46 | [**policy_catalyst**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/policy_catalyst_20260412_190517.md) | 64.3% | 0.86 | -24.1% | 10 | 100% | 30.3% | 0.25 |
-| 47 | [**bill_ackman**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/bill_ackman_20260412_190634.md) | 100.0% | 1.33 | -14.8% | 7 | 83% | 35.2% | 0.25 |
-| 48 | [**nfp_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/nfp_momentum_20260412_190418.md) | 100.2% | 0.68 | -7.9% | 4 | 83% | 34.1% | 0.25 |
-| 49 | [**robotics_autonomous**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/robotics_autonomous_20260412_190041.md) | 99.8% | 1.16 | -18.4% | 8 | 83% | 35.2% | 0.25 |
-| 50 | [**magic_formula**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/magic_formula_20260412_190302.md) | 83.1% | 1.10 | -11.9% | 14 | 83% | 32.2% | 0.24 |
-| 51 | [**blackrock_2026**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/blackrock_2026_20260412_190639.md) | 97.8% | 1.20 | -11.8% | 8 | 83% | 32.6% | 0.24 |
-| 52 | [**singapore_alpha**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/singapore_alpha_20260412_190108.md) | 50.7% | 0.80 | -10.6% | 9 | 100% | 26.4% | 0.23 |
-| 53 | [**bipartisan_consensus**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/bipartisan_consensus_20260412_190509.md) | 75.9% | 1.15 | -11.8% | 9 | 83% | 31.0% | 0.23 |
-| 54 | [**specialty_insurance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/specialty_insurance_20260412_190201.md) | 57.9% | 0.65 | -18.3% | 3 | 100% | 27.1% | 0.23 |
-| 55 | [**ai_infrastructure_layer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_infrastructure_layer_20260412_190125.md) | 106.8% | 1.04 | -22.7% | 11 | 67% | 42.0% | 0.23 |
-| 56 | [**short_seller_dip_buy**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/short_seller_dip_buy_20260412_190547.md) | 75.7% | 1.06 | -11.4% | 1 | 83% | 30.8% | 0.23 |
-| 57 | [**defense_budget_floor**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/defense_budget_floor_20260412_190235.md) | 64.2% | 1.05 | -11.5% | 8 | 100% | 25.6% | 0.23 |
-| 58 | [**masayoshi_son**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/masayoshi_son_20260412_190625.md) | 164.2% | 1.04 | -28.7% | 4 | 83% | 41.3% | 0.23 |
-| 59 | [**product_tanker_shipping**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/product_tanker_shipping_20260412_190321.md) | 11.4% | 0.08 | -25.2% | 8 | 83% | 34.3% | 0.23 |
-| 60 | [**infrastructure_reshoring**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/infrastructure_reshoring_20260414_072409.md) | 84.9% | 0.96 | -22.5% | 0 | 83% | 33.9% | 0.23 |
-| 61 | [**defense_aerospace**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/defense_aerospace_20260412_190020.md) | 114.0% | 0.71 | -49.4% | 9 | 83% | 40.4% | 0.23 |
-| 62 | [**dogs_of_dow**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/dogs_of_dow_20260412_190135.md) | 100.1% | 1.17 | -14.7% | 10 | 83% | 32.8% | 0.23 |
-| 63 | [**unemployment_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/unemployment_momentum_20260412_190430.md) | 104.2% | 0.62 | -10.5% | 8 | 67% | 38.0% | 0.22 |
-| 64 | [**ken_griffin**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ken_griffin_20260412_190512.md) | 126.8% | 1.38 | -16.3% | 6 | 83% | 33.4% | 0.22 |
-| 65 | [**market_making_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/market_making_momentum_20260412_190348.md) | 81.1% | 0.69 | -9.7% | 9 | 67% | 35.4% | 0.21 |
-| 66 | [**vix_fear_buy**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/vix_fear_buy_20260414_072443.md) | 73.2% | 0.74 | -9.1% | 0 | 83% | 26.4% | 0.2 |
-| 67 | [**mean_variance_optimal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/mean_variance_optimal_20260408_141555.md) | 74.4% | 1.36 | -12.2% | 12 | 83% | 26.4% | 0.2 |
-| 68 | [**leveraged_trend_tactical**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/leveraged_trend_tactical_20260414_072412.md) | 82.3% | 1.07 | -16.2% | 0 | 83% | 28.4% | 0.2 |
-| 69 | [**jim_simons**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/jim_simons_20260412_190622.md) | 76.4% | 1.24 | -12.9% | 12 | 83% | 27.3% | 0.2 |
-| 70 | [**kelly_optimal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/kelly_optimal_20260412_190435.md) | 80.7% | 1.13 | -15.2% | 9 | 83% | 27.0% | 0.19 |
-| 71 | [**reshoring_industrial**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/reshoring_industrial_20260412_190051.md) | 64.2% | 0.81 | -20.8% | 11 | 83% | 26.9% | 0.19 |
-| 72 | [**job_loss_tech_boom**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/job_loss_tech_boom_20260412_190220.md) | 87.4% | 0.89 | -33.0% | 8 | 67% | 36.6% | 0.19 |
-| 73 | [**crypto_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/crypto_ecosystem_20260412_190035.md) | 60.9% | 0.56 | -27.3% | 10 | 67% | 35.8% | 0.19 |
-| 74 | [**biotech_breakout**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/biotech_breakout_20260412_190023.md) | 48.1% | 0.64 | -18.3% | 12 | 100% | 21.9% | 0.19 |
-| 75 | [**defensive_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/defensive_rotation_20260412_190425.md) | 95.2% | 0.58 | -21.0% | 6 | 50% | 44.6% | 0.19 |
-| 76 | [**japan_industrial_finance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/japan_industrial_finance_20260413_141458.md) | 77.8% | 0.93 | -17.0% | 6 | 83% | 27.0% | 0.18 |
+| 5 | [**uranium_renaissance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uranium_renaissance_20260412_190203.md) | 353.1% | 1.27 | -37.4% | 8 | 83% | 89.8% | 0.48 |
+| 6 | [**openai_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/openai_ecosystem_20260413_190648.md) | 246.1% | 1.55 | -31.7% | 17 | 83% | 77.1% | 0.47 |
+| 7 | [**ai_revolution**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_revolution_20260412_190016.md) | 214.6% | 1.37 | -27.0% | 8 | 83% | 74.7% | 0.46 |
+| 8 | [**momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_20260412_190553.md) | 218.6% | 1.58 | -29.5% | 5 | 83% | 71.8% | 0.45 |
+| 9 | [**ai_mega_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_mega_ecosystem_20260414_063940.md) | 247.3% | 1.54 | -31.8% | 40 | 83% | 75.0% | 0.45 |
+| 10 | [**yield_curve_inversion**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/yield_curve_inversion_20260412_190427.md) | 172.7% | 0.76 | -13.5% | 7 | 83% | 57.5% | 0.4 |
+| 11 | [**concentrate_winners**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/concentrate_winners_20260412_190150.md) | 177.6% | 1.28 | -29.6% | 5 | 83% | 62.7% | 0.4 |
+| 12 | [**recession_detector**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/recession_detector_20260412_190423.md) | 142.8% | 0.69 | -14.1% | 5 | 83% | 55.0% | 0.39 |
+| 13 | [**open_source_ai_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/open_source_ai_ecosystem_20260413_191458.md) | 232.6% | 1.57 | -26.8% | ? | 83% | 63.8% | 0.37 |
+| 14 | [**ipo_lockup_expiry**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ipo_lockup_expiry_20260412_190422.md) | 162.8% | 1.18 | -22.1% | 2 | 83% | 56.6% | 0.37 |
+| 15 | [**david_tepper**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/david_tepper_20260412_190511.md) | 93.9% | 1.22 | -18.4% | 6 | 100% | 43.3% | 0.36 |
+| 16 | [**crisis_alpha**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/crisis_alpha_20260412_190401.md) | 174.9% | 0.71 | -11.5% | 4 | 83% | 53.0% | 0.36 |
+| 17 | [**crisis_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/crisis_rotation_20260412_190325.md) | 140.9% | 0.84 | -13.6% | 5 | 83% | 49.6% | 0.36 |
+| 18 | [**sentiment_reversal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/sentiment_reversal_20260412_190240.md) | 179.2% | 1.22 | -25.8% | 15 | 83% | 56.1% | 0.35 |
+| 19 | [**stanley_druckenmiller**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/stanley_druckenmiller_20260412_190636.md) | 161.7% | 1.62 | -21.2% | 9 | 83% | 51.4% | 0.35 |
+| 20 | [**triple_witching_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/triple_witching_momentum_20260412_190550.md) | 141.0% | 0.68 | -8.0% | 5 | 83% | 46.1% | 0.33 |
+| 21 | [**presidential_cycle**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/presidential_cycle_20260412_190551.md) | 111.8% | 1.02 | -9.2% | 5 | 83% | 43.8% | 0.33 |
+| 22 | [**multi_factor_smart_beta**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/multi_factor_smart_beta_20260408_141543.md) | 81.6% | 1.23 | -10.9% | 12 | 100% | 36.7% | 0.33 |
+| 23 | [**mag7_domino_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/mag7_domino_hedge_20260412_190123.md) | 177.2% | 1.57 | -23.2% | 16 | 83% | 51.4% | 0.32 |
+| 24 | [**late_cycle_bubble_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/late_cycle_bubble_hedge_20260412_190130.md) | 126.0% | 1.40 | -18.3% | 8 | 83% | 46.0% | 0.32 |
+| 25 | [**barbell_portfolio**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/barbell_portfolio_20260412_190245.md) | 144.8% | 1.63 | -12.1% | 7 | 83% | 46.2% | 0.32 |
+| 26 | [**equal_weight_sp500**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/equal_weight_sp500_20260412_190303.md) | 124.8% | 1.72 | -14.6% | 16 | 83% | 44.9% | 0.32 |
+| 27 | [**midstream_toll_road**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/midstream_toll_road_20260412_190208.md) | 76.0% | 0.99 | -16.4% | 7 | 83% | 45.1% | 0.32 |
+| 28 | [**vix_mean_reversion**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/vix_mean_reversion_20260412_190132.md) | 137.3% | 0.83 | -10.6% | 4 | 83% | 43.4% | 0.31 |
+| 29 | [**uk_european_banking**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/uk_european_banking_20260412_190110.md) | 91.3% | 1.35 | -14.5% | 5 | 100% | 36.0% | 0.31 |
+| 30 | [**nvidia_chain_diversified**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/nvidia_chain_diversified_20260412_190231.md) | 152.2% | 1.37 | -18.9% | 3 | 83% | 44.7% | 0.3 |
+| 31 | [**momentum_crash_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/momentum_crash_hedge_20260408_141550.md) | 122.8% | 1.20 | -20.7% | 10 | 83% | 44.5% | 0.3 |
+| 32 | [**nancy_pelosi**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/nancy_pelosi_20260412_190506.md) | 117.5% | 1.51 | -13.7% | 6 | 83% | 42.1% | 0.3 |
+| 33 | [**breadth_divergence**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/breadth_divergence_20260412_190243.md) | 113.1% | 1.17 | -14.4% | 7 | 83% | 40.9% | 0.3 |
+| 34 | [**consumer_credit_stress**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/consumer_credit_stress_20260412_190428.md) | 119.6% | 0.67 | -16.7% | 7 | 67% | 51.4% | 0.29 |
+| 35 | [**gop_trading**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/gop_trading_20260412_190508.md) | 102.6% | 1.30 | -11.7% | 9 | 83% | 40.0% | 0.29 |
+| 36 | [**polymarket_signal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/polymarket_signal_20260412_190510.md) | 112.4% | 0.73 | -11.3% | 4 | 83% | 40.0% | 0.29 |
+| 37 | [**prince_alwaleed**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/prince_alwaleed_20260414_072438.md) | 98.8% | 1.49 | -12.3% | 0 | 83% | 38.3% | 0.28 |
+| 38 | [**george_soros**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/george_soros_20260412_190616.md) | 111.1% | 1.40 | -13.3% | 5 | 67% | 47.1% | 0.27 |
+| 39 | [**contrastive_pairs**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/contrastive_pairs_20260412_190046.md) | 125.2% | 1.25 | -25.1% | 10 | 83% | 41.0% | 0.27 |
+| 40 | [**pawn_counter_cyclical**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/pawn_counter_cyclical_20260413_194617.md) | 57.9% | 1.00 | -8.5% | 0 | 100% | 29.6% | 0.27 |
+| 41 | [**conservative_regime**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/conservative_regime_20260412_190649.md) | 89.9% | 1.24 | -13.4% | 11 | 83% | 36.5% | 0.27 |
+| 42 | [**fomc_announcement**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/fomc_announcement_20260412_190416.md) | 108.2% | 0.72 | -5.2% | 5 | 83% | 35.7% | 0.27 |
+| 43 | [**santa_claus_rally**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/santa_claus_rally_20260412_190549.md) | 110.3% | 1.00 | -6.2% | 8 | 83% | 35.0% | 0.26 |
+| 44 | [**semiconductor_value**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/semiconductor_value_20260412_190043.md) | 152.3% | 1.06 | -33.7% | 10 | 83% | 44.2% | 0.26 |
+| 45 | [**policy_catalyst**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/policy_catalyst_20260412_190517.md) | 64.3% | 0.86 | -24.1% | 10 | 100% | 30.3% | 0.25 |
+| 46 | [**bill_ackman**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/bill_ackman_20260412_190634.md) | 100.0% | 1.33 | -14.8% | 7 | 83% | 35.2% | 0.25 |
+| 47 | [**nfp_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/nfp_momentum_20260412_190418.md) | 100.2% | 0.68 | -7.9% | 4 | 83% | 34.1% | 0.25 |
+| 48 | [**robotics_autonomous**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/robotics_autonomous_20260412_190041.md) | 99.8% | 1.16 | -18.4% | 8 | 83% | 35.2% | 0.25 |
+| 49 | [**magic_formula**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/magic_formula_20260412_190302.md) | 83.1% | 1.10 | -11.9% | 14 | 83% | 32.2% | 0.24 |
+| 50 | [**blackrock_2026**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/blackrock_2026_20260412_190639.md) | 97.8% | 1.20 | -11.8% | 8 | 83% | 32.6% | 0.24 |
+| 51 | [**singapore_alpha**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/singapore_alpha_20260412_190108.md) | 50.7% | 0.80 | -10.6% | 9 | 100% | 26.4% | 0.23 |
+| 52 | [**bipartisan_consensus**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/bipartisan_consensus_20260412_190509.md) | 75.9% | 1.15 | -11.8% | 9 | 83% | 31.0% | 0.23 |
+| 53 | [**specialty_insurance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/specialty_insurance_20260412_190201.md) | 57.9% | 0.65 | -18.3% | 3 | 100% | 27.1% | 0.23 |
+| 54 | [**ai_infrastructure_layer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ai_infrastructure_layer_20260412_190125.md) | 106.8% | 1.04 | -22.7% | 11 | 67% | 42.0% | 0.23 |
+| 55 | [**short_seller_dip_buy**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/short_seller_dip_buy_20260412_190547.md) | 75.7% | 1.06 | -11.4% | 1 | 83% | 30.8% | 0.23 |
+| 56 | [**defense_budget_floor**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/defense_budget_floor_20260412_190235.md) | 64.2% | 1.05 | -11.5% | 8 | 100% | 25.6% | 0.23 |
+| 57 | [**masayoshi_son**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/masayoshi_son_20260412_190625.md) | 164.2% | 1.04 | -28.7% | 4 | 83% | 41.3% | 0.23 |
+| 58 | [**product_tanker_shipping**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/product_tanker_shipping_20260412_190321.md) | 11.4% | 0.08 | -25.2% | 8 | 83% | 34.3% | 0.23 |
+| 59 | [**infrastructure_reshoring**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/infrastructure_reshoring_20260414_072409.md) | 84.9% | 0.96 | -22.5% | 0 | 83% | 33.9% | 0.23 |
+| 60 | [**defense_aerospace**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/defense_aerospace_20260412_190020.md) | 114.0% | 0.71 | -49.4% | 9 | 83% | 40.4% | 0.23 |
+| 61 | [**dogs_of_dow**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/dogs_of_dow_20260412_190135.md) | 100.1% | 1.17 | -14.7% | 10 | 83% | 32.8% | 0.23 |
+| 62 | [**unemployment_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/unemployment_momentum_20260412_190430.md) | 104.2% | 0.62 | -10.5% | 8 | 67% | 38.0% | 0.22 |
+| 63 | [**ken_griffin**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/ken_griffin_20260412_190512.md) | 126.8% | 1.38 | -16.3% | 6 | 83% | 33.4% | 0.22 |
+| 64 | [**market_making_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/market_making_momentum_20260412_190348.md) | 81.1% | 0.69 | -9.7% | 9 | 67% | 35.4% | 0.21 |
+| 65 | [**vix_fear_buy**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/vix_fear_buy_20260414_072443.md) | 73.2% | 0.74 | -9.1% | 0 | 83% | 26.4% | 0.2 |
+| 66 | [**mean_variance_optimal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/mean_variance_optimal_20260408_141555.md) | 74.4% | 1.36 | -12.2% | 12 | 83% | 26.4% | 0.2 |
+| 67 | [**leveraged_trend_tactical**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/leveraged_trend_tactical_20260414_072412.md) | 82.3% | 1.07 | -16.2% | 0 | 83% | 28.4% | 0.2 |
+| 68 | [**jim_simons**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/jim_simons_20260412_190622.md) | 76.4% | 1.24 | -12.9% | 12 | 83% | 27.3% | 0.2 |
+| 69 | [**kelly_optimal**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/kelly_optimal_20260412_190435.md) | 80.7% | 1.13 | -15.2% | 9 | 83% | 27.0% | 0.19 |
+| 70 | [**reshoring_industrial**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/reshoring_industrial_20260412_190051.md) | 64.2% | 0.81 | -20.8% | 11 | 83% | 26.9% | 0.19 |
+| 71 | [**job_loss_tech_boom**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/job_loss_tech_boom_20260412_190220.md) | 87.4% | 0.89 | -33.0% | 8 | 67% | 36.6% | 0.19 |
+| 72 | [**crypto_ecosystem**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/crypto_ecosystem_20260412_190035.md) | 60.9% | 0.56 | -27.3% | 10 | 67% | 35.8% | 0.19 |
+| 73 | [**biotech_breakout**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/biotech_breakout_20260412_190023.md) | 48.1% | 0.64 | -18.3% | 12 | 100% | 21.9% | 0.19 |
+| 74 | [**defensive_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/defensive_rotation_20260412_190425.md) | 95.2% | 0.58 | -21.0% | 6 | 50% | 44.6% | 0.19 |
+| 75 | [**japan_industrial_finance**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/japan_industrial_finance_20260413_141458.md) | 77.8% | 0.93 | -17.0% | 6 | 83% | 27.0% | 0.18 |
+| 76 | [**drawdown_severity_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/drawdown_severity_rotation_20260414_073950.md) | 76.4% | 0.78 | -8.2% | ? | 83% | 25.0% | 0.18 |
 | 77 | [**adaptive_regime**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/adaptive_regime_20260412_190647.md) | 75.2% | 1.02 | -16.7% | 10 | 67% | 32.2% | 0.18 |
 | 78 | [**global_rotation**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/global_rotation_20260408_141600.md) | 84.3% | 1.20 | -18.3% | 7 | 83% | 26.5% | 0.18 |
 | 79 | [**dynamic_ensemble**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/dynamic_ensemble_20260412_190337.md) | 67.2% | 1.10 | -10.7% | 12 | 83% | 24.5% | 0.18 |
@@ -529,7 +529,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 247 | [**turn_of_month**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/turn_of_month_20260412_190131.md) | -11.2% | -0.99 | -20.9% | 2 | 33% | -7.8% | -0.02 |
 | 248 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | 12.1% | 0.22 | -57.4% | 2 | 67% | -9.2% | -0.03 |
 
-*Updated: 2026-04-14 07:33*
+*Updated: 2026-04-14 07:40*
 
 ---
 

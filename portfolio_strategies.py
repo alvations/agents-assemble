@@ -2005,93 +2005,93 @@ PORTFOLIO_STRATEGIES["preferred_equity_income"] = PreferredEquityIncome
 # ---------------------------------------------------------------------------
 # 23. Tax Harvest Rotation
 # ---------------------------------------------------------------------------
-class TaxHarvestRotation(BasePersona):
-    """Tax-loss harvesting rotation strategy.
+class DrawdownSeverityRotation(BasePersona):
+    """Drawdown-severity asset rotation strategy.
 
-    Source: Wealthfront, Betterment tax-loss harvesting research.
+    Source: Meb Faber's GTAA research + AQR crisis alpha papers.
 
-    Track SPY, QQQ, VTI drawdowns from recent highs. When any drops
-    >10% from its 52-week high, swap to a correlated alternative:
-    - SPY <-> VOO (both S&P 500)
-    - QQQ <-> QQQM (both Nasdaq 100)
-    - VTI <-> ITOT (both total US market)
+    Shifts allocation between equities, bonds, gold, and cash based on
+    how deep the S&P 500 drawdown is from its 52-week high:
 
-    Swap back after 31 days (IRS wash sale rule).
-    This harvests tax losses while maintaining essentially identical
-    market exposure.
+    - Drawdown < 5% (normal):  80% equities (SPY+QQQ), 10% bonds (TLT), 10% gold (GLD)
+    - Drawdown 5-10% (caution): 50% equities, 25% bonds, 15% gold, 10% cash (SHY)
+    - Drawdown 10-20% (fear):   20% equities, 30% bonds, 30% gold, 20% cash
+    - Drawdown > 20% (crisis):  10% equities, 20% bonds, 40% gold, 30% cash
 
-    ## Passive Investor View
-    Tax-loss harvesting is FREE alpha for taxable accounts. The strategy
-    maintains the same market exposure while generating tax deductions.
-    Expected benefit: 0.5-1.5% per year in tax savings for high-bracket
-    investors.
+    As market recovers (drawdown shrinks), shifts back to equities.
+    This captures the well-documented pattern that deep drawdowns
+    precede further losses, and gold/bonds provide crisis alpha.
     """
 
     def __init__(self, universe=None):
         config = PersonaConfig(
-            name="Tax Harvest Rotation",
-            description="Tax-loss harvesting via correlated ETF swaps on drawdowns",
-            risk_tolerance=0.3,
-            max_position_size=0.35,
-            max_positions=6,
+            name="Drawdown Severity Rotation",
+            description="Shift equities→bonds→gold→cash as drawdown deepens",
+            risk_tolerance=0.4,
+            max_position_size=0.45,
+            max_positions=5,
             rebalance_frequency="weekly",
-            universe=universe or [
-                "SPY", "VOO",    # S&P 500 pair
-                "QQQ", "QQQM",  # Nasdaq 100 pair
-                "VTI", "ITOT",  # Total US market pair
-            ],
+            universe=universe or ["SPY", "QQQ", "TLT", "GLD", "SHY"],
         )
         super().__init__(config)
-        # Track which side of each pair to hold (primary vs alternative)
-        self._pairs = [("SPY", "VOO"), ("QQQ", "QQQM"), ("VTI", "ITOT")]
 
     def generate_signals(self, date, prices, portfolio, data):
         weights = {}
 
-        for primary, alt in self._pairs:
-            if primary not in prices and alt not in prices:
-                continue
+        # Measure SPY drawdown from 52-week high
+        dd_pct = 0.0
+        spy_key = "SPY"
+        if spy_key in data and not data[spy_key].empty:
+            df = data[spy_key]
+            try:
+                if date in df.index:
+                    loc = df.index.get_loc(date)
+                elif hasattr(df.index, 'get_indexer'):
+                    idx = df.index.get_indexer([date], method="nearest")[0]
+                    loc = idx if idx != -1 else None
+                else:
+                    loc = None
 
-            # Check drawdown from recent high for primary
-            primary_in_drawdown = False
-            if primary in prices and primary in data and not data[primary].empty:
-                df = data[primary]
-                try:
-                    if date in df.index:
-                        loc = df.index.get_loc(date)
-                    else:
-                        idx = df.index.get_indexer([date], method="nearest")[0]
-                        loc = idx if idx != -1 else None
+                if loc is not None and loc >= 50:
+                    lookback = df.iloc[max(0, loc - 252):loc + 1]
+                    col = "High" if "High" in lookback.columns else "Close"
+                    high_52w = lookback[col].max()
+                    cur_price = prices.get(spy_key, 0)
+                    if high_52w > 0 and cur_price > 0:
+                        dd_pct = (high_52w - cur_price) / high_52w
+            except Exception:
+                pass
 
-                    if loc is not None and loc >= 50:
-                        lookback = df.iloc[max(0, loc - 252):loc + 1]
-                        col = "High" if "High" in lookback.columns else "Close"
-                        high_52w = lookback[col].max()
-                        cur_price = prices[primary]
-                        if high_52w > 0:
-                            drawdown = (high_52w - cur_price) / high_52w
-                            if drawdown > 0.10:
-                                primary_in_drawdown = True
-                except Exception:
-                    pass
+        # Determine regime
+        if dd_pct < 0.05:
+            # Normal: heavy equities
+            eq, bond, gold, cash = 0.40, 0.10, 0.10, 0.0
+        elif dd_pct < 0.10:
+            # Caution: reduce equities, add defense
+            eq, bond, gold, cash = 0.25, 0.25, 0.15, 0.10
+        elif dd_pct < 0.20:
+            # Fear: defensive
+            eq, bond, gold, cash = 0.10, 0.30, 0.30, 0.20
+        else:
+            # Crisis: maximum defense
+            eq, bond, gold, cash = 0.05, 0.20, 0.40, 0.30
 
-            if primary_in_drawdown and alt in prices:
-                # Swap to alternative (harvest tax loss)
-                weights[alt] = 0.30
-                weights[primary] = 0.0
-            elif primary in prices:
-                # Hold primary
-                weights[primary] = 0.30
-                if alt in prices:
-                    weights[alt] = 0.0
-            elif alt in prices:
-                # Primary not available, hold alt
-                weights[alt] = 0.30
+        # Allocate equities between SPY and QQQ
+        if "SPY" in prices:
+            weights["SPY"] = eq * 0.6
+        if "QQQ" in prices:
+            weights["QQQ"] = eq * 0.4
+        if "TLT" in prices:
+            weights["TLT"] = bond
+        if "GLD" in prices:
+            weights["GLD"] = gold
+        if "SHY" in prices:
+            weights["SHY"] = cash
 
         return weights
 
 
-PORTFOLIO_STRATEGIES["tax_harvest_rotation"] = TaxHarvestRotation
+PORTFOLIO_STRATEGIES["drawdown_severity_rotation"] = DrawdownSeverityRotation
 
 
 # ---------------------------------------------------------------------------
