@@ -260,4 +260,4 @@ Ranked by **Composite Score** (6 rolling windows, 2022-2025).
 | 247 | [**turn_of_month**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/turn_of_month_20260412_190131.md) | standalone | -11.2% | -0.99 | -20.9% | 2 | 33% | -7.8% | -0.02 |
 | 248 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | standalone | 12.1% | 0.22 | -57.4% | 2 | 67% | -9.2% | -0.03 |
 
-*Updated: 2026-04-14 07:51*
+*Updated: 2026-04-14 07:56*

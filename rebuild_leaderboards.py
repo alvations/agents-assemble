@@ -316,7 +316,9 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
         pos = s["positions"] if s["positions"] is not None else "?"
         cons_pct = f"{s['consistency'] * 100:.0f}%"
         avg_ret_pct = f"{s['avg_ret'] * 100:.1f}%"
-        comp_str = fmt_composite(s["composite"])
+        raw_comp = fmt_composite(s["composite"])
+        # Bold composite for top 10
+        comp_str = f"**{raw_comp}**" if i < 10 else raw_comp
         combined_tag = " **[combined]**" if s["type"] == "combined" else ""
 
         lines.append(
@@ -327,12 +329,15 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
 
         # Show components nested under combined strategies
         if s["type"] == "combined" and name in component_map:
+            parent_composite = s["composite"]
             for cs in component_map[name]:
                 clink = strategy_link(cs["name"], strat_files)
                 cpos = cs["positions"] if cs["positions"] is not None else "?"
                 ccons = f"{cs['consistency'] * 100:.0f}%"
                 cavg = f"{cs['avg_ret'] * 100:.1f}%"
-                ccomp = fmt_composite(cs["composite"])
+                raw_ccomp = fmt_composite(cs["composite"])
+                # Bold if component beats parent
+                ccomp = f"**{raw_ccomp}**" if cs["composite"] > parent_composite else raw_ccomp
                 lines.append(
                     f"| ↳ | [{cs['name']}]({clink}) | "
                     f"{cs['ret_3y']*100:.1f}% | {cs['sh_3y']:.2f} | {cs['dd_3y']*100:.1f}% | "
