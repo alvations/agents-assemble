@@ -6,11 +6,11 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 
 > **Start here:**
 > - **[LEADERBOARD.md](LEADERBOARD.md)** — Rankings by Composite Score (Avg Return × Consistency × Drawdown Protection)
-> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning248 strategies (entry, stop-loss, take-profit)
+> - **[strategy/winning/](strategy/winning/)** — Trade recommendations for winning strategies (entry, stop-loss, take-profit)
 > - **[strategy/losing/](strategy/losing/)** — Strategies that failed (don't repeat these)
-> - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all 248trading signals and when to act
+> - **[TRIGGERS.md](TRIGGERS.md)** — Plain-English guide to all trading signals and when to act
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
-> - **[knowledge/](knowledge/)** — 54+ research files with248 backtested findings
+> - **[knowledge/](knowledge/)** — 70+ research files with backtested findings
 >
 > **Pre-Market Research: [Monday Apr 13](knowledge/premarket-research/20260413.md) — Hormuz blockade goes live, GS beats but FICC misses, oil back above $100
 
@@ -29,7 +29,7 @@ See **[LEADERBOARD.md](LEADERBOARD.md)** for all 248 strategies with full rankin
 ## Quick Start
 
 ```bash
-pip install 248-e .
+pip install -e .
 
 # Launch web GUI
 python app.py
@@ -47,7 +47,7 @@ python run_multi_horizon.py --category unconventional
 
 ## StockPick — AI Strategy Matcher (Core Feature)
 
-Pick any stocks. We match them to our best248 backtested strategy, show vol-adjusted position sizing, suggest additional tickers, and get Claude AI's opinion.
+Pick any stocks. We match them to our best backtested strategy, show vol-adjusted position sizing, suggest additional tickers, and get Claude AI's opinion.
 
 **GUI:** Open `http://localhost:8888` → click **StockPick** tab
 
@@ -73,7 +73,7 @@ for rec in result["recommendations"]:
 
 **How it works:**
 1. Enter tickers (any stock — if not in our universe, we fetch and cache it)
-2. System matches against 248 backtested248 strategies by universe overlap
+2. System matches against 248 backtested strategies by universe overlap
 3. Runs fresh backtest on the matched strategy
 4. Generates vol-adjusted positions: high-vol stocks get wider stops + smaller size
 5. If your picks are weak, size = 0% with an explanation note
@@ -160,12 +160,12 @@ Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-sha
 
 ```
 agents-assemble/
-  agents_assemble/              # Python package (pip install 248-e .)
+  agents_assemble/              # Python package (pip install -e .)
     data/fetcher.py             # Market data + 25 alternative data sources
     engine/backtester.py        # Event-driven backtester + predictions + black swan sim
     engine/judge.py             # Strategy grading and ranking
     engine/recommender.py       # Trade recommendations with vol-adjusted sizing
-   248 strategies/                    # All strategy implementations (13 modules, 248 strategies)
+    strategies/                    # All strategy implementations (15 modules, 248 strategies)
 
   strategy_orchestrator.py      # Meta-strategy: regime detection + strategy activation
   stock_picker.py               # StockPick: AI strategy matcher (core GUI feature)
@@ -175,10 +175,10 @@ agents-assemble/
 
   LEADERBOARD.md                # Definitive strategy rankings (248 strategies)
   TRADING.md                    # Public.com API execution guide
-  knowledge/                    # 54 research files (NVDA supply chain, alt data, etc.)
+  knowledge/                    # 70+ research files (NVDA supply chain, alt data, AI ecosystem, etc.)
   results/                      # Backtest JSON results
-  strategy/winning/             # Trade recs for winning248 strategies
-  strategy/losing/              # Failed248 strategies (don't repeat)
+  strategy/winning/             # Trade recs for winning strategies
+  strategy/losing/              # Failed strategies (don't repeat)
 ```
 
 ## Key Findings
