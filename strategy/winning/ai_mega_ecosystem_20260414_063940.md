@@ -91,10 +91,28 @@ This mega-strategy combines tickers from 6 individual AI ecosystem strategies. F
 
 **Conviction weighting:** Tickers in more sub-strategies get higher weight (NVDA/AVGO = 3x, ANET/EQIX/VRT/AMD = 2.5x, etc.)
 
-## Passive Investor Section
 
-For buy-and-hold investors who want maximum AI diversification without active
-management: equal-weight the top-conviction names NVDA, AVGO, ANET, EQIX,
-VRT, AMD, TSM, ASML. These 8 names span GPU monopoly, networking, data
-centers, cooling, and fabrication -- the entire AI infrastructure stack.
-Rebalance quarterly. This is the "own the whole AI economy" passive play.
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | 230.7% |
+| **Avg 5Y Sharpe** | 0.96 |
+| **Avg 5Y Max DD** | -33.9% |
+| **10Y Return (2015-2024)** | 1004.8% |
+| **10Y Sharpe** | 1.00 |
+| **10Y Max DD** | -39.5% |
+| **HODL Composite** | 0.97 |
+| **Windows Tested** | 28 |
+| **Consistency** | 93% |
+
+### How to Use This Strategy Passively
+
+This strategy has decent long-term performance. **Consider allocating 5-10% of portfolio.** Rebalance quarterly. Use the strategy orchestrator for regime-aware allocation.
+
+**Note:** This is a combined mega-strategy. Positions come from 6 individual AI ecosystem strategies (see Component Strategies above). For more targeted exposure, pick individual sub-strategies instead.
+
+</details>
