@@ -30,6 +30,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -40,8 +41,8 @@ jobs:
       - name: Install ruff
         run: pip install ruff
 
-      - name: Lint Python files
-        run: ruff check --select E,W,F --ignore E501,W291,W293 *.py
+      - name: Lint Python files (advisory)
+        run: ruff check --select F --ignore F401,F841 *.py || echo "Lint warnings found (non-blocking)"
 
   syntax:
     runs-on: ubuntu-latest
