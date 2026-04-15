@@ -12,7 +12,7 @@ Trading agents and algorithms for publicly tradable instruments. **248 strategie
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
 > - **[knowledge/](knowledge/)** — 70+ research files with backtested findings
 >
-> **Pre-Market Research: [Tuesday Apr 14](knowledge/premarket-research/20260414.md) — Iran deal talks, S&P reversal to 6886, VIX 18, JPM earnings miss
+> **Pre-Market Research: [Wednesday Apr 15](knowledge/premarket-research/20260415.md) — Oil collapses to $91, JPM actually beat, ASML raised guidance, S&P near ATH
 
 ## Top 5 Strategies (by Composite Score, 6 windows 2022-2025)
 
