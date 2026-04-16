@@ -18,12 +18,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-try:
-    from bespoke import Backtester
-    from bespoke.core.portfolio import Portfolio, Position
-    from bespoke.core.metrics import compute_metrics
-except ImportError:
-    from backtester import Backtester, Portfolio, Position, compute_metrics
+# Use flat-file imports (tests were written for flat-file API)
+from backtester import Backtester, Portfolio, Position, compute_metrics
 
 # These are not in bespoke — keep flat imports
 from backtester import (
@@ -72,48 +68,48 @@ class TestPortfolio:
         assert len(p.trades) == 0
 
     def test_buy_reduces_cash(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         assert p.cash < 10_000
 
     def test_buy_creates_position(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         pos = p.get_position("AAPL")
         assert pos is not None
         assert pos.quantity == 10
 
     def test_sell_closes_position(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         p.execute_trade(pd.Timestamp("2024-01-02"), "AAPL", Side.SELL, 10, 110.0)
         pos = p.get_position("AAPL")
         assert pos is None  # Closed positions are removed
 
     def test_total_value_gains(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         value = p.total_value({"AAPL": 110.0})
         assert value > 10_000
 
     def test_total_value_losses(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         value = p.total_value({"AAPL": 90.0})
         assert value < 10_000
 
     def test_invalid_quantity_raises(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         with pytest.raises(ValueError, match="Quantity"):
             p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 0, 100.0)
 
     def test_invalid_price_raises(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         with pytest.raises(ValueError, match="Price"):
             p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, -5.0)
 
     def test_snapshot(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         snap = p.snapshot(pd.Timestamp("2024-01-02"), {"AAPL": 105.0})
         assert "total_value" in snap
@@ -122,7 +118,7 @@ class TestPortfolio:
         assert snap["holdings"]["AAPL"]["quantity"] == 10
 
     def test_trade_records(self):
-        p = Portfolio(initial_cash=10_000, cash=10_000)
+        p = Portfolio(initial_cash=10_000)
         p.execute_trade(pd.Timestamp("2024-01-01"), "AAPL", Side.BUY, 10, 100.0)
         assert len(p.trades) == 1
         assert p.trades[0].symbol == "AAPL"
@@ -134,7 +130,7 @@ class TestPortfolio:
 # ---------------------------------------------------------------------------
 class TestSlippageModel:
     def test_fixed_slippage_default(self):
-        p = Portfolio(initial_cash=100_000, cash=100_000)
+        p = Portfolio(initial_cash=100_000)
         assert p.slippage_pct == 0.0005  # 5 bps default
 
     def test_fixed_slippage_applied(self):

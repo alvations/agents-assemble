@@ -35,10 +35,7 @@ agents-assemble/
   stock_picker.py                 — StockPick: AI strategy matcher
   strategy_orchestrator.py        — Meta-strategy: regime detection
   public_trader.py                — Public.com API execution
-  run_hypotheses.py               — Single-horizon hypothesis runner
-  run_multi_horizon.py            — Multi-horizon (1Y/3Y/5Y/10Y) runner
-  sync_package.py                 — Sync flat files → package after evolution
-  setup.py                        — pip install -e .
+  setup.py                        — pip install -e . (depends on bespoke)
 
   # Strategy files (root level, for self-evolution)
   personas.py, famous_investors.py, theme_strategies.py,
@@ -69,16 +66,8 @@ agents-assemble/
     signal_forge.py               — Signal generation
     terminal.py                   — Terminal UI
 
-  # Python package (pip install -e .)
-  agents_assemble/
-    data/fetcher.py               — Synced from data_fetcher.py
-    engine/backtester.py          — Synced from backtester.py
-    engine/judge.py               — Synced from judge.py
-    engine/recommender.py         — Synced from trade_recommender.py
-    strategies/                   — Synced from *_strategies.py
-
   # Tests
-  tests/                          — 717 tests (pytest)
+  tests/                          — pytest suite
 
   # Data & Results (DO NOT REORGANIZE)
   knowledge/                      — 70+ research files
