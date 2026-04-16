@@ -30,6 +30,7 @@ Strategies:
    24. SelfStorageREIT              — Counter-cyclical self-storage REITs (PSA, EXR, CUBE)
    25. ClosedEndFundDiscount        — CEF discount arbitrage (PDI, PTY, UTF, UTG, GOF)
    26. CanadianAristocratIncome     — Canadian dividend aristocrats (ENB, TRP, FTS, BNS)
+   27. PreIPOInnovationFunds        — Private company exposure via AGIX, BSTZ, DXYZ, ARKK, ARKW
 """
 
 from __future__ import annotations
@@ -2327,6 +2328,102 @@ class CanadianAristocratIncome(BasePersona):
 
 
 PORTFOLIO_STRATEGIES["canadian_aristocrat_income"] = CanadianAristocratIncome
+
+
+# ---------------------------------------------------------------------------
+# Pre-IPO Innovation Funds (private company exposure via public ETFs)
+# ---------------------------------------------------------------------------
+class PreIPOInnovationFunds(BasePersona):
+    """Private company exposure via public ETFs and closed-end funds.
+
+    Source: CICC/KraneShares AGIX + ARK Venture + Destiny Tech100 research.
+    These funds hold stakes in private unicorns (Anthropic, SpaceX, xAI,
+    OpenAI, Stripe, Databricks) that are otherwise inaccessible to retail.
+
+    Universe:
+    - AGIX (KraneShares AI & Tech -- holds Anthropic, SpaceX, xAI)
+    - DXYZ (Destiny Tech100 -- holds unicorn portfolio)
+    - BSTZ (BlackRock Science & Tech Trust -- holds Anthropic, NAV discount)
+    - ARKK (ARK Innovation -- closest public proxy)
+    - ARKW (ARK Next Gen Internet)
+
+    Signal logic:
+    - Equal weight across available funds
+    - AGIX gets 1.5x weight (best private company exposure per research)
+    - BSTZ gets 1.25x weight (trades at NAV discount = margin of safety)
+    - Monthly rebalance
+    - No momentum filter -- these are buy-and-hold fund positions
+
+    ## Passive Investor Section
+    For buy-and-hold: split equally between AGIX (private AI exposure) and
+    BSTZ (BlackRock quality + NAV discount). Add ARKK for broader innovation.
+    These are the easiest ways to get pre-IPO tech company exposure through
+    a regular brokerage account. Hold for 3-5 years through IPO cycles.
+    """
+
+    CONVICTION = {
+        "AGIX": 1.5,   # Best private company exposure per research
+        "BSTZ": 1.25,  # NAV discount = margin of safety
+        "DXYZ": 1.0,
+        "ARKK": 1.0,
+        "ARKW": 1.0,
+    }
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Pre-IPO Innovation Funds",
+            description="Private company exposure via AGIX, BSTZ, DXYZ, ARKK, ARKW (holds Anthropic, SpaceX, xAI)",
+            risk_tolerance=0.7,
+            max_position_size=0.30,
+            max_positions=5,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "AGIX",   # KraneShares AI & Tech (Anthropic, SpaceX, xAI)
+                "DXYZ",   # Destiny Tech100 (unicorn portfolio)
+                "BSTZ",   # BlackRock Science & Tech Trust (Anthropic, NAV discount)
+                "ARKK",   # ARK Innovation (closest public proxy)
+                "ARKW",   # ARK Next Gen Internet
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        qualified = []  # (sym, conviction_mult)
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+
+            # No momentum filter for fund positions -- buy-and-hold thesis
+            conviction = self.CONVICTION.get(sym, 1.0)
+
+            # Only basic safety check: skip if data is severely broken
+            price = prices[sym]
+            sma200 = self._get_indicator(data, sym, "sma_200", date)
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.50:
+                # >50% below SMA200 = something structurally wrong
+                weights[sym] = 0.0
+                continue
+
+            qualified.append((sym, conviction))
+
+        # Distribute weights proportionally
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out unavailable
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+
+        return weights
+
+
+PORTFOLIO_STRATEGIES["pre_ipo_innovation_funds"] = PreIPOInnovationFunds
 
 
 def get_portfolio_strategy(name: str, **kwargs) -> BasePersona:

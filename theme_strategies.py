@@ -52,6 +52,8 @@ Themes:
     + OpenAIEcosystem            — OpenAI/Microsoft-centric AI ecosystem
     + AIInfraPicksShovels        — Arms dealer: wins regardless of which AI company dominates
     + AIMegaEcosystem            — All 41 AI tickers, conviction-weighted mega-strategy
+    + GenomicsRevolution         — Gene editing, synthetic bio, diagnostics (ARK ARKG)
+    + HumanoidRoboticsSupplyChain — Brain + body + integrator robotics (KraneShares KOID)
 """
 
 from __future__ import annotations
@@ -4989,6 +4991,226 @@ class AIMegaEcosystem(BasePersona):
         return weights
 
 
+# ---------------------------------------------------------------------------
+# Genomics Revolution (ARK ARKG thesis)
+# ---------------------------------------------------------------------------
+class GenomicsRevolution(BasePersona):
+    """Gene editing, synthetic biology, and molecular diagnostics megatrend.
+
+    Source: ARK Invest ARKG thesis -- genomics is a convergence of DNA
+    sequencing cost decline, CRISPR gene editing, and AI-driven drug
+    discovery.  This is the biggest gap in the portfolio (zero genomics
+    coverage until now).
+
+    Universe:
+    - Core gene editing: CRSP, BEAM, NTLA, EDIT
+    - Synthetic biology / multi-omics: TWST, TXG, TEM
+    - Diagnostics & tools: ILMN, A, TMO
+    - ETF proxy: ARKG
+
+    Signal logic:
+    - Equal weight across genomics names
+    - Momentum tilt: above SMA50 = full weight, below = half
+    - Core names (CRSP, BEAM, ILMN) get 1.5x weight (highest conviction)
+    - Monthly rebalance
+
+    ## Passive Investor Section
+    For buy-and-hold investors: equal-weight CRSP, BEAM, ILMN, TMO, TWST.
+    These five span gene editing leaders, sequencing monopoly, and tools.
+    Or simply buy ARKG for managed genomics exposure. Rebalance quarterly.
+    """
+
+    CORE_NAMES = {"CRSP", "BEAM", "ILMN"}
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Genomics Revolution",
+            description="Gene editing, synthetic biology, molecular diagnostics (ARK ARKG thesis)",
+            risk_tolerance=0.8,
+            max_position_size=0.15,
+            max_positions=11,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "CRSP", "BEAM", "NTLA", "EDIT",      # Gene editing
+                "TWST", "TXG", "TEM",                 # Synthetic bio / multi-omics
+                "ILMN", "A", "TMO",                   # Diagnostics & tools
+                "ARKG",                                # ETF proxy
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        qualified = []  # (sym, weight_multiplier)
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            # Skip if no SMA data at all (ticker too new)
+            if _is_missing(sma50):
+                # Still include with reduced weight for new tickers
+                qualified.append((sym, 0.5))
+                continue
+
+            # Overbought filter
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Broken trend filter (>30% below SMA200 -- biotech is volatile)
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.70:
+                weights[sym] = 0.0
+                continue
+
+            # Conviction weight: core names get 1.5x
+            conviction = 1.5 if sym in self.CORE_NAMES else 1.0
+
+            # Momentum tilt: above SMA50 = full, below = half
+            if price > sma50:
+                momentum = 1.0
+            else:
+                momentum = 0.5
+
+            qualified.append((sym, conviction * momentum))
+
+        # Distribute weights proportionally
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out unqualified
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+
+        return weights
+
+
+# ---------------------------------------------------------------------------
+# Humanoid Robotics Supply Chain (KraneShares KOID thesis)
+# ---------------------------------------------------------------------------
+class HumanoidRoboticsSupplyChain(BasePersona):
+    """Humanoid robotics value chain: brain + body + integrator stack.
+
+    Source: KraneShares KOID ETF thesis -- humanoid robots require three
+    layers: Brain (AI compute, sensors), Body (actuators, connectors,
+    motors), and Integrators (companies assembling complete systems).
+
+    Universe:
+    - Brain (AI/sensors): NVDA, MBLY, ADI, TER
+    - Body (actuators/connectors): APH, TEL, JBL, RRX
+    - Integrators: ISRG, ROK, ABB
+    - ETF proxies: BOTZ
+
+    Signal logic:
+    - Brain tier: 1.5x weight (AI compute is the bottleneck)
+    - Body tier: 1.0x weight
+    - Integrators: 1.25x weight
+    - Momentum tilt: above SMA50 = full, below = half
+    - Monthly rebalance
+
+    ## Passive Investor Section
+    For buy-and-hold investors: equal-weight NVDA, ISRG, APH, ROK, ADI.
+    These five span the compute brain, surgical precision integrator,
+    connectivity backbone, industrial automation, and analog sensing.
+    Or buy BOTZ for managed robotics exposure. Rebalance quarterly.
+    """
+
+    TIER_WEIGHTS = {
+        # Brain tier: 1.5x (AI compute is the bottleneck)
+        "NVDA": 1.5, "MBLY": 1.5, "ADI": 1.5, "TER": 1.5,
+        # Integrators: 1.25x
+        "ISRG": 1.25, "ROK": 1.25, "ABB": 1.25,
+        # Body tier: 1.0x
+        "APH": 1.0, "TEL": 1.0, "JBL": 1.0, "RRX": 1.0,
+        # ETF proxies: 1.0x
+        "BOTZ": 1.0,
+    }
+
+    def __init__(self, universe: list[str] | None = None):
+        config = PersonaConfig(
+            name="Humanoid Robotics Supply Chain",
+            description="Brain + body + integrator robotics stack (KraneShares KOID thesis)",
+            risk_tolerance=0.7,
+            max_position_size=0.12,
+            max_positions=12,
+            rebalance_frequency="monthly",
+            universe=universe or [
+                "NVDA", "MBLY", "ADI", "TER",      # Brain (AI/sensors)
+                "APH", "TEL", "JBL", "RRX",         # Body (actuators/connectors)
+                "ISRG", "ROK", "ABB",                # Integrators
+                "BOTZ",                               # ETF proxy
+            ],
+        )
+        super().__init__(config)
+
+    def generate_signals(self, date, prices, portfolio, data):
+        weights = {}
+        qualified = []  # (sym, weight_multiplier)
+
+        for sym in self.config.universe:
+            if sym not in prices:
+                continue
+            price = prices[sym]
+            inds = self._get_indicators(
+                data, sym, ["sma_50", "sma_200", "rsi_14"], date
+            )
+            sma50 = inds["sma_50"]
+            sma200 = inds["sma_200"]
+            rsi = inds["rsi_14"]
+
+            # Fallback for tickers with short history
+            if _is_missing(sma50):
+                tier_wt = self.TIER_WEIGHTS.get(sym, 1.0)
+                qualified.append((sym, tier_wt * 0.5))
+                continue
+
+            # Overbought filter
+            if not _is_missing(rsi) and rsi > 80:
+                weights[sym] = 0.0
+                continue
+
+            # Broken trend: >25% below SMA200
+            if not _is_missing(sma200) and sma200 > 0 and price < sma200 * 0.75:
+                weights[sym] = 0.0
+                continue
+
+            # Tier-based conviction weight
+            tier_wt = self.TIER_WEIGHTS.get(sym, 1.0)
+
+            # Momentum tilt: above SMA50 = full, below = half
+            if price > sma50:
+                momentum = 1.0
+            else:
+                momentum = 0.5
+
+            qualified.append((sym, tier_wt * momentum))
+
+        # Distribute weights proportionally
+        total_units = sum(mult for _, mult in qualified)
+        if total_units > 0:
+            base = 0.90 / total_units
+            for sym, mult in qualified:
+                w = base * mult
+                weights[sym] = min(w, self.config.max_position_size)
+
+        # Zero out unqualified
+        for sym in self.config.universe:
+            weights.setdefault(sym, 0.0)
+
+        return weights
+
+
 THEME_STRATEGIES = {
     "ai_revolution": AIRevolution,
     "clean_energy": CleanEnergy,
@@ -5045,6 +5267,9 @@ THEME_STRATEGIES = {
     "ai_infra_picks_shovels": AIInfraPicksShovels,
     "open_source_ai_ecosystem": OpenSourceAIEcosystem,
     "ai_mega_ecosystem": AIMegaEcosystem,
+    # CICC / KraneShares / ARK research-backed (2026-04-13)
+    "genomics_revolution": GenomicsRevolution,
+    "humanoid_robotics_supply_chain": HumanoidRoboticsSupplyChain,
 }
 
 
