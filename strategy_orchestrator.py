@@ -30,7 +30,10 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
-from personas import BasePersona, PersonaConfig
+try:
+    from bespoke.strategies.base import BaseStrategy as BasePersona, StrategyConfig as PersonaConfig
+except ImportError:
+    from personas import BasePersona, PersonaConfig
 
 
 def _is_missing(v):

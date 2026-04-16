@@ -4,6 +4,26 @@ Trading agents and algorithms for publicly tradable instruments on Robinhood, Pu
 
 ## Architecture
 
+**Dependency: `bespoke`** (`pip install bespoke`) provides the backtesting engine
+and all 256 strategies. Scripts import from bespoke as primary, with flat file
+fallback for self-evolution compatibility.
+
+```python
+# Primary (bespoke)
+from bespoke import Backtester
+from bespoke.core.portfolio import Portfolio, Position
+from bespoke.core.metrics import compute_metrics, compute_composite
+from bespoke.strategies import get_strategy, list_strategies, strategy_names
+from bespoke.strategies.base import BaseStrategy, StrategyConfig
+
+# Fallback (flat files, kept for self-evolution)
+from backtester import Backtester, format_report, save_results
+from personas import ALL_PERSONAS, BasePersona, PersonaConfig
+```
+
+Flat files at root are kept because self-evolution (`self_evolve.py`) modifies
+them directly. After evolution, run `sync_package.py` to propagate changes.
+
 ```
 agents-assemble/
   # Core engine (root level)
@@ -245,7 +265,8 @@ python research_parser.py
 ## Quick Start
 
 ```bash
-pip install -e .
+pip install bespoke     # backtesting engine + all 256 strategies
+pip install -e .        # local package (flat file wrappers)
 
 # Run all 248 strategies on 3-year horizon
 python run_multi_horizon.py --horizon 3y

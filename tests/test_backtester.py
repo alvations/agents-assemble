@@ -18,13 +18,17 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+try:
+    from bespoke import Backtester
+    from bespoke.core.portfolio import Portfolio, Position
+    from bespoke.core.metrics import compute_metrics
+except ImportError:
+    from backtester import Backtester, Portfolio, Position, compute_metrics
+
+# These are not in bespoke — keep flat imports
 from backtester import (
-    Backtester,
-    Portfolio,
-    Position,
     Trade,
     Side,
-    compute_metrics,
     format_report,
     estimate_spread_bps,
     HISTORICAL_CRASHES,

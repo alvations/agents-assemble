@@ -15,6 +15,12 @@ from pathlib import Path
 # Ensure we can import from the project root
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+try:
+    from bespoke import Backtester
+except ImportError:
+    from backtester import Backtester
+
+# Flat registry imports (needed for STRATEGY_REGISTRY mapping below)
 from personas import ALL_PERSONAS
 from famous_investors import FAMOUS_INVESTORS
 from theme_strategies import THEME_STRATEGIES
@@ -24,7 +30,6 @@ from research_strategies import RESEARCH_STRATEGIES
 from math_strategies import MATH_STRATEGIES
 from hedge_fund_strategies import HEDGE_FUND_STRATEGIES
 from williams_seasonal_strategies import WILLIAMS_SEASONAL_STRATEGIES
-from backtester import Backtester
 from trade_recommender import save_strategy_recommendation
 
 

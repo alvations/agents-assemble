@@ -3,7 +3,10 @@
 import sys, json, glob, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from backtester import Backtester
+try:
+    from bespoke import Backtester
+except ImportError:
+    from backtester import Backtester
 
 def get_all_strategies():
     modules = [

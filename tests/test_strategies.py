@@ -16,7 +16,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from backtester import Portfolio
+try:
+    from bespoke.core.portfolio import Portfolio
+except ImportError:
+    from backtester import Portfolio
 
 # Import helpers from conftest via the tests package
 _TESTS_DIR = Path(__file__).parent

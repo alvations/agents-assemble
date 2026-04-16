@@ -27,7 +27,13 @@ import pandas as pd
 _REPO_ROOT = Path(__file__).parent.parent  # repo root (parent of scripts/)
 sys.path.insert(0, str(_REPO_ROOT))
 
-from backtester import Backtester, format_report
+try:
+    from bespoke import Backtester
+except ImportError:
+    from backtester import Backtester
+
+# Flat file imports (needed for registries, format_report, getter functions)
+from backtester import format_report
 from personas import get_persona, ALL_PERSONAS
 from famous_investors import get_famous_investor, FAMOUS_INVESTORS
 from theme_strategies import get_theme_strategy, THEME_STRATEGIES

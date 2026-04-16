@@ -26,7 +26,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from backtester import Backtester
+try:
+    from bespoke import Backtester
+except ImportError:
+    from backtester import Backtester
 
 
 # ---------------------------------------------------------------------------

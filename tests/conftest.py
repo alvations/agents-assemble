@@ -116,7 +116,10 @@ def mock_market_data():
 @pytest.fixture
 def mock_portfolio():
     """Fresh portfolio for each test."""
-    from backtester import Portfolio
+    try:
+        from bespoke.core.portfolio import Portfolio
+    except ImportError:
+        from backtester import Portfolio
     return Portfolio(initial_cash=100_000, cash=100_000)
 
 

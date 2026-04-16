@@ -10,7 +10,14 @@ import sys, json, os, traceback
 from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from backtester import Backtester
+try:
+    from bespoke import Backtester
+    from bespoke.strategies import get_strategy as _bespoke_get_strategy
+    _USE_BESPOKE = True
+except ImportError:
+    from backtester import Backtester
+    _USE_BESPOKE = False
+
 from theme_strategies import THEME_STRATEGIES
 from portfolio_strategies import PORTFOLIO_STRATEGIES
 from trade_recommender import save_strategy_recommendation

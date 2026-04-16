@@ -4,7 +4,10 @@ import sys, json, os, traceback
 from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from backtester import Backtester
+try:
+    from bespoke import Backtester
+except ImportError:
+    from backtester import Backtester
 
 WINDOWS = {
     '1Y_2015': ('2015-01-01','2015-12-31'), '1Y_2016': ('2016-01-01','2016-12-31'),

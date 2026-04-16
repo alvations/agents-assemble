@@ -27,13 +27,11 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 try:
     from bespoke import Backtester
-    from bespoke.strategies.registry import get_strategy, strategy_names
-    _USE_BESPOKE = True
 except ImportError:
-    _USE_BESPOKE = False
+    from backtester import Backtester
 
-# Flat file imports (always available, needed for self-evolution compatibility)
-from backtester import Backtester as _FlatBacktester, format_report, save_results
+# Flat file imports (needed for registries, format_report, save_results)
+from backtester import format_report, save_results
 from personas import ALL_PERSONAS, get_persona, list_personas
 from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
 from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
