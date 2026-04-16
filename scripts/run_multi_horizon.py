@@ -24,7 +24,8 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).parent))
+_REPO_ROOT = Path(__file__).parent.parent  # repo root (parent of scripts/)
+sys.path.insert(0, str(_REPO_ROOT))
 
 from backtester import Backtester, format_report
 from personas import get_persona, ALL_PERSONAS
@@ -35,8 +36,8 @@ from unconventional_strategies import get_unconventional_strategy, UNCONVENTIONA
 from research_strategies import get_research_strategy, RESEARCH_STRATEGIES
 from math_strategies import get_math_strategy, MATH_STRATEGIES
 
-KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
-RESULTS_DIR = Path(__file__).parent / "results"
+KNOWLEDGE_DIR = _REPO_ROOT / "knowledge"
+RESULTS_DIR = _REPO_ROOT / "results"
 
 # ---------------------------------------------------------------------------
 # Time horizons

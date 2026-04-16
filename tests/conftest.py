@@ -7,10 +7,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-# Ensure the project root is on sys.path so flat imports work
+# Ensure the project root and scripts/ are on sys.path so flat imports work
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
 
 # ---------------------------------------------------------------------------

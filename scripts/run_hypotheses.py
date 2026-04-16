@@ -22,8 +22,8 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 # Support both installed package and flat-file imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-sys.path.insert(0, str(Path(__file__).parent))
+_REPO_ROOT = Path(__file__).parent.parent  # repo root (parent of scripts/)
+sys.path.insert(0, str(_REPO_ROOT))
 
 try:
     from agents_assemble.engine.backtester import Backtester, format_report, save_results
@@ -53,8 +53,8 @@ except ImportError:
 # ---------------------------------------------------------------------------
 # Knowledge base
 # ---------------------------------------------------------------------------
-KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
-RESULTS_DIR = Path(__file__).parent / "results"
+KNOWLEDGE_DIR = _REPO_ROOT / "knowledge"
+RESULTS_DIR = _REPO_ROOT / "results"
 
 
 def save_to_knowledge(name: str, content: str, category: str = "hypothesis") -> Path:

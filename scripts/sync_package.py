@@ -8,7 +8,7 @@ Usage: python sync_package.py
 
 from pathlib import Path
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).parent.parent  # repo root (parent of scripts/)
 
 # Map ALL flat files to package locations (single source of truth)
 FILE_MAP = {

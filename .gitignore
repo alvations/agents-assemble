@@ -21,3 +21,8 @@ risk_manager.py
 circuit_breaker.py
 trading_log.py
 research_parser.py
+logs/
+*.log
+__pycache__/
+*.pyc
+.cache/
