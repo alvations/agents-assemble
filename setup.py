@@ -7,6 +7,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.9",
     install_requires=[
+        "bespoke>=0.1.0",
         "pandas>=1.3.0",
         "numpy>=1.21.0",
         "yfinance>=0.2.0",

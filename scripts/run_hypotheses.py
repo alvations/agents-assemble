@@ -21,33 +21,30 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-# Support both installed package and flat-file imports
+# Import from bespoke (primary) or flat files (fallback for self-evolution)
 _REPO_ROOT = Path(__file__).parent.parent  # repo root (parent of scripts/)
 sys.path.insert(0, str(_REPO_ROOT))
 
 try:
-    from agents_assemble.engine.backtester import Backtester, format_report, save_results
-    from agents_assemble.strategies.generic import ALL_PERSONAS, get_persona, list_personas
-    from agents_assemble.strategies.famous import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
-    from agents_assemble.strategies.themes import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
-    from agents_assemble.strategies.recession import RECESSION_STRATEGIES, get_recession_strategy
-    from agents_assemble.engine.recommender import save_strategy_recommendation
+    from bespoke import Backtester
+    from bespoke.strategies.registry import get_strategy, strategy_names
+    _USE_BESPOKE = True
 except ImportError:
-    from backtester import Backtester, format_report, save_results
-    from personas import ALL_PERSONAS, get_persona, list_personas
-    from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
-    from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
-    from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
-    from trade_recommender import save_strategy_recommendation
+    _USE_BESPOKE = False
+
+# Flat file imports (always available, needed for self-evolution compatibility)
+from backtester import Backtester as _FlatBacktester, format_report, save_results
+from personas import ALL_PERSONAS, get_persona, list_personas
+from famous_investors import FAMOUS_INVESTORS, get_famous_investor, list_famous_investors
+from theme_strategies import THEME_STRATEGIES, get_theme_strategy, list_theme_strategies
+from recession_strategies import RECESSION_STRATEGIES, get_recession_strategy
+from trade_recommender import save_strategy_recommendation
 
 try:
-    from agents_assemble.strategies.unconventional import UNCONVENTIONAL_STRATEGIES, get_unconventional_strategy
+    from unconventional_strategies import UNCONVENTIONAL_STRATEGIES, get_unconventional_strategy
 except ImportError:
-    try:
-        from unconventional_strategies import UNCONVENTIONAL_STRATEGIES, get_unconventional_strategy
-    except ImportError:
-        UNCONVENTIONAL_STRATEGIES = {}
-        def get_unconventional_strategy(name, **kw): raise ImportError("unconventional_strategies not available")
+    UNCONVENTIONAL_STRATEGIES = {}
+    def get_unconventional_strategy(name, **kw): raise ImportError("unconventional_strategies not available")
 
 
 # ---------------------------------------------------------------------------
