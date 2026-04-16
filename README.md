@@ -161,23 +161,30 @@ Detects regime weekly from: SPY trend, VIX level, dollar stores vs luxury (K-sha
 
 ```
 agents-assemble/
-  agents_assemble/              # Python package (pip install -e .)
-    data/fetcher.py             # Market data + 25 alternative data sources
-    engine/backtester.py        # Event-driven backtester + predictions + black swan sim
-    engine/judge.py             # Strategy grading and ranking
-    engine/recommender.py       # Trade recommendations with vol-adjusted sizing
-    strategies/                    # All strategy implementations (15 modules, 251 strategies)
-
-  strategy_orchestrator.py      # Meta-strategy: regime detection + strategy activation
-  stock_picker.py               # StockPick: AI strategy matcher (core GUI feature)
+  # Core engine
   app.py                        # Web GUI at localhost:8888
+  backtester.py                 # Event-driven backtester
+  data_fetcher.py               # Market data + 25 alternative sources
+  stock_picker.py               # StockPick: AI strategy matcher
+  strategy_orchestrator.py      # Regime detection + strategy activation
+  trade_recommender.py          # Vol-adjusted trade recommendations
   run_multi_horizon.py          # Multi-horizon backtest runner
-  sync_package.py               # Sync flat files → package after evolution
 
-  LEADERBOARD.md                # Definitive strategy rankings (251 strategies)
-  TRADING.md                    # Public.com API execution guide
-  knowledge/                    # 70+ research files (NVDA supply chain, alt data, AI ecosystem, etc.)
-  results/                      # Backtest JSON results
+  # Strategy files (13 modules, 251 strategies)
+  personas.py, famous_investors.py, theme_strategies.py, ...
+
+  # Scripts & tools
+  scripts/                      # Backtest runners, leaderboard rebuild, verification
+  tools/                        # Experimental: catalyst analyzer, signal forge, etc.
+
+  # Package + tests
+  agents_assemble/              # Python package (pip install -e .)
+  tests/                        # 717 tests (pytest)
+
+  # Data (do not reorganize)
+  LEADERBOARD.md                # Strategy rankings (251, components collapsed)
+  knowledge/                    # 70+ research files
+  results/                      # Backtest JSON results + MW snapshots
   strategy/winning/             # Trade recs for winning strategies
   strategy/losing/              # Failed strategies (don't repeat)
 ```

@@ -6,37 +6,68 @@ Trading agents and algorithms for publicly tradable instruments on Robinhood, Pu
 
 ```
 agents-assemble/
-  agents_assemble/                # Python package (pip install -e .)
-    data/fetcher.py               — Market data (yfinance, FRED, SEC, premium)
-    engine/backtester.py          — Event-driven backtesting engine
-    engine/judge.py               — Strategy grading, ranking, diagnosis
-    engine/recommender.py         — Trade recommendation generator
-    strategies/generic.py         — 10 built-in personas
-    strategies/famous.py          — 20 famous investor personas
-    strategies/themes.py          — 51 theme-based strategies
-    strategies/recession.py       — 10 recession strategies + regime detector
-    strategies/unconventional.py  — 52 unconventional strategies
-    strategies/research.py        — 16 research-backed strategies
-    strategies/math.py            — 8 math-driven strategies
-    strategies/hedge_fund.py      — 8 hedge fund-inspired strategies
-
-  # Flat source files (for self-evolution)
-  backtester.py, personas.py, famous_investors.py, theme_strategies.py,
-  recession_strategies.py, unconventional_strategies.py, research_strategies.py,
-  math_strategies.py, hedge_fund_strategies.py, data_fetcher.py, judge.py,
-  trade_recommender.py
-
-  # Runners
+  # Core engine (root level)
+  app.py                          — Web GUI at localhost:8888
+  backtester.py                   — Event-driven backtesting engine
+  data_fetcher.py                 — Market data + 25 alternative sources
+  judge.py                        — Strategy grading, ranking, diagnosis
+  trade_recommender.py            — Trade recommendations with vol-adjusted sizing
+  stock_picker.py                 — StockPick: AI strategy matcher
+  strategy_orchestrator.py        — Meta-strategy: regime detection
+  public_trader.py                — Public.com API execution
   run_hypotheses.py               — Single-horizon hypothesis runner
   run_multi_horizon.py            — Multi-horizon (1Y/3Y/5Y/10Y) runner
   sync_package.py                 — Sync flat files → package after evolution
+  setup.py                        — pip install -e .
 
-  # Data & Results
-  knowledge/                      — Research findings, results, failures
-  results/                        — Backtest result JSON files
+  # Strategy files (root level, for self-evolution)
+  personas.py, famous_investors.py, theme_strategies.py,
+  recession_strategies.py, unconventional_strategies.py, research_strategies.py,
+  math_strategies.py, hedge_fund_strategies.py, crisis_commodity_strategies.py,
+  williams_seasonal_strategies.py, news_event_strategies.py, political_strategies.py,
+  portfolio_strategies.py
+
+  # Scripts (one-off and utility)
+  scripts/
+    rebuild_leaderboards.py       — Rebuild all 3 leaderboards from MW JSON
+    verify_all_248.py             — Full strategy verification suite
+    rerun_all_228.py              — Full rerun with dividend-adjusted prices
+    backtest_fixed.py             — Backtest fixed/new strategies
+    backtest_boring10.py          — Backtest boring strategies
+    backtest_ai_ecosystem.py      — Backtest AI ecosystem strategies
+    backtest_cicc_ark.py          — Backtest CICC/ARK strategies
+    expand_universes.py           — Expand strategy universes
+    fix_21_positions.py           — Fix empty position recommendations
+
+  # Experimental tools
+  tools/
+    catalyst_analyzer.py          — Event catalyst analysis
+    company_profile.py            — Company profiling
+    flow_radar.py                 — Flow detection
+    insight_engine.py             — Insight generation
+    news_catalyst_scanner.py      — News scanning
+    signal_forge.py               — Signal generation
+    terminal.py                   — Terminal UI
+
+  # Python package (pip install -e .)
+  agents_assemble/
+    data/fetcher.py               — Synced from data_fetcher.py
+    engine/backtester.py          — Synced from backtester.py
+    engine/judge.py               — Synced from judge.py
+    engine/recommender.py         — Synced from trade_recommender.py
+    strategies/                   — Synced from *_strategies.py
+
+  # Tests
+  tests/                          — 717 tests (pytest)
+
+  # Data & Results (DO NOT REORGANIZE)
+  knowledge/                      — 70+ research files
+  results/                        — Backtest result JSONs + MW snapshots
   strategy/winning/               — Winning trade recommendations
   strategy/losing/                — Losing strategies (don't repeat!)
-  LEADERBOARD.md                  — Definitive multi-horizon rankings
+  LEADERBOARD.md                  — Rankings (collapsed, components nested)
+  ALL_LEADERBOARD.md              — Flat ranking of all 251 strategies
+  HODL_LEADERBOARD.md             — Passive investor rankings
 ```
 
 ## 248 Strategies (15 categories)

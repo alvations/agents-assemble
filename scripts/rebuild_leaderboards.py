@@ -8,7 +8,7 @@ import re
 import statistics
 from datetime import datetime
 
-BASE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root (parent of scripts/)
 _mw_candidates = sorted(glob.glob(os.path.join(BASE, "results/_multi_window_full_*.json")))
 MW_PATH = _mw_candidates[-1] if _mw_candidates else os.path.join(BASE, "results/_multi_window_full_20260413_183206.json")
 LEADERBOARD_PATH = os.path.join(BASE, "LEADERBOARD.md")
