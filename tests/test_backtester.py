@@ -18,8 +18,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# Use flat-file imports (tests were written for flat-file API)
-from backtester import Backtester, Portfolio, Position, compute_metrics
+try:
+    from bespoke import Backtester
+    from bespoke.core.portfolio import Portfolio, Position, Side
+    from bespoke.core.metrics import compute_metrics
+except ImportError:
+    from backtester import Backtester, Portfolio, Position, compute_metrics
 
 # These are not in bespoke — keep flat imports
 from backtester import (
