@@ -41,3 +41,26 @@
 > **Vol-adjusted sizing:** Volatile stocks (TSLA, NVDA) get wider stops + smaller positions.
 > Stable stocks (KO, PG) get tighter stops + larger positions. This is proper risk management.
 > Click Live Price links for current market price. Apply % rules to calculate exact levels.
+
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | 2.1% |
+| **Avg 5Y Sharpe** | -0.40 |
+| **Avg 5Y Max DD** | -17.3% |
+| **10Y Return (2015-2024)** | -0.8% |
+| **10Y Sharpe** | -0.46 |
+| **10Y Max DD** | -21.4% |
+| **HODL Composite** | 0.00 |
+| **Windows Tested** | 28 |
+| **Consistency** | 18% |
+
+### How to Use This Strategy Passively
+
+**Weak long-term profile.** Not recommended for passive buy-and-hold. May still work as a tactical or hedged position — see main body.
+
+</details>

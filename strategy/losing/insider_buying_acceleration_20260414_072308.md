@@ -32,3 +32,26 @@ This strategy lost money. Key issues:
 - Alpha: -65.38% (target > 0%)
 
 **DO NOT REPEAT** these patterns without fundamental strategy changes.
+
+<details>
+<summary>For passive investors (buy and hold)</summary>
+
+### Long-Horizon Performance
+
+| Metric | Value |
+|--------|-------|
+| **Avg 5Y Return** | -2.3% |
+| **Avg 5Y Sharpe** | -0.63 |
+| **Avg 5Y Max DD** | -12.2% |
+| **10Y Return (2015-2024)** | 3.0% |
+| **10Y Sharpe** | -0.56 |
+| **10Y Max DD** | -14.9% |
+| **HODL Composite** | 0.00 |
+| **Windows Tested** | 28 |
+| **Consistency** | 4% |
+
+### How to Use This Strategy Passively
+
+**Weak long-term profile.** Not recommended for passive buy-and-hold. May still work as a tactical or hedged position — see main body.
+
+</details>

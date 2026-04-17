@@ -1,5 +1,7 @@
 # WINNING Strategy: tax_harvest_rotation
 
+> ⚠ **Stale data:** This strategy is no longer in the active backtest universe. Numbers below reflect an earlier run under the prior flat-averaged composite formula. Re-run `scripts/update_strategy_composites.py` after adding the strategy back to the registry.
+
 **Generated:** 2026-04-13T18:32:38.801797
 **Assessment:** BUY — Good returns with acceptable risk. Consider deploying with moderate position sizes.
 
