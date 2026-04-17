@@ -118,27 +118,45 @@ def strategy_link(name, strat_files):
     return f"{GITHUB_BASE}/winning/{name}.md"
 
 
+def _horizon_weighted(available_windows, w):
+    """Horizon-weighted return, drawdown, and consistency.
+
+    Each of 1Y/3Y/5Y/10Y contributes equally regardless of window count, so a
+    strategy with 11 good 1Y windows cannot drown out one bad 10Y window.
+    Consistency is still fraction-of-windows with positive Sharpe (rewards
+    breadth across regimes).
+    """
+    by_horizon = {}
+    for win in available_windows:
+        h = win.split("_")[0]
+        by_horizon.setdefault(h, []).append(win)
+
+    horizon_rets, horizon_dds = [], []
+    for wins in by_horizon.values():
+        horizon_rets.append(statistics.mean(w[x]["ret"] for x in wins))
+        horizon_dds.append(statistics.mean(abs(w[x]["dd"]) for x in wins))
+
+    sharpes = [w[x]["sh"] for x in available_windows]
+    return {
+        "avg_ret": statistics.mean(horizon_rets),
+        "avg_dd": statistics.mean(horizon_dds),
+        "consistency": sum(1 for s in sharpes if s > 0) / len(sharpes),
+    }
+
+
 def compute_6win_data(entry):
-    """Compute 6-window composite, consistency, avg_ret for LEADERBOARD."""
+    """Compute 6-window horizon-weighted composite for LEADERBOARD."""
     w = entry["w"]
     available = [win for win in SIX_WINDOWS if win in w]
     if not available:
         return {"avg_ret": 0, "consistency": 0, "composite": 0, "avg_dd": 0}
 
-    rets = [w[win]["ret"] for win in available]
-    sharpes = [w[win]["sh"] for win in available]
-    dds = [abs(w[win]["dd"]) for win in available]
-
-    avg_ret = statistics.mean(rets)
-    consistency = sum(1 for s in sharpes if s > 0) / len(sharpes)
-    avg_dd = statistics.mean(dds)
-    composite = avg_ret * consistency * (1 - avg_dd)
-
+    hw = _horizon_weighted(available, w)
     return {
-        "avg_ret": avg_ret,
-        "consistency": consistency,
-        "avg_dd": avg_dd,
-        "composite": composite,
+        "avg_ret": hw["avg_ret"],
+        "consistency": hw["consistency"],
+        "avg_dd": hw["avg_dd"],
+        "composite": hw["avg_ret"] * hw["consistency"] * (1 - hw["avg_dd"]),
     }
 
 
@@ -237,6 +255,8 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
     lines.append("```")
     lines.append("")
     lines.append("**Windows:** 1Y (2022-2025) + 3Y (2022-2024, 2023-2025) = 6")
+    lines.append("")
+    lines.append("Return and drawdown are **horizon-weighted**: the 1Y group and 3Y group each contribute 50% to the averages, so 4 one-year windows cannot drown out 2 three-year windows.")
     lines.append("")
     lines.append("## How to Read This")
     lines.append("")
@@ -368,26 +388,18 @@ def build_leaderboard(mw, strat_files, result_jsons, strat_jsons):
 
 
 def compute_hodl_data(entry):
-    """Compute HODL composite from all 28 windows."""
+    """Compute HODL composite (horizon-weighted, all 28 windows)."""
     w = entry["w"]
     available = [win for win in ALL_28_WINDOWS if win in w]
     if not available:
         return {"hodl_composite": 0, "consistency": 0, "avg_ret": 0, "avg_dd": 0}
 
-    rets = [w[win]["ret"] for win in available]
-    sharpes = [w[win]["sh"] for win in available]
-    dds = [abs(w[win]["dd"]) for win in available]
-
-    avg_ret = statistics.mean(rets)
-    consistency = sum(1 for s in sharpes if s > 0) / len(sharpes)
-    avg_dd = statistics.mean(dds)
-    hodl_composite = avg_ret * consistency * (1 - avg_dd)
-
+    hw = _horizon_weighted(available, w)
     return {
-        "hodl_composite": hodl_composite,
-        "consistency": consistency,
-        "avg_ret": avg_ret,
-        "avg_dd": avg_dd,
+        "hodl_composite": hw["avg_ret"] * hw["consistency"] * (1 - hw["avg_dd"]),
+        "consistency": hw["consistency"],
+        "avg_ret": hw["avg_ret"],
+        "avg_dd": hw["avg_dd"],
     }
 
 
@@ -448,6 +460,8 @@ def build_hodl_leaderboard(mw, strat_files):
     lines.append("```")
     lines.append("Composite = Avg Return x Consistency x (1 - Avg |Max Drawdown|)")
     lines.append("```")
+    lines.append("")
+    lines.append("Return and drawdown are **horizon-weighted**: 1Y/3Y/5Y/10Y each contribute 25%, so 11 one-year windows cannot dominate one 10-year window.")
     lines.append("")
     lines.append("---")
     lines.append("")

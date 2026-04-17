@@ -18,11 +18,11 @@ Trading agents and algorithms for publicly tradable instruments. **251 strategie
 
 | Rank | Strategy | Composite | 3Y Return | 3Y Sharpe | Consistency | Type |
 |------|----------|-----------|-----------|-----------|-------------|------|
-| 1 | **Core Satellite** | **0.61** | 255.4% | 0.87 | 83% | Core index + satellite alpha positions |
-| 2 | **Uranium Renaissance** | **0.48** | 353.1% | 1.27 | 83% | Structural uranium supply deficit (UUUU, CCJ, LEU) |
-| 3 | **Momentum** | **0.45** | 218.6% | 1.58 | 83% | Classic momentum factor |
-| 4 | **AI Mega Ecosystem** | **0.45** | 247.3% | 1.54 | 83% | 41-ticker AI combined (6 sub-strategies collapsed) |
-| 5 | **Yield Curve Inversion** | **0.40** | 172.7% | 0.76 | 83% | Trade yield curve regime changes |
+| 1 | **Core Satellite** | **0.75** | 255.4% | 0.87 | 83% | Core index + satellite alpha positions |
+| 2 | **Uranium Renaissance** | **0.60** | 353.1% | 1.27 | 83% | Structural uranium supply deficit (UUUU, CCJ, LEU) |
+| 3 | **Momentum** | **0.57** | 218.6% | 1.58 | 83% | Classic momentum factor |
+| 4 | **AI Mega Ecosystem** | **0.57** | 247.3% | 1.54 | 83% | 41-ticker AI combined (6 sub-strategies collapsed) |
+| 5 | **Concentrate Winners** | **0.51** | 177.6% | 1.28 | 83% | Top-conviction holdings only, no diversification drag |
 
 See **[LEADERBOARD.md](LEADERBOARD.md)** for all 251 strategies with full rankings and formula details.
 
