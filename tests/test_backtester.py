@@ -18,19 +18,10 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-try:
-    from bespoke import Backtester
-    from bespoke.core.portfolio import Portfolio, Position, Side
-    from bespoke.core.metrics import compute_metrics
-except ImportError:
-    from backtester import Backtester, Portfolio, Position, compute_metrics
-
-# These are not in bespoke — keep flat imports
+# Use flat-file imports — these tests validate the agents-assemble backtester
 from backtester import (
-    Trade,
-    Side,
-    format_report,
-    estimate_spread_bps,
+    Backtester, Portfolio, Position, Side, Trade,
+    compute_metrics, format_report, estimate_spread_bps,
     HISTORICAL_CRASHES,
 )
 
