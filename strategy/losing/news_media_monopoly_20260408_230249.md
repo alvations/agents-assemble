@@ -61,7 +61,7 @@ This strategy lost money. Key issues:
 | **10Y Return (2015-2024)** | 83.6% |
 | **10Y Sharpe** | 0.22 |
 | **10Y Max DD** | -39.6% |
-| **HODL Composite** | 0.22 |
+| **HODL Composite** | 0.26 |
 | **Windows Tested** | 28 |
 | **Consistency** | 67% |
 

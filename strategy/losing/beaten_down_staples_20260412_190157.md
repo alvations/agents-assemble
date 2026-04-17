@@ -63,7 +63,7 @@ This strategy lost money. Key issues:
 | **Avg 5Y Sharpe** | 0.47 |
 | **10Y Return** | 116.2% |
 | **10Y Sharpe** | 0.42 |
-| **HODL Composite** | 0.2 |
+| **HODL Composite** | 0.36 |
 | **Consistency** | 78% |
 | **Suitable for passive** | No |
 
