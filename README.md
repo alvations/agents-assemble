@@ -12,7 +12,7 @@ Trading agents and algorithms for publicly tradable instruments. **253 strategie
 > - **[TRADING.md](TRADING.md)** — How to execute trades via Public.com API
 > - **[knowledge/](knowledge/)** — 70+ research files with backtested findings
 >
-> **Pre-Market Research: [Friday Apr 17](knowledge/premarket-research/20260417.md) — Netflix -9% AH on weak guidance, Nasdaq 12-day streak, TSMC sell-the-news, Hormuz summit
+> **Pre-Market Research: [Weekly Roundup Apr 18](knowledge/premarket-research/20260418_weekly.md) — Hormuz reopened, oil -19%, S&P 7,126 ATH, Nasdaq 13-day streak, banks sweep earnings
 
 ## Top 5 Strategies (by Composite Score, 6 windows 2022-2025)
 
