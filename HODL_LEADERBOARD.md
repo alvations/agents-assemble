@@ -1,6 +1,6 @@
 # HODL LEADERBOARD
 
-**For passive, long-term investors.** 251 strategies, 191 suitable.
+**For passive, long-term investors.** 253 strategies, 191 suitable.
 
 ## HODL Composite (28 windows, 2015-2025)
 
@@ -76,7 +76,7 @@ Return and drawdown are **horizon-weighted**: 1Y/3Y/5Y/10Y each contribute 25%, 
 
 ---
 
-## Full Rankings (251 Strategies)
+## Full Rankings (253 Strategies)
 
 | # | Strategy | 5Y Avg | 10Y Ret | 10Y Sharpe | Consistency | HODL Composite | Suitable |
 |---|----------|--------|---------|------------|------------|----------------|----------|
@@ -322,17 +322,19 @@ Return and drawdown are **horizon-weighted**: 1Y/3Y/5Y/10Y each contribute 25%, 
 | 240 | [**low_vol_quality**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/low_vol_quality_20260414_072331.md) | 3.3% | 5.5% | -1.06 | 7% | 0.0 | No |
 | 241 | [**insider_buying_acceleration**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/insider_buying_acceleration_20260414_073120.md) | -2.3% | 3.0% | -0.56 | 4% | 0.0 | No |
 | 242 | [**nvidia_domino_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/nvidia_domino_hedge_20260412_190229.md) | -13.9% | -26.3% | -1.14 | 0% | 0.0 | No |
-| 243 | [**spinoff_alpha**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/spinoff_alpha_20260413_134754.md) | -8.6% | -11.2% | -0.83 | 4% | -0.0 | No |
-| 244 | [**turn_of_month**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/turn_of_month_20260412_190131.md) | 3.9% | -11.3% | -0.32 | 36% | -0.0 | No |
-| 245 | [**gap_fill_spy**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/gap_fill_spy_20260412_190522.md) | -16.3% | -34.2% | -1.05 | 4% | -0.0 | No |
-| 246 | [**michael_burry**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/michael_burry_20260412_190618.md) | -8.2% | -12.8% | -0.32 | 14% | -0.01 | No |
-| 247 | [**meme_stock**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/meme_stock_20260412_190556.md) | -12.7% | -7.8% | -0.04 | 36% | -0.01 | No |
-| 248 | [**optimal_stopping**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/optimal_stopping_20260412_190505.md) | -23.2% | -37.1% | -0.85 | 7% | -0.01 | No |
-| 249 | [**fda_catalyst**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/fda_catalyst_20260412_190405.md) | -13.8% | -26.9% | -0.52 | 14% | -0.01 | No |
-| 250 | [**global_airlines_travel**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/global_airlines_travel_20260412_190058.md) | -20.9% | -28.0% | -0.27 | 36% | -0.03 | No |
-| 251 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | -17.6% | -32.1% | -0.09 | 50% | -0.03 | No |
+| 243 | [**adx_trend_filter**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/adx_trend_filter_20260417_214317.md) | -0.5% | -2.4% | -3.03 | 0% | 0.0 | No |
+| 244 | [**etf_cointegration**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/etf_cointegration_20260417_214436.md) | -2.4% | -10.3% | -1.22 | 0% | 0.0 | No |
+| 245 | [**spinoff_alpha**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/spinoff_alpha_20260413_134754.md) | -8.6% | -11.2% | -0.83 | 4% | -0.0 | No |
+| 246 | [**turn_of_month**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/turn_of_month_20260412_190131.md) | 3.9% | -11.3% | -0.32 | 36% | -0.0 | No |
+| 247 | [**gap_fill_spy**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/gap_fill_spy_20260412_190522.md) | -16.3% | -34.2% | -1.05 | 4% | -0.0 | No |
+| 248 | [**michael_burry**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/michael_burry_20260412_190618.md) | -8.2% | -12.8% | -0.32 | 14% | -0.01 | No |
+| 249 | [**meme_stock**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/meme_stock_20260412_190556.md) | -12.7% | -7.8% | -0.04 | 36% | -0.01 | No |
+| 250 | [**optimal_stopping**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/optimal_stopping_20260412_190505.md) | -23.2% | -37.1% | -0.85 | 7% | -0.01 | No |
+| 251 | [**fda_catalyst**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/fda_catalyst_20260412_190405.md) | -13.8% | -26.9% | -0.52 | 14% | -0.01 | No |
+| 252 | [**global_airlines_travel**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/global_airlines_travel_20260412_190058.md) | -20.9% | -28.0% | -0.27 | 36% | -0.03 | No |
+| 253 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | -17.6% | -32.1% | -0.09 | 50% | -0.03 | No |
 
-*Updated: 2026-04-17 20:14*
+*Updated: 2026-04-17 21:49*
 
 ---
 

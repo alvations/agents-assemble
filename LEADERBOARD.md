@@ -1,6 +1,6 @@
 # LEADERBOARD
 
-**251 strategies** (245 ranked + 6 components collapsed under combined strategies).
+**253 strategies** (247 ranked + 6 components collapsed under combined strategies).
 
 ## Ranking Formula
 
@@ -278,7 +278,7 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 
 ---
 
-## Full Rankings (245 Ranked + 6 Components)
+## Full Rankings (247 Ranked + 6 Components)
 
 | # | Strategy | 3Y Ret | 3Y Sharpe | 3Y DD | Pos | Consistency | Avg Ret | Composite |
 |---|----------|--------|-----------|-------|-----|------------|---------|-----------|
@@ -522,19 +522,21 @@ Timing: SAFE TO BUY. Position sizes are already risk-adjusted by volatility — 
 | 232 | [**nvidia_domino_hedge**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/nvidia_domino_hedge_20260412_190229.md) | -12.7% | -0.80 | -15.9% | 5 | 0% | -9.9% | 0.0 |
 | 233 | [**optimal_stopping**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/optimal_stopping_20260412_190505.md) | -6.5% | -0.69 | -14.5% | 4 | 0% | -10.6% | 0.0 |
 | 234 | [**water_scarcity**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/water_scarcity_20260412_190317.md) | -8.3% | -0.76 | -14.1% | 4 | 0% | -9.6% | 0.0 |
-| 235 | [**constellation_contrarian**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/constellation_contrarian_20260412_190210.md) | 0.9% | -0.13 | -25.9% | 9 | 17% | -0.6% | -0.0 |
-| 236 | [**low_vol_quality**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/low_vol_quality_20260414_072331.md) | 1.3% | -1.35 | -5.7% | 0 | 17% | -0.5% | -0.0 |
-| 237 | [**dividend_aristocrat_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/dividend_aristocrat_momentum_20260412_190147.md) | -3.8% | -0.49 | -15.3% | 10 | 33% | -0.7% | -0.0 |
-| 238 | [**michael_burry**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/michael_burry_20260412_190618.md) | 7.5% | -0.18 | -8.0% | 12 | 33% | -2.2% | -0.01 |
-| 239 | [**dividend_capture**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/dividend_capture_20260412_190415.md) | 3.6% | -0.24 | -13.6% | 9 | 33% | -3.2% | -0.01 |
-| 240 | [**self_storage_reit**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/self_storage_reit_20260413_194619.md) | -2.7% | -0.21 | -24.6% | 0 | 17% | -9.0% | -0.01 |
-| 241 | [**clean_energy**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/clean_energy_20260412_190017.md) | -3.1% | -0.13 | -43.4% | 5 | 17% | -16.2% | -0.02 |
-| 242 | [**agriculture_food**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/agriculture_food_20260412_190309.md) | -32.8% | -1.42 | -34.2% | 4 | 17% | -16.9% | -0.02 |
-| 243 | [**turn_of_month**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/turn_of_month_20260412_190131.md) | -11.2% | -0.99 | -20.9% | 2 | 33% | -11.0% | -0.03 |
-| 244 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | 12.1% | 0.22 | -57.4% | 2 | 67% | -9.9% | -0.03 |
-| 245 | [**genomics_revolution**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/genomics_revolution_20260415_220615.md) | 1.3% | 0.08 | -44.4% | 11 | 50% | -18.0% | -0.05 |
+| 235 | [**adx_trend_filter**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/adx_trend_filter_20260417_214317.md) | 0.0% | -inf | 0.0% | ? | 0% | 0.0% | 0.0 |
+| 236 | [**etf_cointegration**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/etf_cointegration_20260417_214436.md) | 0.0% | -inf | 0.0% | ? | 0% | 0.0% | 0.0 |
+| 237 | [**constellation_contrarian**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/constellation_contrarian_20260412_190210.md) | 0.9% | -0.13 | -25.9% | 9 | 17% | -0.6% | -0.0 |
+| 238 | [**low_vol_quality**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/low_vol_quality_20260414_072331.md) | 1.3% | -1.35 | -5.7% | 0 | 17% | -0.5% | -0.0 |
+| 239 | [**dividend_aristocrat_momentum**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/dividend_aristocrat_momentum_20260412_190147.md) | -3.8% | -0.49 | -15.3% | 10 | 33% | -0.7% | -0.0 |
+| 240 | [**michael_burry**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/michael_burry_20260412_190618.md) | 7.5% | -0.18 | -8.0% | 12 | 33% | -2.2% | -0.01 |
+| 241 | [**dividend_capture**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/dividend_capture_20260412_190415.md) | 3.6% | -0.24 | -13.6% | 9 | 33% | -3.2% | -0.01 |
+| 242 | [**self_storage_reit**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/self_storage_reit_20260413_194619.md) | -2.7% | -0.21 | -24.6% | 0 | 17% | -9.0% | -0.01 |
+| 243 | [**clean_energy**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/clean_energy_20260412_190017.md) | -3.1% | -0.13 | -43.4% | 5 | 17% | -16.2% | -0.02 |
+| 244 | [**agriculture_food**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/agriculture_food_20260412_190309.md) | -32.8% | -1.42 | -34.2% | 4 | 17% | -16.9% | -0.02 |
+| 245 | [**turn_of_month**](https://github.com/alvations/agents-assemble/blob/main/strategy/losing/turn_of_month_20260412_190131.md) | -11.2% | -0.99 | -20.9% | 2 | 33% | -11.0% | -0.03 |
+| 246 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | 12.1% | 0.22 | -57.4% | 2 | 67% | -9.9% | -0.03 |
+| 247 | [**genomics_revolution**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/genomics_revolution_20260415_220615.md) | 1.3% | 0.08 | -44.4% | 11 | 50% | -18.0% | -0.05 |
 
-*Updated: 2026-04-17 20:14*
+*Updated: 2026-04-17 21:49*
 
 ---
 
