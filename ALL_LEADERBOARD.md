@@ -263,4 +263,4 @@ Ranked by **Composite Score** (6 rolling windows, 2022-2025).
 | 250 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | standalone | 12.1% | 0.22 | -57.4% | 2 | 67% | -9.9% | -0.03 |
 | 251 | [**genomics_revolution**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/genomics_revolution_20260415_220615.md) | standalone | 1.3% | 0.08 | -44.4% | 11 | 50% | -18.0% | -0.05 |
 
-*Updated: 2026-04-16 23:00*
+*Updated: 2026-04-17 20:14*

@@ -332,7 +332,7 @@ Return and drawdown are **horizon-weighted**: 1Y/3Y/5Y/10Y each contribute 25%, 
 | 250 | [**global_airlines_travel**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/global_airlines_travel_20260412_190058.md) | -20.9% | -28.0% | -0.27 | 36% | -0.03 | No |
 | 251 | [**cannabis_alt_consumer**](https://github.com/alvations/agents-assemble/blob/main/strategy/winning/cannabis_alt_consumer_20260412_190213.md) | -17.6% | -32.1% | -0.09 | 50% | -0.03 | No |
 
-*Updated: 2026-04-16 23:00*
+*Updated: 2026-04-17 20:14*
 
 ---
 
